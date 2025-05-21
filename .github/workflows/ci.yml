@@ -34,7 +34,7 @@ jobs:
         coverageCommand: npm run test:coverage
         debug: true
       env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        CC_TEST_REPORTER_ID: 88a332e46a6f3d2dee2a0aa9b9328dec76a3313ce969b8b6608d2a4c6b724dfe
 
   build:
     needs: test
