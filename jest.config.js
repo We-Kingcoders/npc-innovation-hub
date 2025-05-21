@@ -13,12 +13,13 @@ export default {
       tsconfig: '<rootDir>/tsconfig.jest.json',
     }],
   },
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.jest.json',
-      useESM: true
-    }
-  },
+  //no need for this globals if you're already using the modern transform API with inline ts-jest config:
+  // globals: {
+  //   'ts-jest': {
+  //     tsconfig: '<rootDir>/tsconfig.jest.json',
+  //     useESM: true
+  //   }
+  // },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [

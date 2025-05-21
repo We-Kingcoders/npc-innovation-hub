@@ -1,1 +1,15 @@
- 
+ {
+  "compilerOptions": {
+    "jsx": "react-jsx",                
+    "esModuleInterop": true,
+    "module": "ESNext",               
+    "moduleResolution": "node",
+    "target": "ES6",
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "noEmit": true
+  },
+  "include": ["src", "jest.setup.js"]
+}
+// The problem was this tsconfig.jest.json file was empty
