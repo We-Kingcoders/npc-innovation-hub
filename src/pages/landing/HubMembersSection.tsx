@@ -35,7 +35,7 @@ interface HeaderProps {
  */
 const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   return (
-    <div className="backdrop-blur-md border-2 border-white rounded-[30px] p-6 transition-shadow duration-300">
+    <div className="backdrop-blur-md border-2 border-white rounded-[30px] p-6 pt-12 transition-shadow duration-300">
       <div className="flex flex-col items-center">
         <div className="mb-4 w-full overflow-hidden rounded-[20px]">
           <img 
@@ -174,27 +174,29 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
  */
 const HubMembersSection: React.FC = () => {
   const [members] = useState<MemberData[]>([
+
     {
-      id: 4,
-      name: "Priya Sharma",
-      role: "AI Research Scientist",
-      bio: "Pioneering developer exploring the intersection of decentralized systems and traditional finance to build trusted, transparent applications.",
-      image: "/public/assets/images/hero.png"
-    },
-    {
-      id: 5,
-      name: "Arjun Patel",
+      id: 1,
+      name: "Emmanuel MUGISHA",
       role: "Full Stack Developer",
       bio: "Pioneering developer exploring the intersection of decentralized systems and traditional finance to build trusted, transparent applications.",
       image: "/public/assets/images/hero.png"
     },
     {
-      id: 6,
-      name: "Meera Das",
-      role: "UX Designer",
+      id: 2,
+      name: "Alain SHEMA",
+      role: "Full Stack Developer",
       bio: "Pioneering developer exploring the intersection of decentralized systems and traditional finance to build trusted, transparent applications.",
       image: "/public/assets/images/hero.png"
     },
+    {
+      id: 3,
+      name: "Samuel NSHIMIYIMANA",
+      role: "Full Stack Developer",
+      bio: "Pioneering developer exploring the intersection of decentralized systems and traditional finance to build trusted, transparent applications.",
+      image: "/public/assets/images/hero.png"
+    },
+   
   ]);
 
   const handleViewAllMembers = () => {
@@ -204,7 +206,7 @@ const HubMembersSection: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-[#f3fdfe] to-[#a7e1e7]">
       <header className="pt-12 pb-6 px-4 md:px-8">
-        <div className="container mx-auto max-w-7xl">
+        <div className="container mx-auto pt-28 max-w-7xl">
           <Header 
             title="Hub Members Profile" 
             subtitle="Meet our talented tech professionals who are driving innovation and collaboration within our hub. Each member brings unique expertise and perspective to our community."

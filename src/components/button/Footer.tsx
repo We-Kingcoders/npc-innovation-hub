@@ -4,16 +4,16 @@ const Footer: React.FC = () => {
   return (
     <div className="w-full font-sans">
       {/* Main footer with angled background */}
-      <div className="w-full bg-blue-900 pt-24 pb-12 relative min-h-[500px]">
+      <div className="w-full pt-24 pb-12 relative min-h-[500px]" style={{backgroundColor: '#002B56'}}>
         {/* White angled overlay at the top */}
         <div className="absolute top-0 left-0 right-0 h-20 bg-white" style={{clipPath: 'polygon(0 0, 100% 0, 100% 0%, 0% 100%)'}}></div>
         
         <div className="max-w-5xl mx-auto px-4">
           {/* Top card with image and text */}
-          <div className="max-w-5xl mx-auto px-4 -mt-44 relative z-10">
-            <div className="flex flex-col md:flex-row overflow-hidden rounded-lg shadow-lg">
+          <div className="max-w-5xl mx-auto  -mt-44 mb-20 relative z-10">
+            <div className="flex flex-col md:flex-row overflow-hidden rounded-lg shadow-lg bg-green-200" style={{border: '1px solid #002B56'}}>
               {/* Left side - Image */}
-              <div className="md:w-1/2 bg-black">
+              <div className="md:w-1/2  overflow-hidden">
                 <img 
                   src="/public/assets/images/hero.png" 
                   alt="Person with glasses" 
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
               </div>
               
               {/* Right side - Text and button */}
-              <div className="md:w-1/2 bg-green-200 p-6 flex flex-col justify-center">
+              <div className="md:w-1/2 p-6 flex flex-col justify-center">
                 <h3 className="text-2xl font-bold text-blue-900 mb-3">
                   This is the best choie you've made
                 </h3>

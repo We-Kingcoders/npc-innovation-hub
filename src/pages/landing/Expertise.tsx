@@ -10,7 +10,7 @@ const Expertise: React.FC = () => {
           <p className="text-blue-900 font-medium mb-2">Our Expertise</p>
           <h1 className="text-4xl font-bold text-blue-900 mb-4">
             This is<br />
-            <span className="text-blue-700">#Expertise</span>
+            <span className="text-blue-900">#Expertise</span>
           </h1>
           <p className="text-blue-900 mb-10 max-w-sm">
             Secure, user-centric digital solutions for web and mobile.
@@ -37,7 +37,7 @@ const Expertise: React.FC = () => {
 
         {/* Right main image */}
         <div className="md:w-1/2">
-          <div className="rounded-2xl overflow-hidden shadow-lg">
+          <div className="rounded-2xl overflow-hidden shadow-l">
             <img 
               src="/public/assets/images/hero.png" 
               alt="Smiling professional with smartphone" 
@@ -51,7 +51,7 @@ const Expertise: React.FC = () => {
       <div className="grid grid-cols-12 gap-6">
         {/* Left image - server room */}
         <div className="col-span-12 md:col-span-4">
-          <div className="rounded-2xl overflow-hidden shadow-lg h-48 md:h-52">
+          <div className="rounded-2xl overflow-hidden shadow-l h-48 md:h-52">
             <img 
               src="/public/assets/images/hero.png" 
               alt="Professional in blue server room" 
@@ -62,7 +62,7 @@ const Expertise: React.FC = () => {
 
         {/* Middle image - airport/hallway */}
         <div className="col-span-12 md:col-span-5">
-        <div className="rounded-2xl overflow-hidden shadow-lg h-[30rem] md:h-[20rem] relative">
+        <div className="rounded-2xl overflow-hidden shadow-l h-[30rem] md:h-[20rem] relative">
           <img 
             src="/public/assets/images/hero.png" 
             alt="Professional in airport hallway" 
@@ -74,7 +74,7 @@ const Expertise: React.FC = () => {
 
         {/* Right image - person with laptop */}
         <div className="col-span-12 md:col-span-3">
-          <div className="rounded-2xl overflow-hidden shadow-lg h-[18rem] md:h-40 mt-0 md:mt-9">
+          <div className="rounded-2xl overflow-hidden shadow-l h-[18rem] md:h-40 mt-0 md:mt-9">
             <img 
               src="/public/assets/images/hero.png" 
               alt="Professional with laptop" 
