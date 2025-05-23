@@ -5,7 +5,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle login logic here
     console.log("Login submitted:", { email, password, rememberMe });
@@ -77,7 +77,13 @@ const LoginPage = () => {
             </div>
 
             <button
-              onClick={handleSubmit}
+              onClick={() =>
+                handleSubmit(
+                  new Event(
+                    "submit",
+                  ) as unknown as React.FormEvent<HTMLFormElement>,
+                )
+              }
               className="w-full py-3 rounded-lg font-medium transition duration-200"
               style={{ backgroundColor: "#ECE9E9", color: "#002B56" }}
             >
@@ -109,7 +115,12 @@ const LoginPage = () => {
 
             <div className="text-center py-2" style={{ color: "#002B56" }}>
               {" "}
-              ________________________ or ________________________
+              {/* Divider */}
+              <div className="flex items-center justify-center mb-4">
+                <hr className="w-full border-gray-300" />
+                <span className="px-2 text-gray-400">or</span>
+                <hr className="w-full border-gray-300" />
+              </div>{" "}
             </div>
 
             {/* Social Login Buttons */}
@@ -175,7 +186,10 @@ const LoginPage = () => {
               <span className="text-gray-600" style={{ color: "#002B56" }}>
                 Not yet account?{" "}
               </span>
-              <a href="#" className="text-blue-600 hover:underline font-medium">
+              <a
+                href="/signup"
+                className="text-blue-600 hover:underline font-medium"
+              >
                 Sign Up
               </a>
             </div>

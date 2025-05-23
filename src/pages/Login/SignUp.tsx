@@ -61,7 +61,7 @@ const SignUpPage = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
       // Here you can send `firstName`, `lastName`, `email`, `password` to your API
@@ -287,10 +287,11 @@ const SignUpPage = () => {
 
             {/* Already have account? */}
             <div className="text-center">
-              <span className="text-gray-600 text-[#002B56]">
-                Already have an account?{" "}
-              </span>
-              <a href="#" className="text-blue-600 hover:underline font-medium">
+              <span className="text-[#002B56]">Already have an account? </span>
+              <a
+                href="/login"
+                className="text-blue-600 hover:underline font-medium"
+              >
                 Login
               </a>
             </div>
