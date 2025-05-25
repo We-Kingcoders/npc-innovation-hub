@@ -1,11 +1,12 @@
-import "./index.css";
+import { Routes, Route } from "react-router-dom";
+import HireUs from "./hire-us/HireUs.tsx"; // 👈 your new component
 
-export default function App() {
+function App() {
   return (
-    <main className="bg-red-500">
-      {" "}
-      {/* Changed from div to main or Added role attribute  called main*/}
-      <h1 className="text-white">Hello World</h1>
-    </main>
+    <Routes>
+      <Route path="/hire-us" element={<HireUs />} /> {/* 👈 your new route */}
+    </Routes>
   );
 }
+
+export default App;
