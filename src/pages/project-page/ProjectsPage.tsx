@@ -1,11 +1,13 @@
 // import React from "react";
 import ProjectCard from "../../components/projects/ProjectCard";
+import ProjectHero from "../../components/projects/ProjectHero";
 import {
   projects,
   featuredProject,
   allProjects,
 } from "../../data/projectsData";
 import ProjectsHighlightSection from "../../components/projects/ProjectsHighlightSection";
+import { useRef } from "react";
 
 const ProjectsPage = () => {
   // Custom chunking logic for the allProjects layout
@@ -20,11 +22,23 @@ const ProjectsPage = () => {
     i += chunkSize;
     patternIndex++;
   }
+  const projectsRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToProjects = () => {
+    if (projectsRef.current) {
+      projectsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="bg-white">
       {/* Header */}
-      <div className="text-center pt-10 sm:pt-16 px-2 sm:px-0">
+      <ProjectHero onViewProjectsClick={scrollToProjects} />
+
+      <div
+        ref={projectsRef}
+        className="text-center pt-10 sm:pt-16 px-2 sm:px-0"
+      >
         <h1 className="text-2xl sm:text-3xl font-medium text-blue-950 mb-3 sm:mb-5">
           Explore our Projects
         </h1>

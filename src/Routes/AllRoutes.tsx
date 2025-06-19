@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Footer from "../components/button/Footer";
 import Header from "../components/Header";
 import LoginPage from "../pages/Login/LoginPage";
@@ -10,63 +10,75 @@ import HeroSection from "../pages/landing/HeroSection";
 import Expertise from "../pages/landing/Expertise";
 import Mission from "../pages/landing/Mission";
 import SignUpPage from "../pages/Login/SignUp";
+import ProjectsPage from "../pages/project-page/ProjectsPage";
+import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
+import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
 
 const AllRoutes: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <HeroSection />
-              <HubMembersSection />
-              <Expertise />
-              <Skills />
-              <Mission />
-              <TeamCaptain />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <>
-              <Header />
-              <LoginPage />
-            </>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <>
-              <Header />
-              <LoginPage />
-            </>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <>
-              <Header />
-              <LoginPage />
-            </>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <>
-              <Header />
-              <SignUpPage />
-            </>
-          }
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <>
+            <HeroSection />
+            <HubMembersSection />
+            <Expertise />
+            <Skills />
+            <Mission />
+            <TeamCaptain />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <>
+            <Header />
+            <LoginPage />
+          </>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <>
+            <Header />
+            <SignUpPage />
+          </>
+        }
+      />
+      <Route
+        path="/projects"
+        element={
+          <>
+            <ProjectsPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/members"
+        element={
+          <>
+            <Header />
+            <InnovationHubMembersPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/members/:id"
+        element={
+          <>
+            <Header />
+            <MemberDetailPage />
+            <Footer />
+          </>
+        }
+      />
+    </Routes>
   );
 };
 

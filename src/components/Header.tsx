@@ -14,7 +14,7 @@ export default function Header() {
           <ul className="flex space-x-8">
             <li>
               <a
-                href="#"
+                href="/"
                 className="text-teal-500 border-b-2 border-teal-500 pb-1"
                 style={{ color: "#0175C3" }}
               >
@@ -32,7 +32,7 @@ export default function Header() {
             </li>
             <li>
               <a
-                href="#"
+                href="/members"
                 className="text-gray-600 hover:text-teal-500"
                 style={{ color: "#0175C3" }}
               >
@@ -41,7 +41,7 @@ export default function Header() {
             </li>
             <li>
               <a
-                href="#"
+                href="/projects"
                 className="text-gray-600 hover:text-teal-500"
                 style={{ color: "#0175C3" }}
               >
