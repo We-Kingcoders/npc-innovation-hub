@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
+
 export default function Header() {
   const navigate = useNavigate();
+
   return (
     <header className="bg-white">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
-        <div className="text-xl font-semibold text-gray-800">
+        <div className="text-3xl font-semibold text-gray-800">
           NpcInnovationHub
         </div>
 
@@ -15,7 +17,7 @@ export default function Header() {
             <li>
               <a
                 href="/"
-                className="text-teal-500 border-b-2 border-teal-500 pb-1"
+                className="text-2xl text-teal-500 border-b-2 border-teal-500 pb-1"
                 style={{ color: "#0175C3" }}
               >
                 Home
@@ -24,7 +26,7 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="text-gray-600 hover:text-teal-500"
+                className="text-2xl text-gray-600 hover:text-teal-500"
                 style={{ color: "#0175C3" }}
               >
                 AboutHub
@@ -33,7 +35,7 @@ export default function Header() {
             <li>
               <a
                 href="/members"
-                className="text-gray-600 hover:text-teal-500"
+                className="text-2xl text-gray-600 hover:text-teal-500"
                 style={{ color: "#0175C3" }}
               >
                 Members
@@ -42,7 +44,7 @@ export default function Header() {
             <li>
               <a
                 href="/projects"
-                className="text-gray-600 hover:text-teal-500"
+                className="text-2xl text-gray-600 hover:text-teal-500"
                 style={{ color: "#0175C3" }}
               >
                 Projects
@@ -55,7 +57,7 @@ export default function Header() {
         <div>
           <button
             onClick={() => navigate("/signup")}
-            className="bg-blue-900 text-white px-4 py-2 rounded-full hover:bg-blue-700"
+            className="text-2xl bg-blue-900 text-white px-4 py-2 rounded-full hover:bg-blue-700"
           >
             Sign In
           </button>
