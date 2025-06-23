@@ -14,6 +14,11 @@ import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
 import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
 
+import LetTalk from "../pages/HireUs/form";
+import Partners from "../pages/HireUs/partners";
+import Services from "../pages/HireUs/services";
+import LatestPro from "../pages/HireUs/latespro";
+
 const AllRoutes: React.FC = () => {
   return (
     <Routes>
@@ -27,6 +32,20 @@ const AllRoutes: React.FC = () => {
             <Skills />
             <Mission />
             <TeamCaptain />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/hire-us"
+        element={
+          <>
+            <HeroSection />
+
+            <Services />
+            <Partners />
+            <LatestPro />
+            <LetTalk />
             <Footer />
           </>
         }
