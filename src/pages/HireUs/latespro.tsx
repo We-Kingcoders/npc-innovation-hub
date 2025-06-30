@@ -4,7 +4,7 @@ function LatestPro() {
       <div className="max-w-6xl mx-auto">
         {" "}
         {/* Changed from max-w-5xl to max-w-6xl */}
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-16">
           Our Latest Projects
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
