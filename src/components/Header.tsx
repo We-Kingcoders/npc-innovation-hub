@@ -73,7 +73,7 @@ export default function Header() {
                   </li>
                   <li className="border-t border-gray-100">
                     <a
-                      href="/hub-info"
+                      href="/hub-information"
                       className="block px-5 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
                     >
                       Hub Information
