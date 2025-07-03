@@ -18,6 +18,12 @@ import Partners from "../pages/HireUs/partners";
 import Services from "../pages/HireUs/services";
 import LatestPro from "../pages/HireUs/latespro";
 import InnovationHub from "../pages/HireUs/FirstSection";
+import BlogDesign from "../pages/AboutHub/Topics";
+import MissionSection from "../pages/Hub-info/MissionSection";
+import WhyHub from "../pages/Hub-info/WhyHub";
+import FAQs from "../pages/Hub-info/FAQs";
+import SupportCard from "../pages/Hub-info/Support";
+import ChatCard from "../pages/Hub-info/Help";
 
 const AllRoutes: React.FC = () => {
   return (
@@ -94,6 +100,39 @@ const AllRoutes: React.FC = () => {
             <Header />
             <MemberDetailPage />
             <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/blog"
+        element={
+          <>
+            <Header />
+            <BlogDesign />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/Hub-information"
+        element={
+          <>
+            <Header />
+            <MissionSection />
+            <WhyHub />
+            <FAQs />
+            <SupportCard />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/chatcard"
+        element={
+          <>
+            <Header />
+
+            <ChatCard />
           </>
         }
       />
