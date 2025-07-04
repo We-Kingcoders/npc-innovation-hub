@@ -16,7 +16,7 @@ const HeroSection = () => {
         }}
       ></div>
 
-      {/* Mobile/Tablet: Professional Background Design */}
+      {/* Mobile/Tablet: Professional Background Design responsiveness*/}
       <div className="lg:hidden absolute inset-0 z-0">
         {/* Top gradient header with text */}
         <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#00A0E3]">
