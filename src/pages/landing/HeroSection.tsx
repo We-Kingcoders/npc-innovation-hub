@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showAboutDropdown, setShowAboutDropdown] = useState(false);
 
   return (
     <div className="w-full min-h-screen bg-white relative overflow-hidden flex flex-col">
@@ -166,48 +165,12 @@ const HeroSection = () => {
             >
               Home
             </Link>
-
-            <li className="relative list-none">
-              <button
-                onClick={() => setShowAboutDropdown(!showAboutDropdown)}
-                className="text-[#002B56] font-medium px-3 py-1 text-[1.25rem] hover:text-[#00A0E3] focus:text-[#00A0E3]"
-                aria-expanded={showAboutDropdown}
-                aria-haspopup="true"
-              >
-                AboutHub
-              </button>
-
-              {/* Dropdown Menu */}
-              <div
-                className={`absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 ease-out z-10 ${
-                  showAboutDropdown
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-1 pointer-events-none"
-                }`}
-              >
-                <ul>
-                  <li>
-                    <Link
-                      to="/blog"
-                      className="block px-5 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                      onClick={() => setShowAboutDropdown(false)}
-                    >
-                      Blog
-                    </Link>
-                  </li>
-                  <li className="border-t border-gray-100">
-                    <Link
-                      to="/hub-information"
-                      className="block px-5 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                      onClick={() => setShowAboutDropdown(false)}
-                    >
-                      Hub Information
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
+            <Link
+              to="/abouthub"
+              className="text-[#002B56] font-medium px-3 py-1 text-[1.25rem] hover:text-[#00A0E3] focus:text-[#00A0E3]"
+            >
+              AboutHub
+            </Link>
             <Link
               to="/members"
               className="text-[#002B56] font-medium px-3 py-1 text-[1.25rem] hover:text-[#00A0E3] focus:text-[#00A0E3]"

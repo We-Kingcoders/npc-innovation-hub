@@ -38,7 +38,8 @@ export default function Header() {
             <li>
               <a
                 href="/"
-                className="text-2xl text-blue-700 border-b-2 border-blue-700 pb-1 transition-colors duration-200"
+                className="text-teal-500 border-b-2 border-teal-500 pb-1"
+                style={{ color: "#0175C3" }}
               >
                 Home
               </a>
@@ -86,7 +87,8 @@ export default function Header() {
             <li>
               <a
                 href="/members"
-                className="text-2xl text-blue-700 hover:text-blue-800 transition-colors duration-200"
+                className="text-gray-600 hover:text-teal-500"
+                style={{ color: "#0175C3" }}
               >
                 Members
               </a>
@@ -94,10 +96,45 @@ export default function Header() {
             <li>
               <a
                 href="/projects"
-                className="text-2xl text-blue-700 hover:text-blue-800 transition-colors duration-200"
+                className="text-gray-600 hover:text-teal-500"
+                style={{ color: "#0175C3" }}
               >
                 Projects
               </a>
+            </li>
+            {/* Dashboard Link */}
+            <li>
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="text-gray-600 hover:text-teal-500 focus:outline-none"
+                style={{
+                  color: "#0175C3",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  cursor: "pointer",
+                }}
+              >
+                User Dashboard
+              </button>
+            </li>
+            {/* Resources Room Link */}
+            <li>
+              <button
+                onClick={() => navigate("/resources-room")}
+                className="text-gray-600 hover:text-teal-500 focus:outline-none"
+                style={{
+                  color: "#0175C3",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  cursor: "pointer",
+                }}
+              >
+                Resources Room
+              </button>
             </li>
           </ul>
         </nav>
