@@ -102,6 +102,40 @@ export default function Header() {
                 Projects
               </a>
             </li>
+            {/* Dashboard Link */}
+            <li>
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="text-gray-600 hover:text-teal-500 focus:outline-none"
+                style={{
+                  color: "#0175C3",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  cursor: "pointer",
+                }}
+              >
+                User Dashboard
+              </button>
+            </li>
+            {/* Resources Room Link */}
+            <li>
+              <button
+                onClick={() => navigate("/resources-room")}
+                className="text-gray-600 hover:text-teal-500 focus:outline-none"
+                style={{
+                  color: "#0175C3",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  cursor: "pointer",
+                }}
+              >
+                Resources Room
+              </button>
+            </li>
           </ul>
         </nav>
 

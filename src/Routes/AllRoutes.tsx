@@ -25,6 +25,21 @@ import FAQs from "../pages/Hub-info/FAQs";
 import SupportCard from "../pages/Hub-info/Support";
 import ChatCard from "../pages/Hub-info/Help";
 
+// Resources Room
+import Home from "../pages/resources-room/Home";
+import Categories from "../pages/resources-room/Categories";
+import SubcategoryResults from "../pages/resources-room/SubcategoryResults";
+import AllResources from "../pages/resources-room/AllResources";
+
+// Dashboard
+import { DashboardLayout } from "../components/member/layouts/DashboardLayout";
+import { Dashboard } from "../pages/member-page/Dashboard";
+import { Resources } from "../pages/resources-page/Resources";
+import { Projects } from "../pages/projects-page/Projects";
+import { AddProject } from "../pages/add-project-page/AddProject";
+import { Events } from "../pages/events-page/Events";
+import { Messages } from "../pages/messages-page/Messages";
+
 const AllRoutes: React.FC = () => {
   return (
     <Routes>
@@ -47,7 +62,6 @@ const AllRoutes: React.FC = () => {
         element={
           <>
             <InnovationHub />
-
             <Services />
             <Partners />
             <LatestPro />
@@ -127,13 +141,103 @@ const AllRoutes: React.FC = () => {
         }
       />
       <Route
+        path="/resources-room"
+        element={
+          <>
+            <Header />
+            <Home />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/resources-room/categories"
+        element={
+          <>
+            <Header />
+            <Categories />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/resources-room/categories/:subcategory"
+        element={
+          <>
+            <Header />
+            <SubcategoryResults />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/resources-room/all-resources"
+        element={
+          <>
+            <Header />
+            <AllResources />
+            <Footer />
+          </>
+        }
+      />
+      <Route
         path="/chatcard"
         element={
           <>
             <Header />
-
             <ChatCard />
+            <Footer />
           </>
+        }
+      />
+
+      {/* Member Dashboard */}
+      <Route
+        path="/dashboard"
+        element={
+          <DashboardLayout>
+            <Dashboard />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/dashboard/resources"
+        element={
+          <DashboardLayout>
+            <Resources />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/dashboard/projects"
+        element={
+          <DashboardLayout>
+            <Projects />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/dashboard/projects/new"
+        element={
+          <DashboardLayout>
+            <AddProject />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/dashboard/events"
+        element={
+          <DashboardLayout>
+            <Events />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/dashboard/messages"
+        element={
+          <DashboardLayout>
+            <Messages />
+          </DashboardLayout>
         }
       />
     </Routes>
