@@ -39,6 +39,9 @@ import { Projects } from "../pages/projects-page/Projects";
 import { AddProject } from "../pages/add-project-page/AddProject";
 import { Events } from "../pages/events-page/Events";
 import { Messages } from "../pages/messages-page/Messages";
+import { HubChannel } from "../pages/messages-page/HubChannel";
+
+import MemberForm from "../components/member/MemberForm";
 
 const AllRoutes: React.FC = () => {
   return (
@@ -233,10 +236,27 @@ const AllRoutes: React.FC = () => {
         }
       />
       <Route
-        path="/dashboard/messages"
+        path="/messages/:id"
         element={
           <DashboardLayout>
             <Messages />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/hub-channel"
+        element={
+          <DashboardLayout>
+            <HubChannel />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/dashboard/edit-profile"
+        element={
+          <DashboardLayout>
+            <MemberForm />
           </DashboardLayout>
         }
       />
