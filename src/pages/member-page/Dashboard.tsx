@@ -124,7 +124,10 @@ export const Dashboard: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900">
               Recent Projects
             </h3>
-            <button className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+            <button
+              onClick={() => navigate("/dashboard/projects")}
+              className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
+            >
               View all <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -180,7 +183,10 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow group">
+          <div
+            onClick={() => navigate("/dashboard/projects")}
+            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow group"
+          >
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
                 <Settings className="w-6 h-6 text-purple-600" />
@@ -227,7 +233,10 @@ export const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
-            <button className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+            <button
+              onClick={() => navigate("/hub-channel")}
+              className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
+            >
               View all <ArrowRight className="w-4 h-4" />
             </button>
           </div>
