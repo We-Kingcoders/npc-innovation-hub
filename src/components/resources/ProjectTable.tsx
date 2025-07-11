@@ -1,4 +1,5 @@
 import React from "react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 const projects = [
   { name: "Music festival management", date: "14/05/2025" },
@@ -8,48 +9,48 @@ const projects = [
 ];
 
 export const ProjectTable: React.FC = () => (
-  <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-    <table className="min-w-full">
-      <thead>
-        <tr className="bg-[#28335A] text-white">
-          <th className="py-4 px-8 text-left text-lg font-medium">Name</th>
-          <th className="py-4 px-8 text-left text-lg font-medium">Date</th>
-          <th className="py-4 px-8 text-left text-lg font-medium">Actions</th>
+  <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+    <table className="min-w-full text-sm text-gray-700">
+      <thead className="bg-[#28335A] text-white">
+        <tr>
+          <th className="py-4 px-6 text-left text-base font-semibold">
+            Project Name
+          </th>
+          <th className="py-4 px-6 text-left text-base font-semibold">Date</th>
+          <th className="py-4 px-6 text-left text-base font-semibold">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>
         {projects.map((project, idx) => (
           <tr
             key={idx}
-            className="border-b border-[#C1BABA] last:border-b-0 bg-[#E5E6EB]"
+            className="border-b border-gray-200 bg-[#F9FAFB] hover:bg-[#F1F5F9] transition"
           >
-            <td className="py-4 px-8">{project.name}</td>
-            <td className="py-4 px-8">{project.date}</td>
-            <td className="py-4 px-8 flex gap-4">
-              <button className="text-2xl text-gray-700">
-                <svg
-                  width={20}
-                  height={20}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
+            <td className="py-4 px-6">{project.name}</td>
+            <td className="py-4 px-6">{project.date}</td>
+            <td className="py-4 px-6">
+              <div className="flex items-center gap-4">
+                <button
+                  title="View"
+                  className="text-green-600 hover:text-green-800 transition"
                 >
-                  <rect x={4} y={4} width={12} height={12} rx={2} />
-                  <path d="M8 12h4M8 8h4" />
-                </svg>
-              </button>
-              <button className="text-2xl text-gray-700">
-                <svg
-                  width={20}
-                  height={20}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
+                  <Eye size={18} />
+                </button>
+                <button
+                  title="Edit"
+                  className="text-blue-600 hover:text-blue-800 transition"
                 >
-                  <rect x={6} y={6} width={8} height={8} rx={2} />
-                  <path d="M9 9v4M11 9v4" />
-                </svg>
-              </button>
+                  <Pencil size={18} />
+                </button>
+                <button
+                  title="Delete"
+                  className="text-red-600 hover:text-red-800 transition"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
             </td>
           </tr>
         ))}
