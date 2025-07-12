@@ -42,6 +42,13 @@ import { Messages } from "../pages/messages-page/Messages";
 import { HubChannel } from "../pages/messages-page/HubChannel";
 
 import MemberForm from "../components/member/MemberForm";
+import AdminDashboard from "../pages/Admin-pages/AdminDashboard";
+import AdminResources from "../pages/Admin-pages/AdminResources";
+import HireUsRequests from "../pages/Admin-pages/HireUsRequests";
+import AddResource from "../pages/Admin-pages/AddResource";
+import MemberManagement from "../pages/Admin-pages/MemberManagement";
+import BlogTables from "../pages/Admin-pages/BlogTables";
+import ProjectTables from "../pages/Admin-pages/ProjectTables";
 
 const AllRoutes: React.FC = () => {
   return (
@@ -260,6 +267,14 @@ const AllRoutes: React.FC = () => {
           </DashboardLayout>
         }
       />
+      <Route path="/Admindashboard" element={<AdminDashboard />} />
+      <Route path="/resources" element={<AdminResources />} />
+      <Route path="/hire-requests" element={<HireUsRequests />} />
+      <Route path="/add-resource" element={<AddResource />} />
+
+      <Route path="/Admin-members" element={<MemberManagement />} />
+      <Route path="/Admin-blogs" element={<BlogTables />} />
+      <Route path="/Admin-projects" element={<ProjectTables />} />
     </Routes>
   );
 };
