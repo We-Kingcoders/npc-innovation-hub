@@ -49,6 +49,7 @@ import AddResource from "../pages/Admin-pages/AddResource";
 import MemberManagement from "../pages/Admin-pages/MemberManagement";
 import BlogTables from "../pages/Admin-pages/BlogTables";
 import ProjectTables from "../pages/Admin-pages/ProjectTables";
+import OTPVerification from "../pages/Login/OTPVerification";
 
 const AllRoutes: React.FC = () => {
   return (
@@ -95,6 +96,15 @@ const AllRoutes: React.FC = () => {
           <>
             <Header />
             <SignUpPage />
+          </>
+        }
+      />
+      <Route
+        path="/otp"
+        element={
+          <>
+            <Header />
+            <OTPVerification />
           </>
         }
       />

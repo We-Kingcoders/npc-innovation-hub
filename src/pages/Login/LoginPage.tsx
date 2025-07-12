@@ -1,14 +1,77 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  // Handles login API POST
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login submitted:", { email, password, rememberMe });
+    setErrorMessage("");
+
+    if (!email || !password) {
+      setErrorMessage("Please enter both email and password.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        "https://npc-innovation-hub-bn.onrender.com/api/users/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(data?.message || "Login failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      const token = data?.token;
+      const role = data?.data?.user?.role;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("email", email);
+        localStorage.setItem("role", role);
+
+        // Always redirect to OTP after login
+        navigate("/otp");
+      } else {
+        setErrorMessage("Token not received. Login failed.");
+      }
+      // ...rest of the code above...
+    } catch (error: unknown) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "message" in error &&
+        typeof (error as { message?: string }).message === "string"
+      ) {
+        setErrorMessage(
+          (error as { message?: string }).message?.includes("Failed to fetch")
+            ? "Network error. Please check your connection."
+            : "An unexpected error occurred.",
+        );
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,10 +113,17 @@ const LoginPage = () => {
       {/* Right Side - Login Form */}
       <div className="w-1/2 flex items-center justify-center px-8">
         <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <h1 className="text-xl font-semibold text-[#002B56] text-center mb-6">
               Login to your Account
             </h1>
+
+            {errorMessage && (
+              <div className="mb-2 p-2 bg-red-100 text-red-700 rounded">
+                {errorMessage}
+              </div>
+            )}
+
             <div>
               <input
                 type="email"
@@ -62,6 +132,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -73,21 +144,21 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
             <button
-              onClick={() =>
-                handleSubmit(
-                  new Event(
-                    "submit",
-                  ) as unknown as React.FormEvent<HTMLFormElement>,
-                )
-              }
+              type="submit"
               className="w-full py-3 rounded-lg font-medium transition duration-200"
-              style={{ backgroundColor: "#ECE9E9", color: "#002B56" }}
+              style={{
+                backgroundColor: "#ECE9E9",
+                color: "#002B56",
+                opacity: isLoading ? 0.7 : 1,
+              }}
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
 
             <div className="flex justify-between items-center py-2">
@@ -98,6 +169,7 @@ const LoginPage = () => {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  disabled={isLoading}
                 />
                 <label
                   htmlFor="remember"
@@ -108,19 +180,25 @@ const LoginPage = () => {
                 </label>
               </div>
 
-              <a href="#" className="text-sm text-blue-600 hover:underline">
+              <a
+                href="#"
+                className="text-sm text-blue-600 hover:underline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/forgot-password");
+                }}
+              >
                 Forgot password?
               </a>
             </div>
 
             <div className="text-center py-2" style={{ color: "#002B56" }}>
-              {" "}
               {/* Divider */}
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-full border-gray-300" />
                 <span className="px-2 text-gray-400">or</span>
                 <hr className="w-full border-gray-300" />
-              </div>{" "}
+              </div>
             </div>
 
             {/* Social Login Buttons */}
@@ -128,6 +206,7 @@ const LoginPage = () => {
               type="button"
               className="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 mb-3 hover:bg-gray-50 transition duration-200"
               style={{ color: "#002B56" }}
+              disabled={isLoading}
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path
@@ -154,6 +233,7 @@ const LoginPage = () => {
               <button
                 type="button"
                 className="flex-1 flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition duration-200"
+                disabled={isLoading}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -169,6 +249,7 @@ const LoginPage = () => {
               <button
                 type="button"
                 className="flex-1 flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition duration-200"
+                disabled={isLoading}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -193,7 +274,7 @@ const LoginPage = () => {
                 Sign Up
               </a>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
