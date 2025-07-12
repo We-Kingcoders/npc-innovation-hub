@@ -1,86 +1,209 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+// If using react-router-dom for navigation, import as needed
+// import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   // Form state
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [gender, setGender] = useState("male");
+  const [role, setRole] = useState("Member");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
-  // Error state
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    agreeTerms: "",
-  });
+  // API state
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // Simple email regex for demonstration
+  // Error state
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    gender?: string;
+    phone?: string;
+    role?: string;
+    agreeTerms?: string;
+    form?: string;
+  }>({});
+
+  // Email and phone regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^\+[0-9]{1,4}[0-9]{6,14}$/;
+
+  // Clear errors on input change
+  useEffect(() => {
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      if (firstName && newErrors.firstName) delete newErrors.firstName;
+      if (lastName && newErrors.lastName) delete newErrors.lastName;
+      if (email && newErrors.email) delete newErrors.email;
+      if (phone && newErrors.phone) delete newErrors.phone;
+      if (password && newErrors.password) delete newErrors.password;
+      if (
+        confirmPassword &&
+        password === confirmPassword &&
+        newErrors.confirmPassword
+      )
+        delete newErrors.confirmPassword;
+      if (gender && newErrors.gender) delete newErrors.gender;
+      if (role && newErrors.role) delete newErrors.role;
+      if (agreeTerms && newErrors.agreeTerms) delete newErrors.agreeTerms;
+      return newErrors;
+    });
+  }, [
+    firstName,
+    lastName,
+    email,
+    phone,
+    password,
+    confirmPassword,
+    gender,
+    role,
+    agreeTerms,
+  ]);
 
   const validate = () => {
-    const newErrors = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      agreeTerms: "",
-    };
+    const newErrors: typeof errors = {};
     let isValid = true;
 
     if (!firstName.trim()) {
-      newErrors.firstName = "First name is required.";
+      newErrors.firstName = "First name is required";
       isValid = false;
     }
     if (!lastName.trim()) {
-      newErrors.lastName = "Last name is required.";
+      newErrors.lastName = "Last name is required";
       isValid = false;
     }
     if (!email.trim()) {
-      newErrors.email = "Email is required.";
+      newErrors.email = "Email is required";
       isValid = false;
     } else if (!emailRegex.test(email)) {
-      newErrors.email = "Please enter a valid email address.";
+      newErrors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+      isValid = false;
+    } else if (!phoneRegex.test(phone)) {
+      newErrors.phone =
+        "Please enter a valid phone number in international format starting with '+' and country code";
       isValid = false;
     }
     if (!password) {
-      newErrors.password = "Password is required.";
+      newErrors.password = "Password is required";
       isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+    } else if (password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+      isValid = false;
+    }
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+      isValid = false;
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+    if (!gender) {
+      newErrors.gender = "Gender is required";
+      isValid = false;
+    }
+    if (!role) {
+      newErrors.role = "Role is required";
       isValid = false;
     }
     if (!agreeTerms) {
       newErrors.agreeTerms = "You must agree to terms and conditions.";
       isValid = false;
     }
-
     setErrors(newErrors);
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validate()) {
-      // Here you can send `firstName`, `lastName`, `email`, `password` to your API
-      console.log("Sign Up submitted:", {
-        firstName,
-        lastName,
-        email,
-        password,
-        agreeTerms,
-      });
-      // Optionally reset form:
-      // setFirstName('');
-      // setLastName('');
-      // setEmail('');
-      // setPassword('');
-      // setAgreeTerms(false);
-      // setErrors({ firstName: '', lastName: '', email: '', password: '', agreeTerms: '' });
+    setApiError("");
+    setSuccessMessage("");
+
+    if (!validate()) return;
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(
+        "https://npc-innovation-hub-bn.onrender.com/api/users/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim(),
+            password,
+            gender,
+            phone,
+            role,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.errors) {
+          const apiErrors = data.errors.reduce(
+            (
+              acc: Record<string, string>,
+              err: { path: string; message: string },
+            ) => {
+              acc[err.path] = err.message;
+              return acc;
+            },
+            {},
+          );
+          setErrors((prev) => ({ ...prev, ...apiErrors }));
+          throw new Error("Please correct the highlighted errors.");
+        }
+        if (data.data?.message) {
+          throw new Error(data.data.message);
+        }
+        throw new Error(`Registration failed (Status: ${response.status})`);
+      }
+
+      setSuccessMessage(
+        "Registration successful! A verification link has been sent to your email. Please check your inbox and verify your account before logging in.",
+      );
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setGender("male");
+      setPhone("");
+      setRole("Member");
+      setAgreeTerms(false);
+      setErrors({});
+    } catch (err) {
+      let message = "An unexpected error occurred.";
+      if (err instanceof Error) {
+        message = err.message.includes("Failed to fetch")
+          ? "Network error. Please check your connection."
+          : err.message;
+      }
+      setApiError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // const navigate = useNavigate(); // If you want to navigate after signup
 
   return (
     <div
@@ -91,9 +214,7 @@ const SignUpPage = () => {
       <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-36 py-12">
         <div className="mb-8">
           <h1 className="text-4xl font-bold leading-tight">
-            <span className="text-white " style={{ color: "#000000" }}>
-              Innovate.{" "}
-            </span>
+            <span className="text-black">Innovate. </span>
             <span className="text-cyan-400">Create.</span>
             <br />
             <span className="text-cyan-400" style={{ color: "#029DE0" }}>
@@ -101,26 +222,22 @@ const SignUpPage = () => {
             </span>
           </h1>
         </div>
-
         <div className="text-white">
           <h2 className="text-2xl font-semibold mb-6">Welcome!</h2>
-
           <p className="text-sm mb-4 max-w-sm leading-relaxed">
             To get started, create an account or log in. You can use your email
             address and password, or sign in quickly with Google, LinkedIn or
             GitHub.
           </p>
-
           <p className="text-sm max-w-sm leading-relaxed">
             If you already have an account, click the{" "}
             <span className="text-cyan-400 font-medium">
-              “Forgot password?”
+              "Forgot password?"
             </span>{" "}
             to recover your account.
           </p>
         </div>
       </div>
-
       {/* Right Side – Sign Up Form */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 py-12">
         <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
@@ -129,14 +246,25 @@ const SignUpPage = () => {
               Create an Account
             </h1>
 
-            {/* First Name */}
+            {apiError && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                {apiError}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
+                {successMessage}
+              </div>
+            )}
+
             <div className="mb-4">
               <input
                 type="text"
                 placeholder="Firstname"
                 className={`w-full px-4 py-3 border ${
                   errors.firstName ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                } rounded-lg focus:outline-none`}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
@@ -144,15 +272,13 @@ const SignUpPage = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
               )}
             </div>
-
-            {/* Last Name */}
             <div className="mb-4">
               <input
                 type="text"
                 placeholder="Lastname"
                 className={`w-full px-4 py-3 border ${
                   errors.lastName ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                } rounded-lg focus:outline-none`}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
@@ -160,15 +286,13 @@ const SignUpPage = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
               )}
             </div>
-
-            {/* Email */}
             <div className="mb-4">
               <input
                 type="email"
                 placeholder="Email"
                 className={`w-full px-4 py-3 border ${
                   errors.email ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                } rounded-lg focus:outline-none`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -176,15 +300,43 @@ const SignUpPage = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.email}</p>
               )}
             </div>
-
-            {/* Password */}
+            <div className="mb-4">
+              <input
+                type="tel"
+                placeholder="Phone (e.g., +2507xxxxxxxx)"
+                className={`w-full px-4 py-3 border ${
+                  errors.phone ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none`}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <select
+                className={`w-full px-4 py-3 border ${
+                  errors.gender ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none`}
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Select Gender</option>
+                <option value="male">male</option>
+                <option value="female">female</option>
+              </select>
+              {errors.gender && (
+                <p className="mt-1 text-sm text-red-500">{errors.gender}</p>
+              )}
+            </div>
             <div className="mb-4">
               <input
                 type="password"
                 placeholder="Password"
                 className={`w-full px-4 py-3 border ${
                   errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                } rounded-lg focus:outline-none`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -192,15 +344,45 @@ const SignUpPage = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.password}</p>
               )}
             </div>
-
-            {/* Terms & Conditions */}
+            <div className="mb-4">
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className={`w-full px-4 py-3 border ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none`}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.confirmPassword}
+                </p>
+              )}
+            </div>
+            <div className="mb-4">
+              <select
+                className={`w-full px-4 py-3 border ${
+                  errors.role ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none`}
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+                <option value="Moderator">Moderator</option>
+              </select>
+              {errors.role && (
+                <p className="mt-1 text-sm text-red-500">{errors.role}</p>
+              )}
+            </div>
             <div className="flex items-center mb-4">
               <input
                 type="checkbox"
                 id="agree"
                 checked={agreeTerms}
                 onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
               />
               <label htmlFor="agree" className="ml-2 text-sm text-gray-700">
                 I agree to terms and conditions
@@ -209,28 +391,48 @@ const SignUpPage = () => {
             {errors.agreeTerms && (
               <p className="mb-4 text-sm text-red-500">{errors.agreeTerms}</p>
             )}
-
-            {/* Sign Up Button */}
             <button
               type="submit"
               className={`w-full py-3 rounded-lg font-medium transition duration-200 mb-4 ${
-                agreeTerms
+                agreeTerms && !isLoading
                   ? "bg-[#ECE9E9] text-[#002B56] hover:bg-gray-200"
                   : "bg-gray-200 text-gray-500 cursor-not-allowed"
               }`}
-              disabled={!agreeTerms}
+              disabled={!agreeTerms || isLoading}
             >
-              Sign Up
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#002B56]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
-
-            {/* Divider */}
             <div className="flex items-center justify-center mb-4">
               <hr className="w-full border-gray-300" />
               <span className="px-2 text-gray-400">or</span>
               <hr className="w-full border-gray-300" />
             </div>
-
-            {/* Continue with Google */}
             <button
               type="button"
               className="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 mb-3 hover:bg-gray-50 transition duration-200"
@@ -255,8 +457,6 @@ const SignUpPage = () => {
               </svg>
               Continue with Google
             </button>
-
-            {/* LinkedIn & GitHub */}
             <div className="flex space-x-3 mb-6">
               <button
                 type="button"
@@ -270,7 +470,6 @@ const SignUpPage = () => {
                 </svg>
                 <span className="ml-2 text-sm text-[#002B56]">LinkedIn</span>
               </button>
-
               <button
                 type="button"
                 className="flex-1 flex items-center justify-center bg-white border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition duration-200"
@@ -284,8 +483,6 @@ const SignUpPage = () => {
                 <span className="ml-2 text-sm text-[#002B56]">GitHub</span>
               </button>
             </div>
-
-            {/* Already have account? */}
             <div className="text-center">
               <span className="text-[#002B56]">Already have an account? </span>
               <a
