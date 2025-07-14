@@ -31,7 +31,7 @@ const OTPVerification: React.FC = () => {
     try {
       // Use fetch for consistency with LoginPage
       const response = await fetch(
-        "https://npc-innovation-hub-bn.onrender.com/api/users/verify-otp",
+        "http://localhost:5000/api/users/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
