@@ -1,17 +1,27 @@
-import { dashboardStats } from "../../data/admin-data/dashboardStats";
+import { useEffect, useState } from "react";
+import { fetchDashboardStats } from "../../data/admin-data/dashboardStats";
+import type { DashboardStat } from "../../data/admin-data/dashboardStats";
 
 export default function DashboardStatsSecondary() {
-  return (
-    <div className="grid grid-cols-2 gap-6 mb-6">
-      {dashboardStats.slice(3).map((stat) => (
-        <div
-          key={stat.label}
-          className="bg-gray-100 rounded-xl flex flex-col items-center justify-center py-6"
-        >
-          <span className="text-4xl font-bold">{stat.value}</span>
-          <span className="text-lg">{stat.label}</span>
-        </div>
-      ))}
-    </div>
-  );
+  const [, setStats] = useState<DashboardStat[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardStats()
+      .then((data) => {
+        setStats(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to fetch stats");
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading dashboard stats...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  // There are no secondary stats, so show a message or nothing
+  return <div>No secondary stats available.</div>;
 }
