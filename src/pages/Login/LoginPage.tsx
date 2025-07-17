@@ -62,7 +62,7 @@ const LoginPage = () => {
 
             try {
               const res = await fetch(
-                "http://localhost:5000/api/users/auth/google/auth",
+                "https://npc-innovation-hub-bn.onrender.com/api/users/auth/google/auth",
                 {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
