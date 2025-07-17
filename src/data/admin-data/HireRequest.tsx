@@ -1,31 +1,23 @@
-export type HireRequest = {
-  id: number;
-  title: string;
+// types/hire-request.ts
+export type HireInquiry = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  company_name: string;
+  job_title: string;
+  country: string;
   message: string;
-  time: string;
-  imageUrl: string;
+  consent: boolean;
+  status: "Pending" | "Approved" | "Rejected";
+  created_at: string;
+  updated_at: string;
 };
 
-export const hireRequests: HireRequest[] = [
-  {
-    id: 1,
-    title: "You have hired by KPMG company",
-    message: "You’ve been hired. We’re excited to have you on board!",
-    time: "10:30 Am",
-    imageUrl: "/avatar1.png",
-  },
-  {
-    id: 2,
-    title: "You have hired by KPMG company",
-    message: "You’ve been hired. We’re excited to have you on board!",
-    time: "10:30 Am",
-    imageUrl: "/avatar2.png",
-  },
-  {
-    id: 3,
-    title: "You have hired by KPMG company",
-    message: "You’ve been hired. We’re excited to have you on board!",
-    time: "10:30 Am",
-    imageUrl: "/avatar3.png",
-  },
-];
+export type HireInquiriesResponse = {
+  status: string;
+  results: number;
+  data: {
+    inquiries: HireInquiry[];
+  };
+};
