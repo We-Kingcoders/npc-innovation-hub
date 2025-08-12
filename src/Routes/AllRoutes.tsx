@@ -209,7 +209,6 @@ const AllRoutes: React.FC = () => {
           <>
             <Header />
             <ChatCard />
-            <Footer />
           </>
         }
       />
