@@ -1,5 +1,5 @@
 // import React, { useState } from "react";
-import { ProjectTable } from "../../components/resources/ProjectTable";
+import ProjectTable from "../../components/resources/ProjectTable";
 import { useNavigate } from "react-router-dom";
 
 export const Projects: React.FC = () => {
