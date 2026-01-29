@@ -163,99 +163,281 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen" style={{ backgroundColor: "#002B56" }}>
-      {/* Left Side */}
-      <div className="w-1/2 flex flex-col justify-center px-36">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold leading-tight">
-            <span style={{ color: "#000000" }}>Innovate. </span>
-            <span className="text-cyan-400">Create.</span>
-            <br />
-            <span className="text-cyan-400" style={{ color: "#029DE0" }}>
-              Lead.
-            </span>
-          </h1>
-        </div>
-        <div className="text-white">
-          <h2 className="text-2xl font-semibold mb-6">Welcome Back!</h2>
-          <p className="text-sm mb-4 max-w-sm leading-relaxed">
-            You can log in with email & password, or sign in quickly with
-            Google.
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Header Section */}
+      <header className="bg-white shadow-sm py-4">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="text-2xl font-bold text-gray-800">
+              NpcInnovationHub
+            </div>
 
-      {/* Right Side */}
-      <div className="w-1/2 flex items-center justify-center px-8">
-        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <h1 className="text-xl font-semibold text-[#002B56] text-center mb-6">
-              Login to your Account
-            </h1>
-            {errorMessage && (
-              <div className="mb-2 p-2 bg-red-100 text-red-700 rounded">
-                {errorMessage}
+            {/* Navigation Links */}
+            <nav>
+              <ul className="flex space-x-8 items-center">
+                <li>
+                  <a
+                    href="/"
+                    className="text-blue-700 hover:text-blue-800 transition-colors duration-200 font-medium"
+                    style={{ color: "#0175C3" }}
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/about"
+                    className="text-gray-600 hover:text-blue-700 transition-colors duration-200 font-medium"
+                    style={{ color: "#0175C3" }}
+                  >
+                    About Hub
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/members"
+                    className="text-gray-600 hover:text-blue-700 transition-colors duration-200 font-medium"
+                    style={{ color: "#0175C3" }}
+                  >
+                    Members
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/projects"
+                    className="text-gray-600 hover:text-blue-700 transition-colors duration-200 font-medium"
+                    style={{ color: "#0175C3" }}
+                  >
+                    Projects
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content - Two Column Layout */}
+      <div className="flex flex-1">
+        {/* Left Side - Image Background with Text Overlay */}
+        <div className="w-1/2 relative">
+          {/* Image Background */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')",
+              // You can replace this URL with your actual image
+              // For local images: backgroundImage: "url('/path/to/your/image.jpg')"
+            }}
+          >
+            {/* Dark Overlay for Better Text Contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+          </div>
+
+          {/* Content Container - Text Overlay */}
+          <div className="relative z-10 h-full flex items-center p-12">
+            <div className="max-w-lg text-white">
+              {/* Prewritten Words with Enhanced Visibility */}
+              <div className="mb-10">
+                <h1 className="text-5xl font-bold leading-tight mb-6 drop-shadow-lg">
+                  <span className="text-white">Innovate. </span>
+                  <span className="text-cyan-300">Create.</span>
+                  <br />
+                  <span className="text-cyan-400">Lead.</span>
+                </h1>
+                <h2 className="text-3xl font-semibold mb-6 drop-shadow-md">
+                  Welcome Back!
+                </h2>
+                <p className="text-xl leading-relaxed drop-shadow-md backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                  You can log in with email & password, or sign in quickly with
+                  Google. Join our community of innovators shaping the future
+                  together.
+                </p>
               </div>
-            )}
-            <input
-              type="email"
-              placeholder="Enter Email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-            <input
-              type="password"
-              placeholder="Your password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              className="w-full py-3 bg-[#ECE9E9] text-[#002B56] rounded-lg font-medium"
-              disabled={isLoading}
-            >
-              {isLoading ? "Logging in..." : "Login"}
-            </button>
-            <div className="flex justify-between items-center pt-2">
-              <label className="flex items-center text-sm text-[#002B56]">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                  className="mr-2"
-                  disabled={isLoading}
-                />
-                Remember me!
-              </label>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/forgot-password");
-                }}
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Forgot password?
-              </a>
+
+              {/* Feature Highlights */}
+              <div className="mt-12 space-y-6">
+                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                  <div className="mr-4">
+                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xl">🚀</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Innovate Together</h3>
+                    <p className="text-gray-200">
+                      Collaborate with like-minded creators
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                  <div className="mr-4">
+                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xl">💡</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Create Solutions</h3>
+                    <p className="text-gray-200">
+                      Build projects that make a difference
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                  <div className="mr-4">
+                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xl">👥</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Lead Communities</h3>
+                    <p className="text-gray-200">
+                      Inspire and guide fellow innovators
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="text-center text-[#002B56] py-2">OR</div>
-            <div id="google-login-btn" className="w-full mb-3"></div>
-            <div className="text-center pt-4">
-              <span className="text-[#002B56]">Not yet account? </span>
-              <a
-                href="/signup"
-                className="text-blue-600 hover:underline font-medium"
+          </div>
+        </div>
+
+        {/* Right Side - Maximized Login Card */}
+        <div
+          className="w-1/2 flex items-center justify-center p-12"
+          style={{ backgroundColor: "#002B56" }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl p-12 w-full max-w-2xl">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="text-center mb-10">
+                <h1 className="text-3xl font-bold text-[#002B56] mb-4">
+                  Login to your Account
+                </h1>
+                <p className="text-gray-600">
+                  Access your dashboard and continue your innovation journey
+                </p>
+              </div>
+
+              {errorMessage && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-700 text-center">{errorMessage}</p>
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 bg-[#002B56] text-white rounded-xl font-semibold text-lg hover:bg-blue-800 transition-colors duration-200 shadow-lg"
+                disabled={isLoading}
               >
-                Sign Up
-              </a>
-            </div>
-          </form>
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Logging in...
+                  </span>
+                ) : (
+                  "Login"
+                )}
+              </button>
+
+              <div className="flex justify-between items-center pt-4">
+                <label className="flex items-center text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={() => setRememberMe(!rememberMe)}
+                    className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                    disabled={isLoading}
+                  />
+                  <span className="ml-2 text-lg">Remember me</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => navigate("/forgot-password")}
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-lg font-medium"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
+              <div className="relative py-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-4 bg-white text-gray-500 text-lg">
+                    OR CONTINUE WITH
+                  </span>
+                </div>
+              </div>
+
+              <div id="google-login-btn" className="w-full"></div>
+
+              <div className="text-center pt-8 border-t border-gray-200">
+                <p className="text-gray-600 text-lg">
+                  Don't have an account?{" "}
+                  <a
+                    href="/signup"
+                    className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
+                  >
+                    Sign up here
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
