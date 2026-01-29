@@ -52,7 +52,7 @@ export default function Header() {
                 aria-expanded={showAboutDropdown}
                 aria-haspopup="true"
               >
-                About Hub
+                AboutHub
               </button>
 
               {/* Dropdown Menu */}
