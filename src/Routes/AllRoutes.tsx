@@ -88,8 +88,8 @@ const AllRoutes: React.FC = () => {
         path="/login"
         element={
           <>
-            <Header />
             <LoginPage />
+            {/* <Header /> */}
           </>
         }
       />
