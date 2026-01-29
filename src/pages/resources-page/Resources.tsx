@@ -1,5 +1,5 @@
 import React from "react";
-import { ResourceTable } from "../../components/resources/ResourceTable";
+import ResourceTable from "../../components/resources/ResourceTable";
 
 export const Resources: React.FC = () => (
   <div>
