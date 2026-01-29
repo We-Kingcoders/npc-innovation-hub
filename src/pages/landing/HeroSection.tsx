@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 /**
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
  *
  * Features:
  * - Subtle diagonal split background (white left, navy right)
- * - Responsive navigation with hamburger menu
+ * - Responsive navigation with hamburger menu and AboutHub dropdown
  * - Two-column layout with hero text and image
  * - "Innovate. Create. Lead." tagline positioned below hero image
  * - Fully accessible and mobile-responsive
@@ -18,10 +18,30 @@ import { Link } from "react-router-dom";
  * - Reduced diagonal angle for softer transition
  * - Navy background pushed further right
  * - Slogan repositioned directly under hero image
+ * - Integrated AboutHub dropdown functionality
  */
 
 const HeroSection = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAboutDropdown, setShowAboutDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLLIElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowAboutDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="w-full min-h-screen bg-white relative overflow-hidden flex flex-col">
@@ -125,24 +145,50 @@ const HeroSection = () => {
                   </svg>
                 </Link>
 
-                <Link
-                  to="/abouthub"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-between px-4 py-3 text-[#002B56] font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                >
-                  <span>AboutHub</span>
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
+                {/* AboutHub with Sub-menu */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between px-4 py-3 text-[#002B56] font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                    <span>About Hub</span>
+                  </div>
+                  <div className="ml-4 space-y-1">
+                    <Link
+                      to="/blog"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-between px-4 py-2 text-[#002B56] text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                    >
+                      <span>Blog</span>
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                    <Link
+                      to="/hub-information"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-between px-4 py-2 text-[#002B56] text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                    >
+                      <span>Hub Information</span>
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
 
                 <Link
                   to="/members"
@@ -217,12 +263,58 @@ const HeroSection = () => {
             >
               Home
             </Link>
-            <Link
-              to="/abouthub"
-              className="text-[#002B56] font-medium text-[1.125rem] xl:text-[1.25rem] hover:text-[#00A0E3] transition-colors duration-200"
-            >
-              AboutHub
-            </Link>
+
+            {/* AboutHub Dropdown */}
+            <li className="relative list-none z-50" ref={dropdownRef}>
+              <button
+                onClick={() => setShowAboutDropdown(!showAboutDropdown)}
+                className="text-[#002B56] font-medium text-[1.125rem] xl:text-[1.25rem] hover:text-[#00A0E3] transition-colors duration-200 flex items-center gap-1"
+                aria-expanded={showAboutDropdown}
+                aria-haspopup="true"
+              >
+                AboutHub
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    showAboutDropdown ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showAboutDropdown && (
+                <div className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <ul>
+                    <li>
+                      <Link
+                        to="/blog"
+                        onClick={() => setShowAboutDropdown(false)}
+                        className="block w-full px-5 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#00A0E3] transition-colors duration-200 cursor-pointer"
+                      >
+                        Blog
+                      </Link>
+                    </li>
+                    <li className="border-t border-gray-100">
+                      <Link
+                        to="/hub-information"
+                        onClick={() => setShowAboutDropdown(false)}
+                        className="block w-full px-5 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#00A0E3] transition-colors duration-200 cursor-pointer"
+                      >
+                        Hub Information
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+
             <Link
               to="/members"
               className="text-[#002B56] font-medium text-[1.125rem] xl:text-[1.25rem] hover:text-[#00A0E3] transition-colors duration-200"
