@@ -1,7 +1,6 @@
 import React from "react";
 import { Sidebar } from "../Sidebar";
 import { Topbar } from "../Topbar";
-import Header from "../../Header";
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -9,7 +8,6 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   return (
     <div className="flex flex-col min-h-screen bg-[#F9F9FB]">
       {/* Full width Header on top */}
-      <Header />
 
       {/* Below Header: sidebar + main content */}
       <div className="flex flex-1 mt-6">

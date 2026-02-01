@@ -167,7 +167,7 @@ const AllRoutes: React.FC = () => {
         path="/resources-room"
         element={
           <>
-            <Header />
+            {/* <Header /> */}
             <Home />
             <Footer />
           </>
