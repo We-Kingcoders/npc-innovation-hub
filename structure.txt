@@ -1,0 +1,191 @@
+NPC-INNOVATION-HUB/
+├── public/
+│   ├── assets/
+│   │   └── images/
+│   ├── members-images/
+│   ├── index.html
+│   └── vite.svg
+│
+├── src/
+│   ├── api/
+│   │   ├── client.ts
+│   │   └── routes.ts
+│   │
+│   ├── assets/
+│   │   └── react.svg
+│   │
+│   ├── components/
+│   │   ├── admin-components/
+│   │   │   ├── AddResourceForm.tsx
+│   │   │   ├── BlogTable.tsx
+│   │   │   ├── DashboardStats.tsx
+│   │   │   ├── DashboardStatsSecondary.tsx
+│   │   │   ├── HireRequestDetail.tsx
+│   │   │   ├── HireRequests.tsx
+│   │   │   ├── MembersManagement.tsx
+│   │   │   ├── ProjectsTable.tsx
+│   │   │   ├── ResourceTable.tsx
+│   │   │   ├── RevenueWidget.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Topbar.tsx
+│   │   │
+│   │   ├── button/
+│   │   │   ├── button.test.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── styles.module.css
+│   │   │
+│   │   ├── member/
+│   │   │   ├── layouts/
+│   │   │   │   └── DashboardLayout.tsx
+│   │   │   ├── LeftPanel.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   ├── Topbar.tsx
+│   │   │   └── MemberForm.tsx
+│   │   │
+│   │   ├── membercard/
+│   │   │   └── MemberCard.tsx
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── ProjectCard.tsx
+│   │   │   ├── ProjectHero.tsx
+│   │   │   └── ProjectsHighlightSection.tsx
+│   │   │
+│   │   ├── resources/
+│   │   │   ├── CategorySection.tsx
+│   │   │   ├── LikeIcon.tsx
+│   │   │   ├── NavMenu.tsx
+│   │   │   ├── ProjectTable.tsx
+│   │   │   ├── ResourceList.tsx
+│   │   │   ├── ResourceTable.tsx
+│   │   │   ├── SubcategoryResourceGrid.tsx
+│   │   │   └── TrustedBy.tsx
+│   │   │
+│   │   └── Header.tsx
+│   │
+│   ├── contexts/
+│   │   ├── AuthContext.tsx
+│   │   └── BookingContext.tsx
+│   │
+│   ├── data/
+│   │   ├── admin-data/
+│   │   │   ├── categories.tsx
+│   │   │   ├── dashboardStats.tsx
+│   │   │   ├── HireRequest.tsx
+│   │   │   ├── resources.tsx
+│   │   │   └── sidebarLinks.tsx
+│   │   │
+│   │   ├── iconUtils.ts
+│   │   ├── members.ts
+│   │   └── projectsData.ts
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   ├── useBooking.ts
+│   │   └── useForm.ts
+│   │
+│   ├── pages/
+│   │   ├── AboutHub/
+│   │   │   └── Topics.tsx
+│   │   │
+│   │   ├── add-project-page/
+│   │   │   └── AddProject.tsx
+│   │   │
+│   │   ├── Admin-pages/
+│   │   │   ├── AddResource.tsx
+│   │   │   ├── AdminDashboard.tsx
+│   │   │   ├── AdminResources.tsx
+│   │   │   ├── BlogTables.tsx
+│   │   │   ├── HireUsRequests.tsx
+│   │   │   ├── MemberManagement.tsx
+│   │   │   └── ProjectTables.tsx
+│   │   │
+│   │   ├── all-member-page/
+│   │   │   ├── InnovationHubMembersPage.tsx
+│   │   │   └── MemberDetailPage.tsx
+│   │   │
+│   │   ├── events-page/
+│   │   │   └── Events.tsx
+│   │   │
+│   │   ├── HireUs/
+│   │   │   ├── FirstSection.tsx
+│   │   │   ├── form.tsx
+│   │   │   ├── hero.tsx
+│   │   │   ├── latespro.tsx
+│   │   │   ├── partners.tsx
+│   │   │   └── services.tsx
+│   │   │
+│   │   ├── Hub-info/
+│   │   │   ├── FAQs.tsx
+│   │   │   ├── Help.tsx
+│   │   │   ├── MissionSection.tsx
+│   │   │   ├── Support.tsx
+│   │   │   └── WhyHub.tsx
+│   │   │
+│   │   ├── landing/
+│   │   │   ├── Expertise.tsx
+│   │   │   ├── HeroSection.tsx
+│   │   │   ├── HubMembersSection.tsx
+│   │   │   ├── Mission.tsx
+│   │   │   ├── OurHubSection.module.css
+│   │   │   ├── Skills.tsx
+│   │   │   └── TeamCaptain.tsx
+│   │   │
+│   │   ├── Login/
+│   │   │   ├── LoginPage.tsx
+│   │   │   ├── OTPVerification.tsx
+│   │   │   └── SignUp.tsx
+│   │   │
+│   │   ├── member-page/
+│   │   │   └── Dashboard.tsx
+│   │   │
+│   │   ├── messages-page/
+│   │   │   ├── HubChannel.tsx
+│   │   │   └── Messages.tsx
+│   │   │
+│   │   ├── project-page/
+│   │   │   └── ProjectsPage.tsx
+│   │   │
+│   │   ├── projects-page/
+│   │   │   └── Projects.tsx
+│   │   │
+│   │   ├── resources-page/
+│   │   │   └── Resources.tsx
+│   │   │
+│   │   └── resources-room/
+│   │       ├── AllResources.tsx
+│   │       ├── Categories.tsx
+│   │       ├── Home.tsx
+│   │       └── SubcategoryResults.tsx
+│   │
+│   ├── Routes/
+│   │   └── AllRoutes.tsx
+│   │
+│   ├── styles/
+│   │   ├── global.css
+│   │   └── variable.css
+│   │
+│   ├── App.test.tsx
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── setupTest.ts
+│   ├── vite-env.d.ts
+│   └── index.css
+│
+├── .env
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── jest.config.js
+├── jest.setup.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── README.md
+├── structure.txt
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.jest.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
