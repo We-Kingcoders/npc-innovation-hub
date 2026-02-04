@@ -28,7 +28,7 @@ export default function HireRequests() {
       try {
         setLoading(true);
         const response = await fetch(
-          "https://npc-innovation-hub-bn.onrender.com/api/admin/hire-inquiries",
+          "http://localhost:5000/api/admin/hire-inquiries",
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -80,7 +80,7 @@ export default function HireRequests() {
     if (!selectedInquiryId) return;
     try {
       const response = await fetch(
-        `https://npc-innovation-hub-bn.onrender.com/api/admin/hire-inquiries/${selectedInquiryId}/reply`,
+        `http://localhost:5000/api/admin/hire-inquiries/${selectedInquiryId}/reply`,
         {
           method: "POST",
           headers: {

@@ -137,22 +137,19 @@ const SignUpPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://npc-innovation-hub-bn.onrender.com/api/users/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            email: email.trim(),
-            password,
-            gender,
-            phone,
-            role,
-          }),
-        },
-      );
+      const response = await fetch("http://localhost:5000/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          password,
+          gender,
+          phone,
+          role,
+        }),
+      });
 
       const data = await response.json();
 

@@ -16,7 +16,7 @@ export default function HireRequestDetail() {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://npc-innovation-hub-bn.onrender.com/api/admin/hire-inquiries/${id}`,
+          `http://localhost:5000/api/admin/hire-inquiries/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
