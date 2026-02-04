@@ -23,7 +23,7 @@ export const InnovationHubMembersPage: React.FC = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://npc-innovation-hub-bn.onrender.com/api/members?page=${page}&limit=${PAGE_SIZE}`,
+          `http://localhost:5000/api/members?page=${page}&limit=${PAGE_SIZE}`,
         );
         if (!response.ok) throw new Error("Failed to fetch members");
 
