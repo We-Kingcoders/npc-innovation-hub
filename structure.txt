@@ -8,6 +8,9 @@ NPC-INNOVATION-HUB/
 │
 ├── src/
 │   ├── api/
+│   │   ├── admin/
+│   │   │   └── member.api.ts
+│   │   ├── authService.ts
 │   │   ├── client.ts
 │   │   └── routes.ts
 │   │
@@ -18,6 +21,7 @@ NPC-INNOVATION-HUB/
 │   │   ├── admin-components/
 │   │   │   ├── AddResourceForm.tsx
 │   │   │   ├── BlogTable.tsx
+│   │   │   ├── ConfirmationModal.tsx
 │   │   │   ├── DashboardStats.tsx
 │   │   │   ├── DashboardStatsSecondary.tsx
 │   │   │   ├── HireRequestDetail.tsx
@@ -27,7 +31,10 @@ NPC-INNOVATION-HUB/
 │   │   │   ├── ResourceTable.tsx
 │   │   │   ├── RevenueWidget.tsx
 │   │   │   ├── Sidebar.tsx
-│   │   │   └── Topbar.tsx
+│   │   │   ├── Topbar.tsx
+│   │   │   ├── UserAvatar.tsx
+│   │   │   ├── UserManagementFilters.tsx
+│   │   │   └── UserManagementTable.tsx 
 │   │   │
 │   │   ├── button/
 │   │   │   ├── button.test.tsx
@@ -61,6 +68,7 @@ NPC-INNOVATION-HUB/
 │   │   │   ├── SubcategoryResourceGrid.tsx
 │   │   │   └── TrustedBy.tsx
 │   │   │
+│   │   ├── ProtectedRoute.tsx
 │   │   └── Header.tsx
 │   │
 │   ├── contexts/
@@ -82,7 +90,6 @@ NPC-INNOVATION-HUB/
 │   ├── hooks/
 │   │   ├── useAuth.ts
 │   │   ├── useBooking.ts
-│   │   ├── useClickOutside.ts
 │   │   └── useForm.ts
 │   │
 │   ├── pages/
@@ -133,8 +140,10 @@ NPC-INNOVATION-HUB/
 │   │   │   └── TeamCaptain.tsx
 │   │   │
 │   │   ├── Login/
+│   │   │   ├── ForgotPassword.tsx
 │   │   │   ├── LoginPage.tsx
 │   │   │   ├── OTPVerification.tsx
+│   │   │   ├── ResetPassword.tsx
 │   │   │   └── SignUp.tsx
 │   │   │
 │   │   ├── member-page/
@@ -165,6 +174,9 @@ NPC-INNOVATION-HUB/
 │   ├── styles/
 │   │   ├── global.css
 │   │   └── variable.css
+│   │
+│   ├── styles/
+│   │   └── user.types.ts
 │   │
 │   ├── App.test.tsx
 │   ├── App.tsx
