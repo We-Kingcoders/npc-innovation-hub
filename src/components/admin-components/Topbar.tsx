@@ -1,10 +1,32 @@
 import { Search, Sun, Moon, Bell, User, Settings } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { getUserFullName } from "../../types/user.types";
 
 export default function Topbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Get user data and logout function from AuthContext
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      setShowProfile(false); // Close dropdown
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Use helper function from user.types.ts or fallback to defaults
+  const displayName = user ? getUserFullName(user) : "Admin User";
+  const displayEmail = user?.email || "admin@example.com";
 
   return (
     <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -141,8 +163,10 @@ export default function Topbar() {
             {showProfile && (
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100">
-                  <p className="font-semibold text-gray-900">Admin User</p>
-                  <p className="text-xs text-gray-500">admin@example.com</p>
+                  <p className="font-semibold text-gray-900">{displayName}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {displayEmail}
+                  </p>
                 </div>
                 <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                   View Profile
@@ -151,8 +175,16 @@ export default function Topbar() {
                   Account Settings
                 </button>
                 <div className="border-t border-gray-100">
-                  <button className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 transition-colors">
-                    Sign Out
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className={`
+                      w-full px-4 py-2.5 text-left text-sm 
+                      ${isLoggingOut ? "text-gray-400 cursor-not-allowed" : "text-red-600 hover:bg-red-50"}
+                      transition-colors
+                    `}
+                  >
+                    {isLoggingOut ? "Signing out..." : "Sign Out"}
                   </button>
                 </div>
               </div>
