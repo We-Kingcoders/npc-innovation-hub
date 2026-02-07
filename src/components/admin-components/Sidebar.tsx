@@ -13,14 +13,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
-
-type SidebarProps = {
-  user: {
-    name: string;
-    avatar?: string;
-    role?: string;
-  };
-};
+import { useAuth } from "../../hooks/useAuth";
+import { getUserFullName, getUserInitials } from "../../types/user.types";
 
 const iconComponents = {
   dashboard: LayoutDashboard,
@@ -40,21 +34,33 @@ const iconColors = {
   members: "from-purple-500 to-violet-600",
 };
 
-export default function Sidebar({ user }: SidebarProps) {
+export default function Sidebar() {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
+  // Get user data and logout function from AuthContext
+  const { user, logout } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Use helper functions from user.types.ts or fallback to defaults
+  const displayName = user ? getUserFullName(user) : "Admin User";
+  const displayRole = user?.role || "Administrator";
+  const displayAvatar = user?.image || null;
+  const displayInitials = user ? getUserInitials(user) : "AU";
 
   return (
     <>
@@ -110,15 +116,15 @@ export default function Sidebar({ user }: SidebarProps) {
             >
               {/* Avatar */}
               <div className="relative">
-                {user.avatar ? (
+                {displayAvatar ? (
                   <img
-                    src={user.avatar}
-                    alt={user.name}
+                    src={displayAvatar}
+                    alt={displayName}
                     className="w-12 h-12 rounded-full object-cover ring-2 ring-white/20"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/20 shadow-lg">
-                    {getInitials(user.name)}
+                    {displayInitials}
                   </div>
                 )}
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-[#07295B]" />
@@ -130,10 +136,10 @@ export default function Sidebar({ user }: SidebarProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-white font-semibold text-sm leading-tight">
-                        {user.name}
+                        {displayName}
                       </p>
                       <p className="text-blue-200 text-xs mt-0.5">
-                        {user.role || "Administrator"}
+                        {displayRole}
                       </p>
                     </div>
                     <ChevronDown
@@ -273,17 +279,20 @@ export default function Sidebar({ user }: SidebarProps) {
               transition-all duration-200
               group
               ${isCollapsed ? "justify-center px-3" : ""}
+              ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}
             `}
-            onClick={() => {
-              // Add logout logic here
-              console.log("Logout clicked");
-            }}
+            onClick={handleLogout}
+            disabled={isLoggingOut}
           >
             <LogOut
               size={20}
-              className="group-hover:scale-110 transition-transform"
+              className={`group-hover:scale-110 transition-transform ${
+                isLoggingOut ? "animate-spin" : ""
+              }`}
             />
-            {!isCollapsed && <span>Logout</span>}
+            {!isCollapsed && (
+              <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+            )}
           </button>
         </div>
       </aside>
