@@ -1,9 +1,4 @@
-/**
- * Authentication Service
- *
- * Centralized service for all authentication-related API calls.
- * Handles token management, error formatting, and secure communication.
- */
+import type { User } from "../types/user.types";
 
 const API_BASE_URL = "http://localhost:5000/api/users";
 
@@ -49,6 +44,9 @@ export interface ApiError {
   message: string;
   statusCode?: number;
 }
+
+// User type is imported from user.types.ts
+// No need to redefine it here
 
 // ==================== HELPER FUNCTIONS ====================
 
@@ -223,18 +221,33 @@ export const authService = {
   },
 
   /**
+   * Fetch current user profile from backend
+   *
+   * @returns User profile data
+   * @throws Error if not authenticated or request fails
+   */
+  async fetchCurrentUser(): Promise<User> {
+    const response = await apiRequest<{ data: { user: User } }>("/me", {
+      method: "GET",
+      headers: getAuthHeader(),
+    });
+
+    return response.data.user;
+  },
+
+  /**
    * Logout current user
-   * Clears local storage and invalidates session
+   * Calls backend logout endpoint and clears local storage
    */
   async logout(): Promise<void> {
     try {
-      // Call logout endpoint if it exists
+      // Call backend logout endpoint
       await apiRequest("/logout", {
         method: "POST",
         headers: getAuthHeader(),
       });
     } catch (error) {
-      // Continue with local logout even if API call fails
+      // Log error but continue with local logout
       console.error("Logout API error:", error);
     } finally {
       // Always clear local storage
