@@ -156,12 +156,18 @@ export default function Sidebar() {
             {/* User Dropdown Menu */}
             {showUserMenu && !isCollapsed && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl overflow-hidden z-50">
-                <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <a
+                  href="/admin/profile"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  View Profile
+                </a>
+                <a
+                  href="/admin/profile/settings"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                >
                   Profile Settings
-                </button>
-                <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors border-t border-gray-100">
-                  Preferences
-                </button>
+                </a>
               </div>
             )}
           </div>
