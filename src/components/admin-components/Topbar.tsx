@@ -168,12 +168,18 @@ export default function Topbar() {
                     {displayEmail}
                   </p>
                 </div>
-                <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <a
+                  href="/admin/profile"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   View Profile
-                </button>
-                <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                </a>
+                <a
+                  href="/admin/profile/settings"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   Account Settings
-                </button>
+                </a>
                 <div className="border-t border-gray-100">
                   <button
                     onClick={handleLogout}
