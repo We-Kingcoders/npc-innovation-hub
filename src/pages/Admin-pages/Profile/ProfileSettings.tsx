@@ -1,14 +1,12 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { profileService } from "../../../api/profileService";
 import type { UpdateProfilePayload } from "../../../api/profileService";
 import ChangePasswordForm from "../../../components/admin-components/ChangePasswordForm";
-import {
-  getUserFullName,
-  getUserInitials,
-} from "../../../types/user.types";
-import type { User, Gender } from "../../../types/user.types";
-import { User as UserIcon, Mail, Phone, Users, Image, Save, X } from "lucide-react";
+import { getUserInitials } from "../../../types/user.types";
+import type { Gender } from "../../../types/user.types";
+import { User as UserIcon, Mail, Save, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 interface ProfileFormData {
@@ -37,7 +35,6 @@ export default function ProfileSettings() {
     image: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ export default function ProfileSettings() {
   }, [contextUser]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -228,7 +225,9 @@ export default function ProfileSettings() {
                   placeholder="Enter first name"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.firstName}
+                  </p>
                 )}
               </div>
 
