@@ -12,6 +12,7 @@ NPC-INNOVATION-HUB/
 │   │   │   └── member.api.ts
 │   │   ├── authService.ts
 │   │   ├── client.ts
+│   │   ├── profileService.ts
 │   │   └── routes.ts
 │   │
 │   ├── assets/
@@ -21,6 +22,7 @@ NPC-INNOVATION-HUB/
 │   │   ├── admin-components/
 │   │   │   ├── AddResourceForm.tsx
 │   │   │   ├── BlogTable.tsx
+│   │   │   ├── ChangePasswordForm.tsx
 │   │   │   ├── ConfirmationModal.tsx
 │   │   │   ├── DashboardStats.tsx
 │   │   │   ├── DashboardStatsSecondary.tsx
@@ -100,6 +102,10 @@ NPC-INNOVATION-HUB/
 │   │   │   └── AddProject.tsx
 │   │   │
 │   │   ├── Admin-pages/
+│   │   │   ├── Profile/
+│   │   |   │   ├── ProfileSettings.tsx
+│   │   |   │   └── ViewProfile.tsx
+│   │   │   |
 │   │   │   ├── AddResource.tsx
 │   │   │   ├── AdminDashboard.tsx
 │   │   │   ├── AdminResources.tsx
