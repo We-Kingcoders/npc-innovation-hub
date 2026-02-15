@@ -9,7 +9,8 @@ NPC-INNOVATION-HUB/
 ├── src/
 │   ├── api/
 │   │   ├── admin/
-│   │   │   └── member.api.ts
+│   │   |   ├── member.api.ts
+│   │   │   └── resource.api.ts
 │   │   ├── authService.ts
 │   │   ├── client.ts
 │   │   ├── profileService.ts
@@ -181,7 +182,8 @@ NPC-INNOVATION-HUB/
 │   │   ├── global.css
 │   │   └── variable.css
 │   │
-│   ├── styles/
+│   ├── types/
+│   |   ├── resource.types.ts
 │   │   └── user.types.ts
 │   │
 │   ├── App.test.tsx
