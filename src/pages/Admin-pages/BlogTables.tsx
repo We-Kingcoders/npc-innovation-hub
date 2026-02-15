@@ -52,15 +52,19 @@ export default function BlogTables() {
       };
       const image = formData.get("image") as File | null;
 
+      console.log("Submitting blog data:", data);
+
       const success = await handleCreateBlog(data, image);
       if (success) {
         setIsAddModalOpen(false);
         showToast("Blog created successfully!", "success");
       } else {
-        showToast("Failed to create blog", "error");
+        // Error message is already set in the hook
+        showToast(error || "Failed to create blog", "error");
       }
     } catch (err) {
-      showToast("An error occurred while creating the blog", "error");
+      console.error("Unexpected error in handleCreate:", err);
+      showToast("An unexpected error occurred", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -99,10 +103,11 @@ export default function BlogTables() {
         setSelectedBlog(null);
         showToast("Blog updated successfully!", "success");
       } else {
-        showToast("Failed to update blog", "error");
+        showToast(error || "Failed to update blog", "error");
       }
     } catch (err) {
-      showToast("An error occurred while updating the blog", "error");
+      console.error("Unexpected error in handleUpdate:", err);
+      showToast("An unexpected error occurred", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -128,10 +133,11 @@ export default function BlogTables() {
         setSelectedBlog(null);
         showToast("Blog deleted successfully!", "success");
       } else {
-        showToast("Failed to delete blog", "error");
+        showToast(error || "Failed to delete blog", "error");
       }
     } catch (err) {
-      showToast("An error occurred while deleting the blog", "error");
+      console.error("Unexpected error in confirmDelete:", err);
+      showToast("An unexpected error occurred", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -145,7 +151,7 @@ export default function BlogTables() {
       const newStatus = blog?.isPublished ? "unpublished" : "published";
       showToast(`Blog ${newStatus} successfully!`, "success");
     } else {
-      showToast("Failed to update blog status", "error");
+      showToast(error || "Failed to update blog status", "error");
     }
   };
 
