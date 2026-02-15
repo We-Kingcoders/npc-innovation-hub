@@ -9,6 +9,7 @@ NPC-INNOVATION-HUB/
 ├── src/
 │   ├── api/
 │   │   ├── admin/
+│   │   |   ├── blog.api.ts
 │   │   |   ├── member.api.ts
 │   │   │   └── resource.api.ts
 │   │   ├── authService.ts
@@ -21,12 +22,16 @@ NPC-INNOVATION-HUB/
 │   │
 │   ├── components/
 │   │   ├── admin-components/
+│   │   │   ├── AddBlogModal.tsx
 │   │   │   ├── AddResourceForm.tsx
+│   │   │   ├── BlogForm.tsx
 │   │   │   ├── BlogTable.tsx
 │   │   │   ├── ChangePasswordForm.tsx
 │   │   │   ├── ConfirmationModal.tsx
 │   │   │   ├── DashboardStats.tsx
 │   │   │   ├── DashboardStatsSecondary.tsx
+│   │   │   ├── DeleteConfirmModal.tsx
+│   │   │   ├── EditBlogModal.tsx
 │   │   │   ├── HireRequestDetail.tsx
 │   │   │   ├── HireRequests.tsx
 │   │   │   ├── MembersManagement.tsx
@@ -34,6 +39,7 @@ NPC-INNOVATION-HUB/
 │   │   │   ├── ResourceTable.tsx
 │   │   │   ├── RevenueWidget.tsx
 │   │   │   ├── Sidebar.tsx
+│   │   │   ├── Toast.tsx
 │   │   │   ├── Topbar.tsx
 │   │   │   ├── UserAvatar.tsx
 │   │   │   ├── UserManagementFilters.tsx
@@ -91,7 +97,9 @@ NPC-INNOVATION-HUB/
 │   │   └── projectsData.ts
 │   │
 │   ├── hooks/
+│   │   ├── useAdminResources.ts
 │   │   ├── useAuth.ts
+│   │   ├── useBlogs.ts
 │   │   ├── useBooking.ts
 │   │   └── useForm.ts
 │   │
@@ -179,10 +187,12 @@ NPC-INNOVATION-HUB/
 │   │   └── AllRoutes.tsx
 │   │
 │   ├── styles/
+│   |   ├── animations.css
 │   │   ├── global.css
 │   │   └── variable.css
 │   │
 │   ├── types/
+│   |   ├── blog.types.ts
 │   |   ├── resource.types.ts
 │   │   └── user.types.ts
 │   │
