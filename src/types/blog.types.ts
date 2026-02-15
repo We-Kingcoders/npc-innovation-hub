@@ -52,9 +52,9 @@ export interface UpdateBlogPayload {
 }
 
 export const BLOG_CATEGORIES = [
-  "Frontend",
-  "Backend",
-  "CyberSecurity",
+  "Front-end",
+  "Back-end",
+  "Cyber security",
 ] as const;
 
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
