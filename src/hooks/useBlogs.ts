@@ -14,6 +14,28 @@ import {
   togglePublishBlog,
 } from "../api/admin/blog.api";
 
+// Error extraction helper
+const extractErrorMessage = (error: unknown): string => {
+  if (error && typeof error === "object") {
+    if ("response" in error) {
+      const axiosError = error as {
+        response?: {
+          data?: { message?: string; error?: string };
+        };
+      };
+      return (
+        axiosError.response?.data?.message ||
+        axiosError.response?.data?.error ||
+        "An error occurred"
+      );
+    }
+    if ("message" in error) {
+      return (error as { message: string }).message;
+    }
+  }
+  return "An unexpected error occurred";
+};
+
 interface UseBlogsReturn {
   blogs: Blog[];
   loading: boolean;
@@ -45,8 +67,7 @@ export const useBlogs = (): UseBlogsReturn => {
       const response = await getAllBlogs();
       setBlogs(response.data.blogs || []);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to fetch blogs";
+      const message = extractErrorMessage(err);
       setError(message);
       console.error("Error fetching blogs:", err);
     } finally {
@@ -75,6 +96,11 @@ export const useBlogs = (): UseBlogsReturn => {
       setLoading(true);
       setError(null);
       try {
+        console.log("Creating blog with data:", data);
+        if (image) {
+          console.log("Image file:", image.name, image.size, image.type);
+        }
+
         await createBlog(
           {
             title: data.title as string,
@@ -88,10 +114,10 @@ export const useBlogs = (): UseBlogsReturn => {
         await fetchBlogs(); // Refresh list
         return true;
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to create blog";
+        const message = extractErrorMessage(err);
         setError(message);
         console.error("Error creating blog:", err);
+        console.error("Error details:", JSON.stringify(err, null, 2));
         return false;
       } finally {
         setLoading(false);
@@ -113,8 +139,7 @@ export const useBlogs = (): UseBlogsReturn => {
         await fetchBlogs(); // Refresh list
         return true;
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to update blog";
+        const message = extractErrorMessage(err);
         setError(message);
         console.error("Error updating blog:", err);
         return false;
@@ -135,8 +160,7 @@ export const useBlogs = (): UseBlogsReturn => {
         setBlogs((prev) => prev.filter((blog) => blog.id !== id));
         return true;
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to delete blog";
+        const message = extractErrorMessage(err);
         setError(message);
         console.error("Error deleting blog:", err);
         await fetchBlogs(); // Revert on error
@@ -162,10 +186,7 @@ export const useBlogs = (): UseBlogsReturn => {
         );
         return true;
       } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : "Failed to toggle publish status";
+        const message = extractErrorMessage(err);
         setError(message);
         console.error("Error toggling publish:", err);
         await fetchBlogs(); // Revert on error
