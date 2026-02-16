@@ -154,7 +154,6 @@ const AllRoutes: React.FC = () => {
         path="/members"
         element={
           <>
-            <Header />
             <InnovationHubMembersPage />
             <Footer />
           </>
@@ -164,7 +163,6 @@ const AllRoutes: React.FC = () => {
         path="/members/:id"
         element={
           <>
-            <Header />
             <MemberDetailPage />
             <Footer />
           </>
