@@ -1,74 +1,97 @@
-import { useState, useEffect } from "react";
-import type {
-  HireInquiry,
-  HireInquiriesResponse,
-} from "../../data/admin-data/HireRequest";
+/**
+ * HireRequests Component
+ * Modern admin list view for hire inquiries
+ */
+
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import type { HireInquiry } from "../../types/hire.types";
+import { useHireInquiries } from "../../hooks/useHireInquiries";
+import { ReplyModal } from "./ReplyModal";
+import { DeleteConfirmModal } from "./DeleteConfirmModal";
+import { Toast, useToast } from "./Toast";
 
 const PAGE_SIZE = 5;
 
 export default function HireRequests() {
+  const {
+    inquiries,
+    loading,
+    error,
+    fetchInquiries,
+    handleDelete,
+    handleReply,
+  } = useHireInquiries();
+
+  const { toast, showToast, hideToast } = useToast();
   const [page, setPage] = useState(1);
-  const [inquiries, setInquiries] = useState<HireInquiry[]>([]);
-  const [, setLoading] = useState(true);
-  const [, setError] = useState<string | null>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(
+  const [selectedInquiry, setSelectedInquiry] = useState<HireInquiry | null>(
     null,
   );
-  const [replySubject, setReplySubject] = useState("");
-  const [replyMessage, setReplyMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "Pending" | "Reviewed" | "Contacted" | "Rejected"
+  >("all");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
 
-  const authToken = localStorage.getItem("token");
+  const menuRef = useRef<HTMLDivElement>(null);
 
+  // Fetch inquiries on mount
   useEffect(() => {
-    const fetchInquiries = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          "http://localhost:5000/api/admin/hire-inquiries",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          },
-        );
+    fetchInquiries();
+  }, [fetchInquiries]);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch inquiries");
-        }
-
-        const data: HireInquiriesResponse = await response.json();
-        setInquiries(data.data.inquiries);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred",
-        );
-      } finally {
-        setLoading(false);
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpenId(null);
       }
     };
 
-    fetchInquiries();
-  }, [authToken]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const totalPages = Math.ceil(inquiries.length / PAGE_SIZE);
-  const pageRequests = inquiries.slice(
+  // Filter inquiries
+  const filteredInquiries = inquiries.filter((inquiry) => {
+    const matchesSearch =
+      inquiry.company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inquiry.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inquiry.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      inquiry.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || inquiry.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalPages = Math.ceil(filteredInquiries.length / PAGE_SIZE);
+  const pageInquiries = filteredInquiries.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE,
   );
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Approved":
+      case "Contacted":
         return "bg-green-100 text-green-800";
+      case "Reviewed":
+        return "bg-blue-100 text-blue-800";
       case "Rejected":
         return "bg-red-100 text-red-800";
       default:
@@ -76,116 +99,215 @@ export default function HireRequests() {
     }
   };
 
-  const handleReply = async () => {
-    if (!selectedInquiryId) return;
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/admin/hire-inquiries/${selectedInquiryId}/reply`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            subject: replySubject,
-            message: replyMessage,
-          }),
-        },
-      );
-
-      if (!response.ok) throw new Error("Failed to send reply");
-      setShowReplyModal(false);
-      setReplySubject("");
-      setReplyMessage("");
-    } catch (error) {
-      console.error("Reply failed:", error);
-    }
+  const handleReplyClick = (inquiry: HireInquiry) => {
+    setSelectedInquiry(inquiry);
+    setShowReplyModal(true);
+    setMenuOpenId(null);
   };
 
-  const handleDelete = async () => {
-    if (!selectedInquiryId) return;
-    try {
-      // Replace this with real delete API call
-      console.log("Deleting inquiry:", selectedInquiryId);
-      setInquiries((prev) => prev.filter((i) => i.id !== selectedInquiryId));
+  const handleDeleteClick = (inquiry: HireInquiry) => {
+    setSelectedInquiry(inquiry);
+    setShowDeleteModal(true);
+    setMenuOpenId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedInquiry) return;
+
+    setIsDeleting(true);
+    const success = await handleDelete(selectedInquiry.id);
+    if (success) {
       setShowDeleteModal(false);
-    } catch (error) {
-      console.error("Delete failed:", error);
+      setSelectedInquiry(null);
+      showToast("Inquiry deleted successfully!", "success");
+    } else {
+      showToast(error || "Failed to delete inquiry", "error");
     }
+    setIsDeleting(false);
   };
+
+  const submitReply = async (subject: string, message: string) => {
+    if (!selectedInquiry) return;
+
+    setIsReplying(true);
+    const success = await handleReply(selectedInquiry.id, { subject, message });
+    if (success) {
+      setShowReplyModal(false);
+      setSelectedInquiry(null);
+      showToast("Reply sent successfully!", "success");
+    } else {
+      showToast(error || "Failed to send reply", "error");
+    }
+    setIsReplying(false);
+  };
+
+  // Skeleton loader
+  if (loading && inquiries.length === 0) {
+    return (
+      <div className="mt-6 space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="bg-white rounded-xl shadow p-6 animate-pulse">
+            <div className="flex items-center">
+              <div className="w-16 h-16 rounded-full bg-gray-200 mr-6" />
+              <div className="flex-1 space-y-3">
+                <div className="h-4 bg-gray-200 rounded w-1/3" />
+                <div className="h-3 bg-gray-200 rounded w-1/4" />
+                <div className="h-3 bg-gray-200 rounded w-2/3" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6">
-      {pageRequests.map((inquiry) => (
+      {/* Filters */}
+      <div className="mb-6 flex flex-wrap gap-4">
+        <input
+          type="text"
+          placeholder="Search inquiries..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="flex-1 min-w-[250px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(e.target.value as typeof statusFilter)
+          }
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="all">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Reviewed">Reviewed</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      {/* Error State */}
+      {error && !loading && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && pageInquiries.length === 0 && (
+        <div className="bg-white rounded-2xl p-12 text-center">
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400 mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No inquiries found
+          </h3>
+          <p className="text-gray-600">
+            {searchQuery || statusFilter !== "all"
+              ? "Try adjusting your filters"
+              : "No hire inquiries yet"}
+          </p>
+        </div>
+      )}
+
+      {/* Inquiries List */}
+      {pageInquiries.map((inquiry) => (
         <div
           key={inquiry.id}
-          className="relative bg-white rounded-xl shadow p-6 mb-6 border flex items-center"
+          className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 mb-4 border border-gray-100 flex items-start"
         >
-          <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mr-6">
-            <span className="text-blue-600 text-xl font-semibold">
+          {/* Avatar */}
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mr-5 flex-shrink-0">
+            <span className="text-white text-lg font-semibold">
               {inquiry.first_name.charAt(0)}
               {inquiry.last_name.charAt(0)}
             </span>
           </div>
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <div className="font-semibold text-lg">
-                {inquiry.company_name} - {inquiry.job_title}
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                  {inquiry.company_name} - {inquiry.job_title}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  From: {inquiry.first_name} {inquiry.last_name}
+                </p>
+                <p className="text-sm text-gray-500">{inquiry.email}</p>
               </div>
               <span
-                className={`text-xs px-2 py-1 rounded-full ${getStatusColor(inquiry.status)}`}
+                className={`text-xs px-3 py-1 rounded-full font-medium ${getStatusColor(inquiry.status)} flex-shrink-0`}
               >
                 {inquiry.status}
               </span>
             </div>
-            <div className="text-gray-500">
-              From: {inquiry.first_name} {inquiry.last_name}
-            </div>
-            <div className="text-gray-500 mt-1">{inquiry.message}</div>
-            <div className="text-gray-400 text-sm mt-1">
-              {formatDate(inquiry.created_at)}
+
+            <p className="text-gray-700 mt-2 mb-3 line-clamp-2">
+              {inquiry.message}
+            </p>
+
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-400">
+                {formatDate(inquiry.created_at)}
+              </p>
+              <Link
+                to={`/admin/hire-inquiries/${inquiry.id}`}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                View Details →
+              </Link>
             </div>
           </div>
 
-          {/* Three Dots Button */}
-          <div className="relative ml-4">
+          {/* Actions Menu */}
+          <div className="relative ml-4 flex-shrink-0" ref={menuRef}>
             <button
               onClick={() =>
                 setMenuOpenId(menuOpenId === inquiry.id ? null : inquiry.id)
               }
-              className="text-gray-600 hover:text-gray-900 text-3xl h-10 w-10 flex items-center justify-center"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Options"
             >
-              &#x22EE;
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
             </button>
 
             {menuOpenId === inquiry.id && (
-              <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded shadow-lg border z-10">
+              <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
                 <Link
                   to={`/admin/hire-inquiries/${inquiry.id}`}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   onClick={() => setMenuOpenId(null)}
                 >
-                  View
+                  View Details
                 </Link>
                 <button
-                  onClick={() => {
-                    setSelectedInquiryId(inquiry.id);
-                    setShowReplyModal(true);
-                    setMenuOpenId(null);
-                  }}
-                  className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-100"
+                  onClick={() => handleReplyClick(inquiry)}
+                  className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors"
                 >
-                  Reply
+                  Send Reply
                 </button>
+                <hr className="my-1" />
                 <button
-                  onClick={() => {
-                    setSelectedInquiryId(inquiry.id);
-                    setShowDeleteModal(true);
-                    setMenuOpenId(null);
-                  }}
-                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
+                  onClick={() => handleDeleteClick(inquiry)}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
                   Delete
                 </button>
@@ -196,20 +318,20 @@ export default function HireRequests() {
       ))}
 
       {/* Pagination */}
-      {inquiries.length > PAGE_SIZE && (
-        <div className="flex justify-end items-center gap-2 mt-8">
+      {filteredInquiries.length > PAGE_SIZE && (
+        <div className="flex justify-end items-center gap-3 mt-8">
           <button
-            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
           >
-            Prev
+            Previous
           </button>
-          <span className="font-semibold">
+          <span className="text-sm text-gray-600">
             Page {page} of {totalPages}
           </span>
           <button
-            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
           >
@@ -218,68 +340,41 @@ export default function HireRequests() {
         </div>
       )}
 
-      {/* Reply Modal */}
-      {showReplyModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
-            <h3 className="text-xl font-semibold mb-4">Reply to Inquiry</h3>
-            <input
-              type="text"
-              placeholder="Subject"
-              value={replySubject}
-              onChange={(e) => setReplySubject(e.target.value)}
-              className="w-full px-4 py-2 border mb-3 rounded"
-            />
-            <textarea
-              placeholder="Message"
-              value={replyMessage}
-              onChange={(e) => setReplyMessage(e.target.value)}
-              className="w-full px-4 py-2 border mb-4 rounded"
-              rows={4}
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowReplyModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleReply}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modals */}
+      <ReplyModal
+        isOpen={showReplyModal}
+        onClose={() => {
+          setShowReplyModal(false);
+          setSelectedInquiry(null);
+        }}
+        onSubmit={submitReply}
+        isLoading={isReplying}
+        inquiryName={
+          selectedInquiry
+            ? `${selectedInquiry.first_name} ${selectedInquiry.last_name}`
+            : ""
+        }
+      />
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
-            <h3 className="text-lg font-semibold mb-4">Delete Confirmation</h3>
-            <p className="mb-4 text-gray-700">
-              Are you sure you want to delete this inquiry?
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        title="Delete Inquiry"
+        message={`Are you sure you want to delete the inquiry from ${selectedInquiry?.company_name}? This action cannot be undone.`}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setShowDeleteModal(false);
+          setSelectedInquiry(null);
+        }}
+        isLoading={isDeleting}
+      />
+
+      {/* Toast Notification */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
     </div>
   );
 }
