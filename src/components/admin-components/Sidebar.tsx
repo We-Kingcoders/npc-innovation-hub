@@ -11,6 +11,7 @@ import {
   X,
   LogOut,
   ChevronDown,
+  Calendar,
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -23,6 +24,7 @@ const iconComponents = {
   projects: Briefcase,
   blog: FileText,
   members: Users,
+  calendar: Calendar,
 };
 
 const iconColors = {
@@ -32,6 +34,7 @@ const iconColors = {
   projects: "from-sky-500 to-blue-600",
   blog: "from-teal-500 to-cyan-600",
   members: "from-purple-500 to-violet-600",
+  calendar: "from-orange-500 to-amber-600",
 };
 
 export default function Sidebar() {
