@@ -52,6 +52,7 @@ import ProjectTables from "../pages/Admin-pages/ProjectTables";
 import OTPVerification from "../pages/Login/OTPVerification";
 import ForgotPassword from "../pages/Login/ForgotPassword";
 import HireRequestDetail from "../components/admin-components/HireRequestDetail";
+import EventTables from "../pages/Admin-pages/EventTables";
 
 // Admin Profile Pages
 import ViewProfile from "../pages/Admin-pages/Profile/ViewProfile";
@@ -342,6 +343,14 @@ const AllRoutes: React.FC = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-events"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <EventTables />
           </ProtectedRoute>
         }
       />
