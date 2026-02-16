@@ -35,4 +35,10 @@ export const sidebarLinks = [
     path: "/Admin-members",
     notification: 0,
   },
+  {
+    icon: "calendar",
+    label: "Events",
+    path: "/Admin-events",
+    notification: 0,
+  },
 ];
