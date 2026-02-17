@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown,
   Calendar,
+  ClipboardList,
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -25,6 +26,7 @@ const iconComponents = {
   blog: FileText,
   members: Users,
   calendar: Calendar,
+  clipboard: ClipboardList,
 };
 
 const iconColors = {
@@ -35,6 +37,7 @@ const iconColors = {
   blog: "from-teal-500 to-cyan-600",
   members: "from-purple-500 to-violet-600",
   calendar: "from-orange-500 to-amber-600",
+  clipboard: "from-pink-500 to-rose-600",
 };
 
 export default function Sidebar() {
