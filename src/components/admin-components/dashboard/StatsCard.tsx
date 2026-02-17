@@ -1,10 +1,58 @@
 // ============================================================
 // StatsCard.tsx
-// Reusable KPI card with growth indicator and glassmorphism
+// Reusable KPI card with animated count-up and glassmorphism
 // ============================================================
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { GrowthMetric } from "../../../types/dashboard.types";
+
+// ─── useCountUp hook ──────────────────────────────────────────────────────────
+// Animates a number from 0 → target over `duration` ms
+// Uses requestAnimationFrame with an easeOutQuart curve for a snappy feel
+
+function useCountUp(target: number, duration = 1400): number {
+  const [display, setDisplay] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (target === 0) {
+      setDisplay(0);
+      return;
+    }
+
+    // Cancel any in-progress animation
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    startTimeRef.current = null;
+
+    const easeOutQuart = (t: number): number => 1 - Math.pow(1 - t, 4);
+
+    const animate = (timestamp: number) => {
+      if (startTimeRef.current === null) startTimeRef.current = timestamp;
+      const elapsed = timestamp - startTimeRef.current;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuart(progress);
+
+      setDisplay(Math.round(eased * target));
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        setDisplay(target); // land exactly on target
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, duration]);
+
+  return display;
+}
+
+// ─── Color map ────────────────────────────────────────────────────────────────
 
 interface StatsCardProps {
   metric: GrowthMetric;
@@ -13,54 +61,47 @@ interface StatsCardProps {
 
 const COLOR_MAP: Record<
   GrowthMetric["color"],
-  { bg: string; icon: string; badge: string; glow: string; border: string }
+  { bg: string; icon: string; glow: string; border: string }
 > = {
   blue: {
     bg: "from-blue-500/10 to-blue-600/5",
     icon: "bg-blue-500/15 text-blue-600",
-    badge: "bg-blue-50 text-blue-700 ring-blue-200",
     glow: "shadow-blue-100",
     border: "border-blue-100",
   },
   green: {
     bg: "from-emerald-500/10 to-emerald-600/5",
     icon: "bg-emerald-500/15 text-emerald-600",
-    badge: "bg-emerald-50 text-emerald-700 ring-emerald-200",
     glow: "shadow-emerald-100",
     border: "border-emerald-100",
   },
   purple: {
     bg: "from-violet-500/10 to-violet-600/5",
     icon: "bg-violet-500/15 text-violet-600",
-    badge: "bg-violet-50 text-violet-700 ring-violet-200",
     glow: "shadow-violet-100",
     border: "border-violet-100",
   },
   orange: {
     bg: "from-orange-500/10 to-orange-600/5",
     icon: "bg-orange-500/15 text-orange-600",
-    badge: "bg-orange-50 text-orange-700 ring-orange-200",
     glow: "shadow-orange-100",
     border: "border-orange-100",
   },
   red: {
     bg: "from-rose-500/10 to-rose-600/5",
     icon: "bg-rose-500/15 text-rose-600",
-    badge: "bg-rose-50 text-rose-700 ring-rose-200",
     glow: "shadow-rose-100",
     border: "border-rose-100",
   },
   indigo: {
     bg: "from-indigo-500/10 to-indigo-600/5",
     icon: "bg-indigo-500/15 text-indigo-600",
-    badge: "bg-indigo-50 text-indigo-700 ring-indigo-200",
     glow: "shadow-indigo-100",
     border: "border-indigo-100",
   },
   teal: {
     bg: "from-teal-500/10 to-teal-600/5",
     icon: "bg-teal-500/15 text-teal-600",
-    badge: "bg-teal-50 text-teal-700 ring-teal-200",
     glow: "shadow-teal-100",
     border: "border-teal-100",
   },
@@ -196,6 +237,8 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
   ),
 };
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
 export const StatsCardSkeleton: React.FC = () => (
   <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm animate-pulse">
     <div className="flex items-start justify-between mb-4">
@@ -207,7 +250,14 @@ export const StatsCardSkeleton: React.FC = () => (
   </div>
 );
 
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
 const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
+  // Animated display value: starts at 0, counts up to metric.value
+  const displayValue = useCountUp(
+    loading ? 0 : typeof metric.value === "number" ? metric.value : 0,
+  );
+
   if (loading) return <StatsCardSkeleton />;
 
   const colors = COLOR_MAP[metric.color];
@@ -227,20 +277,18 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
       <div
         className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-60 pointer-events-none`}
       />
-
-      {/* Subtle corner accent */}
+      {/* Corner accent */}
       <div
         className={`absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br ${colors.bg} rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-300`}
       />
 
       <div className="relative z-10">
-        {/* Header */}
+        {/* Icon + Growth badge */}
         <div className="flex items-start justify-between mb-4">
           <div className={`p-2.5 rounded-xl ${colors.icon}`}>
             {ICON_PATHS[metric.icon ?? "folder"]}
           </div>
 
-          {/* Growth badge */}
           <span
             className={`
               inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ring-1
@@ -277,10 +325,10 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
           </span>
         </div>
 
-        {/* Value */}
+        {/* Animated count-up value */}
         <div className="mb-1">
-          <span className="text-3xl font-bold text-gray-900 tracking-tight">
-            {metric.value.toLocaleString()}
+          <span className="text-3xl font-bold text-gray-900 tracking-tight tabular-nums">
+            {displayValue.toLocaleString()}
           </span>
           {metric.unit && (
             <span className="ml-1 text-sm text-gray-400">{metric.unit}</span>
