@@ -41,4 +41,10 @@ export const sidebarLinks = [
     path: "/Admin-events",
     notification: 0,
   },
+  {
+    icon: "clipboard",
+    label: "Tasks",
+    path: "/Admin-tasks",
+    notification: 0,
+  },
 ];
