@@ -53,6 +53,7 @@ import OTPVerification from "../pages/Login/OTPVerification";
 import ForgotPassword from "../pages/Login/ForgotPassword";
 import HireRequestDetail from "../components/admin-components/HireRequestDetail";
 import EventTables from "../pages/Admin-pages/EventTables";
+import TaskManagement from "../pages/Admin-pages/TaskManagement";
 
 // Admin Profile Pages
 import ViewProfile from "../pages/Admin-pages/Profile/ViewProfile";
@@ -341,6 +342,14 @@ const AllRoutes: React.FC = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-tasks"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <TaskManagement />
           </ProtectedRoute>
         }
       />
