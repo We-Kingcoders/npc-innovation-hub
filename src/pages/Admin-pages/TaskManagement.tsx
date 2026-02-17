@@ -11,7 +11,7 @@ import TasksTable from "../../components/admin-components/TasksTable";
 import { TaskFormModal } from "../../components/admin-components/TaskFormModal";
 import { useTasks } from "../../hooks/useTasks";
 import { Toast, useToast } from "../../components/admin-components/Toast";
-import apiClient from "../../api/client";
+import { getAllUsers } from "../../api/admin/member.api";
 import type { User } from "../../types/task.types";
 
 export default function TaskManagement() {
@@ -29,29 +29,24 @@ export default function TaskManagement() {
 
   const fetchMembers = async () => {
     try {
-      // Adjust this endpoint to match your backend
-      const response = await apiClient.get("/members");
-      // Fix: Handle the response data correctly with proper typing
-      const membersData = response.data as User[] | { data: User[] } | unknown;
+      // Use existing getAllUsers API
+      const usersData = await getAllUsers();
 
-      // Check if data is an array
-      if (Array.isArray(membersData)) {
-        setMembers(membersData);
-      } else if (
-        membersData &&
-        typeof membersData === "object" &&
-        "data" in membersData
-      ) {
-        // If data is nested in a 'data' property
-        const nestedData = (membersData as { data: unknown }).data;
-        if (Array.isArray(nestedData)) {
-          setMembers(nestedData);
-        } else {
-          setMembers([]);
-        }
-      } else {
-        setMembers([]);
-      }
+      // Transform from your User type to Task User type
+      // Your User type has: { id, firstName, lastName, email, role, isActive, ... }
+      // Task User type needs: { id, firstName, lastName, email, role: "Admin" | "Member" }
+      const transformedMembers: User[] = usersData
+        .filter((user) => user.isActive && user.role === "Member") // ✅ Only show active Members (exclude Admins)
+        .map((user) => ({
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role as "Admin" | "Member",
+        }));
+
+      setMembers(transformedMembers);
+      console.log("Fetched members (Members only):", transformedMembers);
     } catch (err) {
       console.error("Error fetching members:", err);
       setMembers([]);
@@ -73,10 +68,19 @@ export default function TaskManagement() {
     if (success) {
       setIsCreateModalOpen(false);
       showToast("Task created successfully!", "success");
+      // Small delay to ensure DB is updated
+      setTimeout(async () => {
+        await fetchTasks();
+      }, 300);
     } else {
       showToast(error || "Failed to create task", "error");
     }
     setIsSubmitting(false);
+  };
+
+  // Callback to refresh tasks from child component
+  const handleTasksRefresh = async () => {
+    await fetchTasks();
   };
 
   return (
@@ -120,7 +124,7 @@ export default function TaskManagement() {
         <TaskStats tasks={tasks} />
 
         {/* Table */}
-        <TasksTable members={members} />
+        <TasksTable members={members} onTasksChange={handleTasksRefresh} />
 
         {/* Create Modal */}
         <TaskFormModal
