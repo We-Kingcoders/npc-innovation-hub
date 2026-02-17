@@ -1,9 +1,10 @@
 // ============================================================
 // dashboard.api.ts
 // Aggregated API functions for the Admin Analytics Dashboard
-// Uses only existing backend endpoints
+// Uses existing backend endpoints via existing apiClient
 // ============================================================
 
+import apiClient from "../client";
 import type {
   DashboardStats,
   TaskAnalytics,
@@ -17,154 +18,127 @@ import type {
   ActivityType,
 } from "../../types/dashboard.types";
 
-const BASE_URL = "http://localhost:5000";
+// ─── Raw Fetchers (reuse existing apiClient) ──────────────────────────────────
 
-function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No auth token found");
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function safeFetch<T>(
-  url: string,
-  headers: HeadersInit,
-): Promise<T | null> {
+async function fetchUsersRaw(): Promise<unknown[]> {
   try {
-    const res = await fetch(url, { headers });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
+    const res = await apiClient.get("/api/users/users");
+    const data = res.data as { data?: { users?: unknown[] } };
+    return Array.isArray(data?.data?.users) ? data.data!.users! : [];
   } catch {
-    return null;
+    return [];
   }
 }
 
-// ─── Individual Fetchers ──────────────────────────────────────────────────────
-
-async function fetchUsersCount(headers: HeadersInit): Promise<number> {
-  type UsersResponse = { data: { users: unknown[] } };
-  const data = await safeFetch<UsersResponse>(
-    `${BASE_URL}/api/users/users`,
-    headers,
-  );
-  return Array.isArray(data?.data?.users) ? data!.data.users.length : 0;
-}
-
-async function fetchProjectsRaw(headers: HeadersInit): Promise<ProjectItem[]> {
-  type ProjectsResponse = { data: { projects: ProjectItem[] } };
-  const data = await safeFetch<ProjectsResponse>(
-    `${BASE_URL}/api/projects`,
-    headers,
-  );
-  return Array.isArray(data?.data?.projects) ? data!.data.projects : [];
-}
-
-async function fetchResourcesCount(headers: HeadersInit): Promise<number> {
-  type ResourcesResponse = { data: { resources: unknown[] } };
-  const data = await safeFetch<ResourcesResponse>(
-    `${BASE_URL}/api/resources`,
-    headers,
-  );
-  return Array.isArray(data?.data?.resources) ? data!.data.resources.length : 0;
-}
-
-async function fetchBlogsCount(headers: HeadersInit): Promise<number> {
-  type BlogsResponse = { data: { blogs: unknown[] } };
-  const data = await safeFetch<BlogsResponse>(`${BASE_URL}/api/blogs`, headers);
-  return Array.isArray(data?.data?.blogs) ? data!.data.blogs.length : 0;
-}
-
-async function fetchInquiriesCount(headers: HeadersInit): Promise<number> {
-  type InquiriesResponse = { data: { inquiries: unknown[] } };
-  const data = await safeFetch<InquiriesResponse>(
-    `${BASE_URL}/api/admin/hire-inquiries`,
-    headers,
-  );
-  return Array.isArray(data?.data?.inquiries) ? data!.data.inquiries.length : 0;
-}
-
-async function fetchTasksRaw(headers: HeadersInit): Promise<Task[]> {
-  const data = await safeFetch<Task[]>(`${BASE_URL}/tasks`, headers);
-  return Array.isArray(data) ? data : [];
-}
-
-async function fetchEventsRaw(headers: HeadersInit): Promise<EventItem[]> {
-  type EventsResponse = { data: { events: EventItem[] } } | EventItem[];
-  const data = await safeFetch<EventsResponse>(
-    `${BASE_URL}/api/events`,
-    headers,
-  );
-  if (Array.isArray(data)) return data;
-  if (
-    data &&
-    typeof data === "object" &&
-    "data" in data &&
-    Array.isArray((data as { data: { events: EventItem[] } }).data?.events)
-  ) {
-    return (data as { data: { events: EventItem[] } }).data.events;
+async function fetchProjectsRaw(): Promise<ProjectItem[]> {
+  try {
+    const res = await apiClient.get("/api/projects");
+    const data = res.data as { data?: { projects?: ProjectItem[] } };
+    return Array.isArray(data?.data?.projects) ? data.data!.projects! : [];
+  } catch {
+    return [];
   }
-  return [];
+}
+
+async function fetchResourcesRaw(): Promise<unknown[]> {
+  try {
+    const res = await apiClient.get("/api/resources");
+    const data = res.data as { data?: { resources?: unknown[] } };
+    return Array.isArray(data?.data?.resources) ? data.data!.resources! : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchBlogsRaw(): Promise<unknown[]> {
+  try {
+    const res = await apiClient.get("/api/blogs");
+    const data = res.data as { data?: { blogs?: unknown[] } };
+    return Array.isArray(data?.data?.blogs) ? data.data!.blogs! : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchInquiriesRaw(): Promise<unknown[]> {
+  try {
+    const res = await apiClient.get("/api/admin/hire-inquiries");
+    const data = res.data as { data?: { inquiries?: unknown[] } };
+    return Array.isArray(data?.data?.inquiries) ? data.data!.inquiries! : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchTasksRaw(): Promise<Task[]> {
+  try {
+    const res = await apiClient.get("/tasks");
+    return Array.isArray(res.data) ? (res.data as Task[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchEventsRaw(): Promise<EventItem[]> {
+  try {
+    const res = await apiClient.get("/api/events");
+    // Handle both response shapes: array or { data: { events: [] } }
+    if (Array.isArray(res.data)) return res.data as EventItem[];
+    const wrapped = res.data as { data?: { events?: EventItem[] } };
+    if (Array.isArray(wrapped?.data?.events)) return wrapped.data!.events!;
+    return [];
+  } catch {
+    return [];
+  }
 }
 
 // ─── Aggregated Exports ───────────────────────────────────────────────────────
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  const headers = getAuthHeaders();
-
   const [users, projects, resources, blogs, inquiries, tasks, events] =
     await Promise.all([
-      fetchUsersCount(headers),
-      fetchProjectsRaw(headers).then((p) => p.length),
-      fetchResourcesCount(headers),
-      fetchBlogsCount(headers),
-      fetchInquiriesCount(headers),
-      fetchTasksRaw(headers).then((t) => t.length),
-      fetchEventsRaw(headers).then((e) => e.length),
+      fetchUsersRaw().then((u) => u.length),
+      fetchProjectsRaw().then((p) => p.length),
+      fetchResourcesRaw().then((r) => r.length),
+      fetchBlogsRaw().then((b) => b.length),
+      fetchInquiriesRaw().then((i) => i.length),
+      fetchTasksRaw().then((t) => t.length),
+      fetchEventsRaw().then((e) => e.length),
     ]);
 
   return { users, projects, resources, blogs, inquiries, tasks, events };
 }
 
 export async function getTaskAnalytics(): Promise<TaskAnalytics> {
-  const headers = getAuthHeaders();
-  const tasks = await fetchTasksRaw(headers);
-
+  const tasks = await fetchTasksRaw();
   const now = new Date();
 
-  const byStatus: Record<string, number> = {
+  const byStatus = {
     pending: 0,
-    in_progress: 0,
+    "in-progress": 0,
     completed: 0,
-    overdue: 0,
-    cancelled: 0,
   };
 
   let overdue = 0;
 
   for (const task of tasks) {
-    const status = task.status?.toLowerCase() ?? "pending";
-    const key = status.replace(" ", "_");
-    if (key in byStatus) {
-      byStatus[key]++;
-    } else {
-      byStatus["pending"]++;
-    }
+    // task.status from your API: "pending" | "in-progress" | "completed"
+    const s = (task.status ?? "pending") as string;
+    if (s === "pending") byStatus.pending++;
+    else if (s === "in-progress") byStatus["in-progress"]++;
+    else if (s === "completed") byStatus.completed++;
+    else byStatus.pending++; // safe fallback
 
-    if (
-      task.dueDate &&
-      new Date(task.dueDate) < now &&
-      task.status !== "completed" &&
-      task.status !== "cancelled"
-    ) {
+    // Overdue: non-completed task past its due date
+    if (task.dueDate && new Date(task.dueDate) < now && s !== "completed") {
       overdue++;
     }
   }
 
-  const completed = byStatus["completed"] ?? 0;
   const completionRate =
-    tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
+    tasks.length > 0
+      ? Math.round((byStatus.completed / tasks.length) * 100)
+      : 0;
 
   const recentTasks = [...tasks]
     .sort(
@@ -175,24 +149,85 @@ export async function getTaskAnalytics(): Promise<TaskAnalytics> {
 
   return {
     total: tasks.length,
-    byStatus: byStatus as TaskAnalytics["byStatus"],
+    byStatus,
     overdue,
     completionRate,
     recentTasks,
   };
 }
 
-export async function getEventInsights(): Promise<EventInsightsData> {
-  const headers = getAuthHeaders();
-  const events = await fetchEventsRaw(headers);
+// Build real monthly task trend from createdAt + status
+export async function getTaskTrendData(): Promise<
+  { name: string; completed: number; inProgress: number; pending: number }[]
+> {
+  const tasks = await fetchTasksRaw();
 
+  const MONTHS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const now = new Date();
+
+  // Last 6 months including current
+  const slots = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth(),
+      name: MONTHS[d.getMonth()],
+      completed: 0,
+      inProgress: 0,
+      pending: 0,
+    };
+  });
+
+  for (const task of tasks) {
+    const d = new Date(task.createdAt);
+    const slot = slots.find(
+      (s) => s.year === d.getFullYear() && s.month === d.getMonth(),
+    );
+    if (!slot) continue;
+    const s = (task.status ?? "pending") as string;
+    if (s === "completed") slot.completed++;
+    else if (s === "in-progress") slot.inProgress++;
+    else slot.pending++;
+  }
+
+  return slots.map(({ name, completed, inProgress, pending }) => ({
+    name,
+    completed,
+    inProgress,
+    pending,
+  }));
+}
+
+export async function getEventInsights(): Promise<EventInsightsData> {
+  const events = await fetchEventsRaw();
+  const now = new Date();
+
   const upcoming = events
     .filter((e) => new Date(e.date) >= now)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 5);
 
-  const totalAttendees = events.reduce((sum, e) => sum + (e.attendees ?? 0), 0);
+  // Support both field names: attendeesCount (real API) and attendees (alias)
+  const resolveAttendees = (e: EventItem): number =>
+    e.attendeesCount ?? e.attendees ?? 0;
+
+  const totalAttendees = events.reduce(
+    (sum, e) => sum + resolveAttendees(e),
+    0,
+  );
   const totalCapacity = events.reduce((sum, e) => sum + (e.capacity ?? 0), 0);
   const averageAttendance =
     events.length > 0 ? Math.round(totalAttendees / events.length) : 0;
@@ -209,8 +244,7 @@ export async function getEventInsights(): Promise<EventInsightsData> {
 }
 
 export async function getProjectInsights(): Promise<ProjectInsightsData> {
-  const headers = getAuthHeaders();
-  const projects = await fetchProjectsRaw(headers);
+  const projects = await fetchProjectsRaw();
 
   const byStatus: Record<string, number> = {};
   for (const project of projects) {
@@ -225,7 +259,6 @@ export async function getProjectInsights(): Promise<ProjectInsightsData> {
     )
     .slice(0, 5);
 
-  // Growth: compare last 30 days vs prior 30 days
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
@@ -246,26 +279,18 @@ export async function getProjectInsights(): Promise<ProjectInsightsData> {
         ? 100
         : 0;
 
-  return {
-    total: projects.length,
-    recentProjects,
-    byStatus,
-    growthPercent,
-  };
+  return { total: projects.length, recentProjects, byStatus, growthPercent };
 }
 
 export async function getRecentActivity(): Promise<ActivityItem[]> {
-  const headers = getAuthHeaders();
-
   const [projects, tasks, events] = await Promise.all([
-    fetchProjectsRaw(headers),
-    fetchTasksRaw(headers),
-    fetchEventsRaw(headers),
+    fetchProjectsRaw(),
+    fetchTasksRaw(),
+    fetchEventsRaw(),
   ]);
 
   const activities: ActivityItem[] = [];
 
-  // Map projects → activities
   for (const project of projects.slice(0, 3)) {
     activities.push({
       id: `project-${project._id}`,
@@ -277,21 +302,20 @@ export async function getRecentActivity(): Promise<ActivityItem[]> {
     });
   }
 
-  // Map tasks → activities
   for (const task of tasks.slice(0, 3)) {
+    const s = (task.status ?? "pending") as string;
     const type: ActivityType =
-      task.status === "completed" ? "task_completed" : "task_assigned";
+      s === "completed" ? "task_completed" : "task_assigned";
     activities.push({
       id: `task-${task._id}`,
       type,
-      title: type === "task_completed" ? "Task Completed" : "Task Assigned",
+      title: s === "completed" ? "Task Completed" : "Task Assigned",
       description: task.title,
       timestamp: task.createdAt,
       metadata: { priority: task.priority },
     });
   }
 
-  // Map events → activities
   for (const event of events.slice(0, 3)) {
     activities.push({
       id: `event-${event._id}`,
@@ -303,45 +327,36 @@ export async function getRecentActivity(): Promise<ActivityItem[]> {
     });
   }
 
-  // Sort by most recent first
   return activities.sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );
 }
 
 export async function getSystemHealth(): Promise<SystemHealthIndicator[]> {
-  const headers = getAuthHeaders();
-
-  const endpoints: Array<{ service: string; url: string }> = [
-    { service: "Users API", url: `${BASE_URL}/api/users/users` },
-    { service: "Projects API", url: `${BASE_URL}/api/projects` },
-    { service: "Resources API", url: `${BASE_URL}/api/resources` },
-    { service: "Events API", url: `${BASE_URL}/api/events` },
-    { service: "Tasks API", url: `${BASE_URL}/tasks` },
+  const endpoints: { service: string; path: string }[] = [
+    { service: "Users API", path: "/api/users/users" },
+    { service: "Projects API", path: "/api/projects" },
+    { service: "Resources API", path: "/api/resources" },
+    { service: "Events API", path: "/api/events" },
+    { service: "Tasks API", path: "/tasks" },
   ];
 
   const results = await Promise.all(
-    endpoints.map(async ({ service, url }) => {
+    endpoints.map(async ({ service, path }) => {
       const start = performance.now();
-      let status: SystemHealthIndicator["status"] = "healthy";
       try {
-        const res = await fetch(url, { headers });
+        const res = await apiClient.get(path);
         const latency = Math.round(performance.now() - start);
-        if (!res.ok) status = "degraded";
-        return {
-          service,
-          status,
-          latency,
-          uptime: 99.9,
-          endpoint: url.replace(BASE_URL, ""),
-        };
+        const status: SystemHealthIndicator["status"] =
+          res.status >= 200 && res.status < 300 ? "healthy" : "degraded";
+        return { service, status, latency, uptime: 99.9, endpoint: path };
       } catch {
         return {
           service,
           status: "down" as SystemHealthIndicator["status"],
           latency: 0,
           uptime: 0,
-          endpoint: url.replace(BASE_URL, ""),
+          endpoint: path,
         };
       }
     }),
