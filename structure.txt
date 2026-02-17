@@ -10,8 +10,12 @@ NPC-INNOVATION-HUB/
 │   ├── api/
 │   │   ├── admin/
 │   │   |   ├── blog.api.ts
+│   │   |   ├── event.api.ts
+│   │   |   ├── hire.api.ts
 │   │   |   ├── member.api.ts
-│   │   │   └── resource.api.ts
+│   │   |   ├── project.api.ts
+│   │   |   ├── resource.api.ts
+│   │   │   └── task.api.ts
 │   │   ├── authService.ts
 │   │   ├── client.ts
 │   │   ├── profileService.ts
@@ -24,6 +28,7 @@ NPC-INNOVATION-HUB/
 │   │   ├── admin-components/
 │   │   │   ├── AddBlogModal.tsx
 │   │   │   ├── AddResourceForm.tsx
+│   │   │   ├── AssignTaskModal.tsx
 │   │   │   ├── BlogForm.tsx
 │   │   │   ├── BlogTable.tsx
 │   │   │   ├── ChangePasswordForm.tsx
@@ -32,16 +37,31 @@ NPC-INNOVATION-HUB/
 │   │   │   ├── DashboardStatsSecondary.tsx
 │   │   │   ├── DeleteConfirmModal.tsx
 │   │   │   ├── EditBlogModal.tsx
+│   │   │   ├── EventAttendeesModal.tsx
+│   │   │   ├── EventDetailsModal.tsx
+│   │   │   ├── EventFormModal.tsx
+│   │   │   ├── EventsTable.tsx
 │   │   │   ├── HireRequestDetail.tsx
 │   │   │   ├── HireRequests.tsx
 │   │   │   ├── MembersManagement.tsx
+│   │   │   ├── PriorityBadge.tsx
+│   │   │   ├── ProjectDetailsModal.tsx
+│   │   │   ├── ProjectFormModal.tsx
 │   │   │   ├── ProjectsTable.tsx
+│   │   │   ├── ReplyModal.tsx
 │   │   │   ├── ResourceTable.tsx
 │   │   │   ├── RevenueWidget.tsx
 │   │   │   ├── Sidebar.tsx
+│   │   │   ├── StatusBadge.tsx
+│   │   │   ├── TaskDetailsModal.tsx
+│   │   │   ├── TaskFilters.tsx
+│   │   │   ├── TaskFormModal.tsx
+│   │   │   ├── TasksTable.tsx
+│   │   │   ├── TaskStats.tsx
 │   │   │   ├── Toast.tsx
 │   │   │   ├── Topbar.tsx
 │   │   │   ├── UserAvatar.tsx
+│   │   │   ├── UserAvatarChip.tsx
 │   │   │   ├── UserManagementFilters.tsx
 │   │   │   └── UserManagementTable.tsx 
 │   │   │
@@ -101,6 +121,11 @@ NPC-INNOVATION-HUB/
 │   │   ├── useAuth.ts
 │   │   ├── useBlogs.ts
 │   │   ├── useBooking.ts
+│   │   ├── useEventAttendees.ts
+│   │   ├── useEvents.ts
+│   │   ├── useHireInquiries.ts
+│   │   ├── useProjects.ts
+│   │   ├── useTasks.ts
 │   │   └── useForm.ts
 │   │
 │   ├── pages/
@@ -119,9 +144,11 @@ NPC-INNOVATION-HUB/
 │   │   │   ├── AdminDashboard.tsx
 │   │   │   ├── AdminResources.tsx
 │   │   │   ├── BlogTables.tsx
+│   │   │   ├── EventTables.tsx
 │   │   │   ├── HireUsRequests.tsx
 │   │   │   ├── MemberManagement.tsx
-│   │   │   └── ProjectTables.tsx
+│   │   │   ├── ProjectTables.tsx
+│   │   │   └── TaskManagement.tsx
 │   │   │
 │   │   ├── all-member-page/
 │   │   │   ├── InnovationHubMembersPage.tsx
@@ -193,7 +220,11 @@ NPC-INNOVATION-HUB/
 │   │
 │   ├── types/
 │   |   ├── blog.types.ts
+│   |   ├── event.types.ts
+│   |   ├── hire.types.ts
+│   |   ├── project.types.ts
 │   |   ├── resource.types.ts
+│   |   ├── task.types.ts
 │   │   └── user.types.ts
 │   │
 │   ├── App.test.tsx
