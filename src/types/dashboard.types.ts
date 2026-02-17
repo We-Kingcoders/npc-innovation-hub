@@ -24,13 +24,9 @@ export interface GrowthMetric {
   color: "blue" | "green" | "purple" | "orange" | "red" | "indigo" | "teal";
 }
 
-export type TaskStatus =
-  | "pending"
-  | "in_progress"
-  | "completed"
-  | "overdue"
-  | "cancelled";
-export type TaskPriority = "low" | "medium" | "high" | "urgent";
+// Matches task.types.ts exactly — "in-progress" with hyphen
+export type TaskStatus = "pending" | "in-progress" | "completed";
+export type TaskPriority = "low" | "medium" | "high";
 
 export interface Task {
   _id: string;
@@ -46,12 +42,17 @@ export interface Task {
 
 export interface TaskAnalytics {
   total: number;
-  byStatus: Record<TaskStatus, number>;
+  byStatus: {
+    pending: number;
+    "in-progress": number;
+    completed: number;
+  };
   overdue: number;
   completionRate: number;
   recentTasks: Task[];
 }
 
+// attendeesCount is the real API field; attendees kept as fallback
 export interface EventItem {
   _id: string;
   title: string;
@@ -59,6 +60,7 @@ export interface EventItem {
   date: string;
   location?: string;
   capacity?: number;
+  attendeesCount?: number;
   attendees?: number;
   status?: string;
   createdAt: string;
@@ -135,7 +137,6 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// Recharts-compatible data shapes
 export interface ChartDataPoint {
   name: string;
   value: number;
