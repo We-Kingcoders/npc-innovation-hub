@@ -10,6 +10,7 @@ NPC-INNOVATION-HUB/
 │   ├── api/
 │   │   ├── admin/
 │   │   |   ├── blog.api.ts
+│   │   |   ├── dashboard.api.ts
 │   │   |   ├── event.api.ts
 │   │   |   ├── hire.api.ts
 │   │   |   ├── member.api.ts
@@ -26,6 +27,16 @@ NPC-INNOVATION-HUB/
 │   │
 │   ├── components/
 │   │   ├── admin-components/
+│   │   │   ├── dashboard/
+│   │   │   |   ├── ActivityFeed.tsx
+│   │   │   |   ├── DashboardCharts.tsx
+│   │   │   |   ├── EventInsightsWidget.tsx
+│   │   │   |   ├── ModernStatsCards.tsx
+│   │   │   |   ├── QuickActions.tsx
+│   │   │   |   ├── StatsCard.tsx
+│   │   │   |   ├── SystemHealth.tsx
+│   │   │   |   └── TaskOverviewWidget.tsx
+│   │   │   |
 │   │   │   ├── AddBlogModal.tsx
 │   │   │   ├── AddResourceForm.tsx
 │   │   │   ├── AssignTaskModal.tsx
@@ -117,6 +128,7 @@ NPC-INNOVATION-HUB/
 │   │   └── projectsData.ts
 │   │
 │   ├── hooks/
+│   │   ├── useAdminDashboard.ts
 │   │   ├── useAdminResources.ts
 │   │   ├── useAuth.ts
 │   │   ├── useBlogs.ts
@@ -220,6 +232,7 @@ NPC-INNOVATION-HUB/
 │   │
 │   ├── types/
 │   |   ├── blog.types.ts
+│   |   ├── dashboard.types.ts
 │   |   ├── event.types.ts
 │   |   ├── hire.types.ts
 │   |   ├── project.types.ts
