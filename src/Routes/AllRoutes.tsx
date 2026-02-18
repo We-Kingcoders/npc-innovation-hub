@@ -134,7 +134,6 @@ const AllRoutes: React.FC = () => {
         path="/otp"
         element={
           <>
-            <Header />
             <OTPVerification />
           </>
         }
