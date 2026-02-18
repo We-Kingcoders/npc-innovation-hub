@@ -1,6 +1,182 @@
+// // ============================================================
+// // TaskOverviewWidget.tsx
+// // Donut chart of task statuses + overdue warning badge
+// // ============================================================
+
+// import React from "react";
+// import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+// import type { TaskAnalytics } from "../../../types/dashboard.types";
+
+// interface TaskOverviewWidgetProps {
+//   analytics: TaskAnalytics | null;
+//   loading: boolean;
+// }
+
+// const STATUS_CONFIG = {
+//   completed: { label: "Completed", color: "#10b981" },
+//   in_progress: { label: "In Progress", color: "#6366f1" },
+//   pending: { label: "Pending", color: "#f59e0b" },
+//   overdue: { label: "Overdue", color: "#ef4444" },
+//   cancelled: { label: "Cancelled", color: "#9ca3af" },
+// };
+
+// interface TooltipPayload {
+//   name: string;
+//   value: number;
+//   payload: {
+//     label: string;
+//     color: string;
+//   };
+// }
+
+// const CustomTooltip: React.FC<{
+//   active?: boolean;
+//   payload?: TooltipPayload[];
+// }> = ({ active, payload }) => {
+//   if (!active || !payload?.length) return null;
+//   const item = payload[0];
+//   return (
+//     <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-sm">
+//       <span className="font-semibold text-gray-800">{item.name}</span>
+//       <span className="ml-2 text-gray-500">{item.value} tasks</span>
+//     </div>
+//   );
+// };
+
+// const SkeletonWidget: React.FC = () => (
+//   <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-pulse">
+//     <div className="flex justify-between items-center mb-4">
+//       <div className="w-32 h-5 bg-gray-200 rounded" />
+//       <div className="w-20 h-5 bg-gray-200 rounded-full" />
+//     </div>
+//     <div className="w-40 h-40 bg-gray-200 rounded-full mx-auto my-6" />
+//     <div className="space-y-2">
+//       {[1, 2, 3].map((i) => (
+//         <div key={i} className="flex justify-between">
+//           <div className="w-24 h-3 bg-gray-200 rounded" />
+//           <div className="w-8 h-3 bg-gray-200 rounded" />
+//         </div>
+//       ))}
+//     </div>
+//   </div>
+// );
+
+// const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
+//   analytics,
+//   loading,
+// }) => {
+//   if (loading) return <SkeletonWidget />;
+
+//   if (!analytics) {
+//     return (
+//       <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center justify-center h-72">
+//         <p className="text-gray-400 text-sm">No task data available</p>
+//       </div>
+//     );
+//   }
+
+//   const chartData = Object.entries(STATUS_CONFIG)
+//     .map(([key, config]) => ({
+//       name: config.label,
+//       value: analytics.byStatus[key as keyof typeof analytics.byStatus] ?? 0,
+//       color: config.color,
+//       label: config.label,
+//     }))
+//     .filter((d) => d.value > 0);
+
+//   const hasData = chartData.length > 0;
+
+//   return (
+//     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+//       {/* Header */}
+//       <div className="flex items-center justify-between mb-4">
+//         <div>
+//           <h3 className="font-semibold text-gray-900 text-sm">Task Overview</h3>
+//           <p className="text-xs text-gray-400 mt-0.5">
+//             {analytics.total} total tasks
+//           </p>
+//         </div>
+//         {analytics.overdue > 0 && (
+//           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded-full ring-1 ring-red-200 animate-pulse">
+//             <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+//             {analytics.overdue} Overdue
+//           </span>
+//         )}
+//       </div>
+
+//       {/* Completion Rate */}
+//       <div className="mb-4">
+//         <div className="flex justify-between items-center mb-1.5">
+//           <span className="text-xs text-gray-500">Completion Rate</span>
+//           <span className="text-xs font-bold text-emerald-600">
+//             {analytics.completionRate}%
+//           </span>
+//         </div>
+//         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+//           <div
+//             className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700"
+//             style={{ width: `${analytics.completionRate}%` }}
+//           />
+//         </div>
+//       </div>
+
+//       {/* Donut Chart */}
+//       {hasData ? (
+//         <ResponsiveContainer width="100%" height={180}>
+//           <PieChart>
+//             <Pie
+//               data={chartData}
+//               cx="50%"
+//               cy="50%"
+//               innerRadius={48}
+//               outerRadius={75}
+//               paddingAngle={3}
+//               dataKey="value"
+//             >
+//               {chartData.map((entry, index) => (
+//                 <Cell key={index} fill={entry.color} stroke="none" />
+//               ))}
+//             </Pie>
+//             <Tooltip content={<CustomTooltip />} />
+//           </PieChart>
+//         </ResponsiveContainer>
+//       ) : (
+//         <div className="h-[180px] flex items-center justify-center">
+//           <p className="text-gray-400 text-xs">No task data to display</p>
+//         </div>
+//       )}
+
+//       {/* Legend */}
+//       <div className="mt-3 space-y-2">
+//         {Object.entries(STATUS_CONFIG).map(([key, config]) => {
+//           const count =
+//             analytics.byStatus[key as keyof typeof analytics.byStatus] ?? 0;
+//           if (count === 0) return null;
+//           return (
+//             <div key={key} className="flex items-center justify-between">
+//               <div className="flex items-center gap-2">
+//                 <span
+//                   className="w-2 h-2 rounded-full"
+//                   style={{ backgroundColor: config.color }}
+//                 />
+//                 <span className="text-xs text-gray-500">{config.label}</span>
+//               </div>
+//               <span className="text-xs font-semibold text-gray-700">
+//                 {count}
+//               </span>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TaskOverviewWidget;
+
 // ============================================================
 // TaskOverviewWidget.tsx
-// Donut chart of task statuses + overdue warning badge
+// Donut chart — statuses: pending | in-progress | completed
 // ============================================================
 
 import React from "react";
@@ -12,21 +188,19 @@ interface TaskOverviewWidgetProps {
   loading: boolean;
 }
 
-const STATUS_CONFIG = {
+// Keys match task.types.ts exactly — "in-progress" with hyphen
+const STATUS_CONFIG: Record<
+  "pending" | "in-progress" | "completed",
+  { label: string; color: string }
+> = {
   completed: { label: "Completed", color: "#10b981" },
-  in_progress: { label: "In Progress", color: "#6366f1" },
+  "in-progress": { label: "In Progress", color: "#6366f1" },
   pending: { label: "Pending", color: "#f59e0b" },
-  overdue: { label: "Overdue", color: "#ef4444" },
-  cancelled: { label: "Cancelled", color: "#9ca3af" },
 };
 
 interface TooltipPayload {
   name: string;
   value: number;
-  payload: {
-    label: string;
-    color: string;
-  };
 }
 
 const CustomTooltip: React.FC<{
@@ -34,11 +208,10 @@ const CustomTooltip: React.FC<{
   payload?: TooltipPayload[];
 }> = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
-  const item = payload[0];
   return (
     <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-sm">
-      <span className="font-semibold text-gray-800">{item.name}</span>
-      <span className="ml-2 text-gray-500">{item.value} tasks</span>
+      <span className="font-semibold text-gray-800">{payload[0].name}</span>
+      <span className="ml-2 text-gray-500">{payload[0].value} tasks</span>
     </div>
   );
 };
@@ -75,12 +248,16 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
     );
   }
 
-  const chartData = Object.entries(STATUS_CONFIG)
+  // Build chart data using correct hyphenated key
+  const chartData = (
+    Object.entries(STATUS_CONFIG) as Array<
+      [keyof typeof STATUS_CONFIG, { label: string; color: string }]
+    >
+  )
     .map(([key, config]) => ({
       name: config.label,
-      value: analytics.byStatus[key as keyof typeof analytics.byStatus] ?? 0,
+      value: analytics.byStatus[key] ?? 0,
       color: config.color,
-      label: config.label,
     }))
     .filter((d) => d.value > 0);
 
@@ -104,7 +281,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
         )}
       </div>
 
-      {/* Completion Rate */}
+      {/* Completion Rate bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-xs text-gray-500">Completion Rate</span>
@@ -146,17 +323,20 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
         </div>
       )}
 
-      {/* Legend */}
+      {/* Legend — only shows statuses with count > 0 */}
       <div className="mt-3 space-y-2">
-        {Object.entries(STATUS_CONFIG).map(([key, config]) => {
-          const count =
-            analytics.byStatus[key as keyof typeof analytics.byStatus] ?? 0;
+        {(
+          Object.entries(STATUS_CONFIG) as Array<
+            [keyof typeof STATUS_CONFIG, { label: string; color: string }]
+          >
+        ).map(([key, config]) => {
+          const count = analytics.byStatus[key] ?? 0;
           if (count === 0) return null;
           return (
             <div key={key} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span
-                  className="w-2 h-2 rounded-full"
+                  className="w-2 h-2 rounded-full flex-shrink-0"
                   style={{ backgroundColor: config.color }}
                 />
                 <span className="text-xs text-gray-500">{config.label}</span>
@@ -167,6 +347,19 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
             </div>
           );
         })}
+
+        {/* Overdue shown as a separate warning row if any */}
+        {analytics.overdue > 0 && (
+          <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-400 flex-shrink-0" />
+              <span className="text-xs text-rose-500">Overdue</span>
+            </div>
+            <span className="text-xs font-semibold text-rose-600">
+              {analytics.overdue}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
