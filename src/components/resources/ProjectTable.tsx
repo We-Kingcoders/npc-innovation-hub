@@ -1,218 +1,260 @@
-// import React from "react";
-import { Eye, Pencil, Trash2, Calendar, Clock } from "lucide-react";
+// src/components/resources/ProjectTable.tsx
+import React, { useState } from "react";
+import {
+  Eye,
+  Trash2,
+  ExternalLink,
+  Github,
+  Calendar,
+  User,
+  Pencil,
+} from "lucide-react";
+import type { MemberProject } from "../../api/member/project.api";
+import ProjectViewModal from "./ProjectViewModal";
+import ProjectDeleteModal from "./ProjectDeleteModal";
+import ProjectEditModal from "./ProjectEditModal";
 
-const projects = [
-  {
-    name: "Coachella Music Festival 2025",
-    date: "14/05/2025",
-    status: "Active",
-    progress: 85,
-    category: "Music Festival",
-  },
-  {
-    name: "Corporate Event Planning",
-    date: "12/05/2025",
-    status: "In Progress",
-    progress: 62,
-    category: "Corporate",
-  },
-  {
-    name: "Wedding Ceremony Management",
-    date: "10/05/2025",
-    status: "Planning",
-    progress: 35,
-    category: "Wedding",
-  },
-  {
-    name: "Tech Conference 2025",
-    date: "08/05/2025",
-    status: "Completed",
-    progress: 100,
-    category: "Conference",
-  },
-];
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Active":
-      return "bg-green-100 text-green-800 border-green-200";
-    case "In Progress":
-      return "bg-blue-100 text-blue-800 border-blue-200";
-    case "Planning":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "Completed":
-      return "bg-gray-100 text-gray-800 border-gray-200";
-    default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
-  }
-};
-
-const getProgressColor = (progress: number) => {
-  if (progress >= 80) return "bg-green-500";
-  if (progress >= 50) return "bg-blue-500";
-  if (progress >= 30) return "bg-yellow-500";
-  return "bg-red-500";
-};
-
-export default function ProjectTable() {
-  return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-      {/* Header */}
-      <div className="bg-blue-950  px-6 py-4">
-        <h2 className="text-xl font-semibold text-white">Project Dashboard</h2>
-        <p className="text-indigo-100 text-sm mt-1">
-          Manage and track your event projects
-        </p>
-      </div>
-
-      {/* Stats Bar */}
-      <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-        <div className="flex flex-wrap gap-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-gray-600">Active: 1</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-gray-600">In Progress: 1</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <span className="text-gray-600">Planning: 1</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-            <span className="text-gray-600">Completed: 1</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Project Details
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Progress
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date Created
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {projects.map((project, idx) => (
-              <tr
-                key={idx}
-                className="hover:bg-gray-50 transition-colors duration-200"
-              >
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <div className="text-sm font-medium text-gray-900 mb-1">
-                      {project.name}
-                    </div>
-                    <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full inline-block w-fit">
-                      {project.category}
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(project.status)}`}
-                  >
-                    {project.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                      <span>{project.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full ${getProgressColor(project.progress)} transition-all duration-500`}
-                        style={{ width: `${project.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar size={14} className="mr-1" />
-                    {project.date}
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <button
-                      title="View project"
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all duration-200 group"
-                    >
-                      <Eye
-                        size={16}
-                        className="group-hover:scale-110 transition-transform"
-                      />
-                    </button>
-                    <button
-                      title="Edit project"
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 group"
-                    >
-                      <Pencil
-                        size={16}
-                        className="group-hover:scale-110 transition-transform"
-                      />
-                    </button>
-                    <button
-                      title="Delete project"
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 group"
-                    >
-                      <Trash2
-                        size={16}
-                        className="group-hover:scale-110 transition-transform"
-                      />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-500">
-              Showing {projects.length} of {projects.length} projects
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Clock size={14} />
-              <span>Last updated: 2 minutes ago</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors duration-200">
-              Previous
-            </button>
-            <button className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-200">
-              1
-            </button>
-            <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors duration-200">
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+interface Props {
+  projects: MemberProject[];
+  onDelete: (id: string) => Promise<void>;
+  onUpdate?: (id: string, payload: FormData) => Promise<void>;
 }
+
+const ProjectTable: React.FC<Props> = ({ projects, onDelete, onUpdate }) => {
+  const [viewProject, setViewProject] = useState<MemberProject | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<MemberProject | null>(null);
+  const [editTarget, setEditTarget] = useState<MemberProject | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
+    try {
+      await onDelete(deleteTarget.id);
+    } finally {
+      setDeleteLoading(false);
+      setDeleteTarget(null);
+    }
+  };
+
+  return (
+    <>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-100">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Project
+                </th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Owner
+                </th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Links
+                </th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Created
+                </th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {projects.map((project) => (
+                <tr
+                  key={project.id}
+                  className="hover:bg-gray-50/70 transition-colors"
+                >
+                  {/* Project */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {project.image ? (
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="w-10 h-10 rounded-lg object-cover shrink-0 border border-gray-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-[#28335A]/10 flex items-center justify-center shrink-0">
+                          <span className="text-[#28335A] text-sm font-bold">
+                            {project.title.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 leading-tight">
+                          {project.title}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-0.5 max-w-[200px] truncate">
+                          {project.description}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Owner */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={project.ownerAvatar}
+                        alt={project.owner}
+                        className="w-7 h-7 rounded-full border border-gray-200 object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            "https://randomuser.me/api/portraits/lego/1.jpg";
+                        }}
+                      />
+                      <span className="text-sm text-gray-700">
+                        {project.owner &&
+                        project.owner !== "undefined undefined"
+                          ? project.owner
+                          : "—"}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Role */}
+                  <td className="px-6 py-4">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                        project.ownerRole === "Admin"
+                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                          : "bg-blue-50 text-blue-700 border-blue-200"
+                      }`}
+                    >
+                      {project.ownerRole}
+                    </span>
+                  </td>
+
+                  {/* Links */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {project.link ? (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Source Code"
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-900 text-white hover:bg-gray-700 transition"
+                        >
+                          <Github size={13} />
+                        </a>
+                      ) : (
+                        <span className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 text-gray-300 cursor-not-allowed">
+                          <Github size={13} />
+                        </span>
+                      )}
+                      {project.demo ? (
+                        <a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Live Demo"
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-[#28335A] text-white hover:bg-[#1e2745] transition"
+                        >
+                          <ExternalLink size={13} />
+                        </a>
+                      ) : (
+                        <span className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 text-gray-300 cursor-not-allowed">
+                          <ExternalLink size={13} />
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
+                  {/* Date */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                      <Calendar size={12} />
+                      {new Date(project.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <button
+                        title="View project"
+                        onClick={() => setViewProject(project)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition group"
+                      >
+                        <Eye
+                          size={15}
+                          className="group-hover:scale-110 transition-transform"
+                        />
+                      </button>
+                      {onUpdate && (
+                        <button
+                          title="Edit project"
+                          onClick={() => setEditTarget(project)}
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition group"
+                        >
+                          <Pencil
+                            size={15}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </button>
+                      )}
+                      <button
+                        title="Delete project"
+                        onClick={() => setDeleteTarget(project)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition group"
+                      >
+                        <Trash2
+                          size={15}
+                          className="group-hover:scale-110 transition-transform"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-3.5 border-t border-gray-100 bg-gray-50">
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <User size={12} />
+            Showing {projects.length} project{projects.length !== 1 ? "s" : ""}
+          </div>
+        </div>
+      </div>
+
+      {/* Modals */}
+      {viewProject && (
+        <ProjectViewModal
+          project={viewProject}
+          onClose={() => setViewProject(null)}
+        />
+      )}
+      {editTarget && onUpdate && (
+        <ProjectEditModal
+          project={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSave={onUpdate}
+        />
+      )}
+      {deleteTarget && (
+        <ProjectDeleteModal
+          projectTitle={deleteTarget.title}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleteLoading}
+        />
+      )}
+    </>
+  );
+};
+
+export default ProjectTable;
