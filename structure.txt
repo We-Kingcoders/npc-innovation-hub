@@ -17,6 +17,11 @@ NPC-INNOVATION-HUB/
 │   │   |   ├── project.api.ts
 │   │   |   ├── resource.api.ts
 │   │   │   └── task.api.ts
+│   │   │
+│   │   ├── member/
+│   │   |   ├── chat.api.ts
+│   │   |   └── hub.api.ts
+│   │   │
 │   │   ├── authService.ts
 │   │   ├── client.ts
 │   │   ├── profileService.ts
@@ -133,9 +138,11 @@ NPC-INNOVATION-HUB/
 │   │   ├── useAuth.ts
 │   │   ├── useBlogs.ts
 │   │   ├── useBooking.ts
+│   │   ├── useDirectMessages.ts
 │   │   ├── useEventAttendees.ts
 │   │   ├── useEvents.ts
 │   │   ├── useHireInquiries.ts
+│   │   ├── useHubMessages.ts
 │   │   ├── useProjects.ts
 │   │   ├── useTasks.ts
 │   │   └── useForm.ts
@@ -232,6 +239,7 @@ NPC-INNOVATION-HUB/
 │   │
 │   ├── types/
 │   |   ├── blog.types.ts
+│   |   ├── chat.types.ts
 │   |   ├── dashboard.types.ts
 │   |   ├── event.types.ts
 │   |   ├── hire.types.ts
