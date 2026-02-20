@@ -8,7 +8,6 @@
 // import { useParams, useNavigate } from "react-router-dom";
 // import type { DirectMessage } from "../../types/chat.types";
 
-// // Import BubbleMessage only (ReplyRef not needed here)
 // import MessageBubble from "../../components/chat/MessageBubble";
 // import type { BubbleMessage } from "../../components/chat/MessageBubble";
 // import MessageInput from "../../components/chat/MessageInput";
@@ -43,9 +42,14 @@
 //   </div>
 // );
 
-// // ── Adapter: DirectMessage → BubbleMessage ────────────────────────────────────
+// // ── Adapter ───────────────────────────────────────────────────────────────────
 
-// const toBubble = (msg: DirectMessage): BubbleMessage => ({
+// const toBubble = (
+//   msg: DirectMessage,
+//   getReplyTo: (
+//     id: string,
+//   ) => import("../../components/chat/MessageBubble").ReplyRef | null,
+// ): BubbleMessage => ({
 //   id: msg.id,
 //   senderId: msg.senderId,
 //   content: msg.content,
@@ -54,7 +58,7 @@
 //   isDeleted: msg.isDeleted,
 //   updatedAt: msg.updatedAt,
 //   createdAt: msg.createdAt,
-//   replyTo: null,
+//   replyTo: getReplyTo(msg.id),
 //   sender: {
 //     id: msg.sender.id,
 //     firstName: msg.sender.firstName,
@@ -63,7 +67,7 @@
 //   },
 // });
 
-// // ── Main component ─────────────────────────────────────────────────────────────
+// // ── Main ──────────────────────────────────────────────────────────────────────
 
 // export const Messages: React.FC = () => {
 //   const { id: paramUserId } = useParams<{ id: string }>();
@@ -80,7 +84,6 @@
 //   const [searchQuery, setSearchQuery] = useState("");
 
 //   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
 //   const ENABLE_TYPING_INDICATOR = false;
 
 //   const {
@@ -94,14 +97,13 @@
 //     editMessage,
 //     deleteMessage,
 //     setEditingMessageId,
+//     getReplyTo,
 //   } = useDirectMessages(selectedUserId);
 
-//   // Sync URL param → state
 //   useEffect(() => {
 //     if (paramUserId) setSelectedUserId(paramUserId);
 //   }, [paramUserId]);
 
-//   // Track scroll to show/hide scroll-to-bottom button
 //   const handleScroll = useCallback(() => {
 //     const el = scrollContainerRef.current;
 //     if (!el) return;
@@ -112,6 +114,17 @@
 //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 //   }, [messagesEndRef]);
 
+//   // Scroll to a specific message by ID (for reply jump)
+//   const scrollToMessage = useCallback((msgId: string) => {
+//     const el = document.getElementById(`msg-${msgId}`);
+//     if (el) {
+//       el.scrollIntoView({ behavior: "smooth", block: "center" });
+//       // Briefly highlight the target message
+//       el.classList.add("bg-yellow-50");
+//       setTimeout(() => el.classList.remove("bg-yellow-50"), 1500);
+//     }
+//   }, []);
+
 //   const handleSelectUser = (userId: string) => {
 //     setSelectedUserId(userId);
 //     setReplyTarget(null);
@@ -121,11 +134,20 @@
 //   const handleSend = async (
 //     content: string,
 //     _attachments: AttachmentFile[],
-//     replyToId: string | null,
+//     _replyToId: string | null,
 //   ) => {
 //     if (!content.trim()) return;
-//     void replyToId;
-//     await sendMessage(content);
+//     // Pass full replyTarget (with senderName + content) so bubble can show quote
+//     await sendMessage(
+//       content,
+//       replyTarget
+//         ? {
+//             id: replyTarget.id,
+//             senderName: replyTarget.senderName,
+//             content: replyTarget.content,
+//           }
+//         : null,
+//     );
 //     setReplyTarget(null);
 //     scrollToBottom();
 //   };
@@ -141,7 +163,6 @@
 //     });
 //   };
 
-//   // Derive the other user from message history (could be null)
 //   const otherUser = (() => {
 //     for (const m of messages) {
 //       if (m.senderId !== user?.id) return m.sender;
@@ -156,14 +177,13 @@
 //       ? "Conversation"
 //       : "Select a conversation";
 
-//   // Filter messages by search
 //   const displayedMessages = searchQuery
 //     ? messages.filter((m) =>
 //         m.content.toLowerCase().includes(searchQuery.toLowerCase()),
 //       )
 //     : messages;
 
-//   const bubbles = displayedMessages.map(toBubble);
+//   const bubbles = displayedMessages.map((m) => toBubble(m, getReplyTo));
 
 //   return (
 //     <div className="flex gap-4 h-full min-h-0">
@@ -173,7 +193,6 @@
 //         {/* Header */}
 //         <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
 //           <div className="flex items-center gap-3">
-//             {/* Guard: only render avatar when otherUser is not null */}
 //             {otherUser != null && (
 //               <ChatAvatar
 //                 image={otherUser.image}
@@ -250,14 +269,14 @@
 //           </div>
 //         )}
 
-//         {/* Error banner */}
+//         {/* Error */}
 //         {error && (
 //           <div className="bg-red-50 border-b border-red-100 px-5 py-2 text-sm text-red-600 flex-shrink-0">
 //             {error}
 //           </div>
 //         )}
 
-//         {/* Messages area */}
+//         {/* Messages */}
 //         <div
 //           ref={scrollContainerRef}
 //           onScroll={handleScroll}
@@ -308,15 +327,14 @@
 //                       onEdit={editMessage}
 //                       onDelete={deleteMessage}
 //                       onReply={handleReply}
+//                       onScrollToMessage={scrollToMessage}
 //                       use24h={use24h}
 //                     />
 //                   </React.Fragment>
 //                 );
 //               })}
-//               {/* Typing indicator — ready to wire when backend supports it */}
 //               {ENABLE_TYPING_INDICATOR && otherUser != null && (
 //                 <TypingIndicator
-//                   // name={`${otherUser.firstName} ${otherUser.lastName}`.trim()}
 //                   name={`${otherUser?.firstName ?? ""} ${otherUser?.lastName ?? ""}`.trim()}
 //                 />
 //               )}
@@ -325,7 +343,7 @@
 //           <div ref={messagesEndRef} />
 //         </div>
 
-//         {/* Scroll-to-bottom button */}
+//         {/* Scroll to bottom */}
 //         {showScrollBtn && selectedUserId && (
 //           <div className="relative">
 //             <ScrollToBottomButton onClick={scrollToBottom} />
@@ -373,7 +391,6 @@ import type {
 import DateSeparator from "../../components/chat/DateSeparator";
 import TypingIndicator from "../../components/chat/TypingIndicator";
 import ScrollToBottomButton from "../../components/chat/ScrollToBottomButton";
-import ChatAvatar from "../../components/chat/ChatAvatar";
 import {
   getDateSeparatorLabel,
   isSameDay,
@@ -422,6 +439,40 @@ const toBubble = (
   },
 });
 
+// ── Header Avatar (initials-based, consistent color) ─────────────────────────
+
+const PALETTE = [
+  "bg-blue-600",
+  "bg-purple-600",
+  "bg-emerald-600",
+  "bg-rose-600",
+  "bg-orange-500",
+  "bg-teal-600",
+  "bg-indigo-600",
+  "bg-pink-600",
+];
+const colorFor = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = s.charCodeAt(i) + ((h << 5) - h);
+  return PALETTE[Math.abs(h) % PALETTE.length];
+};
+const makeInitials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase())
+    .slice(0, 2)
+    .join("");
+
+const HeaderAvatar: React.FC<{ name: string }> = ({ name }) => (
+  <div
+    className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${colorFor(name)} select-none`}
+  >
+    {makeInitials(name) || "?"}
+  </div>
+);
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export const Messages: React.FC = () => {
@@ -432,6 +483,9 @@ export const Messages: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(
     paramUserId ?? null,
   );
+  // Stores the name passed from LeftPanel/modal so the header shows immediately
+  const [selectedMemberName, setSelectedMemberName] = useState<string>("");
+
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [use24h] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -469,22 +523,25 @@ export const Messages: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messagesEndRef]);
 
-  // Scroll to a specific message by ID (for reply jump)
   const scrollToMessage = useCallback((msgId: string) => {
     const el = document.getElementById(`msg-${msgId}`);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-      // Briefly highlight the target message
       el.classList.add("bg-yellow-50");
       setTimeout(() => el.classList.remove("bg-yellow-50"), 1500);
     }
   }, []);
 
-  const handleSelectUser = (userId: string) => {
-    setSelectedUserId(userId);
-    setReplyTarget(null);
-    navigate(`/messages/${userId}`, { replace: true });
-  };
+  // LeftPanel now calls onSelect(userId, memberName) — both args always present
+  const handleSelectUser = useCallback(
+    (userId: string, memberName: string) => {
+      setSelectedUserId(userId);
+      setSelectedMemberName(memberName); // ← set immediately so header updates at once
+      setReplyTarget(null);
+      navigate(`/messages/${userId}`, { replace: true });
+    },
+    [navigate],
+  );
 
   const handleSend = async (
     content: string,
@@ -492,7 +549,6 @@ export const Messages: React.FC = () => {
     _replyToId: string | null,
   ) => {
     if (!content.trim()) return;
-    // Pass full replyTarget (with senderName + content) so bubble can show quote
     await sendMessage(
       content,
       replyTarget
@@ -518,6 +574,7 @@ export const Messages: React.FC = () => {
     });
   };
 
+  // Derive other user from loaded messages (most accurate when messages exist)
   const otherUser = (() => {
     for (const m of messages) {
       if (m.senderId !== user?.id) return m.sender;
@@ -526,11 +583,13 @@ export const Messages: React.FC = () => {
     return null;
   })();
 
-  const headerName = otherUser
-    ? `${otherUser.firstName} ${otherUser.lastName}`.trim()
-    : selectedUserId
-      ? "Conversation"
-      : "Select a conversation";
+  // Header name: prefer name from messages, fall back to what LeftPanel passed
+  const headerName =
+    (otherUser
+      ? `${otherUser.firstName} ${otherUser.lastName}`.trim()
+      : null) ||
+    selectedMemberName ||
+    "";
 
   const displayedMessages = searchQuery
     ? messages.filter((m) =>
@@ -542,30 +601,25 @@ export const Messages: React.FC = () => {
 
   return (
     <div className="flex gap-4 h-full min-h-0">
+      {/* LeftPanel onSelect now receives (userId, memberName) */}
       <LeftPanel selectedUserId={selectedUserId} onSelect={handleSelectUser} />
 
       <div className="bg-white rounded-2xl shadow-lg flex-1 flex flex-col overflow-hidden min-h-0">
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            {otherUser != null && (
-              <ChatAvatar
-                image={otherUser.image}
-                name={`${otherUser.firstName} ${otherUser.lastName}`.trim()}
-                size="md"
-                isOnline
-              />
-            )}
-            {otherUser == null && !selectedUserId && (
+            {selectedUserId && headerName ? (
+              <HeaderAvatar name={headerName} />
+            ) : (
               <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
                 <MessageSquare size={16} className="text-gray-400" />
               </div>
             )}
             <div>
               <h2 className="text-base font-bold text-gray-800 leading-tight">
-                {headerName}
+                {headerName || "Select a conversation"}
               </h2>
-              {selectedUserId && otherUser != null && (
+              {selectedUserId && headerName && (
                 <span className="text-xs text-green-500 font-medium flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block" />
                   Online
@@ -652,9 +706,12 @@ export const Messages: React.FC = () => {
               <MessageSkeleton reverse />
             </div>
           ) : bubbles.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-gray-400 text-sm gap-2">
+            <div className="flex flex-col items-center justify-center h-full text-gray-400 text-sm gap-3">
               <MessageSquare size={36} className="text-gray-200" />
-              <p>No messages yet — say hello! 👋</p>
+              <p className="font-medium">No messages yet</p>
+              <p className="text-xs">
+                Say hello to {headerName || "your contact"} 👋
+              </p>
             </div>
           ) : (
             <>
@@ -664,7 +721,6 @@ export const Messages: React.FC = () => {
                   !isSameDay(bubbles[index - 1].timestamp, msg.timestamp);
                 const showAv = shouldShowAvatar(bubbles, index);
                 const groupStart = calcGroupStart(bubbles, index);
-
                 return (
                   <React.Fragment key={msg.id}>
                     {showDateSep && (
@@ -698,7 +754,7 @@ export const Messages: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Scroll to bottom */}
+        {/* Scroll-to-bottom */}
         {showScrollBtn && selectedUserId && (
           <div className="relative">
             <ScrollToBottomButton onClick={scrollToBottom} />
@@ -709,7 +765,7 @@ export const Messages: React.FC = () => {
         {selectedUserId && (
           <div className="flex-shrink-0 relative">
             <MessageInput
-              placeholder={`Message ${headerName}...`}
+              placeholder={`Message ${headerName || "..."}...`}
               isSending={isSending}
               replyTarget={replyTarget}
               onCancelReply={() => setReplyTarget(null)}
