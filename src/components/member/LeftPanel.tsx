@@ -5,8 +5,8 @@
 // import { Hash, Search, Plus, MoreVertical } from "lucide-react";
 // import { useConversations } from "../../hooks/useDirectMessages";
 // import { useAuth } from "../../hooks/useAuth";
-// import type { User } from "../../types/user.types";
 // import NewConversationModal from "../chat/NewConversationModal";
+// import type { MemberItem } from "../chat/NewConversationModal";
 // import ChatAvatar from "../chat/ChatAvatar";
 
 // interface LeftPanelProps {
@@ -14,13 +14,11 @@
 //   onSelect?: (userId: string) => void;
 // }
 
-// // ── Time formatter ────────────────────────────────────────────────────────────
-
-// const formatPreviewTime = (isoOrTime: string): string => {
-//   if (!isoOrTime) return "";
+// const formatPreviewTime = (iso: string): string => {
+//   if (!iso) return "";
 //   try {
-//     const date = new Date(isoOrTime);
-//     if (isNaN(date.getTime())) return isoOrTime;
+//     const date = new Date(iso);
+//     if (isNaN(date.getTime())) return iso;
 //     const diffMs = Date.now() - date.getTime();
 //     const diffMin = Math.floor(diffMs / 60_000);
 //     if (diffMin < 1) return "now";
@@ -32,8 +30,6 @@
 //   }
 // };
 
-// // ── Skeleton ──────────────────────────────────────────────────────────────────
-
 // const Skeleton: React.FC = () => (
 //   <div className="flex items-center gap-3 px-3 py-3 animate-pulse">
 //     <div className="w-11 h-11 rounded-full bg-gray-200 flex-shrink-0" />
@@ -44,8 +40,6 @@
 //   </div>
 // );
 
-// // ── Main ──────────────────────────────────────────────────────────────────────
-
 // const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
 //   const navigate = useNavigate();
 //   const location = useLocation();
@@ -54,31 +48,20 @@
 //   const [showNewConvo, setShowNewConvo] = useState(false);
 
 //   const { conversations, isLoading } = useConversations();
-
 //   const isHub = location.pathname === "/hub-channel";
 
-//   const filtered = conversations.filter((c) => {
-//     const name = `${c.firstName} ${c.lastName}`.toLowerCase();
-//     return name.includes(search.toLowerCase());
-//   });
+//   const filtered = conversations.filter((c) =>
+//     `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()),
+//   );
 
-//   const handleHubClick = () => navigate("/hub-channel");
-
-//   const handleMemberClick = (userId: string) => {
-//     if (onSelect) {
-//       onSelect(userId);
-//     } else {
-//       navigate(`/messages/${userId}`);
-//     }
+//   const go = (userId: string) => {
+//     if (onSelect) onSelect(userId);
+//     else navigate(`/messages/${userId}`);
 //   };
 
-//   const handleNewConversationSelect = (selectedUser: User) => {
+//   const handleNewConversationSelect = (member: MemberItem) => {
 //     setShowNewConvo(false);
-//     if (onSelect) {
-//       onSelect(selectedUser.id);
-//     } else {
-//       navigate(`/messages/${selectedUser.id}`);
-//     }
+//     go(member.id);
 //   };
 
 //   return (
@@ -120,7 +103,7 @@
 //           </div>
 //         </div>
 
-//         {/* Hub Collaboration */}
+//         {/* Hub */}
 //         <div className="px-5 py-4 border-b border-gray-100">
 //           <div className="flex items-center justify-between mb-3">
 //             <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-widest">
@@ -128,11 +111,10 @@
 //             </h3>
 //             <MoreVertical size={14} className="text-gray-400" />
 //           </div>
-
 //           <button
 //             type="button"
-//             onClick={handleHubClick}
-//             className={`w-full flex items-center gap-3 py-2.5 px-3 rounded-xl cursor-pointer transition-all duration-200 text-left ${
+//             onClick={() => navigate("/hub-channel")}
+//             className={`w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-left transition-all ${
 //               isHub ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50"
 //             }`}
 //           >
@@ -145,15 +127,13 @@
 //               >
 //                 Hub Channel
 //               </div>
-//               <div className="text-xs text-gray-400 truncate">
-//                 General discussions
-//               </div>
+//               <div className="text-xs text-gray-400">General discussions</div>
 //             </div>
-//             <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+//             <span className="w-2 h-2 bg-green-500 rounded-full" />
 //           </button>
 //         </div>
 
-//         {/* Direct Messages */}
+//         {/* DMs */}
 //         <div className="flex-1 flex flex-col overflow-hidden">
 //           <div className="px-5 pt-4 pb-2 flex items-center justify-between">
 //             <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-widest">
@@ -185,16 +165,15 @@
 //                   const fullName =
 //                     `${conv.firstName} ${conv.lastName}`.trim() || "Unknown";
 //                   const isSelected = selectedUserId === conv.userId;
-//                   const lastMsgText =
+//                   const lastMsg =
 //                     typeof conv.lastMessage === "string"
 //                       ? conv.lastMessage
 //                       : "";
-
 //                   return (
 //                     <li
 //                       key={conv.userId}
-//                       onClick={() => handleMemberClick(conv.userId)}
-//                       className={`flex items-center gap-3 py-2.5 px-3 rounded-xl cursor-pointer transition-all duration-200 ${
+//                       onClick={() => go(conv.userId)}
+//                       className={`flex items-center gap-3 py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
 //                         isSelected
 //                           ? "bg-blue-50 border border-blue-100"
 //                           : "hover:bg-gray-50"
@@ -206,13 +185,10 @@
 //                         size="lg"
 //                         isOnline={conv.isOnline}
 //                       />
-
 //                       <div className="flex-1 min-w-0">
 //                         <div className="flex items-center justify-between mb-0.5">
 //                           <span
-//                             className={`font-semibold text-sm truncate ${
-//                               isSelected ? "text-blue-700" : "text-gray-800"
-//                             }`}
+//                             className={`font-semibold text-sm truncate ${isSelected ? "text-blue-700" : "text-gray-800"}`}
 //                           >
 //                             {fullName}
 //                           </span>
@@ -221,10 +197,9 @@
 //                           </span>
 //                         </div>
 //                         <p className="text-xs text-gray-500 truncate">
-//                           {lastMsgText || "No messages yet"}
+//                           {lastMsg || "No messages yet"}
 //                         </p>
 //                       </div>
-
 //                       {conv.unreadCount > 0 && (
 //                         <span className="flex-shrink-0 bg-blue-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5 font-medium">
 //                           {conv.unreadCount > 99 ? "99+" : conv.unreadCount}
@@ -263,12 +238,16 @@ import NewConversationModal from "../chat/NewConversationModal";
 import type { MemberItem } from "../chat/NewConversationModal";
 import ChatAvatar from "../chat/ChatAvatar";
 
-interface LeftPanelProps {
+// onSelect passes both userId AND the display name so Messages.tsx header
+// can show the correct name before any messages have loaded.
+export interface LeftPanelProps {
   selectedUserId?: string | null;
-  onSelect?: (userId: string) => void;
+  onSelect?: (userId: string, memberName: string) => void;
 }
 
-const formatPreviewTime = (iso: string): string => {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const formatTime = (iso: string): string => {
   if (!iso) return "";
   try {
     const date = new Date(iso);
@@ -294,6 +273,8 @@ const Skeleton: React.FC = () => (
   </div>
 );
 
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -308,14 +289,18 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
     `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const go = (userId: string) => {
-    if (onSelect) onSelect(userId);
-    else navigate(`/messages/${userId}`);
+  // Central navigation helper — always passes name alongside userId
+  const go = (userId: string, name: string) => {
+    if (onSelect) {
+      onSelect(userId, name);
+    } else {
+      navigate(`/messages/${userId}`);
+    }
   };
 
-  const handleNewConversationSelect = (member: MemberItem) => {
+  const handleModalSelect = (member: MemberItem) => {
     setShowNewConvo(false);
-    go(member.id);
+    go(member.id, member.name);
   };
 
   return (
@@ -323,7 +308,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
       {showNewConvo && user && (
         <NewConversationModal
           currentUserId={user.id}
-          onSelect={handleNewConversationSelect}
+          onSelect={handleModalSelect}
           onClose={() => setShowNewConvo(false)}
         />
       )}
@@ -336,10 +321,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
             <button
               type="button"
               onClick={() => setShowNewConvo(true)}
-              className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded-lg transition-colors"
+              className="p-2 hover:bg-blue-50 rounded-lg transition-colors group"
               title="New conversation"
             >
-              <Plus size={18} className="text-gray-600" />
+              <Plus
+                size={18}
+                className="text-gray-500 group-hover:text-blue-500 transition-colors"
+              />
             </button>
           </div>
           <div className="relative">
@@ -357,7 +345,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
           </div>
         </div>
 
-        {/* Hub */}
+        {/* Hub Collaboration */}
         <div className="px-5 py-4 border-b border-gray-100">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-widest">
@@ -383,11 +371,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
               </div>
               <div className="text-xs text-gray-400">General discussions</div>
             </div>
-            <span className="w-2 h-2 bg-green-500 rounded-full" />
+            <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
           </button>
         </div>
 
-        {/* DMs */}
+        {/* Direct Messages */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="px-5 pt-4 pb-2 flex items-center justify-between">
             <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-widest">
@@ -426,7 +414,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
                   return (
                     <li
                       key={conv.userId}
-                      onClick={() => go(conv.userId)}
+                      onClick={() => go(conv.userId, fullName)}
                       className={`flex items-center gap-3 py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
                         isSelected
                           ? "bg-blue-50 border border-blue-100"
@@ -447,7 +435,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
                             {fullName}
                           </span>
                           <span className="text-xs text-gray-400 ml-2 flex-shrink-0">
-                            {formatPreviewTime(conv.lastMessageTime)}
+                            {formatTime(conv.lastMessageTime)}
                           </span>
                         </div>
                         <p className="text-xs text-gray-500 truncate">
