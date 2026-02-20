@@ -321,3 +321,32 @@ export const buildRouteWithParams = (
 
   return finalRoute;
 };
+
+// ─── ROUTES ADDITIONS ──────────────────────────────────────────────────────
+// Add these entries to your existing src/api/routes.ts under the ROUTES object.
+// If ROUTES is exported as a plain object, just merge this block into it.
+
+// PROJECTS: {
+//   ALL: "/api/projects",
+//   ME: "/api/projects/me",
+//   BY_ID: (id: string) => `/api/projects/project/${id}`,
+//   CREATE: "/api/projects",
+//   UPDATE: (id: string) => `/api/projects/${id}`,
+//   DELETE: (id: string) => `/api/projects/${id}`,
+//   SEARCH: "/api/projects/search",
+// },
+
+// ─── EXAMPLE of what your routes.ts might look like after merging ───────────
+export const ROUTES = {
+  // ... your existing routes ...
+
+  PROJECTS: {
+    ALL: "/api/projects",
+    ME: "/api/projects/me",
+    BY_ID: (id: string) => `/api/projects/project/${id}`,
+    CREATE: "/api/projects",
+    UPDATE: (id: string) => `/api/projects/${id}`,
+    DELETE: (id: string) => `/api/projects/${id}`,
+    SEARCH: "/api/projects/search",
+  },
+};

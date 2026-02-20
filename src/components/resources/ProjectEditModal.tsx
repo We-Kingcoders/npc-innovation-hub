@@ -1,18 +1,21 @@
-// src/pages/add-project-page/AddProject.tsx
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// src/components/resources/ProjectEditModal.tsx
+import React, { useState, useRef, useEffect } from "react";
 import {
-  ArrowLeft,
-  Upload,
-  FileText,
-  Globe,
+  X,
   Github,
+  Globe,
+  FileText,
   ImageIcon,
   Loader2,
-  CheckCircle,
-  AlertCircle,
+  Upload,
 } from "lucide-react";
-import { createProject } from "../../api/member/project.api";
+import type { MemberProject } from "../../api/member/project.api";
+
+interface Props {
+  project: MemberProject;
+  onClose: () => void;
+  onSave: (id: string, payload: FormData) => Promise<void>;
+}
 
 interface FormState {
   title: string;
@@ -22,21 +25,29 @@ interface FormState {
   image: File | null;
 }
 
-const AddProject: React.FC = () => {
-  const navigate = useNavigate();
+const ProjectEditModal: React.FC<Props> = ({ project, onClose, onSave }) => {
   const imageRef = useRef<HTMLInputElement>(null);
-
   const [form, setForm] = useState<FormState>({
-    title: "",
-    description: "",
-    link: "",
-    demo: "",
+    title: project.title,
+    description: project.description,
+    link: project.link ?? "",
+    demo: project.demo ?? "",
     image: null,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    project.image ?? null,
+  );
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -67,69 +78,49 @@ const AddProject: React.FC = () => {
 
     setSubmitting(true);
     setError(null);
-
     try {
-      await createProject(payload);
-      setSuccess(true);
-      setTimeout(() => navigate("/dashboard/projects"), 1800);
+      await onSave(project.id, payload);
+      onClose();
     } catch (err: unknown) {
       const msg =
-        err instanceof Error
-          ? err.message
-          : "Failed to create project. Please try again.";
+        err instanceof Error ? err.message : "Failed to update project.";
       setError(msg);
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (success) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-          <CheckCircle size={32} className="text-green-600" />
-        </div>
-        <h2 className="text-xl font-bold text-gray-900">Project Created!</h2>
-        <p className="text-sm text-gray-500">
-          Redirecting you to your projects…
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Back nav */}
-      <button
-        onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
       >
-        <ArrowLeft size={15} />
-        Back to Projects
-      </button>
-
-      {/* Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-[#28335A] px-6 py-5">
-          <h1 className="text-xl font-bold text-white">Add New Project</h1>
-          <p className="text-blue-200 text-sm mt-0.5">
-            Share your work with the Innovation Hub community
-          </p>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h2 className="text-lg font-bold text-gray-900">Edit Project</h2>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition"
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Error banner */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Error */}
           {error && (
-            <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-              <AlertCircle size={16} className="shrink-0" />
+            <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
               {error}
             </div>
           )}
 
-          {/* Project Image */}
+          {/* Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Project Image
             </label>
             <div
@@ -137,7 +128,7 @@ const AddProject: React.FC = () => {
               onClick={() => imageRef.current?.click()}
             >
               {imagePreview ? (
-                <div className="relative h-44">
+                <div className="relative h-36">
                   <img
                     src={imagePreview}
                     alt="Preview"
@@ -150,10 +141,9 @@ const AddProject: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="h-44 flex flex-col items-center justify-center gap-2 text-gray-400">
-                  <ImageIcon size={28} />
-                  <p className="text-sm">Click to upload project image</p>
-                  <p className="text-xs text-gray-300">PNG, JPG up to 5MB</p>
+                <div className="h-36 flex flex-col items-center justify-center gap-2 text-gray-400">
+                  <ImageIcon size={24} />
+                  <p className="text-sm">Click to upload a new image</p>
                 </div>
               )}
             </div>
@@ -169,11 +159,11 @@ const AddProject: React.FC = () => {
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Project Title <span className="text-red-500">*</span>
+              Title <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <FileText
-                size={15}
+                size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
@@ -181,7 +171,6 @@ const AddProject: React.FC = () => {
                 type="text"
                 value={form.title}
                 onChange={handleChange}
-                placeholder="e.g. AI Chatbot for Customer Support"
                 required
                 className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#28335A]/20 focus:border-[#28335A] transition"
               />
@@ -197,22 +186,21 @@ const AddProject: React.FC = () => {
               name="description"
               value={form.description}
               onChange={handleChange}
-              placeholder="Describe what this project does, the tech stack used, and any key highlights…"
-              rows={4}
+              rows={3}
               required
               className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#28335A]/20 focus:border-[#28335A] transition resize-none"
             />
           </div>
 
-          {/* Links row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Links */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Repository URL
               </label>
               <div className="relative">
                 <Github
-                  size={15}
+                  size={14}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 />
                 <input
@@ -231,7 +219,7 @@ const AddProject: React.FC = () => {
               </label>
               <div className="relative">
                 <Globe
-                  size={15}
+                  size={14}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 />
                 <input
@@ -246,30 +234,30 @@ const AddProject: React.FC = () => {
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="pt-2 flex items-center justify-end gap-3">
+          {/* Actions */}
+          <div className="flex items-center justify-end gap-3 pt-2">
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={onClose}
               disabled={submitting}
-              className="px-5 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition disabled:opacity-50"
+              className="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-[#28335A] hover:bg-[#1e2745] rounded-lg transition disabled:opacity-60 shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#28335A] hover:bg-[#1e2745] rounded-lg transition disabled:opacity-60"
             >
               {submitting ? (
                 <>
-                  <Loader2 size={15} className="animate-spin" />
-                  Creating…
+                  <Loader2 size={14} className="animate-spin" />
+                  Saving…
                 </>
               ) : (
                 <>
-                  <Upload size={15} />
-                  Publish Project
+                  <Upload size={14} />
+                  Save Changes
                 </>
               )}
             </button>
@@ -280,4 +268,4 @@ const AddProject: React.FC = () => {
   );
 };
 
-export default AddProject;
+export default ProjectEditModal;
