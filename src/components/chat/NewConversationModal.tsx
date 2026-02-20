@@ -3,121 +3,119 @@
 // import React, { useState, useEffect, useCallback } from "react";
 // import { X, Search, Loader2 } from "lucide-react";
 // import apiClient from "../../api/client";
-// import { UserRole } from "../../types/user.types";
-// import type { User } from "../../types/user.types";
-// import ChatAvatar from "./ChatAvatar";
 
 // interface NewConversationModalProps {
 //   currentUserId: string;
-//   onSelect: (user: User) => void;
+//   onSelect: (member: MemberItem) => void;
 //   onClose: () => void;
 // }
 
-// // ── Normalize a raw object into a User ───────────────────────────────────────
+// export interface MemberItem {
+//   id: string;
+//   name: string;
+//   role: string;
+//   imageUrl: string | null;
+// }
+
+// // ── Avatar that generates initials from a full name string ────────────────────
+// const MemberAvatar: React.FC<{ name: string; imageUrl: string | null }> = ({
+//   name,
+//   imageUrl,
+// }) => {
+//   const [imgFailed, setImgFailed] = useState(false);
+
+//   // Generate initials from any name format e.g. "Alain shema" → "AS"
+//   const initials = name
+//     .trim()
+//     .split(/\s+/)
+//     .filter(Boolean)
+//     .map((w) => w[0].toUpperCase())
+//     .slice(0, 2)
+//     .join("");
+
+//   // Only treat as valid image if it starts with http or / and image hasn't errored
+//   const hasValidImage =
+//     !imgFailed &&
+//     imageUrl &&
+//     (imageUrl.startsWith("http") || imageUrl.startsWith("/"));
+
+//   return (
+//     <div className="relative w-10 h-10 flex-shrink-0">
+//       {hasValidImage ? (
+//         <img
+//           src={imageUrl!}
+//           alt={name}
+//           className="w-10 h-10 rounded-full object-cover"
+//           onError={() => setImgFailed(true)}
+//         />
+//       ) : (
+//         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0C2340] to-[#3b5998] flex items-center justify-center text-white font-semibold text-sm select-none">
+//           {initials || "?"}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // ── Parse /api/members response ───────────────────────────────────────────────
 // const str = (v: unknown): string =>
 //   typeof v === "string" ? v : v == null ? "" : String(v);
 
-// const toUser = (raw: unknown): User | null => {
-//   const u = (raw ?? {}) as Record<string, unknown>;
-//   const id = str(u.id ?? u._id);
-//   if (!id) return null;
-//   return {
-//     id,
-//     firstName: str(u.firstName),
-//     lastName: str(u.lastName),
-//     email: str(u.email),
-//     image: typeof u.image === "string" ? u.image : null,
-//     phone: str(u.phone),
-//     gender: (u.gender as User["gender"]) ?? "other",
-//     verified: Boolean(u.verified),
-//     role: (u.role as UserRole) ?? UserRole.MEMBER,
-//     isActive: u.isActive !== false,
-//     createdAt: str(u.createdAt),
-//     updatedAt: str(u.updatedAt),
+// const parseMembersResponse = (data: unknown): MemberItem[] => {
+//   const toItem = (raw: unknown): MemberItem | null => {
+//     const r = (raw ?? {}) as Record<string, unknown>;
+//     // userId is the actual user ID used for DM routing
+//     const id = str(r.userId ?? r.id);
+//     if (!id) return null;
+//     const name =
+//       str(r.name) ||
+//       `${str(r.firstName)} ${str(r.lastName)}`.trim() ||
+//       "Unknown";
+//     const imageUrl =
+//       typeof r.imageUrl === "string" && r.imageUrl
+//         ? r.imageUrl
+//         : typeof r.image === "string" && r.image
+//           ? r.image
+//           : null;
+//     return { id, name, role: str(r.role || "Member"), imageUrl };
 //   };
-// };
 
-// // ── Unwrap any API envelope into a User[] ────────────────────────────────────
-// const extractUsers = (data: unknown): User[] => {
-//   const tryArray = (arr: unknown): User[] | null => {
+//   const tryArr = (arr: unknown): MemberItem[] | null => {
 //     if (!Array.isArray(arr) || arr.length === 0) return null;
-//     const mapped = arr.map(toUser).filter((u): u is User => u !== null);
-//     return mapped.length > 0 ? mapped : null;
+//     const items = arr.map(toItem).filter((x): x is MemberItem => x !== null);
+//     return items.length > 0 ? items : null;
 //   };
 
-//   if (Array.isArray(data)) return tryArray(data) ?? [];
+//   // Direct array
+//   if (Array.isArray(data)) return tryArr(data) ?? [];
 
 //   const d = (data ?? {}) as Record<string, unknown>;
 
-//   // { data: { users/members: [] } }
+//   // { data: { members: [] } }  ← actual shape from your backend
 //   if (d.data && typeof d.data === "object" && !Array.isArray(d.data)) {
 //     const inner = d.data as Record<string, unknown>;
-//     return (
-//       tryArray(inner.users) ??
-//       tryArray(inner.members) ??
-//       tryArray(inner.data) ??
-//       tryArray(Object.values(inner)) ??
-//       []
-//     );
+//     const result =
+//       tryArr(inner.members) ??
+//       tryArr(inner.users) ??
+//       tryArr(inner.data) ??
+//       // last resort: values of whatever is inside data
+//       null;
+//     if (result) return result;
 //   }
 
-//   if (Array.isArray(d.data)) return tryArray(d.data) ?? [];
-
-//   return tryArray(d.users) ?? tryArray(d.members) ?? tryArray(d.data) ?? [];
+//   if (Array.isArray(d.data)) return tryArr(d.data) ?? [];
+//   return tryArr(d.members) ?? tryArr(d.users) ?? [];
 // };
 
-// // ── Derive users from /api/chat conversations (always accessible) ─────────────
-// const extractUsersFromChat = (data: unknown): User[] => {
-//   let items: unknown[] = [];
-//   if (Array.isArray(data)) items = data;
-//   else {
-//     const d = (data ?? {}) as Record<string, unknown>;
-//     if (Array.isArray(d.data)) items = d.data;
-//     else if (d.data && typeof d.data === "object") {
-//       const inner = d.data as Record<string, unknown>;
-//       if (Array.isArray(inner.conversations)) items = inner.conversations;
-//     }
-//     if (Array.isArray(d.conversations)) items = d.conversations;
-//   }
-//   return items.flatMap((item) => {
-//     const c = (item ?? {}) as Record<string, unknown>;
-//     if (c.user && typeof c.user === "object") {
-//       const u = toUser(c.user);
-//       return u ? [u] : [];
-//     }
-//     return [];
-//   });
-// };
+// // ── Fetch ─────────────────────────────────────────────────────────────────────
 
-// // ── Try endpoints in order ────────────────────────────────────────────────────
-// // /api/members is the confirmed working endpoint from the API docs
-// const ENDPOINTS = ["/api/members", "/api/users/members", "/api/users"];
-
-// const fetchMembers = async (currentUserId: string): Promise<User[]> => {
-//   for (const endpoint of ENDPOINTS) {
-//     try {
-//       const res = await apiClient.get(endpoint);
-//       const users = extractUsers(res.data);
-//       if (users.length > 0) {
-//         return users.filter((u) => u.id !== currentUserId);
-//       }
-//     } catch {
-//       // 403 / 404 — try next
-//     }
-//   }
-
-//   // Last resort: extract from existing conversations
-//   try {
-//     const res = await apiClient.get("/api/chat");
-//     const users = extractUsersFromChat(res.data);
-//     if (users.length > 0) {
-//       return users.filter((u) => u.id !== currentUserId);
-//     }
-//   } catch {
-//     // ignore
-//   }
-
-//   throw new Error("No accessible member endpoint found");
+// const fetchMembers = async (currentUserId: string): Promise<MemberItem[]> => {
+//   const res = await apiClient.get("/api/members");
+//   // Debug: log raw response to confirm data arrives
+//   console.log("[NewConversationModal] /api/members raw:", res.data);
+//   const members = parseMembersResponse(res.data);
+//   console.log("[NewConversationModal] parsed members:", members);
+//   return members.filter((m) => m.id !== currentUserId);
 // };
 
 // // ── Component ─────────────────────────────────────────────────────────────────
@@ -127,7 +125,7 @@
 //   onSelect,
 //   onClose,
 // }) => {
-//   const [users, setUsers] = useState<User[]>([]);
+//   const [members, setMembers] = useState<MemberItem[]>([]);
 //   const [search, setSearch] = useState("");
 //   const [isLoading, setIsLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
@@ -137,9 +135,10 @@
 //       setIsLoading(true);
 //       setError(null);
 //       const result = await fetchMembers(currentUserId);
-//       setUsers(result);
-//     } catch {
-//       setError("Could not load members list.");
+//       setMembers(result);
+//     } catch (err) {
+//       console.error("[NewConversationModal] fetch failed:", err);
+//       setError("Could not load members. Please try again.");
 //     } finally {
 //       setIsLoading(false);
 //     }
@@ -157,13 +156,9 @@
 //     return () => document.removeEventListener("keydown", handler);
 //   }, [onClose]);
 
-//   const filtered = users.filter((u) => {
-//     const name = `${u.firstName} ${u.lastName}`.toLowerCase();
-//     return (
-//       name.includes(search.toLowerCase()) ||
-//       u.email.toLowerCase().includes(search.toLowerCase())
-//     );
-//   });
+//   const filtered = members.filter((m) =>
+//     m.name.toLowerCase().includes(search.toLowerCase()),
+//   );
 
 //   return (
 //     <div
@@ -194,7 +189,7 @@
 //             <input
 //               autoFocus
 //               type="text"
-//               placeholder="Search by name or email..."
+//               placeholder="Search by name..."
 //               value={search}
 //               onChange={(e) => setSearch(e.target.value)}
 //               className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -218,26 +213,20 @@
 //             </p>
 //           ) : (
 //             <ul className="py-2">
-//               {filtered.map((u) => {
-//                 const fullName = `${u.firstName} ${u.lastName}`.trim();
-//                 const isAdmin = u.role === UserRole.ADMIN;
+//               {filtered.map((m) => {
+//                 const isAdmin = m.role.toLowerCase() === "admin";
 //                 return (
-//                   <li key={u.id}>
+//                   <li key={m.id}>
 //                     <button
 //                       type="button"
-//                       onClick={() => onSelect(u)}
+//                       onClick={() => onSelect(m)}
 //                       className="w-full flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors text-left"
 //                     >
-//                       <ChatAvatar
-//                         image={u.image}
-//                         name={fullName}
-//                         size="md"
-//                         isOnline={u.isActive}
-//                       />
+//                       <MemberAvatar name={m.name} imageUrl={m.imageUrl} />
 //                       <div className="flex-1 min-w-0">
 //                         <div className="flex items-center gap-2">
 //                           <span className="font-medium text-gray-800 text-sm truncate">
-//                             {fullName}
+//                             {m.name}
 //                           </span>
 //                           {isAdmin && (
 //                             <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-medium flex-shrink-0">
@@ -245,9 +234,6 @@
 //                             </span>
 //                           )}
 //                         </div>
-//                         <p className="text-xs text-gray-400 truncate">
-//                           {u.email}
-//                         </p>
 //                       </div>
 //                     </button>
 //                   </li>
@@ -264,10 +250,24 @@
 // export default NewConversationModal;
 
 // src/components/chat/NewConversationModal.tsx
+//
+// Uses /api/members (works for all users).
+// If the current user is an Admin, also fetches /api/users/users to include
+// admin accounts that are not in the members table.
 
 import React, { useState, useEffect, useCallback } from "react";
 import { X, Search, Loader2 } from "lucide-react";
 import apiClient from "../../api/client";
+import { useAuth } from "../../hooks/useAuth";
+import { UserRole } from "../../types/user.types";
+
+export interface MemberItem {
+  id: string;
+  name: string;
+  role: string;
+  initials: string;
+  color: string;
+}
 
 interface NewConversationModalProps {
   currentUserId: string;
@@ -275,74 +275,56 @@ interface NewConversationModalProps {
   onClose: () => void;
 }
 
-export interface MemberItem {
-  id: string;
-  name: string;
-  role: string;
-  imageUrl: string | null;
-}
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-// ── Avatar that generates initials from a full name string ────────────────────
-const MemberAvatar: React.FC<{ name: string; imageUrl: string | null }> = ({
-  name,
-  imageUrl,
-}) => {
-  const [imgFailed, setImgFailed] = useState(false);
-
-  // Generate initials from any name format e.g. "Alain shema" → "AS"
-  const initials = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0].toUpperCase())
-    .slice(0, 2)
-    .join("");
-
-  // Only treat as valid image if it starts with http or / and image hasn't errored
-  const hasValidImage =
-    !imgFailed &&
-    imageUrl &&
-    (imageUrl.startsWith("http") || imageUrl.startsWith("/"));
-
-  return (
-    <div className="relative w-10 h-10 flex-shrink-0">
-      {hasValidImage ? (
-        <img
-          src={imageUrl!}
-          alt={name}
-          className="w-10 h-10 rounded-full object-cover"
-          onError={() => setImgFailed(true)}
-        />
-      ) : (
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0C2340] to-[#3b5998] flex items-center justify-center text-white font-semibold text-sm select-none">
-          {initials || "?"}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ── Parse /api/members response ───────────────────────────────────────────────
 const str = (v: unknown): string =>
   typeof v === "string" ? v : v == null ? "" : String(v);
 
-const parseMembersResponse = (data: unknown): MemberItem[] => {
+const PALETTE = [
+  "bg-blue-600",
+  "bg-purple-600",
+  "bg-emerald-600",
+  "bg-rose-600",
+  "bg-orange-500",
+  "bg-teal-600",
+  "bg-indigo-600",
+  "bg-pink-600",
+  "bg-cyan-600",
+  "bg-amber-600",
+];
+
+const colorFor = (id: string): string => {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = id.charCodeAt(i) + ((h << 5) - h);
+  return PALETTE[Math.abs(h) % PALETTE.length];
+};
+
+const makeInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
+// ── Parse /api/members response ───────────────────────────────────────────────
+// Shape: { status, results, data: { members: [ { id, userId, name, role, imageUrl } ] } }
+
+const parseMembersEndpoint = (data: unknown): MemberItem[] => {
   const toItem = (raw: unknown): MemberItem | null => {
     const r = (raw ?? {}) as Record<string, unknown>;
-    // userId is the actual user ID used for DM routing
     const id = str(r.userId ?? r.id);
     if (!id) return null;
     const name =
       str(r.name) ||
       `${str(r.firstName)} ${str(r.lastName)}`.trim() ||
       "Unknown";
-    const imageUrl =
-      typeof r.imageUrl === "string" && r.imageUrl
-        ? r.imageUrl
-        : typeof r.image === "string" && r.image
-          ? r.image
-          : null;
-    return { id, name, role: str(r.role || "Member"), imageUrl };
+    return {
+      id,
+      name,
+      role: str(r.role || "Member"),
+      initials: makeInitials(name),
+      color: colorFor(id),
+    };
   };
 
   const tryArr = (arr: unknown): MemberItem[] | null => {
@@ -351,37 +333,103 @@ const parseMembersResponse = (data: unknown): MemberItem[] => {
     return items.length > 0 ? items : null;
   };
 
-  // Direct array
   if (Array.isArray(data)) return tryArr(data) ?? [];
-
   const d = (data ?? {}) as Record<string, unknown>;
 
-  // { data: { members: [] } }  ← actual shape from your backend
   if (d.data && typeof d.data === "object" && !Array.isArray(d.data)) {
     const inner = d.data as Record<string, unknown>;
-    const result =
-      tryArr(inner.members) ??
-      tryArr(inner.users) ??
-      tryArr(inner.data) ??
-      // last resort: values of whatever is inside data
-      null;
-    if (result) return result;
+    for (const key of ["members", "users", "data"]) {
+      const r = tryArr(inner[key]);
+      if (r) return r;
+    }
   }
-
   if (Array.isArray(d.data)) return tryArr(d.data) ?? [];
-  return tryArr(d.members) ?? tryArr(d.users) ?? [];
+  for (const key of ["members", "users", "data"]) {
+    const r = tryArr(d[key]);
+    if (r) return r;
+  }
+  return [];
 };
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
+// ── Parse /api/users/users response (admin only) ──────────────────────────────
+// Shape: { status, results, data: { users: [ { id, firstName, lastName, email, role } ] } }
 
-const fetchMembers = async (currentUserId: string): Promise<MemberItem[]> => {
-  const res = await apiClient.get("/api/members");
-  // Debug: log raw response to confirm data arrives
-  console.log("[NewConversationModal] /api/members raw:", res.data);
-  const members = parseMembersResponse(res.data);
-  console.log("[NewConversationModal] parsed members:", members);
-  return members.filter((m) => m.id !== currentUserId);
+const parseUsersEndpoint = (data: unknown): MemberItem[] => {
+  const toItem = (raw: unknown): MemberItem | null => {
+    const r = (raw ?? {}) as Record<string, unknown>;
+    const id = str(r.id ?? r._id);
+    if (!id) return null;
+    const name =
+      `${str(r.firstName)} ${str(r.lastName)}`.trim() ||
+      str(r.name) ||
+      str(r.email).split("@")[0] ||
+      "Unknown";
+    return {
+      id,
+      name,
+      role: str(r.role || "Member"),
+      initials: makeInitials(name),
+      color: colorFor(id),
+    };
+  };
+
+  const tryArr = (arr: unknown): MemberItem[] | null => {
+    if (!Array.isArray(arr) || arr.length === 0) return null;
+    const items = arr.map(toItem).filter((x): x is MemberItem => x !== null);
+    return items.length > 0 ? items : null;
+  };
+
+  if (Array.isArray(data)) return tryArr(data) ?? [];
+  const d = (data ?? {}) as Record<string, unknown>;
+
+  if (d.data && typeof d.data === "object" && !Array.isArray(d.data)) {
+    const inner = d.data as Record<string, unknown>;
+    for (const key of ["users", "members", "data"]) {
+      const r = tryArr(inner[key]);
+      if (r) return r;
+    }
+  }
+  if (Array.isArray(d.data)) return tryArr(d.data) ?? [];
+  for (const key of ["users", "members"]) {
+    const r = tryArr(d[key]);
+    if (r) return r;
+  }
+  return [];
 };
+
+// ── Merge + deduplicate (Admin records win over Member records) ───────────────
+
+const mergeDedupe = (...lists: MemberItem[][]): MemberItem[] => {
+  const map = new Map<string, MemberItem>();
+  for (const list of lists) {
+    for (const item of list) {
+      const existing = map.get(item.id);
+      // If record already exists, keep the one with Admin role
+      if (!existing || item.role.toLowerCase() === "admin") {
+        map.set(item.id, item);
+      }
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => {
+    const aA = a.role.toLowerCase() === "admin" ? 0 : 1;
+    const bA = b.role.toLowerCase() === "admin" ? 0 : 1;
+    if (aA !== bA) return aA - bA;
+    return a.name.localeCompare(b.name);
+  });
+};
+
+// ── InitialsAvatar ────────────────────────────────────────────────────────────
+
+const InitialsAvatar: React.FC<{ initials: string; color: string }> = ({
+  initials,
+  color,
+}) => (
+  <div
+    className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${color} select-none`}
+  >
+    {initials}
+  </div>
+);
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -390,6 +438,9 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
   onSelect,
   onClose,
 }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === UserRole.ADMIN;
+
   const [members, setMembers] = useState<MemberItem[]>([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -399,26 +450,51 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
     try {
       setIsLoading(true);
       setError(null);
-      const result = await fetchMembers(currentUserId);
-      setMembers(result);
+
+      const lists: MemberItem[][] = [];
+
+      // 1. Always fetch /api/members (works for everyone)
+      try {
+        const res = await apiClient.get("/api/members");
+        const items = parseMembersEndpoint(res.data);
+        if (items.length > 0) lists.push(items);
+      } catch (e) {
+        console.warn("[Modal] /api/members failed:", e);
+      }
+
+      // 2. If admin, also fetch /api/users/users to get admin accounts
+      if (isAdmin) {
+        try {
+          const res = await apiClient.get("/api/users/users");
+          const items = parseUsersEndpoint(res.data);
+          if (items.length > 0) lists.push(items);
+        } catch {
+          // Non-admin gets 403 here — silently ignore
+        }
+      }
+
+      const merged = mergeDedupe(...lists).filter(
+        (m) => m.id !== currentUserId,
+      );
+      setMembers(merged);
     } catch (err) {
-      console.error("[NewConversationModal] fetch failed:", err);
+      console.error("[Modal] fetch failed:", err);
       setError("Could not load members. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  }, [currentUserId]);
+  }, [currentUserId, isAdmin]);
 
   useEffect(() => {
     load();
   }, [load]);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    const h = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
   }, [onClose]);
 
   const filtered = members.filter((m) =>
@@ -435,7 +511,14 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 className="text-base font-bold text-gray-800">New Message</h3>
+          <div>
+            <h3 className="text-base font-bold text-gray-800">New Message</h3>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {isLoading
+                ? "Loading…"
+                : `${members.length} member${members.length !== 1 ? "s" : ""} available`}
+            </p>
+          </div>
           <button
             onClick={onClose}
             className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
@@ -454,7 +537,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
             <input
               autoFocus
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -465,8 +548,9 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
         {/* List */}
         <div className="overflow-y-auto max-h-80">
           {isLoading ? (
-            <div className="flex items-center justify-center py-10">
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
               <Loader2 size={20} className="animate-spin text-gray-400" />
+              <p className="text-xs text-gray-400">Loading members…</p>
             </div>
           ) : error ? (
             <p className="text-center text-sm text-red-500 py-8 px-5">
@@ -479,7 +563,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
           ) : (
             <ul className="py-2">
               {filtered.map((m) => {
-                const isAdmin = m.role.toLowerCase() === "admin";
+                const isAdminMember = m.role.toLowerCase() === "admin";
                 return (
                   <li key={m.id}>
                     <button
@@ -487,18 +571,21 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
                       onClick={() => onSelect(m)}
                       className="w-full flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors text-left"
                     >
-                      <MemberAvatar name={m.name} imageUrl={m.imageUrl} />
+                      <InitialsAvatar initials={m.initials} color={m.color} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-800 text-sm truncate">
                             {m.name}
                           </span>
-                          {isAdmin && (
-                            <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-medium flex-shrink-0">
+                          {isAdminMember && (
+                            <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-md font-semibold flex-shrink-0">
                               Admin
                             </span>
                           )}
                         </div>
+                        <p className="text-xs text-gray-400 capitalize">
+                          {m.role}
+                        </p>
                       </div>
                     </button>
                   </li>
