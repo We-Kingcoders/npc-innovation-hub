@@ -47,4 +47,10 @@ export const sidebarLinks = [
     path: "/Admin-tasks",
     notification: 0,
   },
+  {
+    icon: "messages", // ← new
+    label: "Messages",
+    path: "/admin/messages", // opens the messages page (no userId = show panel)
+    notification: 0,
+  },
 ];
