@@ -36,7 +36,7 @@
 // import { Dashboard } from "../pages/member-page/Dashboard";
 // import { Resources } from "../pages/resources-page/Resources";
 // import { Projects } from "../pages/projects-page/Projects";
-// import { AddProject } from "../pages/add-project-page/AddProject";
+// import AddProject from "../pages/add-project-page/AddProject"; // ✅ default export — no curly braces
 // import { Events } from "../pages/events-page/Events";
 // import { Messages } from "../pages/messages-page/Messages";
 // import { HubChannel } from "../pages/messages-page/HubChannel";
@@ -440,6 +440,8 @@
 
 // export default AllRoutes;
 
+// src/Routes/AllRoutes.tsx
+
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "../components/button/Footer";
@@ -473,17 +475,18 @@ import Categories from "../pages/resources-room/Categories";
 import SubcategoryResults from "../pages/resources-room/SubcategoryResults";
 import AllResources from "../pages/resources-room/AllResources";
 
-// Dashboard
+// Member Dashboard
 import { DashboardLayout } from "../components/member/layouts/DashboardLayout";
 import { Dashboard } from "../pages/member-page/Dashboard";
 import { Resources } from "../pages/resources-page/Resources";
 import { Projects } from "../pages/projects-page/Projects";
-import AddProject from "../pages/add-project-page/AddProject"; // ✅ default export — no curly braces
+import AddProject from "../pages/add-project-page/AddProject";
 import { Events } from "../pages/events-page/Events";
 import { Messages } from "../pages/messages-page/Messages";
 import { HubChannel } from "../pages/messages-page/HubChannel";
-
 import MemberForm from "../components/member/MemberForm";
+
+// Admin pages
 import AdminDashboard from "../pages/Admin-pages/AdminDashboard";
 import AdminResources from "../pages/Admin-pages/AdminResources";
 import HireUsRequests from "../pages/Admin-pages/HireUsRequests";
@@ -496,12 +499,17 @@ import ForgotPassword from "../pages/Login/ForgotPassword";
 import HireRequestDetail from "../components/admin-components/HireRequestDetail";
 import EventTables from "../pages/Admin-pages/EventTables";
 import TaskManagement from "../pages/Admin-pages/TaskManagement";
-
-// Admin Profile Pages
 import ViewProfile from "../pages/Admin-pages/Profile/ViewProfile";
 import ProfileSettings from "../pages/Admin-pages/Profile/ProfileSettings";
 
-// Auth Components
+// Admin Chat pages (new)
+import AdminMessages from "../pages/Admin-pages/AdminMessages";
+import AdminHubChannel from "../pages/Admin-pages/AdminHubChannel";
+
+// Admin Chat Layout (proper bounded-height layout for chat routes)
+import AdminChatLayout from "../components/admin-components/AdminChatLayout";
+
+// Auth
 import { ProtectedRoute, PublicRoute } from "../components/ProtectedRoute";
 
 const AllRoutes: React.FC = () => {
@@ -509,7 +517,6 @@ const AllRoutes: React.FC = () => {
     <Routes>
       {/* ==================== PUBLIC ROUTES ==================== */}
 
-      {/* Landing Page */}
       <Route
         path="/"
         element={
@@ -524,8 +531,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Hire Us Page */}
       <Route
         path="/hire-us"
         element={
@@ -539,8 +544,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Auth Pages - Redirect to dashboard if already logged in */}
       <Route
         path="/login"
         element={
@@ -560,8 +563,6 @@ const AllRoutes: React.FC = () => {
           </PublicRoute>
         }
       />
-
-      {/* Forgot Password - Public route */}
       <Route
         path="/forgot-password"
         element={
@@ -570,18 +571,7 @@ const AllRoutes: React.FC = () => {
           </PublicRoute>
         }
       />
-
-      {/* OTP Verification - Semi-protected (requires login but not full auth) */}
-      <Route
-        path="/otp"
-        element={
-          <>
-            <OTPVerification />
-          </>
-        }
-      />
-
-      {/* Projects Page - Public */}
+      <Route path="/otp" element={<OTPVerification />} />
       <Route
         path="/projects"
         element={
@@ -591,8 +581,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Members Page - Public */}
       <Route
         path="/members"
         element={
@@ -611,8 +599,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Blog Page - Public */}
       <Route
         path="/blog"
         element={
@@ -623,8 +609,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Hub Information - Public */}
       <Route
         path="/Hub-information"
         element={
@@ -638,13 +622,10 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Resources Room - Public */}
       <Route
         path="/resources-room"
         element={
           <>
-            {/* <Header /> */}
             <Home />
             <Footer />
           </>
@@ -680,8 +661,6 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
-
-      {/* Chat Card - Public */}
       <Route
         path="/chatcard"
         element={
@@ -694,7 +673,6 @@ const AllRoutes: React.FC = () => {
 
       {/* ==================== PROTECTED MEMBER ROUTES ==================== */}
 
-      {/* Member Dashboard Routes */}
       <Route
         path="/dashboard"
         element={
@@ -741,6 +719,18 @@ const AllRoutes: React.FC = () => {
           <ProtectedRoute requiredRole="Member">
             <DashboardLayout>
               <Events />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Member Messages — base (no userId) + with userId */}
+      <Route
+        path="/messages"
+        element={
+          <ProtectedRoute requiredRole="Member">
+            <DashboardLayout>
+              <Messages />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -858,8 +848,6 @@ const AllRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-
-      {/* Admin Profile Routes */}
       <Route
         path="/admin/profile"
         element={
@@ -873,6 +861,42 @@ const AllRoutes: React.FC = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <ProfileSettings />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ── Admin Chat Routes ── */}
+
+      {/* Base — shows left panel, no conversation selected */}
+      <Route
+        path="/admin/messages"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminChatLayout>
+              <AdminMessages />
+            </AdminChatLayout>
+          </ProtectedRoute>
+        }
+      />
+      {/* With a specific member */}
+      <Route
+        path="/admin/messages/:id"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminChatLayout>
+              <AdminMessages />
+            </AdminChatLayout>
+          </ProtectedRoute>
+        }
+      />
+      {/* Admin Hub Channel */}
+      <Route
+        path="/admin/hub-channel"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminChatLayout>
+              <AdminHubChannel />
+            </AdminChatLayout>
           </ProtectedRoute>
         }
       />

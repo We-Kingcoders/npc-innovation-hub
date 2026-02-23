@@ -1,8 +1,4 @@
 // src/components/chat/ChatShell.tsx
-//
-// Drop-in wrapper that gives every chat view a properly contained,
-// non-growing layout. Import this instead of duplicating the flex
-// column + overflow plumbing in every page.
 
 import React, { useRef, useState, useCallback } from "react";
 import { MessageSquare, Search, X, MoreHorizontal } from "lucide-react";
@@ -39,7 +35,6 @@ export const MessageSkeleton: React.FC<{ reverse?: boolean }> = ({
   </div>
 );
 
-const ENABLE_TYPING_INDICATOR = false;
 // ── Header Avatar ─────────────────────────────────────────────────────────────
 
 const PALETTE = [
@@ -66,6 +61,8 @@ const makeInitials = (name: string) =>
     .slice(0, 2)
     .join("");
 
+const ENABLE_TYPING_INDICATOR = false;
+
 export const HeaderAvatar: React.FC<{ name: string; size?: "sm" | "md" }> = ({
   name,
   size = "md",
@@ -81,36 +78,33 @@ export const HeaderAvatar: React.FC<{ name: string; size?: "sm" | "md" }> = ({
 };
 
 // ── Props ─────────────────────────────────────────────────────────────────────
+// NOTE: getReplyTo is NOT a prop here — parents embed replyTo directly into
+// each BubbleMessage via their toBubble() adapter before passing messages down.
 
 export interface ChatShellProps {
-  // Header
   headerTitle: string;
   headerSubtitle?: string;
-  headerIcon?: React.ReactNode; // e.g. Hub # icon
-  headerRight?: React.ReactNode; // extra header actions
+  headerIcon?: React.ReactNode;
+  headerRight?: React.ReactNode;
   showOnlineStatus?: boolean;
 
-  // Messages
   messages: BubbleMessage[];
   currentUserId: string;
   isLoading?: boolean;
   error?: string | null;
 
-  // Input
   inputPlaceholder?: string;
   isSending?: boolean;
   currentUserImage: string | null;
   currentUserName: string;
 
-  // Empty state
   emptyIcon?: React.ReactNode;
   emptyTitle?: string;
   emptySubtitle?: string;
   noSelectionTitle?: string;
   noSelectionSubtitle?: string;
-  isSelected?: boolean; // if false, shows the "no selection" state
+  isSelected?: boolean;
 
-  // Callbacks
   onSend: (
     content: string,
     attachments: AttachmentFile[],
@@ -119,9 +113,7 @@ export interface ChatShellProps {
   onEdit: (id: string, content: string) => void;
   onDelete: (id: string) => void;
   onScrollToMessage?: (id: string) => void;
-  getReplyTo?: (id: string) => import("./MessageBubble").ReplyRef | null;
 
-  // Reply state (managed externally)
   replyTarget: ReplyTarget | null;
   onReply: (msg: BubbleMessage) => void;
   onCancelReply: () => void;
@@ -130,8 +122,6 @@ export interface ChatShellProps {
   setEditingId: (id: string | null) => void;
 
   use24h?: boolean;
-
-  // messagesEndRef — passed in so parent can also call scrollToBottom
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -200,10 +190,8 @@ const ChatShell: React.FC<ChatShellProps> = ({
     : messages;
 
   return (
-    // ⬇ This flex column fills 100% of whatever container it lives in.
-    // The parent (DashboardLayout / admin layout) must give this a bounded height.
     <div className="flex flex-col h-full min-h-0 bg-white rounded-2xl shadow-lg overflow-hidden">
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      {/* Header */}
       <div className="flex-shrink-0 flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
         <div className="flex items-center gap-3 min-w-0">
           {headerIcon ??
@@ -252,7 +240,7 @@ const ChatShell: React.FC<ChatShellProps> = ({
         </div>
       </div>
 
-      {/* ── Search bar ─────────────────────────────────────────────────────── */}
+      {/* Search bar */}
       {isSearchOpen && (
         <div className="flex-shrink-0 px-5 py-2 border-b border-gray-100 flex items-center gap-2 bg-gray-50">
           <Search size={13} className="text-gray-400 flex-shrink-0" />
@@ -276,20 +264,18 @@ const ChatShell: React.FC<ChatShellProps> = ({
         </div>
       )}
 
-      {/* ── Error bar ──────────────────────────────────────────────────────── */}
+      {/* Error */}
       {error && (
         <div className="flex-shrink-0 bg-red-50 border-b border-red-100 px-5 py-2 text-sm text-red-600">
           {error}
         </div>
       )}
 
-      {/* ── Message list — the ONLY scrolling element ───────────────────────
-           flex-1 + min-h-0 is the key: without min-h-0 flex items won't
-           shrink below their content size and the page will grow forever.  */}
+      {/* Messages — only scrolling region */}
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 min-h-0 overflow-y-auto py-2 relative"
+        className="flex-1 min-h-0 overflow-y-auto py-2"
       >
         {!isSelected ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-3 px-8 text-center">
@@ -343,21 +329,20 @@ const ChatShell: React.FC<ChatShellProps> = ({
                 </React.Fragment>
               );
             })}
-            {/* Typing indicator placeholder */}
             {ENABLE_TYPING_INDICATOR && <TypingIndicator name="Someone" />}
           </>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* ── Scroll-to-bottom button ─────────────────────────────────────────── */}
+      {/* Scroll-to-bottom */}
       {showScrollBtn && isSelected && (
         <div className="flex-shrink-0 flex justify-end px-4 py-1">
           <ScrollToBottomButton onClick={scrollToBottom} />
         </div>
       )}
 
-      {/* ── Input ──────────────────────────────────────────────────────────── */}
+      {/* Input */}
       {isSelected && (
         <div className="flex-shrink-0 relative">
           <MessageInput
