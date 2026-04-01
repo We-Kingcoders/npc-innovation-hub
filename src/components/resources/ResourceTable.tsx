@@ -1,42 +1,65 @@
-import { Eye, Download, FileText } from "lucide-react";
+// src/components/resources/ResourceTable.tsx
 
-const resources = [
-  {
-    name: "Essentials for figma beginners",
-    date: "14/05/2025",
-    category: "Cyber Security",
-  },
-  {
-    name: "Event Planning Templates",
-    date: "12/05/2025",
-    category: "Frontend",
-  },
-  {
-    name: "Vendor Management Checklist",
-    date: "10/05/2025",
-    category: "Backend",
-  },
-  {
-    name: "Budget Planning Spreadsheet",
-    date: "08/05/2025",
-    category: "Cyber Security",
-  },
-];
+import React from "react";
+import { Eye, Download, FileText, Video, BookOpen } from "lucide-react";
+import type { Resource } from "../../types/resource.types";
+import ResourceSkeleton from "./ResourceSkeleton";
+import UpvoteButton from "./UpvoteButton";
+import SaveButton from "./SaveButton";
 
-const getCategoryIcon = (category: string) => {
-  switch (category) {
-    case "Cyber Security":
+interface ResourceTableProps {
+  resources: Resource[];
+  loading: boolean;
+  savedResourceIds: Set<string>;
+  upvotedResourceIds: Set<string>;
+  onView: (resource: Resource) => void;
+  onUpvote: (id: string) => Promise<void>;
+  onSave: (id: string) => Promise<void>;
+}
+
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case "Video":
+      return <Video size={16} className="text-red-500" />;
+    case "Book":
+      return <BookOpen size={16} className="text-blue-500" />;
+    case "Documentation":
       return <FileText size={16} className="text-purple-500" />;
-    case "Frontend":
-      return <FileText size={16} className="text-pink-500" />;
-    case "Backend":
-      return <FileText size={16} className="text-blue-500" />;
     default:
       return <FileText size={16} className="text-gray-500" />;
   }
 };
 
-export default function ResourceTable() {
+const getCategoryColor = (category: string): string => {
+  switch (category) {
+    case "Frontend":
+      return "bg-pink-100 text-pink-700";
+    case "Backend":
+      return "bg-blue-100 text-blue-700";
+    case "Cybersecurity":
+      return "bg-purple-100 text-purple-700";
+    default:
+      return "bg-gray-100 text-gray-600";
+  }
+};
+
+const formatDate = (iso: string): string => {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const ResourceTable: React.FC<ResourceTableProps> = ({
+  resources,
+  loading,
+  savedResourceIds,
+  upvotedResourceIds,
+  onView,
+  onUpvote,
+  onSave,
+}) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
       {/* Header */}
@@ -59,7 +82,10 @@ export default function ResourceTable() {
                 Category
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date Modified
+                Type
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date Added
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -67,72 +93,125 @@ export default function ResourceTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {resources.map((resource, idx) => (
-              <tr
-                key={idx}
-                className="hover:bg-gray-50 transition-colors duration-200"
-              >
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0 mr-3">
-                      {getCategoryIcon(resource.category)}
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {resource.name}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {resource.category}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {resource.date}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex space-x-3">
-                    <button
-                      className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200 p-1 rounded-md hover:bg-indigo-50"
-                      title="View Resource"
-                    >
-                      <Eye size={16} />
-                    </button>
-                    <button
-                      className="text-green-600 hover:text-green-900 transition-colors duration-200 p-1 rounded-md hover:bg-green-50"
-                      title="Download Resource"
-                    >
-                      <Download size={16} />
-                    </button>
+            {loading ? (
+              <ResourceSkeleton />
+            ) : resources.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-16 text-center">
+                  <div className="flex flex-col items-center gap-2 text-gray-400">
+                    <FileText size={36} className="opacity-40" />
+                    <p className="text-sm font-medium">No resources found</p>
+                    <p className="text-xs">
+                      Try adjusting your filters or check back later.
+                    </p>
                   </div>
                 </td>
               </tr>
-            ))}
+            ) : (
+              resources.map((resource) => (
+                <tr
+                  key={resource.id}
+                  className="hover:bg-gray-50 transition-colors duration-200"
+                >
+                  {/* Title */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <div className="shrink-0">
+                        {getTypeIcon(resource.type)}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-gray-900 max-w-xs truncate">
+                          {resource.title}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {resource.author}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Category */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(resource.category)}`}
+                    >
+                      {resource.category}
+                    </span>
+                  </td>
+
+                  {/* Type */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                      {resource.type}
+                    </span>
+                  </td>
+
+                  {/* Date */}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(resource.createdAt)}
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center gap-1">
+                      {/* View */}
+                      <button
+                        onClick={() => onView(resource)}
+                        className="text-indigo-600 hover:text-indigo-900 transition-colors p-1 rounded-md hover:bg-indigo-50"
+                        title="View Resource"
+                      >
+                        <Eye size={16} />
+                      </button>
+
+                      {/* Upvote */}
+                      <UpvoteButton
+                        resourceId={resource.id}
+                        upvotes={resource.upvotes}
+                        hasUpvoted={upvotedResourceIds.has(resource.id)}
+                        onUpvote={onUpvote}
+                        compact
+                      />
+
+                      {/* Save */}
+                      <SaveButton
+                        resourceId={resource.id}
+                        hasSaved={savedResourceIds.has(resource.id)}
+                        onSave={onSave}
+                        compact
+                      />
+
+                      {/* Download */}
+                      {resource.url && (
+                        <a
+                          href={resource.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:text-green-900 transition-colors p-1 rounded-md hover:bg-green-50"
+                          title="Open / Download"
+                        >
+                          <Download size={16} />
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Footer */}
-      <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-        <div className="flex items-center justify-between">
+      {!loading && resources.length > 0 && (
+        <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
           <div className="text-sm text-gray-500">
-            Showing {resources.length} of {resources.length} resources
-          </div>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200">
-              Previous
-            </button>
-            <button className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-200">
-              1
-            </button>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200">
-              Next
-            </button>
+            Showing {resources.length} resource
+            {resources.length !== 1 ? "s" : ""}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default ResourceTable;
