@@ -1,33 +1,37 @@
 // src/components/resources/ResourceFilters.tsx
 
-import React from "react";
+import React, { useRef } from "react";
 import { Search } from "lucide-react";
 import type { ResourceFilterState } from "../../types/resource.types";
 import { ResourceCategory, ResourceType } from "../../types/resource.types";
 
 interface ResourceFiltersProps {
   filters: ResourceFilterState;
-  onChange: (filters: ResourceFilterState) => void;
+  onSearch: (query: string) => void;
+  onCategoryChange: (category: string) => void;
+  onTypeChange: (type: string) => void;
+  className?: string;
 }
 
 const ResourceFilters: React.FC<ResourceFiltersProps> = ({
   filters,
-  onChange,
+  onSearch,
+  onCategoryChange,
+  onTypeChange,
+  className = "",
 }) => {
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...filters, search: e.target.value });
-  };
-
-  const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange({ ...filters, category: e.target.value });
-  };
-
-  const handleType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange({ ...filters, type: e.target.value });
+    const value = e.target.value;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      onSearch(value);
+    }, 400);
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-5">
+    <div className={`flex flex-col sm:flex-row gap-3 ${className}`}>
       {/* Search */}
       <div className="relative flex-1">
         <Search
@@ -37,17 +41,17 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
         <input
           type="text"
           placeholder="Search resources..."
-          value={filters.search}
+          defaultValue={filters.search}
           onChange={handleSearch}
-          className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"
+          className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition bg-white"
         />
       </div>
 
       {/* Category */}
       <select
         value={filters.category}
-        onChange={handleCategory}
-        className="px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition bg-white"
+        onChange={(e) => onCategoryChange(e.target.value)}
+        className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition bg-white"
       >
         <option value="">All Categories</option>
         {Object.values(ResourceCategory).map((cat) => (
@@ -60,8 +64,8 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
       {/* Type */}
       <select
         value={filters.type}
-        onChange={handleType}
-        className="px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition bg-white"
+        onChange={(e) => onTypeChange(e.target.value)}
+        className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition bg-white"
       >
         <option value="">All Types</option>
         {Object.values(ResourceType).map((t) => (
