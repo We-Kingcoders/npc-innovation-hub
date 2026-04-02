@@ -15,6 +15,8 @@ interface ResourceTableProps {
   onView: (resource: Resource) => void;
   onUpvote: (id: string) => Promise<void>;
   onSave: (id: string) => Promise<void>;
+  /** Pass false for public pages where auth actions are hidden */
+  showAuthActions?: boolean;
 }
 
 const getTypeIcon = (type: string) => {
@@ -43,13 +45,12 @@ const getCategoryColor = (category: string): string => {
   }
 };
 
-const formatDate = (iso: string): string => {
-  return new Date(iso).toLocaleDateString("en-US", {
+const formatDate = (iso: string): string =>
+  new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
-};
 
 const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
@@ -59,6 +60,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
   onView,
   onUpvote,
   onSave,
+  showAuthActions = true,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
@@ -66,7 +68,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
       <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-4">
         <h2 className="text-xl font-semibold text-white">Resource Library</h2>
         <p className="text-slate-300 text-sm mt-1">
-          Manage your event resources and documents
+          Browse resources and documents from the hub
         </p>
       </div>
 
@@ -113,12 +115,20 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                   key={resource.id}
                   className="hover:bg-gray-50 transition-colors duration-200"
                 >
-                  {/* Title */}
+                  {/* Title + thumbnail */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="shrink-0">
-                        {getTypeIcon(resource.type)}
-                      </div>
+                      {resource.imageUrl ? (
+                        <img
+                          src={resource.imageUrl}
+                          alt={resource.title}
+                          className="w-10 h-10 rounded-lg object-cover shrink-0 border border-gray-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                          {getTypeIcon(resource.type)}
+                        </div>
+                      )}
                       <div>
                         <div className="text-sm font-medium text-gray-900 max-w-xs truncate">
                           {resource.title}
@@ -141,7 +151,8 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
 
                   {/* Type */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                      {getTypeIcon(resource.type)}
                       {resource.type}
                     </span>
                   </td>
@@ -154,7 +165,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                   {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-1">
-                      {/* View */}
+                      {/* View - always visible */}
                       <button
                         onClick={() => onView(resource)}
                         className="text-indigo-600 hover:text-indigo-900 transition-colors p-1 rounded-md hover:bg-indigo-50"
@@ -163,24 +174,26 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                         <Eye size={16} />
                       </button>
 
-                      {/* Upvote */}
-                      <UpvoteButton
-                        resourceId={resource.id}
-                        upvotes={resource.upvotes}
-                        hasUpvoted={upvotedResourceIds.has(resource.id)}
-                        onUpvote={onUpvote}
-                        compact
-                      />
+                      {/* Auth-only actions */}
+                      {showAuthActions && (
+                        <>
+                          <UpvoteButton
+                            resourceId={resource.id}
+                            upvotes={resource.upvotes}
+                            hasUpvoted={upvotedResourceIds.has(resource.id)}
+                            onUpvote={onUpvote}
+                            compact
+                          />
+                          <SaveButton
+                            resourceId={resource.id}
+                            hasSaved={savedResourceIds.has(resource.id)}
+                            onSave={onSave}
+                            compact
+                          />
+                        </>
+                      )}
 
-                      {/* Save */}
-                      <SaveButton
-                        resourceId={resource.id}
-                        hasSaved={savedResourceIds.has(resource.id)}
-                        onSave={onSave}
-                        compact
-                      />
-
-                      {/* Download */}
+                      {/* Download - always visible */}
                       {resource.url && (
                         <a
                           href={resource.url}
