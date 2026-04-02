@@ -3,6 +3,13 @@
  * TypeScript interfaces for event and attendance data structures
  */
 
+export interface Creator {
+  id: string;
+  firstName: string;
+  lastName: string;
+  image: string | null;
+}
+
 export interface Event {
   id: string;
   title: string;
@@ -14,6 +21,7 @@ export interface Event {
   createdBy?: string;
   createdAt: string;
   updatedAt: string;
+  creator?: Creator;
 }
 
 export interface Attendee {
@@ -68,6 +76,21 @@ export interface EventResponse {
   message?: string;
   data: {
     event: Event;
+  };
+}
+
+export interface RSVPResponse {
+  status: string;
+  message: string;
+  data: {
+    attendance: {
+      id: string;
+      userId: string;
+      eventId: string;
+      status: "going";
+      updatedAt: string;
+      createdAt: string;
+    };
   };
 }
 
