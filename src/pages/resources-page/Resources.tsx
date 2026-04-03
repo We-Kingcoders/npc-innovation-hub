@@ -6,7 +6,7 @@ import ResourceTable from "../../components/resources/ResourceTable";
 import ResourceDetailsModal from "../../components/resources/ResourceDetailsModal";
 import ResourceFilters from "../../components/resources/ResourceFilters";
 import { useResources } from "../../hooks/useResources";
-import type { Resource, ResourceFilterState } from "../../types/resource.types";
+import type { Resource } from "../../types/resource.types";
 
 export const Resources: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +18,8 @@ export const Resources: React.FC = () => {
     savedResources,
     loading,
     error,
+    filters,
+    setFilters,
     fetchResources,
     fetchResourceById,
     fetchSavedResources,
@@ -27,26 +29,17 @@ export const Resources: React.FC = () => {
   } = useResources();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [filters, setFilters] = useState<ResourceFilterState>({
-    search: "",
-    category: "",
-    type: "",
-  });
+  const [upvotedIds, setUpvotedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchResources();
     fetchSavedResources();
   }, [fetchResources, fetchSavedResources]);
 
-  // Saved resource IDs set for quick lookup
   const savedResourceIds = useMemo(
     () => new Set(savedResources.map((r) => r.id)),
     [savedResources],
   );
-
-  // Upvoted resource IDs — tracked via userInteraction per selected resource
-  // For table-level, we keep a local set that grows as user upvotes
-  const [upvotedIds, setUpvotedIds] = useState<Set<string>>(new Set());
 
   const handleUpvote = async (id: string) => {
     await upvote(id);
@@ -66,6 +59,21 @@ export const Resources: React.FC = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
     clearSelectedResource();
+  };
+
+  // Filter callbacks — client-side only for the member dashboard
+  // (the member Resources page does not call server filter endpoints,
+  //  it fetches all once and filters locally for instant UX)
+  const handleSearch = (query: string) => {
+    setFilters((prev) => ({ ...prev, search: query }));
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setFilters((prev) => ({ ...prev, category }));
+  };
+
+  const handleTypeChange = (type: string) => {
+    setFilters((prev) => ({ ...prev, type }));
   };
 
   // Client-side filtering
@@ -121,7 +129,13 @@ export const Resources: React.FC = () => {
       )}
 
       {/* Filters */}
-      <ResourceFilters filters={filters} onChange={setFilters} />
+      <ResourceFilters
+        filters={filters}
+        onSearch={handleSearch}
+        onCategoryChange={handleCategoryChange}
+        onTypeChange={handleTypeChange}
+        className="mb-5"
+      />
 
       {/* Table */}
       <ResourceTable
