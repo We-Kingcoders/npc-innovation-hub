@@ -44,6 +44,8 @@ import { Events } from "../pages/events-page/Events";
 import { Messages } from "../pages/messages-page/Messages";
 import { HubChannel } from "../pages/messages-page/HubChannel";
 import MemberForm from "../components/member/MemberForm";
+import MyTasks from "../pages/tasks/MyTasks";
+import TaskDetails from "../pages/tasks/TaskDetails";
 
 // Admin pages
 import AdminDashboard from "../pages/Admin-pages/AdminDashboard";
@@ -300,6 +302,30 @@ const AllRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* ── Member Tasks ── */}
+      <Route
+        path="/dashboard/tasks"
+        element={
+          <ProtectedRoute requiredRole="Member">
+            <DashboardLayout>
+              <MyTasks />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/tasks/:id"
+        element={
+          <ProtectedRoute requiredRole="Member">
+            <DashboardLayout>
+              <TaskDetails />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Member Messages */}
       <Route
         path="/messages"
         element={
