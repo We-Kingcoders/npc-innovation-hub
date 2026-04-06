@@ -21,6 +21,7 @@ import Services from "../pages/HireUs/services";
 import LatestPro from "../pages/HireUs/latespro";
 import InnovationHub from "../pages/HireUs/FirstSection";
 import BlogDesign from "../pages/AboutHub/Topics";
+import BlogDetails from "../pages/blog/BlogDetails";
 import MissionSection from "../pages/Hub-info/MissionSection";
 import WhyHub from "../pages/Hub-info/WhyHub";
 import FAQs from "../pages/Hub-info/FAQs";
@@ -60,11 +61,9 @@ import TaskManagement from "../pages/Admin-pages/TaskManagement";
 import ViewProfile from "../pages/Admin-pages/Profile/ViewProfile";
 import ProfileSettings from "../pages/Admin-pages/Profile/ProfileSettings";
 
-// Admin Chat pages (new)
+// Admin Chat pages
 import AdminMessages from "../pages/Admin-pages/AdminMessages";
 import AdminHubChannel from "../pages/Admin-pages/AdminHubChannel";
-
-// Admin Chat Layout (proper bounded-height layout for chat routes)
 import AdminChatLayout from "../components/admin-components/AdminChatLayout";
 
 // Auth
@@ -157,6 +156,8 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
+
+      {/* ── Blog routes ── */}
       <Route
         path="/blog"
         element={
@@ -167,6 +168,27 @@ const AllRoutes: React.FC = () => {
           </>
         }
       />
+      <Route
+        path="/blogs"
+        element={
+          <>
+            <Header />
+            <BlogDesign />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/blogs/:id"
+        element={
+          <>
+            <Header />
+            <BlogDetails />
+            <Footer />
+          </>
+        }
+      />
+
       <Route
         path="/Hub-information"
         element={
@@ -193,7 +215,6 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/categories"
         element={
           <>
-            {/* <Header /> */}
             <Categories />
             <Footer />
           </>
@@ -203,7 +224,6 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/categories/:subcategory"
         element={
           <>
-            {/* <Header /> */}
             <SubcategoryResults />
             <Footer />
           </>
@@ -213,7 +233,6 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/all-resources"
         element={
           <>
-            {/* <Header /> */}
             <AllResources />
             <Footer />
           </>
@@ -281,8 +300,6 @@ const AllRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-
-      {/* Member Messages — base (no userId) + with userId */}
       <Route
         path="/messages"
         element={
@@ -424,8 +441,6 @@ const AllRoutes: React.FC = () => {
       />
 
       {/* ── Admin Chat Routes ── */}
-
-      {/* Base — shows left panel, no conversation selected */}
       <Route
         path="/admin/messages"
         element={
@@ -436,7 +451,6 @@ const AllRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      {/* With a specific member */}
       <Route
         path="/admin/messages/:id"
         element={
@@ -447,7 +461,6 @@ const AllRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      {/* Admin Hub Channel */}
       <Route
         path="/admin/hub-channel"
         element={
