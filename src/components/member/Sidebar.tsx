@@ -1,9 +1,6 @@
-/**
- * Member Sidebar Component
- * Place in: src/components/member/Sidebar.tsx
- */
+// src/components/member/Sidebar.tsx
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -17,6 +14,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { useMember } from "../../hooks/useMember";
 import { getUserInitials, getUserFullName } from "../../types/user.types";
 
 interface SidebarItem {
@@ -84,8 +82,14 @@ const sidebarItems: SidebarItem[] = [
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { member, fetchMember } = useMember();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  // Fetch member profile once to get the uploaded avatar
+  useEffect(() => {
+    if (user?.id) fetchMember(user.id);
+  }, [user?.id, fetchMember]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -99,10 +103,15 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  // Derive display values from the real User shape (firstName + lastName)
   const displayName = user ? getUserFullName(user) : "User";
   const initials = user ? getUserInitials(user) : "U";
   const fallbackName = user?.email?.split("@")[0] ?? "User";
+
+  // Prefer the uploaded member image, fall back to auth image, then show initials
+  const avatarUrl = member?.imageUrl || user?.image || null;
+
+  // Prefer member display name if set (e.g. "Entue MUGABO" from profile form)
+  const shownName = member?.name || displayName || fallbackName;
 
   return (
     <>
@@ -110,28 +119,30 @@ export const Sidebar: React.FC = () => {
         <div>
           {/* Profile Section */}
           <div className="flex flex-col items-center mb-10">
-            {user?.image ? (
+            {avatarUrl ? (
               <img
-                src={user.image}
-                alt={displayName}
+                src={avatarUrl}
+                alt={shownName}
                 className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-[#9B5CFF]"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-[#9B5CFF] mb-2 flex items-center justify-center text-2xl font-bold">
+              <div className="w-20 h-20 rounded-full bg-[#9B5CFF] mb-2 flex items-center justify-center text-2xl font-bold select-none">
                 {initials}
               </div>
             )}
 
-            <span className="text-xl font-semibold text-center">
-              {displayName || fallbackName}
+            <span className="text-xl font-semibold text-center leading-tight">
+              {shownName}
             </span>
 
-            {user?.role && (
-              <span className="text-xs text-gray-400 mt-1">{user.role}</span>
+            {(member?.role || user?.role) && (
+              <span className="text-xs text-gray-400 mt-1">
+                {member?.role || user?.role}
+              </span>
             )}
           </div>
 
-          {/* Menu Section */}
+          {/* Menu label */}
           <div className="mb-6 ml-2 text-sm opacity-70 uppercase tracking-wide font-medium">
             Menu
           </div>
