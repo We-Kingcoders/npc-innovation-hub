@@ -1,10 +1,11 @@
 // src/components/dashboard/ProfileCard.tsx
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, UserCircle } from "lucide-react";
-import type { User } from "../../types/user.types";
+import { useMember } from "../../hooks/useMember";
 import { getUserInitials } from "../../types/user.types";
+import type { User } from "../../types/user.types";
 
 interface ProfileCardProps {
   user: User | null;
@@ -12,22 +13,32 @@ interface ProfileCardProps {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const navigate = useNavigate();
+  const { member, fetchMember } = useMember();
+
+  // Fetch member profile to get the uploaded image
+  useEffect(() => {
+    if (user?.id) fetchMember(user.id);
+  }, [user?.id, fetchMember]);
 
   const initials = user ? getUserInitials(user) : "?";
   const fullName = user
     ? `${user.firstName} ${user.lastName}`.trim()
     : "Member";
-  const role = user?.role ?? "";
+  const role = member?.role ?? user?.role ?? "";
   const email = user?.email ?? "";
+
+  // Prefer member profile image (uploaded via /api/members),
+  // fall back to auth user image, then show initials
+  const avatarUrl = member?.imageUrl || user?.image || null;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex flex-col items-center text-center">
         {/* Avatar */}
         <div className="relative mb-4">
-          {user?.image ? (
+          {avatarUrl ? (
             <img
-              src={user.image}
+              src={avatarUrl}
               alt={fullName}
               className="w-20 h-20 rounded-full object-cover border-2 border-indigo-200"
             />
@@ -40,13 +51,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
               {initials}
             </div>
           )}
+          {/* Online dot */}
           <span
             className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500
                            rounded-full border-2 border-white"
           />
         </div>
 
-        <h3 className="text-base font-bold text-gray-900 mb-0.5">{fullName}</h3>
+        {/* Name */}
+        <h3 className="text-base font-bold text-gray-900 mb-0.5">
+          {member?.name || fullName}
+        </h3>
+
+        {/* Role badge */}
         {role && (
           <span
             className="text-xs font-semibold text-indigo-600 bg-indigo-50
@@ -55,12 +72,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
             {role}
           </span>
         )}
+
+        {/* Email */}
         {email && (
           <p className="text-xs text-gray-400 mb-5 truncate max-w-full">
             {email}
           </p>
         )}
 
+        {/* Buttons */}
         <div className="flex gap-2 w-full">
           <button
             onClick={() => navigate("/dashboard/edit-profile")}
@@ -72,7 +92,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
             Edit Profile
           </button>
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/dashboard/profile")}
             className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100
                        hover:bg-gray-200 text-gray-700 px-3 py-2.5 rounded-lg text-xs
                        font-semibold transition-colors duration-200"
