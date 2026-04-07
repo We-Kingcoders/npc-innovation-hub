@@ -1,493 +1,700 @@
-import React, { useState } from "react";
-import { User, Mail, Award, Code, Trash2 } from "lucide-react";
+// src/components/member/MemberForm.tsx
 
-interface Skill {
-  name: string;
-  technologies: string[];
-  percent: number;
-}
+import React, { useEffect, useRef, useState } from "react";
+import {
+  User,
+  Mail,
+  Award,
+  Code,
+  Trash2,
+  Lock,
+  Check,
+  AlertCircle,
+  Camera,
+} from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
+import { useProfile } from "../../hooks/useProfile";
+import { useMember } from "../../hooks/useMember";
+import type { SkillDetail } from "../../types/member.types";
 
-interface Education {
-  degree: string;
-  institution: string;
-  description: string;
-  imageUrl: string;
-}
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-interface Contacts {
-  linkedin: string;
-  github: string;
-  twitter: string;
-  telegram: string;
-}
+const Input: React.FC<
+  React.InputHTMLAttributes<HTMLInputElement> & {
+    label: string;
+    accent?: string;
+  }
+> = ({ label, accent = "blue", ...props }) => (
+  <div className="space-y-1.5">
+    <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <input
+      {...props}
+      className={`w-full px-4 py-3 border border-gray-300 rounded-lg
+                  focus:ring-2 focus:ring-${accent}-500 focus:border-transparent
+                  transition-colors text-sm ${props.className ?? ""}`}
+    />
+  </div>
+);
 
-interface MemberData {
-  name: string;
-  role: string;
-  imageUrl: string;
-  bio: string;
-  education: Education;
-  contacts: Contacts;
-  skills: Skill[];
-}
+const Textarea: React.FC<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    label: string;
+    accent?: string;
+  }
+> = ({ label, accent = "blue", ...props }) => (
+  <div className="space-y-1.5">
+    <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <textarea
+      {...props}
+      className={`w-full px-4 py-3 border border-gray-300 rounded-lg resize-none
+                  focus:ring-2 focus:ring-${accent}-500 focus:border-transparent
+                  transition-colors text-sm ${props.className ?? ""}`}
+    />
+  </div>
+);
+
+const SectionHeader: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  color: string;
+}> = ({ icon, title, subtitle, color }) => (
+  <div className={`border-b border-gray-200 pb-4 mb-6`}>
+    <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+      <span className={color}>{icon}</span>
+      {title}
+    </h2>
+    <p className="text-gray-500 text-sm mt-0.5">{subtitle}</p>
+  </div>
+);
+
+const Toast: React.FC<{ msg: string | null; type: "success" | "error" }> = ({
+  msg,
+  type,
+}) => {
+  if (!msg) return null;
+  return (
+    <div
+      className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium mb-6
+                      ${
+                        type === "success"
+                          ? "bg-green-50 text-green-700 border border-green-200"
+                          : "bg-red-50 text-red-700 border border-red-200"
+                      }`}
+    >
+      {type === "success" ? <Check size={15} /> : <AlertCircle size={15} />}
+      {msg}
+    </div>
+  );
+};
+
+// ── Main Component ────────────────────────────────────────────────────────────
 
 const MemberForm: React.FC = () => {
-  const [formData, setFormData] = useState<MemberData>({
-    name: "",
-    role: "",
-    imageUrl: "",
-    bio: "",
-    education: {
-      degree: "",
-      institution: "",
-      description: "",
-      imageUrl: "",
-    },
-    contacts: {
-      linkedin: "",
-      github: "",
-      twitter: "",
-      telegram: "",
-    },
-    skills: [],
-  });
+  const { user } = useAuth();
+  const userId = user?.id ?? "";
 
-  const [newSkill, setNewSkill] = useState<Skill>({
+  const {
+    profile,
+    fetchProfile,
+    updateProfile,
+    updatePassword,
+    saving: pSaving,
+    error: pError,
+    successMsg: pSuccess,
+    clearMessages: pClear,
+  } = useProfile();
+
+  const {
+    member,
+    memberExists,
+    fetchMember,
+    saveMemberBasic,
+    manageContacts,
+    manageEducation,
+    manageSkills,
+    saving: mSaving,
+    error: mError,
+    successMsg: mSuccess,
+    clearMessages: mClear,
+  } = useMember();
+
+  // ── Local form state ───────────────────────────────────────────────────────
+
+  // Basic member info
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [bio, setBio] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  // Profile (user)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+
+  // Education
+  const [degree, setDegree] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [eduDesc, setEduDesc] = useState("");
+  const [eduImage, setEduImage] = useState<File | null>(null);
+  const eduFileRef = useRef<HTMLInputElement>(null);
+
+  // Contacts
+  const [linkedin, setLinkedin] = useState("");
+  const [github, setGithub] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [instagram, setInstagram] = useState("");
+
+  // Skills
+  const [skills, setSkills] = useState<SkillDetail[]>([]);
+  const [newSkill, setNewSkill] = useState<SkillDetail>({
     name: "",
     technologies: [],
     percent: 0,
   });
-
   const [techInput, setTechInput] = useState("");
-  const [isSubmitting] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Password
+  const [oldPwd, setOldPwd] = useState("");
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [pwdError, setPwdError] = useState<string | null>(null);
 
-  const handleNestedChange = (
-    section: "education",
-    field: keyof Education,
-    value: string,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
-    }));
-  };
+  // ── Fetch on mount ─────────────────────────────────────────────────────────
 
-  const handleContactChange = (field: keyof Contacts, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      contacts: {
-        ...prev.contacts,
-        [field]: value,
-      },
-    }));
-  };
+  useEffect(() => {
+    fetchProfile();
+    if (userId) fetchMember(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
-  const addTechnology = () => {
-    if (techInput.trim()) {
-      setNewSkill((prev) => ({
-        ...prev,
-        technologies: [...prev.technologies, techInput.trim()],
-      }));
-      setTechInput("");
+  // Pre-fill from API data
+  useEffect(() => {
+    if (profile) {
+      setFirstName(profile.firstName ?? "");
+      setLastName(profile.lastName ?? "");
+      setPhone(profile.phone ?? "");
+      setGender(profile.gender ?? "");
     }
+  }, [profile]);
+
+  useEffect(() => {
+    if (member) {
+      setName(member.name ?? "");
+      setRole(member.role ?? "");
+      setBio(member.bio ?? "");
+      setPreview(member.imageUrl ?? "");
+      // Education
+      if (member.education) {
+        setDegree(member.education.degree ?? "");
+        setInstitution(member.education.institution ?? "");
+        setEduDesc(member.education.description ?? "");
+      }
+      // Contacts
+      if (member.contacts) {
+        setLinkedin(member.contacts.linkedin ?? "");
+        setGithub(member.contacts.github ?? "");
+        setTwitter(member.contacts.twitter ?? "");
+        setTelegram(member.contacts.telegram ?? "");
+        setInstagram(member.contacts.instagram ?? "");
+      }
+      // Skills
+      if (member.skillDetails?.length) {
+        setSkills(member.skillDetails);
+      }
+    }
+  }, [member]);
+
+  // ── Image picker ───────────────────────────────────────────────────────────
+
+  const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  const removeTechnology = (index: number) => {
-    setNewSkill((prev) => ({
-      ...prev,
-      technologies: prev.technologies.filter((_, i) => i !== index),
+  // ── Skills helpers ─────────────────────────────────────────────────────────
+
+  const addTech = () => {
+    if (!techInput.trim()) return;
+    setNewSkill((p) => ({
+      ...p,
+      technologies: [...p.technologies, techInput.trim()],
     }));
+    setTechInput("");
   };
 
   const addSkill = () => {
-    if (formData.skills.length >= 4) {
-      alert("You can only add up to 4 skills.");
+    if (skills.length >= 4) {
+      alert("Max 4 skills.");
       return;
     }
+    if (!newSkill.name || !newSkill.technologies.length || !newSkill.percent)
+      return;
+    setSkills((p) => [...p, newSkill]);
+    setNewSkill({ name: "", technologies: [], percent: 0 });
+  };
 
-    if (newSkill.name && newSkill.technologies.length && newSkill.percent) {
-      setFormData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, newSkill],
-      }));
-      setNewSkill({ name: "", technologies: [], percent: 0 });
+  // ── Submit handlers ────────────────────────────────────────────────────────
+
+  const handleSaveBasic = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mClear();
+    await saveMemberBasic(userId, { name, role, bio, image });
+    await updateProfile({ firstName, lastName, phone, gender });
+  };
+
+  const handleSaveEducation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mClear();
+    await manageEducation(userId, {
+      degree,
+      institution,
+      description: eduDesc,
+      educationImage: eduImage ?? undefined,
+    });
+  };
+
+  const handleSaveContacts = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mClear();
+    await manageContacts(userId, {
+      linkedin,
+      github,
+      twitter,
+      telegram,
+      instagram,
+    });
+  };
+
+  const handleSaveSkills = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mClear();
+    await manageSkills(userId, { skillDetails: skills });
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError(null);
+    pClear();
+    if (newPwd !== confirmPwd) {
+      setPwdError("Passwords do not match.");
+      return;
+    }
+    if (newPwd.length < 8) {
+      setPwdError("New password must be at least 8 characters.");
+      return;
+    }
+    const ok = await updatePassword(userId, {
+      oldPassword: oldPwd,
+      newPassword: newPwd,
+    });
+    if (ok) {
+      setOldPwd("");
+      setNewPwd("");
+      setConfirmPwd("");
     }
   };
 
-  const removeSkill = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((_, i) => i !== index),
-    }));
-  };
+  const saving = pSaving || mSaving;
+  const error = mError || pError;
+  const success = mSuccess || pSuccess;
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-blue-950  px-8 py-6">
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <User className="h-8 w-8" />
-              Member Profile Registration
+          <div className="bg-blue-950 px-8 py-6">
+            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+              <User className="h-7 w-7" />
+              {memberExists ? "Edit Your Profile" : "Complete Your Profile"}
             </h1>
-            <p className="text-blue-100 mt-2">
-              Fill out the form below to provide your profile
+            <p className="text-blue-200 mt-1 text-sm">
+              {memberExists
+                ? "Update your information below"
+                : "Fill out the form to set up your member profile"}
             </p>
           </div>
 
-          <div className="p-8 space-y-8">
-            {/* Basic Information */}
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-4">
-                <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                  <User className="h-5 w-5 text-blue-600" />
-                  Basic Information
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Enter the member's basic details
-                </p>
-              </div>
+          <div className="p-8 space-y-10">
+            {/* Global toast */}
+            <Toast msg={error} type="error" />
+            <Toast msg={success} type="success" />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Full Name *
-                  </label>
-                  <input
-                    name="name"
-                    type="text"
-                    required
-                    placeholder="Enter full name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
+            {/* ══════════════════════════════════════════════════
+                SECTION 1: Basic Information
+            ══════════════════════════════════════════════════ */}
+            <form onSubmit={handleSaveBasic} className="space-y-6">
+              <SectionHeader
+                icon={<User className="h-5 w-5" />}
+                title="Basic Information"
+                subtitle="Your name, role, bio and avatar"
+                color="text-blue-600"
+              />
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Role/Position *
-                  </label>
-                  <input
-                    name="role"
-                    type="text"
-                    required
-                    placeholder="e.g., Software Engineer, Designer"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Profile Image URL
-                  </label>
-                  <input
-                    name="imageUrl"
-                    type="url"
-                    placeholder="https://example.com/profile-image.jpg"
-                    value={formData.imageUrl}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Bio *
-                  </label>
-                  <textarea
-                    name="bio"
-                    required
-                    rows={4}
-                    placeholder="Tell us about yourself, your background, and interests..."
-                    value={formData.bio}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Education */}
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-4">
-                <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                  <Award className="h-5 w-5 text-purple-600" />
-                  Education
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Educational background and qualifications
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Degree *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., Bachelor of Computer Science"
-                    value={formData.education.degree}
-                    onChange={(e) =>
-                      handleNestedChange("education", "degree", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Institution *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., University of Rwanda"
-                    value={formData.education.institution}
-                    onChange={(e) =>
-                      handleNestedChange(
-                        "education",
-                        "institution",
-                        e.target.value,
-                      )
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    University Logo URL
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://example.com/university-logo.png"
-                    value={formData.education.imageUrl}
-                    onChange={(e) =>
-                      handleNestedChange(
-                        "education",
-                        "imageUrl",
-                        e.target.value,
-                      )
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Description
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Describe your educational experience, achievements, or relevant coursework..."
-                    value={formData.education.description}
-                    onChange={(e) =>
-                      handleNestedChange(
-                        "education",
-                        "description",
-                        e.target.value,
-                      )
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Contacts */}
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-4">
-                <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-green-600" />
-                  Contact Information
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Social media and professional links
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    LinkedIn
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://linkedin.com/in/username"
-                    value={formData.contacts.linkedin}
-                    onChange={(e) =>
-                      handleContactChange("linkedin", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    GitHub
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://github.com/username"
-                    value={formData.contacts.github}
-                    onChange={(e) =>
-                      handleContactChange("github", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Twitter
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://twitter.com/username"
-                    value={formData.contacts.twitter}
-                    onChange={(e) =>
-                      handleContactChange("twitter", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Telegram
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://t.me/username"
-                    value={formData.contacts.telegram}
-                    onChange={(e) =>
-                      handleContactChange("telegram", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-4">
-                <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                  <Code className="h-5 w-5 text-orange-600" />
-                  Skills & Technologies
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Add your technical skills and proficiency levels
-                </p>
-              </div>
-
-              {/* Add New Skill */}
-              <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-                <h3 className="font-medium text-gray-800">Add New Skill</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Skill Name
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g., Frontend Development"
-                      value={newSkill.name}
-                      onChange={(e) =>
-                        setNewSkill({ ...newSkill, name: e.target.value })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
-                    />
+              {/* Avatar picker */}
+              <div className="flex items-center gap-5">
+                <div className="relative">
+                  <div
+                    className="w-20 h-20 rounded-xl overflow-hidden bg-gray-100
+                                  border-2 border-gray-200 flex items-center justify-center"
+                  >
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User size={28} className="text-gray-300" />
+                    )}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-indigo-600
+                               rounded-full flex items-center justify-center text-white
+                               hover:bg-indigo-700 transition-colors shadow"
+                  >
+                    <Camera size={13} />
+                  </button>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImagePick}
+                  />
+                </div>
+                <div className="text-sm text-gray-500">
+                  <p className="font-medium text-gray-700">Profile photo</p>
+                  <p className="text-xs mt-0.5">JPG, PNG up to 5MB</p>
+                </div>
+              </div>
 
-                  <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input
+                  label="Display Name *"
+                  placeholder="Entue MUGABO"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Role / Position *"
+                  placeholder="e.g. Full Stack Developer"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  required
+                />
+                <Input
+                  label="First Name"
+                  placeholder="Entue"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <Input
+                  label="Last Name"
+                  placeholder="MUGABO"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                <Input
+                  label="Phone"
+                  placeholder="+250791396400"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Gender
+                  </label>
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                               focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                               transition-colors text-sm bg-white"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="md:col-span-2">
+                  <Textarea
+                    label="Bio *"
+                    rows={4}
+                    placeholder="Tell us about yourself, your background and interests..."
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full bg-blue-950 text-white py-3.5 rounded-lg font-semibold
+                           hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
+              >
+                {saving ? "Saving…" : "Save Basic Info"}
+              </button>
+            </form>
+
+            {/* ══════════════════════════════════════════════════
+                SECTION 2: Education
+            ══════════════════════════════════════════════════ */}
+            <form onSubmit={handleSaveEducation} className="space-y-6">
+              <SectionHeader
+                icon={<Award className="h-5 w-5" />}
+                title="Education"
+                subtitle="Degree, institution and description"
+                color="text-purple-600"
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input
+                  label="Degree"
+                  accent="purple"
+                  placeholder="Bachelor of Science in Computer Science"
+                  value={degree}
+                  onChange={(e) => setDegree(e.target.value)}
+                />
+                <Input
+                  label="Institution"
+                  accent="purple"
+                  placeholder="University of Technology"
+                  value={institution}
+                  onChange={(e) => setInstitution(e.target.value)}
+                />
+
+                {/* Education image upload */}
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Institution Logo (image file)
+                  </label>
+                  <input
+                    ref={eduFileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEduImage(e.target.files?.[0] ?? null)}
+                    className="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4
+                               file:rounded-lg file:border-0 file:text-sm file:font-semibold
+                               file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                  />
+                  {member?.education?.imageUrl && !eduImage && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      Current:{" "}
+                      <a
+                        href={member.education.imageUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-500 underline"
+                      >
+                        View logo
+                      </a>
+                    </p>
+                  )}
+                </div>
+
+                <div className="md:col-span-2">
+                  <Textarea
+                    label="Description"
+                    accent="purple"
+                    rows={3}
+                    placeholder="Describe your educational experience, achievements..."
+                    value={eduDesc}
+                    onChange={(e) => setEduDesc(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full bg-purple-700 text-white py-3.5 rounded-lg font-semibold
+                           hover:bg-purple-800 disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
+              >
+                {saving ? "Saving…" : "Save Education"}
+              </button>
+            </form>
+
+            {/* ══════════════════════════════════════════════════
+                SECTION 3: Contacts
+            ══════════════════════════════════════════════════ */}
+            <form onSubmit={handleSaveContacts} className="space-y-6">
+              <SectionHeader
+                icon={<Mail className="h-5 w-5" />}
+                title="Contact Information"
+                subtitle="Social media and professional links"
+                color="text-green-600"
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input
+                  label="LinkedIn"
+                  accent="green"
+                  type="url"
+                  placeholder="https://linkedin.com/in/username"
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                />
+                <Input
+                  label="GitHub"
+                  accent="green"
+                  type="url"
+                  placeholder="https://github.com/username"
+                  value={github}
+                  onChange={(e) => setGithub(e.target.value)}
+                />
+                <Input
+                  label="Twitter/X"
+                  accent="green"
+                  type="url"
+                  placeholder="https://twitter.com/username"
+                  value={twitter}
+                  onChange={(e) => setTwitter(e.target.value)}
+                />
+                <Input
+                  label="Telegram"
+                  accent="green"
+                  type="url"
+                  placeholder="https://t.me/username"
+                  value={telegram}
+                  onChange={(e) => setTelegram(e.target.value)}
+                />
+                <Input
+                  label="Instagram"
+                  accent="green"
+                  type="url"
+                  placeholder="https://instagram.com/username"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full bg-green-700 text-white py-3.5 rounded-lg font-semibold
+                           hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
+              >
+                {saving ? "Saving…" : "Save Contacts"}
+              </button>
+            </form>
+
+            {/* ══════════════════════════════════════════════════
+                SECTION 4: Skills
+            ══════════════════════════════════════════════════ */}
+            <form onSubmit={handleSaveSkills} className="space-y-6">
+              <SectionHeader
+                icon={<Code className="h-5 w-5" />}
+                title="Skills & Technologies"
+                subtitle="Up to 4 skill categories with proficiency levels"
+                color="text-orange-600"
+              />
+
+              {/* New skill builder */}
+              <div className="bg-orange-50 border border-orange-100 rounded-xl p-5 space-y-4">
+                <h3 className="font-semibold text-gray-800 text-sm">
+                  Add New Skill
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Skill Category"
+                    accent="orange"
+                    placeholder="e.g. Frontend Development"
+                    value={newSkill.name}
+                    onChange={(e) =>
+                      setNewSkill((p) => ({ ...p, name: e.target.value }))
+                    }
+                  />
+                  <div className="space-y-1.5">
                     <label className="block text-sm font-medium text-gray-700">
-                      Proficiency Level (%)
+                      Proficiency (%)
                     </label>
                     <input
                       type="number"
-                      min="0"
-                      max="100"
+                      min={0}
+                      max={100}
                       placeholder="85"
                       value={newSkill.percent || ""}
                       onChange={(e) =>
-                        setNewSkill({
-                          ...newSkill,
-                          percent: parseInt(e.target.value) || 0,
-                        })
+                        setNewSkill((p) => ({
+                          ...p,
+                          percent: +e.target.value || 0,
+                        }))
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                                 focus:ring-2 focus:ring-orange-500 focus:border-transparent
+                                 transition-colors text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* Technologies */}
+                <div className="space-y-1.5">
                   <label className="block text-sm font-medium text-gray-700">
                     Technologies
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="e.g., React, TypeScript, Node.js"
+                      placeholder="e.g. React, TypeScript…"
                       value={techInput}
                       onChange={(e) => setTechInput(e.target.value)}
                       onKeyDown={(e) =>
-                        e.key === "Enter" &&
-                        (e.preventDefault(), addTechnology())
+                        e.key === "Enter" && (e.preventDefault(), addTech())
                       }
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg
+                                 focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
                     />
                     <button
                       type="button"
-                      onClick={addTechnology}
-                      className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                      onClick={addTech}
+                      className="px-5 py-3 bg-orange-600 text-white rounded-lg
+                                 hover:bg-orange-700 transition-colors font-medium text-sm"
                     >
                       Add
                     </button>
                   </div>
-                </div>
-
-                {newSkill.technologies.length > 0 && (
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Selected Technologies
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {newSkill.technologies.map((tech, index) => (
+                  {newSkill.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {newSkill.technologies.map((t, i) => (
                         <span
-                          key={index}
-                          className="inline-flex items-center gap-1 bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm"
+                          key={i}
+                          className="flex items-center gap-1 bg-orange-100
+                                                  text-orange-800 px-3 py-1 rounded-full text-xs font-medium"
                         >
-                          {tech}
+                          {t}
                           <button
                             type="button"
-                            onClick={() => removeTechnology(index)}
-                            className="hover:text-orange-600 transition-colors"
+                            onClick={() =>
+                              setNewSkill((p) => ({
+                                ...p,
+                                technologies: p.technologies.filter(
+                                  (_, j) => j !== i,
+                                ),
+                              }))
+                            }
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 size={11} className="hover:text-red-600" />
                           </button>
                         </span>
                       ))}
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 <button
                   type="button"
@@ -497,74 +704,121 @@ const MemberForm: React.FC = () => {
                     !newSkill.technologies.length ||
                     !newSkill.percent
                   }
-                  className="w-full bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+                  className="w-full bg-orange-600 text-white py-3 rounded-lg
+                             hover:bg-orange-700 disabled:bg-gray-200 disabled:cursor-not-allowed
+                             transition-colors font-medium text-sm"
                 >
                   Add Skill
                 </button>
               </div>
 
-              {/* Skills List */}
-              {formData.skills.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="font-medium text-gray-800">Added Skills</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {formData.skills.map((skill, index) => (
-                      <div
-                        key={index}
-                        className="bg-white border border-gray-200 rounded-lg p-4 relative"
+              {/* Added skills */}
+              {skills.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {skills.map((skill, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white border border-gray-200 rounded-xl p-4 relative"
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSkills((p) => p.filter((_, i) => i !== idx))
+                        }
+                        className="absolute top-3 right-3 text-red-400 hover:text-red-600"
                       >
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(index)}
-                          className="absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="pr-8">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-medium text-gray-800">
-                              {skill.name}
-                            </h4>
-                            <span className="text-sm font-medium text-orange-600">
-                              {skill.percent}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                            <div
-                              className="bg-orange-600 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${skill.percent}%` }}
-                            ></div>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {skill.technologies.map((tech, techIndex) => (
-                              <span
-                                key={techIndex}
-                                className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        <Trash2 size={14} />
+                      </button>
+                      <div className="flex justify-between items-start mb-1.5 pr-6">
+                        <h4 className="text-sm font-bold text-gray-800">
+                          {skill.name}
+                        </h4>
+                        <span className="text-xs font-bold text-orange-600">
+                          {skill.percent}%
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+                        <div
+                          className="bg-orange-500 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${skill.percent}%` }}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {skill.technologies.map((t) => (
+                          <span
+                            key={t}
+                            className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
-            </div>
 
-            {/* Submit Button */}
-            <div className="pt-6 border-t border-gray-200">
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-blue-950  text-white py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold text-lg shadow-lg"
+                disabled={saving || skills.length === 0}
+                className="w-full bg-orange-600 text-white py-3.5 rounded-lg font-semibold
+                           hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
               >
-                {isSubmitting
-                  ? "Confirming Profile..."
-                  : "Confirm Member Information"}
+                {saving ? "Saving…" : "Save Skills"}
               </button>
-            </div>
+            </form>
+
+            {/* ══════════════════════════════════════════════════
+                SECTION 5: Change Password
+            ══════════════════════════════════════════════════ */}
+            <form onSubmit={handleChangePassword} className="space-y-6">
+              <SectionHeader
+                icon={<Lock className="h-5 w-5" />}
+                title="Change Password"
+                subtitle="Update your account password"
+                color="text-red-600"
+              />
+              <Toast msg={pwdError} type="error" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Input
+                  label="Current Password *"
+                  type="password"
+                  accent="red"
+                  placeholder="••••••••"
+                  value={oldPwd}
+                  onChange={(e) => setOldPwd(e.target.value)}
+                  required
+                />
+                <Input
+                  label="New Password *"
+                  type="password"
+                  accent="red"
+                  placeholder="••••••••"
+                  value={newPwd}
+                  onChange={(e) => setNewPwd(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Confirm New Password *"
+                  type="password"
+                  accent="red"
+                  placeholder="••••••••"
+                  value={confirmPwd}
+                  onChange={(e) => setConfirmPwd(e.target.value)}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={pSaving}
+                className="w-full bg-red-700 text-white py-3.5 rounded-lg font-semibold
+                           hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
+              >
+                {pSaving ? "Updating…" : "Update Password"}
+              </button>
+            </form>
           </div>
         </div>
       </div>
