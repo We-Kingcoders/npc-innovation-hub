@@ -46,6 +46,7 @@ import { HubChannel } from "../pages/messages-page/HubChannel";
 import MemberForm from "../components/member/MemberForm";
 import MyTasks from "../pages/tasks/MyTasks";
 import TaskDetails from "../pages/tasks/TaskDetails";
+import ProfilePage from "../pages/profile/ProfilePage";
 
 // Admin pages
 import AdminDashboard from "../pages/Admin-pages/AdminDashboard";
@@ -362,6 +363,16 @@ const AllRoutes: React.FC = () => {
           <ProtectedRoute requiredRole="Member">
             <DashboardLayout>
               <MemberForm />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/profile"
+        element={
+          <ProtectedRoute requiredRole="Member">
+            <DashboardLayout>
+              <ProfilePage />
             </DashboardLayout>
           </ProtectedRoute>
         }
