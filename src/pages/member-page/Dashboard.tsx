@@ -79,7 +79,7 @@ export const Dashboard: React.FC = () => {
   if (isFirstLoad) return <DashboardSkeleton />;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-mist-100 p-6">
       {/* ── Greeting header ── */}
       <DashboardHeader user={user} />
 

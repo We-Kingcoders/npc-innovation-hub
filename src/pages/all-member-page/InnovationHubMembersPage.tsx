@@ -20,25 +20,32 @@ const PAGE_STYLE_ID = "ihp-styles";
 const PAGE_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
-/* Hero */
+/* ── Palette ───────────────────────────────────────────────────────────
+   --navy is #002B56, the exact flat colour used by the site Footer
+   (components/button/Footer.tsx). The hero uses it unmodified: no
+   gradient, no pattern, no overlay — so both sections match precisely. */
+.ihp-root {
+  --navy:     #002B56;
+  --navy-700: #002B56;
+  --navy-600: #0a4680;
+  --navy-500: #1a6fc4;
+  --gold:     #f0a500;
+  --gold-lt:  #ffd166;
+  --cyan:     #38bdf8;
+  --violet:   #8b7cf6;
+  --page-bg:  #f4f7fc;
+  min-height: 100vh;
+  background: var(--page-bg);
+}
+
+/* Hero — flat #002B56, identical to the footer */
 .ihp-hero {
   position: relative;
   overflow: hidden;
   text-align: center;
-  padding: 56px 24px 80px;
-  background: #0a3665;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(26,111,196,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(26,111,196,0.15) 0%, transparent 60%);
-}
-.ihp-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
+  padding: 56px 24px 104px;
+  color: #ffffff;
+  background: var(--navy);
 }
 
 /* ── Back button ───────────────────────────────────────────────────── */
@@ -71,11 +78,15 @@ const PAGE_CSS = `
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 .ihp-back-btn:hover {
-  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #06b6d4 100%);
-  border-color: transparent;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--navy-500) 55%, var(--cyan) 100%);
+  border-color: rgba(255,255,255,0.34);
   color: #ffffff;
   transform: translateX(-3px) scale(1.04);
-  box-shadow: 0 6px 28px rgba(99,102,241,0.55), 0 2px 8px rgba(6,182,212,0.3);
+  box-shadow: 0 8px 30px rgba(139,124,246,0.5), 0 2px 10px rgba(56,189,248,0.32);
+}
+.ihp-back-btn:focus-visible {
+  outline: 2px solid var(--gold-lt);
+  outline-offset: 3px;
 }
 .ihp-back-btn:active {
   transform: translateX(-1px) scale(0.98);
@@ -85,8 +96,8 @@ const PAGE_CSS = `
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background: linear-gradient(135deg, rgba(99,102,241,0.35) 0%, rgba(6,182,212,0.25) 100%);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, rgba(139,124,246,0.42) 0%, rgba(56,189,248,0.3) 100%);
+  border: 1px solid rgba(255,255,255,0.22);
   transition: all 0.28s ease;
 }
 .ihp-back-btn:hover .ihp-back-icon {
@@ -109,46 +120,75 @@ const PAGE_CSS = `
 
 /* Badge */
 .ihp-badge {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #f0a500;
-  background: rgba(240,165,0,0.12);
-  border: 1px solid rgba(240,165,0,0.25);
-  padding: 5px 14px;
+  color: var(--gold-lt);
+  background: linear-gradient(135deg, rgba(240,165,0,0.20) 0%, rgba(139,124,246,0.16) 100%);
+  border: 1px solid rgba(255,209,102,0.34);
+  padding: 6px 16px;
   border-radius: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 20px rgba(240,165,0,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
 }
 .ihp-badge-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: #f0a500;
+  background: var(--gold);
+  box-shadow: 0 0 10px 2px rgba(240,165,0,0.85);
   animation: ihp-pulse 2s ease-in-out infinite;
 }
 @keyframes ihp-pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
 
 .ihp-h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(2rem, 5.2vw, 3.6rem);
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  margin: 0 0 14px;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  margin: 0 0 16px;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.3);
 }
-.ihp-h1 span { color: #f0a500; }
+/* Animated gold sweep on the accent word */
+.ihp-h1 span {
+  background: linear-gradient(100deg,
+    var(--gold) 0%, var(--gold-lt) 22%, #fff3c4 40%,
+    var(--gold-lt) 58%, var(--gold) 80%, var(--gold) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ihp-sweep 6s linear infinite;
+}
+@keyframes ihp-sweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -50% 0; }
+}
+/* Gradient rule under the headline */
+.ihp-rule {
+  width: 132px; height: 3px;
+  margin: 0 auto 18px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), var(--violet), transparent);
+  background-size: 200% 100%;
+  animation: ihp-sweep 5s linear infinite;
+}
 .ihp-subtitle {
   font-family: 'DM Sans', sans-serif;
-  font-size: clamp(0.85rem, 1.8vw, 0.98rem);
-  color: rgba(255,255,255,0.6);
-  max-width: 520px;
+  font-size: clamp(0.9rem, 1.8vw, 1.02rem);
+  color: rgba(226,236,250,0.76);
+  max-width: 560px;
   margin: 0 auto;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 /* Wrapper */
@@ -162,6 +202,8 @@ const PAGE_CSS = `
 
 /* Stats bar */
 .ihp-stats {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -172,13 +214,21 @@ const PAGE_CSS = `
   border-radius: 14px;
   padding: 16px 24px;
   margin: -36px 0 32px;
-  box-shadow: 0 2px 12px rgba(10,54,101,0.08);
+  box-shadow: 0 10px 34px rgba(33,53,99,0.16), 0 2px 8px rgba(33,53,99,0.06);
+}
+/* Colour accent along the top edge of the stats bar */
+.ihp-stats::before {
+  content: '';
+  position: absolute; left: 24px; right: 24px; top: 0;
+  height: 3px;
+  border-radius: 0 0 99px 99px;
+  background: linear-gradient(90deg, var(--cyan), var(--navy-500), var(--gold), var(--violet));
 }
 .ihp-stats-left { display: flex; align-items: center; gap: 20px; }
 .ihp-stat { display: flex; flex-direction: column; gap: 2px; }
 .ihp-stat-num {
   font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 700; color: #0a3665; line-height: 1;
+  font-size: 1.3rem; font-weight: 700; color: var(--navy-700); line-height: 1;
 }
 .ihp-stat-label {
   font-size: 0.68rem; font-weight: 600;
@@ -186,7 +236,7 @@ const PAGE_CSS = `
 }
 .ihp-stat-div { width: 1px; height: 32px; background: #dde6f0; }
 .ihp-stats-right { font-size: 0.8rem; color: #8498b4; font-family: 'DM Sans', sans-serif; }
-.ihp-stats-right strong { color: #0a3665; }
+.ihp-stats-right strong { color: var(--navy-700); }
 
 /* Grid */
 .ihp-grid {
@@ -241,14 +291,39 @@ const PAGE_CSS = `
   cursor: pointer;
   transition: all 0.18s ease;
 }
-.ihp-page-btn:hover:not(:disabled) { border-color: #1a6fc4; color: #1a6fc4; }
-.ihp-page-btn.active { background: #0a3665; border-color: #0a3665; color: #ffffff; box-shadow: 0 2px 8px rgba(10,54,101,0.3); }
+.ihp-page-btn:hover:not(:disabled) { border-color: var(--navy-500); color: var(--navy-600); }
+.ihp-page-btn.active {
+  background: linear-gradient(135deg, var(--navy-600) 0%, var(--navy-700) 100%);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(33,53,99,0.42);
+}
 .ihp-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .ihp-h1 span,
+  .ihp-rule,
+  .ihp-badge-dot,
+  .ihp-skeleton::after {
+    animation: none !important;
+  }
+  .ihp-h1 span {
+    -webkit-text-fill-color: var(--gold-lt);
+    color: var(--gold-lt);
+  }
+}
 `;
 
 function injectPageStyles() {
   if (typeof document === "undefined") return;
-  if (document.getElementById(PAGE_STYLE_ID)) return;
+  // Update in place rather than bailing out, so an edit to PAGE_CSS is picked
+  // up on hot-reload instead of leaving the previous <style> tag in the head.
+  const existing = document.getElementById(PAGE_STYLE_ID);
+  if (existing) {
+    if (existing.textContent !== PAGE_CSS) existing.textContent = PAGE_CSS;
+    return;
+  }
   const el = document.createElement("style");
   el.id = PAGE_STYLE_ID;
   el.textContent = PAGE_CSS;
@@ -295,7 +370,7 @@ export const InnovationHubMembersPage: React.FC = () => {
   const totalMembers = members.length > 0 ? members.length * totalPages : 0;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f4f7fc" }}>
+    <div className="ihp-root">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div className="ihp-hero">
         {/* Back button — top-left inside hero */}
@@ -317,6 +392,7 @@ export const InnovationHubMembersPage: React.FC = () => {
         <h1 className="ihp-h1">
           Meet the <span>Developers</span>
         </h1>
+        <div className="ihp-rule" aria-hidden="true" />
         <p className="ihp-subtitle">
           A team of dedicated engineers at the NPC Innovation Hub building
           scalable, user-centered software that makes a real-world impact.

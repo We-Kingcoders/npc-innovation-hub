@@ -32,7 +32,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const avatarUrl = member?.imageUrl || user?.image || null;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-mist-300 p-6">
       <div className="flex flex-col items-center text-center">
         {/* Avatar */}
         <div className="relative mb-4">
@@ -40,11 +40,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
             <img
               src={avatarUrl}
               alt={fullName}
-              className="w-20 h-20 rounded-full object-cover border-2 border-indigo-200"
+              className="w-20 h-20 rounded-full object-cover border-2 border-navy-200"
             />
           ) : (
             <div
-              className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600
+              className="w-20 h-20 bg-gradient-to-br from-navy-600 to-navy-800
                             rounded-full flex items-center justify-center text-white
                             text-xl font-bold select-none"
             >
@@ -53,20 +53,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           )}
           {/* Online dot */}
           <span
-            className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500
+            className="absolute -bottom-1 -right-1 w-5 h-5 bg-navy-600
                            rounded-full border-2 border-white"
           />
         </div>
 
         {/* Name */}
-        <h3 className="text-base font-bold text-gray-900 mb-0.5">
+        <h3 className="text-base font-bold text-navy-800 mb-0.5">
           {member?.name || fullName}
         </h3>
 
         {/* Role badge */}
         {role && (
           <span
-            className="text-xs font-semibold text-indigo-600 bg-indigo-50
+            className="text-xs font-semibold text-navy-700 bg-navy-50
                            px-2.5 py-0.5 rounded-full mb-1"
           >
             {role}
@@ -75,7 +75,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
 
         {/* Email */}
         {email && (
-          <p className="text-xs text-gray-400 mb-5 truncate max-w-full">
+          <p className="text-xs text-mist-500 mb-5 truncate max-w-full">
             {email}
           </p>
         )}
@@ -84,8 +84,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         <div className="flex gap-2 w-full">
           <button
             onClick={() => navigate("/dashboard/edit-profile")}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-indigo-600
-                       hover:bg-indigo-700 text-white px-3 py-2.5 rounded-lg text-xs
+            className="flex-1 flex items-center justify-center gap-1.5 bg-navy-800
+                       hover:bg-navy-700 text-white px-3 py-2.5 rounded-lg text-xs
                        font-semibold transition-colors duration-200"
           >
             <Settings size={13} />
@@ -93,8 +93,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           </button>
           <button
             onClick={() => navigate("/dashboard/profile")}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100
-                       hover:bg-gray-200 text-gray-700 px-3 py-2.5 rounded-lg text-xs
+            className="flex-1 flex items-center justify-center gap-1.5 bg-mist-200
+                       hover:bg-mist-300 text-navy-700 border border-mist-300
+                       px-3 py-2.5 rounded-lg text-xs
                        font-semibold transition-colors duration-200"
           >
             <UserCircle size={13} />

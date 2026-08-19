@@ -57,10 +57,10 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
           <Clock size={14} />
         ),
         iconBg: overdue
-          ? "bg-red-100 text-red-600"
+          ? "bg-navy-800 text-white"
           : t.status === "completed"
-            ? "bg-green-100 text-green-600"
-            : "bg-yellow-100 text-yellow-600",
+            ? "bg-navy-100 text-navy-800"
+            : "bg-mist-200 text-mist-600",
         text: overdue
           ? `Overdue task: "${t.title}"`
           : `Task "${t.title}" is ${t.status}`,
@@ -74,7 +74,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
       items.push({
         id: `blog-${b.id}`,
         icon: <BookOpen size={14} />,
-        iconBg: "bg-pink-100 text-pink-600",
+        iconBg: "bg-navy-50 text-navy-700",
         text: `New article published: "${b.title}"`,
         time: timeAgo(b.createdAt),
         timestamp: new Date(b.createdAt).getTime(),
@@ -86,7 +86,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
       items.push({
         id: `res-${r.id}`,
         icon: <FolderOpen size={14} />,
-        iconBg: "bg-blue-100 text-blue-600",
+        iconBg: "bg-navy-100 text-navy-800",
         text: `Resource added: "${r.title}"`,
         time: timeAgo(r.createdAt),
         timestamp: new Date(r.createdAt).getTime(),
@@ -97,17 +97,17 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
   }, [tasks, blogs, resources]);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 className="text-sm font-bold text-gray-900 mb-5">Activity Feed</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-mist-300 p-6">
+      <h3 className="text-sm font-bold text-navy-800 mb-5">Activity Feed</h3>
 
       {feed.length === 0 ? (
-        <p className="text-sm text-gray-400 text-center py-4">
+        <p className="text-sm text-mist-500 text-center py-4">
           No recent activity.
         </p>
       ) : (
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
+          <div className="absolute left-4 top-0 bottom-0 w-px bg-mist-300" />
 
           <div className="space-y-4 pl-10">
             {feed.map((item) => (
@@ -121,13 +121,13 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
                 </div>
 
                 <div
-                  className="flex-1 min-w-0 bg-gray-50 rounded-xl px-3 py-2.5
-                                border border-gray-100"
+                  className="flex-1 min-w-0 bg-mist-100 rounded-xl px-3 py-2.5
+                                border border-mist-300"
                 >
-                  <p className="text-xs text-gray-700 font-medium line-clamp-1">
+                  <p className="text-xs text-navy-800 font-medium line-clamp-1">
                     {item.text}
                   </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">
+                  <p className="text-[10px] text-mist-500 mt-0.5">
                     {item.time}
                   </p>
                 </div>

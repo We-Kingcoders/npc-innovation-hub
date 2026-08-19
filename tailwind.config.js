@@ -33,6 +33,29 @@ export default {
             secondary: "#283D4B",
           },
         },
+        // Member-dashboard two-tone palette — dark blue
+        navy: {
+          50: "#EEF3F9",
+          100: "#DCE5F0",
+          200: "#BCCBE0",
+          300: "#8FA7C6",
+          400: "#5E7FA8",
+          500: "#3A6EA5",
+          600: "#1E4E8C",
+          700: "#14375F",
+          800: "#0C2340",
+          900: "#07182D",
+        },
+        // Member-dashboard two-tone palette — white / gray
+        mist: {
+          50: "#FAFBFD",
+          100: "#F4F6FA",
+          200: "#EDF1F6",
+          300: "#E3E8F0",
+          400: "#CBD3E0",
+          500: "#94A0B4",
+          600: "#64748B",
+        },
         // Additional semantic colors
         background: {
           primary: "#FFFFFF",

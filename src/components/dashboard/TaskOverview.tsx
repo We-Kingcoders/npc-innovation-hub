@@ -24,19 +24,20 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
   const filled = (pct / 100) * circ;
   const gap = circ - filled;
 
+  // Two-tone scale: darker navy = more urgent, light gray-blue = least urgent.
   const segments = [
-    { label: "Completed", count: completed, color: "#22c55e" },
-    { label: "In Progress", count: inProg, color: "#6366f1" },
-    { label: "Pending", count: pending, color: "#eab308" },
-    { label: "Overdue", count: overdue, color: "#ef4444" },
+    { label: "Overdue", count: overdue, color: "#07182D" },
+    { label: "Completed", count: completed, color: "#1E4E8C" },
+    { label: "In Progress", count: inProg, color: "#5E7FA8" },
+    { label: "Pending", count: pending, color: "#CBD3E0" },
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <h3 className="text-sm font-bold text-gray-800 mb-4">Task Overview</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-mist-300 p-5">
+      <h3 className="text-sm font-bold text-navy-800 mb-4">Task Overview</h3>
 
       {total === 0 ? (
-        <p className="text-xs text-gray-400 text-center py-4">No tasks yet</p>
+        <p className="text-xs text-mist-500 text-center py-4">No tasks yet</p>
       ) : (
         <>
           {/* Donut SVG */}
@@ -48,7 +49,7 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
                   cy="50"
                   r={radius}
                   fill="none"
-                  stroke="#e5e7eb"
+                  stroke="#E3E8F0"
                   strokeWidth="12"
                 />
                 <circle
@@ -56,7 +57,7 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
                   cy="50"
                   r={radius}
                   fill="none"
-                  stroke="#6366f1"
+                  stroke="#0C2340"
                   strokeWidth="12"
                   strokeDasharray={`${filled} ${gap}`}
                   strokeLinecap="round"
@@ -64,8 +65,8 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-gray-900">{pct}%</span>
-                <span className="text-[10px] text-gray-400 font-medium">
+                <span className="text-2xl font-bold text-navy-800">{pct}%</span>
+                <span className="text-[10px] text-mist-500 font-medium">
                   done
                 </span>
               </div>
@@ -73,7 +74,7 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
           </div>
 
           {/* Segmented bar */}
-          <div className="w-full h-2.5 rounded-full overflow-hidden flex mb-4 bg-gray-100">
+          <div className="w-full h-2.5 rounded-full overflow-hidden flex mb-4 bg-mist-200">
             {segments.map((s) =>
               s.count > 0 ? (
                 <div
@@ -93,11 +94,11 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
             {segments.map((s) => (
               <div key={s.label} className="flex items-center gap-1.5">
                 <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  className="w-2.5 h-2.5 rounded-full shrink-0 ring-1 ring-mist-400"
                   style={{ backgroundColor: s.color }}
                 />
-                <span className="text-xs text-gray-500">
-                  {s.label} <strong className="text-gray-700">{s.count}</strong>
+                <span className="text-xs text-mist-600">
+                  {s.label} <strong className="text-navy-800">{s.count}</strong>
                 </span>
               </div>
             ))}

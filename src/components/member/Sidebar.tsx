@@ -22,7 +22,6 @@ interface SidebarItem {
   icon: React.ReactNode;
   link: string;
   badge?: number;
-  color: string;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -30,53 +29,45 @@ const sidebarItems: SidebarItem[] = [
     name: "Dashboard",
     icon: <LayoutDashboard size={20} />,
     link: "/dashboard",
-    color: "bg-[#9B5CFF]",
   },
   {
     name: "Notifications",
     icon: <Bell size={20} />,
     link: "/notifications",
     badge: 6,
-    color: "bg-[#FF4D4D]",
   },
   {
     name: "Resources",
     icon: <FolderOpen size={20} />,
     link: "/dashboard/resources",
     badge: 5,
-    color: "bg-[#38D9A9]",
   },
   {
     name: "Projects",
     icon: <Briefcase size={20} />,
     link: "/dashboard/projects",
     badge: 30,
-    color: "bg-[#A5B4FC]",
   },
   {
     name: "Messages",
     icon: <MessageSquare size={20} />,
     link: "/hub-channel",
-    color: "bg-[#38D9A9]",
   },
   {
     name: "Events",
     icon: <Calendar size={20} />,
     link: "/dashboard/events",
     badge: 6,
-    color: "bg-[#38D9A9]",
   },
   {
     name: "Blog",
     icon: <BookOpen size={20} />,
     link: "/blog",
-    color: "bg-[#F97316]",
   },
   {
     name: "My Tasks",
     icon: <ClipboardList size={20} />,
     link: "/dashboard/tasks",
-    color: "bg-[#3B82F6]",
   },
 ];
 
@@ -115,7 +106,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      <aside className="w-64 ml-6 rounded-md bg-[#0C2340] min-h-screen flex flex-col justify-between py-8 px-6 text-white shadow-xl">
+      <aside className="w-64 ml-6 rounded-xl bg-navy-800 min-h-screen flex flex-col justify-between py-8 px-6 text-white shadow-lg">
         <div>
           {/* Profile Section */}
           <div className="flex flex-col items-center mb-10">
@@ -123,10 +114,10 @@ export const Sidebar: React.FC = () => {
               <img
                 src={avatarUrl}
                 alt={shownName}
-                className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-[#9B5CFF]"
+                className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-navy-400"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-[#9B5CFF] mb-2 flex items-center justify-center text-2xl font-bold select-none">
+              <div className="w-20 h-20 rounded-full bg-navy-600 border-2 border-navy-400 mb-2 flex items-center justify-center text-2xl font-bold select-none">
                 {initials}
               </div>
             )}
@@ -136,14 +127,14 @@ export const Sidebar: React.FC = () => {
             </span>
 
             {(member?.role || user?.role) && (
-              <span className="text-xs text-gray-400 mt-1">
+              <span className="text-xs text-navy-200 mt-1">
                 {member?.role || user?.role}
               </span>
             )}
           </div>
 
           {/* Menu label */}
-          <div className="mb-6 ml-2 text-sm opacity-70 uppercase tracking-wide font-medium">
+          <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-medium">
             Menu
           </div>
 
@@ -155,24 +146,32 @@ export const Sidebar: React.FC = () => {
                 key={item.name}
                 end={item.link === "/dashboard"}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 ${
+                  `group flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? "bg-[#122e4a] font-medium shadow-md border-l-4 border-[#9B5CFF]"
-                      : "hover:bg-[#122e4a] hover:shadow-sm"
+                      ? "bg-navy-700 font-medium shadow-md border-l-4 border-white"
+                      : "text-navy-100 hover:bg-navy-700 hover:text-white"
                   }`
                 }
               >
-                <span
-                  className={`${item.color} text-white rounded-lg p-2 relative`}
-                >
-                  {item.icon}
-                  {item.badge !== undefined && (
-                    <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                      {item.badge > 99 ? "99+" : item.badge}
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`rounded-lg p-2 relative transition-colors duration-200 ${
+                        isActive
+                          ? "bg-white text-navy-800"
+                          : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
+                      }`}
+                    >
+                      {item.icon}
+                      {item.badge !== undefined && (
+                        <span className="absolute -top-2 -right-2 text-xs bg-white text-navy-800 ring-2 ring-navy-800 rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                          {item.badge > 99 ? "99+" : item.badge}
+                        </span>
+                      )}
                     </span>
-                  )}
-                </span>
-                <span className="flex-1">{item.name}</span>
+                    <span className="flex-1">{item.name}</span>
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
@@ -182,7 +181,7 @@ export const Sidebar: React.FC = () => {
         <button
           onClick={() => setShowLogoutConfirm(true)}
           disabled={isLoggingOut}
-          className="flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 hover:bg-red-600 hover:shadow-md font-medium text-red-400 hover:text-white mt-10 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-medium text-navy-100 hover:text-navy-800 mt-10 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <LogOut size={20} />
           <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
@@ -191,12 +190,12 @@ export const Sidebar: React.FC = () => {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-navy-900 bg-opacity-60">
+          <div className="bg-white rounded-xl shadow-xl border border-mist-300 max-w-md w-full mx-4 p-6">
+            <h2 className="text-2xl font-bold text-navy-800 mb-4">
               Confirm Logout
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-mist-600 mb-6">
               Are you sure you want to log out? You'll need to log in again to
               access your dashboard.
             </p>
@@ -204,14 +203,14 @@ export const Sidebar: React.FC = () => {
               <button
                 onClick={() => setShowLogoutConfirm(false)}
                 disabled={isLoggingOut}
-                className="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
+                className="px-6 py-2 bg-mist-200 text-navy-800 border border-mist-300 rounded-lg hover:bg-mist-300 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-navy-800 text-white rounded-lg hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoggingOut ? (
                   <span className="flex items-center gap-2">
