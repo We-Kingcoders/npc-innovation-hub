@@ -1,14 +1,20 @@
 // src/components/button/Footer.tsx
 import React, { useState } from "react";
 import HireUsModal from "../HireUsModal";
+import JoinUsModal from "../JoinUsModal";
 
 const Footer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const currentYear = new Date().getFullYear();
 
   return (
     <div className="w-full font-sans mt-64">
       <HireUsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <JoinUsModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
 
       <style>{`
         .hire-btn {
@@ -123,9 +129,13 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-gray-300 transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => setIsJoinModalOpen(true)}
+                    className="hover:text-gray-300 transition-colors"
+                  >
                     Join Us
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
