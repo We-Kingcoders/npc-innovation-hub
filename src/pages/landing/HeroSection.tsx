@@ -313,6 +313,7 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import JoinUsModal from "../../components/JoinUsModal";
 
 /**
  * HeroSection Component
@@ -338,6 +339,7 @@ import { Link } from "react-router-dom";
 const HeroSection = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   const teamMembers = [
     {
@@ -427,6 +429,10 @@ const HeroSection = () => {
 
   return (
     <div className="w-full min-h-screen bg-white relative overflow-hidden flex flex-col">
+      <JoinUsModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
       {/* =================================================================
           BACKGROUND DESIGN - Subtle Diagonal Split
           ================================================================= */}
@@ -678,6 +684,7 @@ const HeroSection = () => {
             <button
               className="rounded-full border-2 border-[#00A0E3] text-[#00A0E3] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#00A0E3] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
               aria-label="Join NpcInnovationHub"
+              onClick={() => setIsJoinModalOpen(true)}
             >
               Join Us
             </button>
