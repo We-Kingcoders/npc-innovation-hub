@@ -53,6 +53,18 @@ export default [
   },
 
   // =========================
+  // Test files (Jest globals)
+  // =========================
+  {
+    files: ["src/**/*.test.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+
+  // =========================
   // Node / Backend files
   // =========================
   {
