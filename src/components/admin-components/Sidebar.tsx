@@ -342,6 +342,7 @@ import {
   Calendar,
   ClipboardList,
   MessageSquare, // ← new
+  UserCheck, // ← new
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -357,6 +358,7 @@ const iconComponents = {
   calendar: Calendar,
   clipboard: ClipboardList,
   messages: MessageSquare, // ← new
+  applications: UserCheck, // ← new
 };
 
 const iconColors = {
@@ -369,6 +371,7 @@ const iconColors = {
   calendar: "from-orange-500 to-amber-600",
   clipboard: "from-pink-500 to-rose-600",
   messages: "from-blue-400 to-blue-600", // ← new
+  applications: "from-indigo-500 to-purple-600", // ← new
 };
 
 export default function Sidebar() {
