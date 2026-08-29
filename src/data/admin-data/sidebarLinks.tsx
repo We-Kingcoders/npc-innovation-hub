@@ -12,6 +12,12 @@ export const sidebarLinks = [
     notification: 6,
   },
   {
+    icon: "applications", // ← new
+    label: "Applications",
+    path: "/admin/applications",
+    notification: 0,
+  },
+  {
     icon: "resources",
     label: "Resources",
     path: "/resources",
