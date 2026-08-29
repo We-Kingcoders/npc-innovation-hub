@@ -56,3 +56,60 @@ export interface ApplicationApiError {
   message: string;
   statusCode: number;
 }
+
+/**
+ * Admin review of membership applications.
+ * Matches GET/PATCH /api/admin/applications/* on the backend exactly.
+ */
+
+export type ApplicationStatus = "Pending" | "Accepted" | "Rejected";
+
+export const APPLICATION_STATUSES: ApplicationStatus[] = [
+  "Pending",
+  "Accepted",
+  "Rejected",
+];
+
+export interface AdminApplicationsResponse {
+  status: "success";
+  results: number;
+  data: {
+    applications: MembershipApplication[];
+  };
+}
+
+export interface AdminApplicationResponse {
+  status: "success";
+  data: {
+    application: MembershipApplication;
+  };
+}
+
+export interface RejectApplicationPayload {
+  reason?: string;
+}
+
+export interface RejectApplicationResponse {
+  status: "success";
+  message: string;
+  data: {
+    application: MembershipApplication;
+  };
+}
+
+export interface AcceptedApplicationUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface AcceptApplicationResponse {
+  status: "success";
+  message: string;
+  data: {
+    application: MembershipApplication;
+    user: AcceptedApplicationUser;
+    member: { id: string };
+  };
+}
