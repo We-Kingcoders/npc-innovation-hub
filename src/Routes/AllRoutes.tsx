@@ -11,6 +11,7 @@ import TeamCaptain from "../pages/landing/TeamCaptain";
 import HeroSection from "../pages/landing/HeroSection";
 import Expertise from "../pages/landing/Expertise";
 import Mission from "../pages/landing/Mission";
+import HubIntroVideo from "../pages/landing/HubIntroVideo";
 import SignUpPage from "../pages/Login/SignUp";
 import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
@@ -88,6 +89,7 @@ const AllRoutes: React.FC = () => {
             <Expertise />
             <Skills />
             <Mission />
+            <HubIntroVideo />
             <TeamCaptain />
             <Footer />
           </>
