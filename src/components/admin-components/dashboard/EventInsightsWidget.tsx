@@ -228,25 +228,25 @@ function getDaysUntil(startTime: string): number {
 }
 
 const SkeletonWidget: React.FC = () => (
-  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-pulse">
-    <div className="w-32 h-5 bg-gray-200 rounded mb-4" />
+  <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm animate-pulse">
+    <div className="w-32 h-5 bg-mist-200 rounded mb-4" />
     <div className="grid grid-cols-3 gap-3 mb-5">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-gray-100 rounded-xl p-3 space-y-2">
-          <div className="w-8 h-6 bg-gray-200 rounded" />
-          <div className="w-16 h-3 bg-gray-200 rounded" />
+        <div key={i} className="bg-mist-100 rounded-xl p-3 space-y-2">
+          <div className="w-8 h-6 bg-mist-200 rounded" />
+          <div className="w-16 h-3 bg-mist-200 rounded" />
         </div>
       ))}
     </div>
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="flex gap-3 p-3 bg-gray-50 rounded-xl">
-          <div className="w-10 h-10 bg-gray-200 rounded-xl flex-shrink-0" />
+        <div key={i} className="flex gap-3 p-3 bg-mist-100 rounded-xl">
+          <div className="w-10 h-10 bg-mist-200 rounded-xl flex-shrink-0" />
           <div className="flex-1 space-y-1.5">
-            <div className="w-3/4 h-3 bg-gray-200 rounded" />
-            <div className="w-1/2 h-3 bg-gray-100 rounded" />
+            <div className="w-3/4 h-3 bg-mist-200 rounded" />
+            <div className="w-1/2 h-3 bg-mist-200 rounded" />
           </div>
-          <div className="w-8 h-5 bg-gray-200 rounded-full flex-shrink-0" />
+          <div className="w-8 h-5 bg-mist-200 rounded-full flex-shrink-0" />
         </div>
       ))}
     </div>
@@ -261,8 +261,8 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
 
   if (!insights) {
     return (
-      <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center justify-center h-72">
-        <p className="text-gray-400 text-sm">No event data available</p>
+      <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm flex items-center justify-center h-72">
+        <p className="text-mist-500 text-sm">No event data available</p>
       </div>
     );
   }
@@ -289,14 +289,14 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">
+          <h3 className="font-semibold text-navy-800 text-sm">
             Event Insights
           </h3>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-mist-500 mt-0.5">
             {insights.upcoming.length} upcoming
             {insights.upcoming.length === 1 ? " event" : " events"}
           </p>
@@ -325,7 +325,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
             className={`${stat.bg} rounded-xl p-3 text-center`}
           >
             <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
+            <p className="text-xs text-mist-600 mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -348,7 +348,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
             </div>
-            <p className="text-gray-400 text-xs">No upcoming events</p>
+            <p className="text-mist-500 text-xs">No upcoming events</p>
           </div>
         ) : (
           insights.upcoming.slice(0, 4).map((event) => {
@@ -360,7 +360,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
             return (
               <div
                 key={event.id}
-                className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors duration-150 group"
+                className="flex items-center gap-3 p-3 rounded-xl bg-mist-100 hover:bg-mist-200 transition-colors duration-150 group"
               >
                 {/* Date badge using startTime */}
                 <div
@@ -378,10 +378,10 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
 
                 {/* Event Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">
+                  <p className="text-sm font-medium text-navy-800 truncate">
                     {event.title}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-mist-500 mt-0.5">
                     {formatEventTime(event.startTime)}
                   </p>
                 </div>
@@ -394,7 +394,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
                         ? "bg-rose-100 text-rose-700"
                         : daysUntil <= 3
                           ? "bg-orange-100 text-orange-700"
-                          : "bg-gray-200 text-gray-500"
+                          : "bg-mist-200 text-mist-600"
                     }`}
                 >
                   {daysUntil === 0 ? "Today" : `${daysUntil}d`}
