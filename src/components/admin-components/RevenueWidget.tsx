@@ -225,7 +225,7 @@ export default function RevenueWidget() {
                 <Bar
                   dataKey="revenue"
                   name="Monthly Revenue"
-                  fill="#4f46e5"
+                  fill="#14375F"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -267,14 +267,14 @@ export default function RevenueWidget() {
               text={`${growthPercent}%`}
               styles={{
                 path: {
-                  stroke: growthPercent >= 0 ? "#4f46e5" : "#ef4444",
+                  stroke: "#14375F",
                   strokeLinecap: "round",
                 },
                 trail: {
                   stroke: "#e5e7eb",
                 },
                 text: {
-                  fill: growthPercent >= 0 ? "#4f46e5" : "#ef4444",
+                  fill: "#14375F",
                   fontSize: "28px",
                   fontWeight: "bold",
                 },

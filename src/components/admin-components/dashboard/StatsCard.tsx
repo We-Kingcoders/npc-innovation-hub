@@ -657,15 +657,8 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
 
           {/* Growth badge */}
           <span
-            className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
-              text-[10px] font-bold ring-1
-              ${
-                isPositive
-                  ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
-                  : isNegative
-                    ? "bg-rose-50 text-rose-700 ring-rose-200"
-                    : "bg-mist-100 text-mist-600 ring-mist-300"
-              }`}
+            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
+              text-[10px] font-bold ring-1 bg-navy-50 text-navy-700 ring-navy-200"
           >
             {isPositive ? (
               <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 10 10">
