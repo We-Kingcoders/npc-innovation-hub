@@ -149,9 +149,9 @@ export default function ProjectsTable() {
       <div className="ml-8 p-0">
         <div className="w-full max-w-[98%]">
           <div className="animate-pulse space-y-4">
-            <div className="h-12 bg-gray-200 rounded-2xl" />
+            <div className="h-12 bg-mist-200 rounded-2xl" />
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-100 rounded-lg" />
+              <div key={i} className="h-20 bg-mist-100 rounded-lg" />
             ))}
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function ProjectsTable() {
             placeholder="Search projects by title, description, or owner..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
           />
         </div>
 
@@ -184,7 +184,7 @@ export default function ProjectsTable() {
         {!loading && filteredProjects.length === 0 && (
           <div className="bg-white rounded-2xl p-12 text-center mb-6">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400 mb-4"
+              className="mx-auto h-12 w-12 text-mist-400 mb-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -196,10 +196,10 @@ export default function ProjectsTable() {
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-navy-800 mb-2">
               No projects found
             </h3>
-            <p className="text-gray-600">
+            <p className="text-mist-600">
               {searchQuery
                 ? "Try adjusting your search"
                 : "Get started by creating your first project"}
@@ -209,9 +209,9 @@ export default function ProjectsTable() {
 
         {/* Projects Table */}
         {filteredProjects.length > 0 && (
-          <table className="w-full bg-[#f4f6fa] rounded-t-2xl overflow-hidden shadow-sm">
+          <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden shadow-sm">
             <thead>
-              <tr className="bg-[#343a5e] text-white text-left">
+              <tr className="bg-navy-800 text-white text-left">
                 <th className="px-6 py-4 rounded-tl-2xl">Project</th>
                 <th className="px-6 py-4">Owner</th>
                 <th className="px-6 py-4">Created</th>
@@ -222,7 +222,7 @@ export default function ProjectsTable() {
               {filteredProjects.map((project) => (
                 <tr
                   key={project.id}
-                  className="border-b border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+                  className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
                 >
                   {/* Project Info */}
                   <td className="px-6 py-4">
@@ -237,10 +237,10 @@ export default function ProjectsTable() {
                         }}
                       />
                       <div className="max-w-md">
-                        <p className="font-semibold text-gray-900 truncate">
+                        <p className="font-semibold text-navy-800 truncate">
                           {project.title}
                         </p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-mist-600 truncate">
                           {project.description}
                         </p>
                       </div>
@@ -260,10 +260,10 @@ export default function ProjectsTable() {
                         }}
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-navy-800">
                           {project.owner}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-mist-500">
                           {project.ownerRole}
                         </p>
                       </div>
@@ -271,7 +271,7 @@ export default function ProjectsTable() {
                   </td>
 
                   {/* Created Date */}
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-6 py-4 text-mist-600">
                     {format(new Date(project.createdAt), "MMM dd, yyyy")}
                   </td>
 
@@ -279,22 +279,22 @@ export default function ProjectsTable() {
                   <td className="px-6 py-4 relative">
                     <button
                       onClick={(e) => toggleActionMenu(project.id, e)}
-                      className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 rounded transition-colors"
+                      className="flex flex-col items-center gap-1 p-2 hover:bg-mist-100 rounded transition-colors"
                     >
-                      <span className="w-1.5 h-1.5 bg-black rounded-full block" />
-                      <span className="w-1.5 h-1.5 bg-black rounded-full block" />
-                      <span className="w-1.5 h-1.5 bg-black rounded-full block" />
+                      <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
+                      <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
+                      <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
                     </button>
 
                     {/* Action Menu */}
                     {actionMenuId === project.id && (
                       <div
                         ref={menuRef}
-                        className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px] z-10"
+                        className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-mist-300 py-1 min-w-[160px] z-10"
                       >
                         <button
                           onClick={() => handleViewDetails(project)}
-                          className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                          className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
                         >
                           <svg
                             className="w-4 h-4"
@@ -319,7 +319,7 @@ export default function ProjectsTable() {
                         </button>
                         <button
                           onClick={() => handleEdit(project)}
-                          className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                          className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
                         >
                           <svg
                             className="w-4 h-4"
@@ -369,7 +369,7 @@ export default function ProjectsTable() {
         <div className="flex justify-end mt-8">
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-[#343a5e] text-white rounded-xl px-10 py-3 font-bold text-lg shadow hover:bg-[#20253a] transition-all flex items-center gap-2"
+            className="bg-navy-800 text-white rounded-xl px-10 py-3 font-bold text-lg shadow hover:bg-navy-700 transition-all flex items-center gap-2"
           >
             <svg
               className="w-5 h-5"

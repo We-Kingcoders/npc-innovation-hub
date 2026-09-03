@@ -220,29 +220,29 @@ const ACTIVITY_CONFIG: Record<
 
 const SkeletonItem: React.FC = () => (
   <div className="flex gap-3 animate-pulse">
-    <div className="w-7 h-7 bg-gray-200 rounded-full flex-shrink-0 mt-0.5" />
+    <div className="w-7 h-7 bg-mist-200 rounded-full flex-shrink-0 mt-0.5" />
     <div className="flex-1 pt-0.5 space-y-1.5">
-      <div className="w-24 h-3 bg-gray-200 rounded" />
-      <div className="w-40 h-3 bg-gray-100 rounded" />
+      <div className="w-24 h-3 bg-mist-200 rounded" />
+      <div className="w-40 h-3 bg-mist-200 rounded" />
     </div>
-    <div className="w-12 h-3 bg-gray-100 rounded flex-shrink-0" />
+    <div className="w-12 h-3 bg-mist-200 rounded flex-shrink-0" />
   </div>
 );
 
 const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">
+          <h3 className="font-semibold text-navy-800 text-sm">
             Recent Activity
           </h3>
-          <p className="text-xs text-gray-400 mt-0.5">Latest system events</p>
+          <p className="text-xs text-mist-500 mt-0.5">Latest system events</p>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          <span className="text-xs text-gray-400">Live</span>
+          <span className="text-xs text-mist-500">Live</span>
         </div>
       </div>
 
@@ -252,9 +252,9 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
           Array.from({ length: 6 }).map((_, i) => <SkeletonItem key={i} />)
         ) : activities.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 bg-mist-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <svg
-                className="w-5 h-5 text-gray-300"
+                className="w-5 h-5 text-mist-400"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.5}
@@ -267,7 +267,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
                 />
               </svg>
             </div>
-            <p className="text-gray-400 text-xs">No recent activity</p>
+            <p className="text-mist-500 text-xs">No recent activity</p>
           </div>
         ) : (
           activities.map((activity, idx) => {
@@ -279,7 +279,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
               <div key={activity.id} className="relative flex gap-3 group">
                 {/* Connector line */}
                 {!isLast && (
-                  <div className="absolute left-3.5 top-7 bottom-0 w-px bg-gray-100" />
+                  <div className="absolute left-3.5 top-7 bottom-0 w-px bg-mist-200" />
                 )}
 
                 {/* Icon */}
@@ -291,16 +291,16 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0 pt-0.5">
-                  <p className="text-xs font-semibold text-gray-700">
+                  <p className="text-xs font-semibold text-navy-700">
                     {activity.title}
                   </p>
-                  <p className="text-xs text-gray-400 truncate mt-0.5">
+                  <p className="text-xs text-mist-500 truncate mt-0.5">
                     {activity.description}
                   </p>
                 </div>
 
                 {/* Timestamp */}
-                <span className="flex-shrink-0 text-xs text-gray-400 pt-0.5">
+                <span className="flex-shrink-0 text-xs text-mist-500 pt-0.5">
                   {timeAgo(activity.timestamp)}
                 </span>
               </div>

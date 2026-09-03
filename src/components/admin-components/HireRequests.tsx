@@ -91,7 +91,7 @@ export default function HireRequests() {
       case "Contacted":
         return "bg-green-100 text-green-800";
       case "Reviewed":
-        return "bg-blue-100 text-blue-800";
+        return "bg-navy-100 text-navy-800";
       case "Rejected":
         return "bg-red-100 text-red-800";
       default:
@@ -148,11 +148,11 @@ export default function HireRequests() {
         {[...Array(3)].map((_, i) => (
           <div key={i} className="bg-white rounded-xl shadow p-6 animate-pulse">
             <div className="flex items-center">
-              <div className="w-16 h-16 rounded-full bg-gray-200 mr-6" />
+              <div className="w-16 h-16 rounded-full bg-mist-200 mr-6" />
               <div className="flex-1 space-y-3">
-                <div className="h-4 bg-gray-200 rounded w-1/3" />
-                <div className="h-3 bg-gray-200 rounded w-1/4" />
-                <div className="h-3 bg-gray-200 rounded w-2/3" />
+                <div className="h-4 bg-mist-200 rounded w-1/3" />
+                <div className="h-3 bg-mist-200 rounded w-1/4" />
+                <div className="h-3 bg-mist-200 rounded w-2/3" />
               </div>
             </div>
           </div>
@@ -170,14 +170,14 @@ export default function HireRequests() {
           placeholder="Search inquiries..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 min-w-[250px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="flex-1 min-w-[250px] px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
         />
         <select
           value={statusFilter}
           onChange={(e) =>
             setStatusFilter(e.target.value as typeof statusFilter)
           }
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
         >
           <option value="all">All Status</option>
           <option value="Pending">Pending</option>
@@ -198,7 +198,7 @@ export default function HireRequests() {
       {!loading && pageInquiries.length === 0 && (
         <div className="bg-white rounded-2xl p-12 text-center">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
+            className="mx-auto h-12 w-12 text-mist-400 mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -210,10 +210,10 @@ export default function HireRequests() {
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-navy-800 mb-2">
             No inquiries found
           </h3>
-          <p className="text-gray-600">
+          <p className="text-mist-600">
             {searchQuery || statusFilter !== "all"
               ? "Try adjusting your filters"
               : "No hire inquiries yet"}
@@ -225,10 +225,10 @@ export default function HireRequests() {
       {pageInquiries.map((inquiry) => (
         <div
           key={inquiry.id}
-          className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 mb-4 border border-gray-100 flex items-start"
+          className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 mb-4 border border-mist-300 flex items-start"
         >
           {/* Avatar */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mr-5 flex-shrink-0">
+          <div className="w-14 h-14 rounded-full bg-navy-700 flex items-center justify-center mr-5 flex-shrink-0">
             <span className="text-white text-lg font-semibold">
               {inquiry.first_name.charAt(0)}
               {inquiry.last_name.charAt(0)}
@@ -239,13 +239,13 @@ export default function HireRequests() {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                <h3 className="font-semibold text-navy-800 text-lg mb-1">
                   {inquiry.company_name} - {inquiry.job_title}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-mist-600">
                   From: {inquiry.first_name} {inquiry.last_name}
                 </p>
-                <p className="text-sm text-gray-500">{inquiry.email}</p>
+                <p className="text-sm text-mist-500">{inquiry.email}</p>
               </div>
               <span
                 className={`text-xs px-3 py-1 rounded-full font-medium ${getStatusColor(inquiry.status)} flex-shrink-0`}
@@ -254,17 +254,17 @@ export default function HireRequests() {
               </span>
             </div>
 
-            <p className="text-gray-700 mt-2 mb-3 line-clamp-2">
+            <p className="text-navy-700 mt-2 mb-3 line-clamp-2">
               {inquiry.message}
             </p>
 
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-mist-500">
                 {formatDate(inquiry.created_at)}
               </p>
               <Link
                 to={`/admin/hire-inquiries/${inquiry.id}`}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-navy-700 hover:text-navy-800 font-medium"
               >
                 View Details →
               </Link>
@@ -277,11 +277,11 @@ export default function HireRequests() {
               onClick={() =>
                 setMenuOpenId(menuOpenId === inquiry.id ? null : inquiry.id)
               }
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-mist-100 rounded-lg transition-colors"
               aria-label="Options"
             >
               <svg
-                className="w-5 h-5 text-gray-600"
+                className="w-5 h-5 text-navy-700"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -290,17 +290,17 @@ export default function HireRequests() {
             </button>
 
             {menuOpenId === inquiry.id && (
-              <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+              <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg border border-mist-300 py-1 z-10">
                 <Link
                   to={`/admin/hire-inquiries/${inquiry.id}`}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="block px-4 py-2 text-sm text-navy-800 hover:bg-mist-100 transition-colors"
                   onClick={() => setMenuOpenId(null)}
                 >
                   View Details
                 </Link>
                 <button
                   onClick={() => handleReplyClick(inquiry)}
-                  className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm text-navy-700 hover:bg-mist-100 transition-colors"
                 >
                   Send Reply
                 </button>
@@ -321,17 +321,17 @@ export default function HireRequests() {
       {filteredInquiries.length > PAGE_SIZE && (
         <div className="flex justify-end items-center gap-3 mt-8">
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
+            className="px-4 py-2 rounded-lg bg-white border border-mist-300 hover:bg-mist-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
           >
             Previous
           </button>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-mist-600">
             Page {page} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
+            className="px-4 py-2 rounded-lg bg-white border border-mist-300 hover:bg-mist-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
           >

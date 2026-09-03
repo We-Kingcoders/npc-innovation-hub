@@ -773,7 +773,7 @@ export default function AddResourceForm({
 
       {/* Image URL Input (Alternative to upload) */}
       <div>
-        <label className="block mb-2 text-gray-700 font-medium">
+        <label className="block mb-2 text-navy-800 font-medium">
           Image URL (Optional)
         </label>
         <input
@@ -784,7 +784,7 @@ export default function AddResourceForm({
           onChange={(e) => setImagePreview(e.target.value)}
           disabled={isLoading}
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-mist-500 mt-1">
           Paste the full URL of your resource image (must start with https://)
         </p>
         {imagePreview && (
@@ -792,7 +792,7 @@ export default function AddResourceForm({
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
+              className="w-32 h-32 object-cover rounded-lg border-2 border-mist-300"
               onError={(e) => {
                 (e.target as HTMLImageElement).src =
                   "https://via.placeholder.com/128?text=Invalid+URL";
@@ -805,18 +805,18 @@ export default function AddResourceForm({
       {/* Video URL Input (shown when type is Video) */}
       {type === "Video" && (
         <div>
-          <label className="block mb-2 text-gray-700 font-medium">
+          <label className="block mb-2 text-navy-800 font-medium">
             Video URL (Optional)
           </label>
           <input
             type="url"
-            className="border rounded-lg px-4 py-3 w-full"
+            className="border border-mist-300 rounded-lg px-4 py-3 w-full"
             placeholder="Video URL (e.g., https://youtube.com/watch?v=... or https://vimeo.com/...)"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             disabled={isLoading}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-mist-500 mt-1">
             Paste the URL to your video (YouTube, Vimeo, or direct video link)
           </p>
         </div>
@@ -825,9 +825,9 @@ export default function AddResourceForm({
       {/* Category, Type, Difficulty */}
       <div className="grid grid-cols-3 gap-6">
         <div className="flex flex-col">
-          <label className="mb-2 text-gray-700 font-medium">Category</label>
+          <label className="mb-2 text-navy-800 font-medium">Category</label>
           <select
-            className="border rounded-lg px-4 py-3"
+            className="border border-mist-300 rounded-lg px-4 py-3"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             disabled={isLoading}
@@ -841,9 +841,9 @@ export default function AddResourceForm({
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-2 text-gray-700 font-medium">Type</label>
+          <label className="mb-2 text-navy-800 font-medium">Type</label>
           <select
-            className="border rounded-lg px-4 py-3"
+            className="border border-mist-300 rounded-lg px-4 py-3"
             value={type}
             onChange={(e) => setType(e.target.value)}
             disabled={isLoading}
@@ -857,9 +857,9 @@ export default function AddResourceForm({
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-2 text-gray-700 font-medium">Difficulty</label>
+          <label className="mb-2 text-navy-800 font-medium">Difficulty</label>
           <select
-            className="border rounded-lg px-4 py-3"
+            className="border border-mist-300 rounded-lg px-4 py-3"
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
             disabled={isLoading}
@@ -878,25 +878,25 @@ export default function AddResourceForm({
         {/* Resource URL - Only show for non-Video types */}
         {type !== "Video" && (
           <div>
-            <label className="block mb-2 text-gray-700 font-medium">
+            <label className="block mb-2 text-navy-800 font-medium">
               Resource URL (Optional)
             </label>
             <input
               type="url"
-              className="border rounded-lg px-4 py-3 w-full"
+              className="border border-mist-300 rounded-lg px-4 py-3 w-full"
               placeholder="https://example.com/resource"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               disabled={isLoading}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-mist-500 mt-1">
               Link to the resource (documentation, article, book, etc.)
             </p>
           </div>
         )}
 
         <div className={type !== "Video" ? "" : "col-span-2"}>
-          <label className="block mb-2 text-gray-700 font-medium">
+          <label className="block mb-2 text-navy-800 font-medium">
             Author Name
           </label>
           <input
@@ -925,7 +925,7 @@ export default function AddResourceForm({
             disabled={isLoading}
             className="w-4 h-4"
           />
-          <span className="text-gray-700">Paid Resource</span>
+          <span className="text-navy-800">Paid Resource</span>
         </label>
 
         {isPaid && (
@@ -982,11 +982,11 @@ export default function AddResourceForm({
 
       {/* Tags */}
       <div>
-        <label className="block mb-2 text-gray-700 font-medium">Tags</label>
+        <label className="block mb-2 text-navy-800 font-medium">Tags</label>
         <div className="flex gap-2">
           <input
             type="text"
-            className="border rounded-lg px-4 py-3 flex-1"
+            className="border border-mist-300 rounded-lg px-4 py-3 flex-1"
             placeholder="Add tag and press Enter"
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
@@ -996,7 +996,7 @@ export default function AddResourceForm({
           <button
             type="button"
             onClick={handleAddTag}
-            className="bg-[#2d3155] text-white px-6 py-3 rounded-lg hover:bg-[#1f2340] transition-colors"
+            className="bg-navy-800 text-white px-6 py-3 rounded-lg hover:bg-navy-700 transition-colors"
             disabled={isLoading}
           >
             Add
@@ -1007,13 +1007,13 @@ export default function AddResourceForm({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-mist-200 text-mist-700"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-mist-500 hover:text-navy-800"
                   disabled={isLoading}
                 >
                   ×
@@ -1034,7 +1034,7 @@ export default function AddResourceForm({
             disabled={isLoading}
             className="w-4 h-4"
           />
-          <span className="text-gray-700">Featured Resource</span>
+          <span className="text-navy-800">Featured Resource</span>
         </label>
 
         <label className="flex items-center gap-2 cursor-pointer">
@@ -1045,7 +1045,7 @@ export default function AddResourceForm({
             disabled={isLoading}
             className="w-4 h-4"
           />
-          <span className="text-gray-700">Self-Hosted</span>
+          <span className="text-navy-800">Self-Hosted</span>
         </label>
       </div>
 
@@ -1054,7 +1054,7 @@ export default function AddResourceForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="bg-[#2d3155] text-white px-8 py-3 rounded-lg hover:bg-[#1f2340] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-navy-800 text-white px-8 py-3 rounded-lg hover:bg-navy-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : initialData ? "Update" : "Save"}
         </button>
@@ -1064,7 +1064,7 @@ export default function AddResourceForm({
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="border border-mist-300 text-navy-800 px-8 py-3 rounded-lg hover:bg-mist-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Cancel
           </button>

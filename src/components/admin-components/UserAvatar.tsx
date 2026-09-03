@@ -42,8 +42,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     <div
       className={`${sizeClasses[size]} rounded-full flex-shrink-0 overflow-hidden ${
         showInitials
-          ? "bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"
-          : "bg-gray-200"
+          ? "bg-navy-700 flex items-center justify-center"
+          : "bg-mist-200"
       }`}
       title={alt}
     >

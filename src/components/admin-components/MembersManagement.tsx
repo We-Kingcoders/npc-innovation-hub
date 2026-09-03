@@ -154,10 +154,10 @@ const MembersManagement: React.FC = () => {
     <div className="flex-1 px-8 py-6">
       {/* HEADER */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-3xl font-bold text-navy-800 mb-2">
           Members Management
         </h2>
-        <p className="text-gray-600">
+        <p className="text-mist-600">
           Manage user accounts, roles, and permissions
         </p>
       </div>
@@ -225,7 +225,7 @@ const MembersManagement: React.FC = () => {
         <div className="mt-6 flex justify-end">
           <button
             onClick={fetchUsers}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-mist-300 shadow-sm text-sm font-medium rounded-lg text-navy-800 bg-white hover:bg-mist-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
           >
             <svg
               className="mr-2 h-4 w-4"

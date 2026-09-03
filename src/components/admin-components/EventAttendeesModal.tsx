@@ -46,11 +46,11 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
 
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6 text-white">
+        <div className="bg-navy-800 px-8 py-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-1">Event Attendees</h2>
-              <p className="text-indigo-100">{eventTitle}</p>
+              <p className="text-navy-100">{eventTitle}</p>
             </div>
             <button
               onClick={onClose}
@@ -74,13 +74,13 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
         </div>
 
         {/* Filter */}
-        <div className="px-8 py-4 border-b border-gray-200">
+        <div className="px-8 py-4 border-b border-mist-200">
           <select
             value={statusFilter}
             onChange={(e) =>
               setStatusFilter(e.target.value as AttendanceStatus)
             }
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
           >
             <option value="all">All Attendees</option>
             <option value="going">Going</option>
@@ -92,8 +92,8 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
         <div className="p-8 overflow-y-auto max-h-[calc(90vh-200px)]">
           {loading && (
             <div className="text-center py-8">
-              <div className="animate-spin h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto"></div>
-              <p className="mt-2 text-gray-600">Loading attendees...</p>
+              <div className="animate-spin h-8 w-8 border-4 border-navy-700 border-t-transparent rounded-full mx-auto"></div>
+              <p className="mt-2 text-mist-600">Loading attendees...</p>
             </div>
           )}
 
@@ -119,7 +119,7 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
           {!loading && filteredAttendees.length === 0 && (
             <div className="text-center py-12">
               <svg
-                className="w-16 h-16 text-gray-400 mx-auto mb-4"
+                className="w-16 h-16 text-mist-400 mx-auto mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -131,10 +131,10 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-navy-800 mb-2">
                 No attendees found
               </h3>
-              <p className="text-gray-600">
+              <p className="text-mist-600">
                 {statusFilter !== "all"
                   ? "Try changing the filter"
                   : "No one has registered for this event yet"}
@@ -147,7 +147,7 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
               {filteredAttendees.map((attendance) => (
                 <div
                   key={attendance.id}
-                  className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-4 p-4 bg-mist-100 rounded-lg hover:bg-mist-200 transition-colors"
                 >
                   {/* Avatar */}
                   {attendance.attendee.image ? (
@@ -164,7 +164,7 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
                       }}
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold shadow-md">
+                    <div className="w-12 h-12 rounded-full bg-navy-700 flex items-center justify-center text-white font-bold shadow-md">
                       {attendance.attendee.firstName[0]}
                       {attendance.attendee.lastName[0]}
                     </div>
@@ -172,11 +172,11 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 truncate">
+                    <p className="font-semibold text-navy-800 truncate">
                       {attendance.attendee.firstName}{" "}
                       {attendance.attendee.lastName}
                     </p>
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-sm text-mist-600 truncate">
                       {attendance.attendee.email}
                     </p>
                   </div>
@@ -198,15 +198,15 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
 
           {/* Summary */}
           {!loading && attendees.length > 0 && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="mt-6 pt-6 border-t border-mist-200">
+              <div className="flex items-center justify-between text-sm text-mist-600">
                 <span>
                   Total Attendees:{" "}
-                  <strong className="text-gray-900">{attendees.length}</strong>
+                  <strong className="text-navy-800">{attendees.length}</strong>
                 </span>
                 <span>
                   Showing:{" "}
-                  <strong className="text-gray-900">
+                  <strong className="text-navy-800">
                     {filteredAttendees.length}
                   </strong>
                 </span>
