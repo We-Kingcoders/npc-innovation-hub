@@ -37,7 +37,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+      <div className="relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-md w-full p-6">
         {/* Icon */}
         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
           <svg
@@ -57,15 +57,15 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
 
         {/* Content */}
         <div className="text-center mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-          <p className="text-sm text-gray-600">{message}</p>
+          <h3 className="text-lg font-semibold text-navy-800 mb-2">{title}</h3>
+          <p className="text-sm text-mist-600">{message}</p>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 px-4 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+            className="flex-1 px-4 py-2.5 text-navy-800 bg-mist-200 border border-mist-300 rounded-lg hover:bg-mist-300 transition-all font-medium"
             disabled={isLoading}
           >
             {cancelText}
