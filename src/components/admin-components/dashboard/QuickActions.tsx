@@ -185,16 +185,16 @@ const ACTIONS: QuickAction[] = [
 
 const QuickActions: React.FC = () => {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">Quick Actions</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Common admin tasks</p>
+          <h3 className="font-semibold text-navy-800 text-sm">Quick Actions</h3>
+          <p className="text-xs text-mist-500 mt-0.5">Common admin tasks</p>
         </div>
-        <div className="p-2 bg-gray-100 rounded-xl">
+        <div className="p-2 bg-mist-100 rounded-xl">
           <svg
-            className="w-4 h-4 text-gray-500"
+            className="w-4 h-4 text-mist-600"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
@@ -213,7 +213,7 @@ const QuickActions: React.FC = () => {
             href={action.href}
             className={`
               group flex flex-col items-center gap-2 p-3.5 rounded-xl border border-transparent
-              hover:border-gray-200 ${action.hoverColor}
+              hover:border-mist-300 ${action.hoverColor}
               transition-all duration-200 hover:shadow-sm cursor-pointer
               text-center
             `}
@@ -228,7 +228,7 @@ const QuickActions: React.FC = () => {
               <p className={`text-xs font-semibold ${action.color}`}>
                 {action.label}
               </p>
-              <p className="text-xs text-gray-400 leading-tight mt-0.5">
+              <p className="text-xs text-mist-500 leading-tight mt-0.5">
                 {action.description}
               </p>
             </div>
