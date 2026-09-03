@@ -608,14 +608,14 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 export const StatsCardSkeleton: React.FC = () => (
-  <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm animate-pulse">
+  <div className="bg-white rounded-2xl p-5 border border-mist-300 shadow-sm animate-pulse">
     <div className="flex items-start justify-between mb-4">
-      <div className="w-8 h-8 bg-gray-200 rounded-lg" />
-      <div className="w-12 h-5 bg-gray-200 rounded-full" />
+      <div className="w-8 h-8 bg-mist-200 rounded-lg" />
+      <div className="w-12 h-5 bg-mist-200 rounded-full" />
     </div>
     {/* Circular number skeleton */}
-    <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-3" />
-    <div className="w-20 h-3 bg-gray-100 rounded mx-auto" />
+    <div className="w-16 h-16 bg-mist-200 rounded-full mx-auto mb-3" />
+    <div className="w-20 h-3 bg-mist-200 rounded mx-auto" />
   </div>
 );
 
@@ -664,7 +664,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
                   ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
                   : isNegative
                     ? "bg-rose-50 text-rose-700 ring-rose-200"
-                    : "bg-gray-50 text-gray-500 ring-gray-200"
+                    : "bg-mist-100 text-mist-600 ring-mist-300"
               }`}
           >
             {isPositive ? (
@@ -698,7 +698,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
         </div>
 
         {/* Label */}
-        <p className="text-xs font-semibold text-gray-600 leading-tight">
+        <p className="text-xs font-semibold text-navy-700 leading-tight">
           {metric.label}
         </p>
       </div>
