@@ -464,13 +464,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
             </p>
           </div>
           {projectInsights && (
-            <span
-              className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                projectInsights.growthPercent >= 0
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-rose-50 text-rose-700"
-              }`}
-            >
+            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-navy-50 text-navy-700">
               {projectInsights.growthPercent >= 0 ? "+" : ""}
               {projectInsights.growthPercent}% growth
             </span>
