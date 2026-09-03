@@ -29,7 +29,7 @@ export default function Topbar() {
   const displayEmail = user?.email || "admin@example.com";
 
   return (
-    <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-mist-300 shadow-sm">
+    <header className="sticky top-0 z-10 bg-white border-b border-mist-300 shadow-sm">
       <div className="flex items-center justify-between px-6 lg:px-8 py-4">
         {/* Search Bar */}
         <div className="flex-1 max-w-xl">
