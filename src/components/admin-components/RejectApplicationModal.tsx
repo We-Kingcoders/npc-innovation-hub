@@ -44,18 +44,18 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div className="relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-2xl w-full">
         {/* Header */}
-        <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <div className="border-b border-mist-300 px-6 py-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-navy-800">
               Reject Application
             </h2>
-            <p className="text-sm text-gray-600 mt-1">From: {applicantName}</p>
+            <p className="text-sm text-mist-600 mt-1">From: {applicantName}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-mist-500 hover:text-navy-800 transition-colors"
             disabled={isLoading}
           >
             <svg
@@ -77,18 +77,18 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-navy-800 mb-2">
               Reason (optional)
             </label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={5}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all resize-none"
+              className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all resize-none"
               placeholder="Explain why this application is being rejected…"
               disabled={isLoading}
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-mist-500">
               If filled in, this text is included in the rejection email sent to
               the applicant. Leave it blank to send a plain rejection notice.
             </p>
@@ -99,7 +99,7 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+              className="px-6 py-2.5 text-navy-800 bg-mist-200 border border-mist-300 rounded-lg hover:bg-mist-300 transition-all font-medium"
               disabled={isLoading}
             >
               Cancel
