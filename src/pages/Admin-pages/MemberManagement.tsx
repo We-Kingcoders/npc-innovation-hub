@@ -59,7 +59,7 @@ const MemberManagement: React.FC = () => {
         }}
       />
 
-      <div className="flex min-h-screen bg-[#f7f8fa]">
+      <div className="flex min-h-screen bg-mist-100">
         {/* Sidebar */}
         <Sidebar user={{ name: "Admin" }} />
 

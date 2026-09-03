@@ -309,7 +309,7 @@ export default function AdminDashboard() {
   }, [refresh]);
 
   return (
-    <div className="flex min-h-screen bg-[#f7f8fa]">
+    <div className="flex min-h-screen bg-mist-100">
       {/* Sidebar */}
       <Sidebar />
 

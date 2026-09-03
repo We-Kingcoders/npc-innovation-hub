@@ -9,7 +9,7 @@ import EventsTable from "../../components/admin-components/EventsTable";
 
 export default function EventTables() {
   return (
-    <div className="flex min-h-screen bg-[#f7f8fa]">
+    <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
       <main className="flex-1 px-10 py-8">
         <Topbar />
