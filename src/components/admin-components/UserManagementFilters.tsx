@@ -44,7 +44,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg
-                className="h-5 w-5 text-gray-400"
+                className="h-5 w-5 text-mist-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search by name or email..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-mist-300 rounded-lg leading-5 bg-white placeholder-mist-500 focus:outline-none focus:placeholder-mist-400 focus:ring-2 focus:ring-navy-500 focus:border-transparent sm:text-sm"
             />
           </div>
         </div>
@@ -74,7 +74,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           <div className="flex items-center gap-2">
             <label
               htmlFor="roleFilter"
-              className="text-sm font-medium text-gray-700 whitespace-nowrap"
+              className="text-sm font-medium text-navy-800 whitespace-nowrap"
             >
               Role:
             </label>
@@ -84,7 +84,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
               onChange={(e) =>
                 onRoleFilterChange(e.target.value as UserRole | "all")
               }
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="border border-mist-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
             >
               <option value="all">All Roles</option>
               <option value="Admin">Admin</option>
@@ -96,7 +96,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           <div className="flex items-center gap-2">
             <label
               htmlFor="statusFilter"
-              className="text-sm font-medium text-gray-700 whitespace-nowrap"
+              className="text-sm font-medium text-navy-800 whitespace-nowrap"
             >
               Status:
             </label>
@@ -108,7 +108,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
                   e.target.value as "all" | "active" | "inactive",
                 )
               }
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="border border-mist-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -117,7 +117,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           </div>
 
           {/* RESULTS COUNT */}
-          <div className="text-sm text-gray-600 whitespace-nowrap">
+          <div className="text-sm text-mist-600 whitespace-nowrap">
             Showing <span className="font-semibold">{filteredUsers}</span> of{" "}
             <span className="font-semibold">{totalUsers}</span> users
           </div>
@@ -127,14 +127,14 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
       {/* ACTIVE FILTERS SUMMARY */}
       {(searchQuery || roleFilter !== "all" || statusFilter !== "all") && (
         <div className="mt-4 flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600">Active filters:</span>
+          <span className="text-sm text-mist-600">Active filters:</span>
 
           {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-navy-50 text-navy-700">
               Search: "{searchQuery}"
               <button
                 onClick={() => onSearchChange("")}
-                className="ml-1 hover:text-blue-900"
+                className="ml-1 hover:text-navy-900"
                 title="Clear search"
               >
                 ×
@@ -143,11 +143,11 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           )}
 
           {roleFilter !== "all" && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-800">
               Role: {roleFilter}
               <button
                 onClick={() => onRoleFilterChange("all")}
-                className="ml-1 hover:text-purple-900"
+                className="ml-1 hover:text-navy-900"
                 title="Clear role filter"
               >
                 ×
@@ -156,11 +156,11 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
           )}
 
           {statusFilter !== "all" && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-mist-200 text-mist-700">
               Status: {statusFilter}
               <button
                 onClick={() => onStatusFilterChange("all")}
-                className="ml-1 hover:text-green-900"
+                className="ml-1 hover:text-navy-800"
                 title="Clear status filter"
               >
                 ×
@@ -174,7 +174,7 @@ const UserManagementFilters: React.FC<UserManagementFiltersProps> = ({
               onRoleFilterChange("all");
               onStatusFilterChange("all");
             }}
-            className="text-xs text-gray-600 hover:text-gray-900 underline ml-2"
+            className="text-xs text-mist-600 hover:text-navy-800 underline ml-2"
           >
             Clear all filters
           </button>
