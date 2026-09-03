@@ -394,6 +394,7 @@ function useCountUp(target: number, duration = 1400): number {
 interface StatsCardProps {
   metric: GrowthMetric;
   loading?: boolean;
+  index?: number;
 }
 
 // All metric types share one navy/mist look — no per-metric rainbow coding.
@@ -565,7 +566,11 @@ export const StatsCardSkeleton: React.FC = () => (
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
-const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
+const StatsCard: React.FC<StatsCardProps> = ({
+  metric,
+  loading,
+  index = 0,
+}) => {
   const displayValue = useCountUp(
     loading || typeof metric.value !== "number" ? 0 : metric.value,
   );
@@ -578,12 +583,16 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
 
   return (
     <div
+      style={{
+        animationDelay: `${index * 60}ms`,
+        animationFillMode: "backwards",
+      }}
       className={`
         group relative isolate bg-gradient-to-b ${c.cardBg}
         rounded-2xl p-5 border ${c.border}
         shadow-sm hover:shadow-lg ${c.glow}
         transition-all duration-300 hover:-translate-y-0.5
-        overflow-hidden cursor-default
+        overflow-hidden cursor-default animate-slide-up
       `}
     >
       {/* Decorative corner circle */}
