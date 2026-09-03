@@ -90,13 +90,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"
         onClick={!isLoading ? onClose : undefined}
       />
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="relative bg-white border border-mist-300 rounded-2xl shadow-xl max-w-md w-full p-6">
           {/* Icon */}
           <div
             className={`mx-auto flex items-center justify-center h-12 w-12 rounded-full ${styles.iconBg} mb-4`}
@@ -105,12 +105,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+          <h3 className="text-lg font-semibold text-navy-800 text-center mb-2">
             {title}
           </h3>
 
           {/* Message */}
-          <p className="text-sm text-gray-500 text-center mb-6">{message}</p>
+          <p className="text-sm text-mist-600 text-center mb-6">{message}</p>
 
           {/* Actions */}
           <div className="flex gap-3">
@@ -118,7 +118,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-2 border border-mist-300 rounded-lg text-sm font-medium text-navy-800 bg-mist-100 hover:bg-mist-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {cancelText}
             </button>
