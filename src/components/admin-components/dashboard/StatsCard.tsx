@@ -396,81 +396,25 @@ interface StatsCardProps {
   loading?: boolean;
 }
 
-const COLOR_MAP: Record<
-  GrowthMetric["color"],
-  {
-    cardBg: string; // gradient on card background
-    border: string;
-    glow: string;
-    icon: string; // icon pill bg + text
-    numBg: string; // full circle behind count number
-    numText: string; // number text color inside circle
-    cornerAccent: string;
-  }
-> = {
-  blue: {
-    cardBg: "from-blue-50/80 to-white",
-    border: "border-blue-100",
-    glow: "hover:shadow-blue-100",
-    icon: "bg-blue-100 text-blue-600",
-    numBg: "bg-blue-500",
-    numText: "text-white",
-    cornerAccent: "bg-blue-100",
-  },
-  green: {
-    cardBg: "from-emerald-50/80 to-white",
-    border: "border-emerald-100",
-    glow: "hover:shadow-emerald-100",
-    icon: "bg-emerald-100 text-emerald-600",
-    numBg: "bg-emerald-500",
-    numText: "text-white",
-    cornerAccent: "bg-emerald-100",
-  },
-  purple: {
-    cardBg: "from-violet-50/80 to-white",
-    border: "border-violet-100",
-    glow: "hover:shadow-violet-100",
-    icon: "bg-violet-100 text-violet-600",
-    numBg: "bg-violet-500",
-    numText: "text-white",
-    cornerAccent: "bg-violet-100",
-  },
-  orange: {
-    cardBg: "from-orange-50/80 to-white",
-    border: "border-orange-100",
-    glow: "hover:shadow-orange-100",
-    icon: "bg-orange-100 text-orange-600",
-    numBg: "bg-orange-500",
-    numText: "text-white",
-    cornerAccent: "bg-orange-100",
-  },
-  red: {
-    cardBg: "from-rose-50/80 to-white",
-    border: "border-rose-100",
-    glow: "hover:shadow-rose-100",
-    icon: "bg-rose-100 text-rose-600",
-    numBg: "bg-rose-500",
-    numText: "text-white",
-    cornerAccent: "bg-rose-100",
-  },
-  indigo: {
-    cardBg: "from-indigo-50/80 to-white",
-    border: "border-indigo-100",
-    glow: "hover:shadow-indigo-100",
-    icon: "bg-indigo-100 text-indigo-600",
-    numBg: "bg-indigo-500",
-    numText: "text-white",
-    cornerAccent: "bg-indigo-100",
-  },
-  teal: {
-    cardBg: "from-teal-50/80 to-white",
-    border: "border-teal-100",
-    glow: "hover:shadow-teal-100",
-    icon: "bg-teal-100 text-teal-600",
-    numBg: "bg-teal-500",
-    numText: "text-white",
-    cornerAccent: "bg-teal-100",
-  },
+// All metric types share one navy/mist look — no per-metric rainbow coding.
+const NAVY_CARD = {
+  cardBg: "from-mist-50 to-white",
+  border: "border-mist-300",
+  glow: "hover:shadow-mist-200",
+  icon: "bg-navy-50 text-navy-700",
+  numBg: "bg-navy-800",
+  numText: "text-white",
+  cornerAccent: "bg-navy-50",
+};
+
+const COLOR_MAP: Record<GrowthMetric["color"], typeof NAVY_CARD> = {
+  blue: NAVY_CARD,
+  green: NAVY_CARD,
+  purple: NAVY_CARD,
+  orange: NAVY_CARD,
+  red: NAVY_CARD,
+  indigo: NAVY_CARD,
+  teal: NAVY_CARD,
 };
 
 // ─── Icon paths ───────────────────────────────────────────────────────────────
