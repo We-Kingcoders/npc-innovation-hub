@@ -30,8 +30,8 @@ const ModernStatsCards: React.FC<ModernStatsCardsProps> = ({
 
   if (!metrics.length) {
     return (
-      <div className="flex items-center justify-center h-32 bg-gray-50 rounded-2xl mb-6">
-        <p className="text-gray-400 text-sm">No stats available</p>
+      <div className="flex items-center justify-center h-32 bg-mist-100 rounded-2xl mb-6">
+        <p className="text-mist-500 text-sm">No stats available</p>
       </div>
     );
   }
