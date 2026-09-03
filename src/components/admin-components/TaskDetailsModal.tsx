@@ -105,7 +105,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                   task.status === "completed"
                     ? "bg-green-500 w-full"
                     : task.status === "in-progress"
-                      ? "bg-blue-500 w-1/2"
+                      ? "bg-navy-700 w-1/2"
                       : "bg-yellow-500 w-0"
                 }`}
               />
