@@ -194,7 +194,7 @@ const STATUS_CONFIG: Record<
   { label: string; color: string }
 > = {
   completed: { label: "Completed", color: "#10b981" },
-  "in-progress": { label: "In Progress", color: "#6366f1" },
+  "in-progress": { label: "In Progress", color: "#14375F" },
   pending: { label: "Pending", color: "#f59e0b" },
 };
 
