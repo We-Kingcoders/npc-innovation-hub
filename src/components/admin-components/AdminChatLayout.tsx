@@ -14,7 +14,7 @@ interface AdminChatLayoutProps {
 const AdminChatLayout: React.FC<AdminChatLayoutProps> = ({ children }) => {
   return (
     // Full viewport height, no overflow on the outer shell
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-mist-100">
       {/* Sidebar — fixed width, full height */}
       <Sidebar />
 
