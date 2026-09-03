@@ -271,20 +271,20 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
     {
       label: "Total Events",
       value: insights.total,
-      color: "text-indigo-700",
-      bg: "bg-indigo-50",
+      color: "text-navy-800",
+      bg: "bg-navy-100",
     },
     {
       label: "Attendees",
       value: insights.totalAttendees,
-      color: "text-emerald-700",
-      bg: "bg-emerald-50",
+      color: "text-navy-700",
+      bg: "bg-navy-50",
     },
     {
       label: "Avg / Event",
       value: insights.averageAttendance,
-      color: "text-orange-700",
-      bg: "bg-orange-50",
+      color: "text-navy-600",
+      bg: "bg-mist-100",
     },
   ];
 
@@ -301,9 +301,9 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
             {insights.upcoming.length === 1 ? " event" : " events"}
           </p>
         </div>
-        <div className="p-2 bg-indigo-50 rounded-xl">
+        <div className="p-2 bg-navy-50 rounded-xl">
           <svg
-            className="w-4 h-4 text-indigo-600"
+            className="w-4 h-4 text-navy-700"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
@@ -334,9 +334,9 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
       <div className="space-y-2">
         {insights.upcoming.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-6 gap-2">
-            <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-mist-100 rounded-full flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-indigo-300"
+                className="w-5 h-5 text-mist-400"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.5}
@@ -366,7 +366,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
                 <div
                   className={`flex-shrink-0 w-10 h-10 rounded-xl flex flex-col items-center
                     justify-center text-center
-                    ${isImminent ? "bg-rose-100 text-rose-700" : "bg-indigo-100 text-indigo-700"}`}
+                    ${isImminent ? "bg-navy-800 text-white" : "bg-navy-50 text-navy-700"}`}
                 >
                   <span className="text-xs font-bold leading-none">
                     {startDate.getDate()}
@@ -391,9 +391,9 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
                   className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap
                     ${
                       daysUntil === 0
-                        ? "bg-rose-100 text-rose-700"
+                        ? "bg-navy-800 text-white"
                         : daysUntil <= 3
-                          ? "bg-orange-100 text-orange-700"
+                          ? "bg-navy-200 text-navy-800"
                           : "bg-mist-200 text-mist-600"
                     }`}
                 >
