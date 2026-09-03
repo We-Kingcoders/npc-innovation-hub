@@ -31,10 +31,10 @@ export default function DashboardStats() {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="bg-gray-100 rounded-xl flex flex-col items-center justify-center py-6 shadow-sm"
+          className="bg-mist-100 rounded-xl flex flex-col items-center justify-center py-6 shadow-sm"
         >
-          <span className="text-4xl font-bold text-blue-800">{stat.value}</span>
-          <span className="text-lg text-gray-700">{stat.label}</span>
+          <span className="text-4xl font-bold text-navy-800">{stat.value}</span>
+          <span className="text-lg text-navy-700">{stat.label}</span>
         </div>
       ))}
     </div>
