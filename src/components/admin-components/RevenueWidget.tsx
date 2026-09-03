@@ -79,7 +79,7 @@ export default function RevenueWidget() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-navy-700"></div>
       </div>
     );
   }
@@ -115,7 +115,7 @@ export default function RevenueWidget() {
       <div className="bg-white shadow-sm rounded-lg p-6">
         <div className="text-center py-8">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400"
+            className="mx-auto h-12 w-12 text-mist-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -127,17 +127,17 @@ export default function RevenueWidget() {
               d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-gray-900">
+          <h3 className="mt-2 text-lg font-medium text-navy-800">
             No revenue data
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-mist-500">
             There are currently no revenue records available.
           </p>
           <div className="mt-6">
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-navy-800 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
             >
               <svg
                 className="-ml-1 mr-2 h-5 w-5"
@@ -165,13 +165,13 @@ export default function RevenueWidget() {
       {/* Chart Section */}
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-navy-800">
             Revenue Analysis
           </h2>
           <div className="flex items-center space-x-2">
             <label
               htmlFor="year-select"
-              className="text-sm font-medium text-gray-500"
+              className="text-sm font-medium text-mist-500"
             >
               Year:
             </label>
@@ -179,7 +179,7 @@ export default function RevenueWidget() {
               id="year-select"
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="bg-gray-50 border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              className="bg-mist-100 border border-mist-300 text-navy-800 py-1 px-3 pr-8 rounded-md focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 text-sm"
             >
               {availableYears.map((year) => (
                 <option key={year} value={year}>
@@ -232,10 +232,10 @@ export default function RevenueWidget() {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div className="h-80 flex items-center justify-center bg-mist-100 rounded-lg">
             <div className="text-center">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-12 w-12 text-mist-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -247,10 +247,10 @@ export default function RevenueWidget() {
                   d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <h3 className="mt-2 text-sm font-medium text-navy-800">
                 No data for {selectedYear}
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-mist-500">
                 Select another year from the dropdown above
               </p>
             </div>
@@ -259,7 +259,7 @@ export default function RevenueWidget() {
       </div>
 
       {/* Stats Summary */}
-      <div className="lg:w-72 xl:w-80 flex flex-col items-center lg:items-start lg:pl-8 lg:border-l lg:border-gray-100">
+      <div className="lg:w-72 xl:w-80 flex flex-col items-center lg:items-start lg:pl-8 lg:border-l lg:border-mist-200">
         <div className="w-full max-w-xs mb-8">
           <div className="w-40 h-40 mx-auto">
             <CircularProgressbar
@@ -282,27 +282,27 @@ export default function RevenueWidget() {
             />
           </div>
           <div className="text-center mt-4">
-            <p className="text-lg font-medium text-gray-700">
+            <p className="text-lg font-medium text-navy-800">
               {growthPercent >= 0 ? "Revenue Growth" : "Revenue Decline"}
             </p>
-            <p className="text-sm text-gray-500">Year over Year Comparison</p>
+            <p className="text-sm text-mist-500">Year over Year Comparison</p>
           </div>
         </div>
 
         <div className="w-full space-y-6">
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-mist-100 rounded-lg p-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-sm font-medium text-mist-500">
                   Current Year
                 </p>
-                <p className="text-2xl font-semibold text-gray-800">
+                <p className="text-2xl font-semibold text-navy-800">
                   ${(currentYearTotal / 1000).toFixed(1)}k
                 </p>
               </div>
-              <div className="bg-indigo-100 rounded-full p-2">
+              <div className="bg-navy-50 rounded-full p-2">
                 <svg
-                  className="h-6 w-6 text-indigo-600"
+                  className="h-6 w-6 text-navy-700"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -318,19 +318,19 @@ export default function RevenueWidget() {
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-mist-100 rounded-lg p-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-sm font-medium text-mist-500">
                   Previous Year
                 </p>
-                <p className="text-2xl font-semibold text-gray-800">
+                <p className="text-2xl font-semibold text-navy-800">
                   ${(previousYearTotal / 1000).toFixed(1)}k
                 </p>
               </div>
-              <div className="bg-gray-200 rounded-full p-2">
+              <div className="bg-mist-200 rounded-full p-2">
                 <svg
-                  className="h-6 w-6 text-gray-600"
+                  className="h-6 w-6 text-mist-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
