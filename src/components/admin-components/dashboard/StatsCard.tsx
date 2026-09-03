@@ -635,7 +635,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
   return (
     <div
       className={`
-        group relative bg-gradient-to-b ${c.cardBg}
+        group relative isolate bg-gradient-to-b ${c.cardBg}
         rounded-2xl p-5 border ${c.border}
         shadow-sm hover:shadow-lg ${c.glow}
         transition-all duration-300 hover:-translate-y-0.5
@@ -648,7 +648,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
           opacity-40 group-hover:opacity-70 transition-opacity duration-300`}
       />
 
-      <div className="relative z-10 flex flex-col items-center text-center gap-3">
+      <div className="relative flex flex-col items-center text-center gap-3">
         {/* Top row: icon (left) + growth badge (right) */}
         <div className="w-full flex items-center justify-between">
           <div className={`p-2 rounded-lg ${c.icon}`}>
