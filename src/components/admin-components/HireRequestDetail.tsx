@@ -44,7 +44,7 @@ export default function HireRequestDetail() {
       case "Contacted":
         return "bg-green-100 text-green-800 border-green-200";
       case "Reviewed":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-navy-100 text-navy-800 border-navy-200";
       case "Rejected":
         return "bg-red-100 text-red-800 border-red-200";
       default:
@@ -110,7 +110,7 @@ export default function HireRequestDetail() {
         {/* Back Button */}
         <button
           onClick={() => navigate("/hire-requests")}
-          className="mb-6 text-blue-600 font-medium hover:text-blue-700 transition-colors flex items-center gap-2"
+          className="mb-6 text-navy-700 font-medium hover:text-navy-800 transition-colors flex items-center gap-2"
         >
           <svg
             className="w-5 h-5"
@@ -132,10 +132,10 @@ export default function HireRequestDetail() {
         {loading && (
           <div className="bg-white rounded-2xl shadow-sm p-8 animate-pulse">
             <div className="space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-1/3" />
-              <div className="h-4 bg-gray-200 rounded w-1/4" />
-              <div className="h-4 bg-gray-200 rounded w-1/2" />
-              <div className="h-32 bg-gray-200 rounded" />
+              <div className="h-8 bg-mist-200 rounded w-1/3" />
+              <div className="h-4 bg-mist-200 rounded w-1/4" />
+              <div className="h-4 bg-mist-200 rounded w-1/2" />
+              <div className="h-32 bg-mist-200 rounded" />
             </div>
           </div>
         )}
@@ -157,10 +157,10 @@ export default function HireRequestDetail() {
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-navy-800 mb-2">
                 Error Loading Inquiry
               </h3>
-              <p className="text-gray-600">{error}</p>
+              <p className="text-mist-600">{error}</p>
             </div>
           </div>
         )}
@@ -169,18 +169,18 @@ export default function HireRequestDetail() {
         {inquiry && !loading && (
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6 text-white">
+            <div className="bg-navy-800 px-8 py-6 text-white">
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-2xl font-bold mb-2">
                     {inquiry.company_name}
                   </h1>
-                  <p className="text-blue-100">{inquiry.job_title}</p>
+                  <p className="text-navy-100">{inquiry.job_title}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowReplyModal(true)}
-                    className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium flex items-center gap-2"
+                    className="px-4 py-2 bg-white text-navy-700 rounded-lg hover:bg-mist-100 transition-colors font-medium flex items-center gap-2"
                   >
                     <svg
                       className="w-4 h-4"
@@ -224,32 +224,32 @@ export default function HireRequestDetail() {
             <div className="p-8 space-y-6">
               {/* Contact Information */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Contact Information
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Full Name
                     </label>
-                    <p className="text-gray-900 mt-1">
+                    <p className="text-navy-800 mt-1">
                       {inquiry.first_name} {inquiry.last_name}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Email
                     </label>
-                    <p className="text-gray-900 mt-1">{inquiry.email}</p>
+                    <p className="text-navy-800 mt-1">{inquiry.email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Country
                     </label>
-                    <p className="text-gray-900 mt-1">{inquiry.country}</p>
+                    <p className="text-navy-800 mt-1">{inquiry.country}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Status
                     </label>
                     <div className="mt-1">
@@ -259,7 +259,7 @@ export default function HireRequestDetail() {
                           handleStatusChange(e.target.value as InquiryStatus)
                         }
                         disabled={isUpdatingStatus}
-                        className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(inquiry.status)} focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50`}
+                        className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(inquiry.status)} focus:outline-none focus:ring-2 focus:ring-navy-500 disabled:opacity-50`}
                       >
                         {STATUS_OPTIONS.map((status) => (
                           <option key={status} value={status}>
@@ -274,19 +274,19 @@ export default function HireRequestDetail() {
 
               {/* Message */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Message
                 </h2>
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                <div className="bg-mist-100 rounded-lg p-6 border border-mist-300">
+                  <p className="text-navy-700 whitespace-pre-wrap">
                     {inquiry.message}
                   </p>
                 </div>
               </div>
 
               {/* Metadata */}
-              <div className="pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm text-gray-500">
+              <div className="pt-4 border-t border-mist-300">
+                <div className="flex items-center justify-between text-sm text-mist-600">
                   <span>Created: {formatDate(inquiry.created_at)}</span>
                   <span>Last Updated: {formatDate(inquiry.updated_at)}</span>
                 </div>
