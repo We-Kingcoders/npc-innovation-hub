@@ -137,7 +137,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-5 flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-navy-800 px-8 py-5 flex items-center justify-between z-10">
           <h2 className="text-2xl font-bold text-white">
             {initialData ? "Edit Task" : "Create New Task"}
           </h2>
@@ -170,7 +170,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
           <div className="space-y-5">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Task Title *
               </label>
               <input
@@ -180,8 +180,8 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   setFormData({ ...formData, title: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
+                  errors.title ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 placeholder="E.g., Fix login authentication timeout"
                 disabled={isLoading}
               />
@@ -192,7 +192,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Description *
               </label>
               <textarea
@@ -202,8 +202,8 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 }
                 rows={4}
                 className={`w-full px-4 py-2.5 border ${
-                  errors.description ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none`}
+                  errors.description ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all resize-none`}
                 placeholder="Describe the task in detail..."
                 disabled={isLoading}
               />
@@ -218,7 +218,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
             <div className="grid grid-cols-2 gap-4">
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-navy-800 mb-2">
                   Status *
                 </label>
                 <select
@@ -226,7 +226,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   onChange={(e) =>
                     setFormData({ ...formData, status: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
                   disabled={isLoading}
                 >
                   <option value="pending">Pending</option>
@@ -237,7 +237,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
               {/* Priority */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-navy-800 mb-2">
                   Priority *
                 </label>
                 <select
@@ -245,7 +245,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   onChange={(e) =>
                     setFormData({ ...formData, priority: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
                   disabled={isLoading}
                 >
                   <option value="low">Low</option>
@@ -257,7 +257,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
             {/* Due Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Due Date *
               </label>
               <input
@@ -267,8 +267,8 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   setFormData({ ...formData, dueDate: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.dueDate ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
+                  errors.dueDate ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 disabled={isLoading}
               />
               {errors.dueDate && (
@@ -278,7 +278,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
             {/* Assign Member */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Assign To *
               </label>
               <select
@@ -287,8 +287,8 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   setFormData({ ...formData, assignedTo: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.assignedTo ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                  errors.assignedTo ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent`}
                 disabled={isLoading}
               >
                 <option value="">Select a member</option>
@@ -305,7 +305,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
             {/* GitHub Issue Link */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 GitHub Issue Link
               </label>
               <input
@@ -315,8 +315,8 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   setFormData({ ...formData, githubIssueLink: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.githubIssueLink ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
+                  errors.githubIssueLink ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 placeholder="https://github.com/username/repo/issues/123"
                 disabled={isLoading}
               />
@@ -333,14 +333,14 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+              className="px-6 py-2.5 text-navy-800 bg-mist-100 rounded-lg hover:bg-mist-200 transition-all font-medium"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2.5 text-white bg-navy-800 rounded-lg hover:bg-navy-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               disabled={isLoading}
             >
               {isLoading ? (
