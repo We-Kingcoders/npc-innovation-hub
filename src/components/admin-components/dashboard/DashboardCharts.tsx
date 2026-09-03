@@ -360,7 +360,7 @@ const BarTooltip: React.FC<{
   return (
     <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-mist-300 text-sm">
       <p className="font-semibold text-navy-800">{label}</p>
-      <p className="text-indigo-600 mt-0.5">{payload[0].value} projects</p>
+      <p className="text-navy-700 mt-0.5">{payload[0].value} projects</p>
     </div>
   );
 };
@@ -508,7 +508,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
                 />
                 <Bar
                   dataKey="projects"
-                  fill="#6366f1"
+                  fill="#14375F"
                   radius={[6, 6, 0, 0]}
                   maxBarSize={40}
                 />
@@ -533,7 +533,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
           <div className="flex items-center gap-2">
             {[
               { key: "completed", label: "Done", color: "#10b981" },
-              { key: "inProgress", label: "In Progress", color: "#6366f1" },
+              { key: "inProgress", label: "In Progress", color: "#14375F" },
               { key: "pending", label: "Pending", color: "#f59e0b" },
             ].map((item) => (
               <span
@@ -596,8 +596,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
                     x2="0"
                     y2="1"
                   >
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#14375F" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#14375F" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gradPending" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
@@ -636,11 +636,11 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
                   type="monotone"
                   dataKey="inProgress"
                   name="inProgress"
-                  stroke="#6366f1"
+                  stroke="#14375F"
                   strokeWidth={2}
                   fill="url(#gradInProgress)"
                   dot={false}
-                  activeDot={{ r: 4, fill: "#6366f1" }}
+                  activeDot={{ r: 4, fill: "#14375F" }}
                 />
                 <Area
                   type="monotone"
