@@ -276,7 +276,10 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
             const isLast = idx === activities.length - 1;
 
             return (
-              <div key={activity.id} className="relative flex gap-3 group">
+              <div
+                key={activity.id}
+                className="relative isolate flex gap-3 group"
+              >
                 {/* Connector line */}
                 {!isLast && (
                   <div className="absolute left-3.5 top-7 bottom-0 w-px bg-mist-200" />
@@ -284,7 +287,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, loading }) => {
 
                 {/* Icon */}
                 <div
-                  className={`relative z-10 flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-0.5 ${config.bg} ${config.color}`}
+                  className={`relative flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-0.5 ${config.bg} ${config.color}`}
                 >
                   {config.icon}
                 </div>
