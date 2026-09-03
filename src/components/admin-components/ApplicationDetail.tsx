@@ -102,7 +102,7 @@ export default function ApplicationDetail() {
         {/* Back Button */}
         <button
           onClick={() => navigate("/admin/applications")}
-          className="mb-6 text-blue-600 font-medium hover:text-blue-700 transition-colors flex items-center gap-2"
+          className="mb-6 text-navy-700 font-medium hover:text-navy-800 transition-colors flex items-center gap-2"
         >
           <svg
             className="w-5 h-5"
@@ -124,10 +124,10 @@ export default function ApplicationDetail() {
         {loading && (
           <div className="bg-white rounded-2xl shadow-sm p-8 animate-pulse">
             <div className="space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-1/3" />
-              <div className="h-4 bg-gray-200 rounded w-1/4" />
-              <div className="h-4 bg-gray-200 rounded w-1/2" />
-              <div className="h-32 bg-gray-200 rounded" />
+              <div className="h-8 bg-mist-200 rounded w-1/3" />
+              <div className="h-4 bg-mist-200 rounded w-1/4" />
+              <div className="h-4 bg-mist-200 rounded w-1/2" />
+              <div className="h-32 bg-mist-200 rounded" />
             </div>
           </div>
         )}
@@ -149,10 +149,10 @@ export default function ApplicationDetail() {
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-navy-800 mb-2">
                 Error Loading Application
               </h3>
-              <p className="text-gray-600">{error}</p>
+              <p className="text-mist-600">{error}</p>
             </div>
           </div>
         )}
@@ -161,7 +161,7 @@ export default function ApplicationDetail() {
         {application && !loading && (
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6 text-white">
+            <div className="bg-navy-800 px-8 py-6 text-white">
               <div className="flex items-start justify-between flex-wrap gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
@@ -174,7 +174,7 @@ export default function ApplicationDetail() {
                       {application.status}
                     </span>
                   </div>
-                  <p className="text-blue-100">{application.email}</p>
+                  <p className="text-navy-100">{application.email}</p>
                 </div>
                 {isPending && (
                   <div className="flex gap-2">
@@ -228,32 +228,32 @@ export default function ApplicationDetail() {
                 <img
                   src={application.imageUrl}
                   alt={application.fullName}
-                  className="w-24 h-24 rounded-full object-cover border border-gray-200"
+                  className="w-24 h-24 rounded-full object-cover border border-mist-300"
                 />
               )}
 
               {/* Contact Information */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Applicant Information
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Phone Number
                     </label>
-                    <p className="text-gray-900 mt-1">
+                    <p className="text-navy-800 mt-1">
                       {application.phoneNumber}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Gender
                     </label>
-                    <p className="text-gray-900 mt-1">{application.gender}</p>
+                    <p className="text-navy-800 mt-1">{application.gender}</p>
                   </div>
                   <div className="col-span-2">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       GitHub
                     </label>
                     <p className="mt-1">
@@ -261,14 +261,14 @@ export default function ApplicationDetail() {
                         href={application.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-navy-700 hover:underline"
                       >
                         {application.githubUrl}
                       </a>
                     </p>
                   </div>
                   <div className="col-span-2">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-mist-600">
                       Application Letter
                     </label>
                     <p className="mt-1">
@@ -276,7 +276,7 @@ export default function ApplicationDetail() {
                         href={application.applicationLetterUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-navy-700 hover:underline"
                       >
                         Open Letter (PDF) →
                       </a>
@@ -287,14 +287,14 @@ export default function ApplicationDetail() {
 
               {/* Skills */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Skills
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {application.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="text-xs px-3 py-1.5 rounded-full font-medium bg-blue-50 text-blue-700"
+                      className="text-xs px-3 py-1.5 rounded-full font-medium bg-navy-50 text-navy-700"
                     >
                       {skill}
                     </span>
@@ -304,11 +304,11 @@ export default function ApplicationDetail() {
 
               {/* Strengths */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Strengths
                 </h2>
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                <div className="bg-mist-100 rounded-lg p-6 border border-mist-300">
+                  <p className="text-navy-700 whitespace-pre-wrap">
                     {application.strengths}
                   </p>
                 </div>
@@ -316,11 +316,11 @@ export default function ApplicationDetail() {
 
               {/* Weaknesses */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Weaknesses
                 </h2>
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                <div className="bg-mist-100 rounded-lg p-6 border border-mist-300">
+                  <p className="text-navy-700 whitespace-pre-wrap">
                     {application.weaknesses}
                   </p>
                 </div>
@@ -329,23 +329,23 @@ export default function ApplicationDetail() {
               {/* Review metadata */}
               {!isPending && (
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h2 className="text-lg font-semibold text-navy-800 mb-4">
                     Review
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500">
+                      <label className="text-sm font-medium text-mist-600">
                         Reviewed By
                       </label>
-                      <p className="text-gray-900 mt-1">
+                      <p className="text-navy-800 mt-1">
                         {application.reviewedBy || "—"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">
+                      <label className="text-sm font-medium text-mist-600">
                         Reviewed At
                       </label>
-                      <p className="text-gray-900 mt-1">
+                      <p className="text-navy-800 mt-1">
                         {application.reviewedAt
                           ? formatDate(application.reviewedAt)
                           : "—"}
@@ -356,8 +356,8 @@ export default function ApplicationDetail() {
               )}
 
               {/* Metadata */}
-              <div className="pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm text-gray-500">
+              <div className="pt-4 border-t border-mist-300">
+                <div className="flex items-center justify-between text-sm text-mist-600">
                   <span>Submitted: {formatDate(application.createdAt)}</span>
                   <span>Last Updated: {formatDate(application.updatedAt)}</span>
                 </div>
