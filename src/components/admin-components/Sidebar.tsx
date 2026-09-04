@@ -345,6 +345,7 @@ import {
   UserCheck, // ← new
   Star, // ← new
   Video, // ← new
+  GraduationCap, // ← new
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -363,6 +364,7 @@ const iconComponents = {
   applications: UserCheck, // ← new
   heroMembers: Star, // ← new
   hubVideo: Video, // ← new
+  alumni: GraduationCap, // ← new
 };
 
 export default function Sidebar() {

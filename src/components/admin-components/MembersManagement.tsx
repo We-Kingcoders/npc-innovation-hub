@@ -18,6 +18,7 @@ import {
   filterUsersByRole,
   filterUsersByStatus,
 } from "../../api/admin/member.api";
+import { setMemberAlumniStatus } from "../../api/admin/alumni.api";
 import UserManagementTable from "./UserManagementTable";
 import UserManagementFilters from "./UserManagementFilters";
 
@@ -132,6 +133,27 @@ const MembersManagement: React.FC = () => {
     }
   };
 
+  const handleAlumniToggle = async (userId: string, isAlumni: boolean) => {
+    try {
+      await setMemberAlumniStatus(userId, isAlumni);
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, isAlumni } : user,
+        ),
+      );
+
+      toast.success(
+        isAlumni ? "Member promoted to alumni" : "Member demoted from alumni",
+      );
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update alumni status";
+      toast.error(errorMessage);
+      throw err; // Re-throw to let table handle loading state
+    }
+  };
+
   const handleDeleteUser = async (userId: string) => {
     try {
       await deleteUser(userId);
@@ -217,6 +239,7 @@ const MembersManagement: React.FC = () => {
         isLoading={isLoading}
         onRoleChange={handleRoleChange}
         onStatusToggle={handleStatusToggle}
+        onAlumniToggle={handleAlumniToggle}
         onDeleteUser={handleDeleteUser}
       />
 
