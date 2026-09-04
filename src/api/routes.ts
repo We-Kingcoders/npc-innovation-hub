@@ -286,6 +286,16 @@ export const MESSAGE_ROUTES = {
   DELETE_MESSAGE: (id: string) => `${API_BASE}/messages/${id}`,
 } as const;
 
+// ==================== ADMIN HERO MEMBER ROUTES ====================
+
+export const HERO_MEMBER_ROUTES = {
+  GET_HERO_MEMBERS: `${API_BASE}/admin/hero-members`,
+  ADD_HERO_MEMBER: `${API_BASE}/admin/hero-members`,
+  REMOVE_HERO_MEMBER: (id: string) => `${API_BASE}/admin/hero-members/${id}`,
+  REORDER_HERO_MEMBERS: `${API_BASE}/admin/hero-members/reorder`,
+  GET_MEMBERS_PICKER: `${API_BASE}/admin/members/picker`,
+} as const;
+
 // ==================== HELPER FUNCTIONS ====================
 
 /**
