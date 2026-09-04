@@ -344,6 +344,7 @@ import {
   MessageSquare, // ← new
   UserCheck, // ← new
   Star, // ← new
+  Video, // ← new
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -361,6 +362,7 @@ const iconComponents = {
   messages: MessageSquare, // ← new
   applications: UserCheck, // ← new
   heroMembers: Star, // ← new
+  hubVideo: Video, // ← new
 };
 
 export default function Sidebar() {

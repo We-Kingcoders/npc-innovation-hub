@@ -296,6 +296,14 @@ export const HERO_MEMBER_ROUTES = {
   GET_MEMBERS_PICKER: `${API_BASE}/admin/members/picker`,
 } as const;
 
+// ==================== ADMIN HUB VIDEO ROUTES ====================
+
+export const HUB_VIDEO_ROUTES = {
+  GET_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  UPLOAD_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  DELETE_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+} as const;
+
 // ==================== HELPER FUNCTIONS ====================
 
 /**

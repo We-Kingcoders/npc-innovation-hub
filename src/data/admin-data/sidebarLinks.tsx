@@ -48,6 +48,12 @@ export const sidebarLinks = [
     notification: 0,
   },
   {
+    icon: "hubVideo",
+    label: "Hub Video",
+    path: "/Admin-hub-video",
+    notification: 0,
+  },
+  {
     icon: "calendar",
     label: "Events",
     path: "/Admin-events",
