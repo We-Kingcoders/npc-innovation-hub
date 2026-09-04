@@ -343,6 +343,7 @@ import {
   ClipboardList,
   MessageSquare, // ← new
   UserCheck, // ← new
+  Star, // ← new
   Video, // ← new
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
@@ -360,6 +361,7 @@ const iconComponents = {
   clipboard: ClipboardList,
   messages: MessageSquare, // ← new
   applications: UserCheck, // ← new
+  heroMembers: Star, // ← new
   hubVideo: Video, // ← new
 };
 
