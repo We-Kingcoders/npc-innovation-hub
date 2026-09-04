@@ -286,6 +286,14 @@ export const MESSAGE_ROUTES = {
   DELETE_MESSAGE: (id: string) => `${API_BASE}/messages/${id}`,
 } as const;
 
+// ==================== ADMIN HUB VIDEO ROUTES ====================
+
+export const HUB_VIDEO_ROUTES = {
+  GET_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  UPLOAD_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  DELETE_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+} as const;
+
 // ==================== HELPER FUNCTIONS ====================
 
 /**
