@@ -15,6 +15,7 @@ import SignUpPage from "../pages/Login/SignUp";
 import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
 import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
+import { ApplyPage } from "../pages/apply/ApplyPage";
 import LetTalk from "../pages/HireUs/form";
 import Partners from "../pages/HireUs/partners";
 import Services from "../pages/HireUs/services";
@@ -157,6 +158,15 @@ const AllRoutes: React.FC = () => {
         element={
           <>
             <MemberDetailPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/apply"
+        element={
+          <>
+            <ApplyPage />
             <Footer />
           </>
         }
