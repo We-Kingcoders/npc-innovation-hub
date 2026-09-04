@@ -49,8 +49,8 @@ const ACTIVITY_CONFIG: Record<
         />
       </svg>
     ),
-    color: "text-indigo-600",
-    bg: "bg-indigo-100",
+    color: "text-navy-800",
+    bg: "bg-navy-100",
   },
   task_assigned: {
     icon: (
@@ -69,8 +69,8 @@ const ACTIVITY_CONFIG: Record<
         <rect x="9" y="3" width="6" height="4" rx="1" />
       </svg>
     ),
-    color: "text-amber-600",
-    bg: "bg-amber-100",
+    color: "text-navy-700",
+    bg: "bg-navy-50",
   },
   task_completed: {
     icon: (
@@ -84,8 +84,8 @@ const ACTIVITY_CONFIG: Record<
         <polyline points="20 6 9 17 4 12" />
       </svg>
     ),
-    color: "text-emerald-600",
-    bg: "bg-emerald-100",
+    color: "text-navy-600",
+    bg: "bg-mist-100",
   },
   event_created: {
     icon: (
@@ -102,8 +102,8 @@ const ACTIVITY_CONFIG: Record<
         <line x1="3" y1="10" x2="21" y2="10" />
       </svg>
     ),
-    color: "text-violet-600",
-    bg: "bg-violet-100",
+    color: "text-navy-800",
+    bg: "bg-mist-200",
   },
   resource_added: {
     icon: (
@@ -126,8 +126,8 @@ const ACTIVITY_CONFIG: Record<
         />
       </svg>
     ),
-    color: "text-teal-600",
-    bg: "bg-teal-100",
+    color: "text-navy-700",
+    bg: "bg-navy-100",
   },
   blog_published: {
     icon: (
@@ -150,8 +150,8 @@ const ACTIVITY_CONFIG: Record<
         />
       </svg>
     ),
-    color: "text-blue-600",
-    bg: "bg-blue-100",
+    color: "text-navy-600",
+    bg: "bg-navy-50",
   },
   hire_inquiry: {
     icon: (
@@ -170,8 +170,8 @@ const ACTIVITY_CONFIG: Record<
         />
       </svg>
     ),
-    color: "text-orange-600",
-    bg: "bg-orange-100",
+    color: "text-navy-800",
+    bg: "bg-mist-100",
   },
   user_joined: {
     icon: (
@@ -192,8 +192,8 @@ const ACTIVITY_CONFIG: Record<
         <line x1="22" y1="11" x2="16" y2="11" />
       </svg>
     ),
-    color: "text-green-600",
-    bg: "bg-green-100",
+    color: "text-navy-700",
+    bg: "bg-mist-200",
   },
   member_updated: {
     icon: (
@@ -213,8 +213,8 @@ const ACTIVITY_CONFIG: Record<
         <polyline points="16 11 18 13 22 9" />
       </svg>
     ),
-    color: "text-gray-600",
-    bg: "bg-gray-100",
+    color: "text-navy-600",
+    bg: "bg-navy-50",
   },
 };
 

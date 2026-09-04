@@ -20,9 +20,9 @@ const ACTIONS: QuickAction[] = [
     label: "Create Project",
     description: "Add a new project",
     href: "/dashboard/projects/new",
-    color: "text-indigo-700",
-    hoverColor: "hover:bg-indigo-50",
-    iconBg: "bg-indigo-100",
+    color: "text-navy-800",
+    hoverColor: "hover:bg-navy-50",
+    iconBg: "bg-navy-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -45,9 +45,9 @@ const ACTIONS: QuickAction[] = [
     label: "Create Event",
     description: "Schedule an event",
     href: "/Admin-events",
-    color: "text-violet-700",
-    hoverColor: "hover:bg-violet-50",
-    iconBg: "bg-violet-100",
+    color: "text-navy-700",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-50",
     icon: (
       <svg
         className="w-5 h-5"
@@ -69,9 +69,9 @@ const ACTIONS: QuickAction[] = [
     label: "Add Task",
     description: "Create a new task",
     href: "/Admin-tasks",
-    color: "text-amber-700",
-    hoverColor: "hover:bg-amber-50",
-    iconBg: "bg-amber-100",
+    color: "text-navy-600",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-mist-200",
     icon: (
       <svg
         className="w-5 h-5"
@@ -95,9 +95,9 @@ const ACTIONS: QuickAction[] = [
     label: "Add Resource",
     description: "Upload a resource",
     href: "/add-resource",
-    color: "text-teal-700",
-    hoverColor: "hover:bg-teal-50",
-    iconBg: "bg-teal-100",
+    color: "text-navy-800",
+    hoverColor: "hover:bg-navy-50",
+    iconBg: "bg-mist-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -125,9 +125,9 @@ const ACTIONS: QuickAction[] = [
     label: "Manage Members",
     description: "View all members",
     href: "/Admin-members",
-    color: "text-blue-700",
-    hoverColor: "hover:bg-blue-50",
-    iconBg: "bg-blue-100",
+    color: "text-navy-700",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -159,9 +159,9 @@ const ACTIONS: QuickAction[] = [
     label: "Hire Requests",
     description: "View inquiries",
     href: "/hire-requests",
-    color: "text-orange-700",
-    hoverColor: "hover:bg-orange-50",
-    iconBg: "bg-orange-100",
+    color: "text-navy-600",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-50",
     icon: (
       <svg
         className="w-5 h-5"
