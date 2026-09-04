@@ -27,6 +27,7 @@ interface UserManagementTableProps {
   isLoading: boolean;
   onRoleChange: (userId: string, newRole: UserRole) => Promise<void>;
   onStatusToggle: (userId: string) => Promise<void>;
+  onAlumniToggle: (userId: string, isAlumni: boolean) => Promise<void>;
   onDeleteUser: (userId: string) => Promise<void>;
 }
 
@@ -37,6 +38,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   isLoading,
   onRoleChange,
   onStatusToggle,
+  onAlumniToggle,
   onDeleteUser,
 }) => {
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
@@ -62,6 +64,19 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     setLoadingUsers((prev) => new Set(prev).add(userId));
     try {
       await onStatusToggle(userId);
+    } finally {
+      setLoadingUsers((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
+  const handleAlumniToggle = async (userId: string, isAlumni: boolean) => {
+    setLoadingUsers((prev) => new Set(prev).add(userId));
+    try {
+      await onAlumniToggle(userId, isAlumni);
     } finally {
       setLoadingUsers((prev) => {
         const next = new Set(prev);
@@ -146,6 +161,9 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Verified
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
+                  Alumni
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Joined
@@ -237,6 +255,28 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         Unverified
                       </span>
                     )}
+                  </td>
+
+                  {/* ALUMNI COLUMN */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button
+                      onClick={() =>
+                        handleAlumniToggle(user.id, !user.isAlumni)
+                      }
+                      disabled={isUserLoading(user.id)}
+                      title={
+                        user.isAlumni
+                          ? "Demote from alumni"
+                          : "Promote to alumni"
+                      }
+                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
+                        user.isAlumni
+                          ? "bg-navy-800 text-white"
+                          : "bg-mist-200 text-mist-600"
+                      }`}
+                    >
+                      {user.isAlumni ? "Alumni" : "Current"}
+                    </button>
                   </td>
 
                   {/* JOINED DATE COLUMN */}
