@@ -286,6 +286,17 @@ export const MESSAGE_ROUTES = {
   DELETE_MESSAGE: (id: string) => `${API_BASE}/messages/${id}`,
 } as const;
 
+// ==================== ADMIN ALUMNI ROUTES ====================
+
+export const ALUMNI_ROUTES = {
+  SET_MEMBER_ALUMNI_STATUS: (id: string) =>
+    `${API_BASE}/admin/members/${id}/alumni-status`,
+  GET_ALUMNI: `${API_BASE}/admin/alumni`,
+  CREATE_ALUMNI: `${API_BASE}/admin/alumni`,
+  UPDATE_ALUMNI: (id: string) => `${API_BASE}/admin/alumni/${id}`,
+  DELETE_ALUMNI: (id: string) => `${API_BASE}/admin/alumni/${id}`,
+} as const;
+
 // ==================== HELPER FUNCTIONS ====================
 
 /**
