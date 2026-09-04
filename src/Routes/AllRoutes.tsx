@@ -14,6 +14,7 @@ import Mission from "../pages/landing/Mission";
 import SignUpPage from "../pages/Login/SignUp";
 import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
+import { AlumniPage } from "../pages/all-member-page/AlumniPage";
 import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
 import { ApplyPage } from "../pages/apply/ApplyPage";
 import LetTalk from "../pages/HireUs/form";
@@ -167,6 +168,15 @@ const AllRoutes: React.FC = () => {
         element={
           <>
             <ApplyPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/alumni"
+        element={
+          <>
+            <AlumniPage />
             <Footer />
           </>
         }
