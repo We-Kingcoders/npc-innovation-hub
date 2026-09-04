@@ -343,6 +343,7 @@ import {
   ClipboardList,
   MessageSquare, // ← new
   UserCheck, // ← new
+  GraduationCap, // ← new
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
@@ -359,6 +360,7 @@ const iconComponents = {
   clipboard: ClipboardList,
   messages: MessageSquare, // ← new
   applications: UserCheck, // ← new
+  alumni: GraduationCap, // ← new
 };
 
 export default function Sidebar() {
