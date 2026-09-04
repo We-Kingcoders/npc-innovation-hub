@@ -54,6 +54,7 @@ import AdminResources from "../pages/Admin-pages/AdminResources";
 import HireUsRequests from "../pages/Admin-pages/HireUsRequests";
 import AddResource from "../pages/Admin-pages/AddResource";
 import MemberManagement from "../pages/Admin-pages/MemberManagement";
+import HubVideoPage from "../pages/Admin-pages/HubVideoPage";
 import BlogTables from "../pages/Admin-pages/BlogTables";
 import ProjectTables from "../pages/Admin-pages/ProjectTables";
 import OTPVerification from "../pages/Login/OTPVerification";
@@ -459,6 +460,14 @@ const AllRoutes: React.FC = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <MemberManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-hub-video"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <HubVideoPage />
           </ProtectedRoute>
         }
       />
