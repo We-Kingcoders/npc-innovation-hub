@@ -1,7 +1,7 @@
 // src/components/button/landing/HubMembersSection.tsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getPublicMembers } from "../../api/member/member.api";
+import { useHeroMembers } from "../../hooks/useHeroMembers";
 
 // Define types
 interface MemberData {
@@ -147,9 +147,11 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onViewProfile }) => {
             </div>
           )}
 
-          <p className="text-base text-center text-gray-700 px-2 mb-4">
-            {member.bio || member.description}
-          </p>
+          {(member.bio || member.description) && (
+            <p className="text-base text-center text-gray-700 px-2 mb-4">
+              {member.bio || member.description}
+            </p>
+          )}
 
           {member.skills && member.skills.length > 0 && (
             <div className="mt-4">
@@ -238,36 +240,39 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
 };
 
 /**
+ * Skeleton Grid - shown while hero members are loading
+ */
+const SkeletonGrid: React.FC = () => (
+  <div
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+    aria-label="Loading hero members"
+  >
+    {[...Array(3)].map((_, i) => (
+      <div
+        key={i}
+        className="border-2 border-white rounded-[30px] p-6 pt-12 animate-pulse"
+      >
+        <div className="mb-4 w-full h-[300px] rounded-[20px] bg-white/40" />
+        <div className="h-6 w-2/3 mx-auto rounded bg-white/40 mb-3" />
+        <div className="h-4 w-1/3 mx-auto rounded bg-white/40" />
+      </div>
+    ))}
+  </div>
+);
+
+/**
  * Main HubMembersSection component - Displays the hub members section
  */
 const HubMembersSection: React.FC = () => {
-  const [members, setMembers] = useState<MemberData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { members: heroMembers, loading } = useHeroMembers();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        setLoading(true);
-        const result = await getPublicMembers(1, 3);
-        setMembers(
-          result.members.map((m) => ({
-            id: m.id,
-            name: m.name,
-            role: m.role,
-            bio: m.tagline,
-            skills: m.techStack,
-            image: m.imageUrl ?? "/public/assets/images/hero.png",
-          })),
-        );
-      } catch {
-        setMembers([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMembers();
-  }, []);
+  const members: MemberData[] = heroMembers.map((hm) => ({
+    id: hm.memberId,
+    name: hm.name,
+    role: hm.role,
+    image: hm.imageUrl ?? "/public/assets/images/hero.png",
+  }));
 
   const handleViewAllMembers = () => {
     navigate("/members");
@@ -276,8 +281,6 @@ const HubMembersSection: React.FC = () => {
   const handleViewProfile = (id: string) => {
     navigate(`/members/${id}`);
   };
-
-  if (!loading && members.length === 0) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-[#f3fdfe] to-[#a7e1e7]">
@@ -293,16 +296,13 @@ const HubMembersSection: React.FC = () => {
       <main className="py-8 px-4 md:px-8">
         <div className="container mx-auto max-w-7xl">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="border-2 border-white rounded-[30px] p-6 pt-12 h-[420px] bg-white/40 animate-pulse"
-                />
-              ))}
-            </div>
-          ) : (
+            <SkeletonGrid />
+          ) : members.length > 0 ? (
             <MemberGrid members={members} onViewProfile={handleViewProfile} />
+          ) : (
+            <p className="text-center text-lg text-[#002b56]/70">
+              We're featuring new hub members soon — check back shortly.
+            </p>
           )}
 
           <div className="flex justify-center mt-16">

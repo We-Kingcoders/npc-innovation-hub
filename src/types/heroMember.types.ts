@@ -1,4 +1,8 @@
-// src/types/heroMember.types.ts
+/**
+ * Hero Member Type Definitions
+ * Admin-curated members featured on the public landing page.
+ * Matches GET /admin/hero-members (admin) and GET /api/hero-members (public).
+ */
 
 export interface HeroMember {
   id: string;
@@ -7,6 +11,13 @@ export interface HeroMember {
   role: string;
   imageUrl: string | null;
   order: number;
+}
+
+export interface HeroMembersResponse {
+  status: string;
+  data: {
+    heroMembers: HeroMember[];
+  };
 }
 
 export interface MemberPickerOption {
