@@ -3,8 +3,9 @@ jest.mock("../../api/member/member.api", () => ({
   getPublicMembers: jest.fn(),
 }));
 
-import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, screen, waitFor, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { InnovationHubMembersPage } from "./InnovationHubMembersPage";
 import { getPublicMembers } from "../../api/member/member.api";
 import type { PublicMembersPage } from "../../api/member/member.api";
@@ -78,5 +79,47 @@ describe("InnovationHubMembersPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Network error")).toBeInTheDocument();
     });
+  });
+
+  test("surfaces the real API error message instead of a generic fallback", async () => {
+    // Matches the shape apiClient's response interceptor actually rejects
+    // with: a plain object, not an Error instance.
+    mockedGetPublicMembers.mockRejectedValue({
+      statusCode: 404,
+      message: "Route not found",
+    });
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Route not found")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Unknown error")).not.toBeInTheDocument();
+  });
+
+  test("navigates to the member's userId, not their Member.id, when viewing a profile", async () => {
+    mockedGetPublicMembers.mockResolvedValue(samplePage);
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<InnovationHubMembersPage />} />
+          <Route
+            path="/members/:id"
+            element={<div>Viewing member user-1</div>}
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", { name: "View Jane Doe's profile" }),
+      );
+    });
+
+    expect(screen.getByText("Viewing member user-1")).toBeInTheDocument();
   });
 });
