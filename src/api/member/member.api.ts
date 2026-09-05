@@ -32,7 +32,7 @@ export const getPublicMembers = async (
   page: number,
   limit: number,
 ): Promise<PublicMembersPage> => {
-  const response = await apiClient.get("/api/members/public", {
+  const response = await apiClient.get("/api/members", {
     params: { page, limit },
   });
   const body = response.data as {
