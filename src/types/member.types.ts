@@ -1,5 +1,22 @@
 // src/types/member.types.ts
 
+// The backend validates a member/alumni "role" against this fixed set of
+// specializations — anything else is rejected with a 400.
+export const MEMBER_ROLES = [
+  "Frontend Developer",
+  "Backend Developer",
+  "Full-Stack Developer",
+  "Database Specialist",
+  "Cybersecurity Specialist",
+  "Network Administrator",
+  "DevOps Engineer",
+  "Mobile Developer",
+  "UI/UX Designer",
+  "Other",
+] as const;
+
+export type MemberRole = (typeof MEMBER_ROLES)[number];
+
 export interface SkillDetail {
   name: string;
   percent: number;
