@@ -286,6 +286,35 @@ export const MESSAGE_ROUTES = {
   DELETE_MESSAGE: (id: string) => `${API_BASE}/messages/${id}`,
 } as const;
 
+// ==================== ADMIN HERO MEMBER ROUTES ====================
+
+export const HERO_MEMBER_ROUTES = {
+  GET_HERO_MEMBERS: `${API_BASE}/admin/hero-members`,
+  ADD_HERO_MEMBER: `${API_BASE}/admin/hero-members`,
+  REMOVE_HERO_MEMBER: (id: string) => `${API_BASE}/admin/hero-members/${id}`,
+  REORDER_HERO_MEMBERS: `${API_BASE}/admin/hero-members/reorder`,
+  GET_MEMBERS_PICKER: `${API_BASE}/admin/members/picker`,
+} as const;
+
+// ==================== ADMIN HUB VIDEO ROUTES ====================
+
+export const HUB_VIDEO_ROUTES = {
+  GET_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  UPLOAD_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+  DELETE_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
+} as const;
+
+// ==================== ADMIN ALUMNI ROUTES ====================
+
+export const ALUMNI_ROUTES = {
+  SET_MEMBER_ALUMNI_STATUS: (id: string) =>
+    `${API_BASE}/admin/members/${id}/alumni-status`,
+  GET_ALUMNI: `${API_BASE}/admin/alumni`,
+  CREATE_ALUMNI: `${API_BASE}/admin/alumni`,
+  UPDATE_ALUMNI: (id: string) => `${API_BASE}/admin/alumni/${id}`,
+  DELETE_ALUMNI: (id: string) => `${API_BASE}/admin/alumni/${id}`,
+} as const;
+
 // ==================== HELPER FUNCTIONS ====================
 
 /**

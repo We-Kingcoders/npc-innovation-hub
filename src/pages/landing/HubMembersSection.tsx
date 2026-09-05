@@ -21,10 +21,12 @@ interface MemberData {
 
 interface MemberCardProps {
   member: MemberData;
+  onViewProfile: (id: string) => void;
 }
 
 interface MemberGridProps {
   members: MemberData[];
+  onViewProfile: (id: string) => void;
 }
 
 interface HeaderProps {
@@ -35,7 +37,7 @@ interface HeaderProps {
 /**
  * Member Card Component - Displays individual member information
  */
-const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
+const MemberCard: React.FC<MemberCardProps> = ({ member, onViewProfile }) => {
   return (
     <div className="backdrop-blur-md border-2 border-white rounded-[30px] p-6 pt-12 transition-shadow duration-300">
       <div className="flex flex-col items-center">
@@ -192,7 +194,10 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             </div>
           )}
 
-          <button className="mt-6 bg-[#002b56] text-white py-2 px-6 rounded-full hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
+          <button
+            onClick={() => onViewProfile(member.id)}
+            className="mt-6 bg-[#002b56] text-white py-2 px-6 rounded-full hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+          >
             View Full Profile
           </button>
         </div>
@@ -204,11 +209,15 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
 /**
  * Member Grid Component - Displays a grid of member cards
  */
-const MemberGrid: React.FC<MemberGridProps> = ({ members }) => {
+const MemberGrid: React.FC<MemberGridProps> = ({ members, onViewProfile }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {members.map((member) => (
-        <MemberCard key={member.id} member={member} />
+        <MemberCard
+          key={member.id}
+          member={member}
+          onViewProfile={onViewProfile}
+        />
       ))}
     </div>
   );
@@ -259,14 +268,18 @@ const HubMembersSection: React.FC = () => {
   const navigate = useNavigate();
 
   const members: MemberData[] = heroMembers.map((hm) => ({
-    id: hm.id,
+    id: hm.memberId,
     name: hm.name,
     role: hm.role,
-    image: hm.imageUrl,
+    image: hm.imageUrl ?? "/public/assets/images/hero.png",
   }));
 
   const handleViewAllMembers = () => {
     navigate("/members");
+  };
+
+  const handleViewProfile = (id: string) => {
+    navigate(`/members/${id}`);
   };
 
   return (
@@ -285,7 +298,7 @@ const HubMembersSection: React.FC = () => {
           {loading ? (
             <SkeletonGrid />
           ) : members.length > 0 ? (
-            <MemberGrid members={members} />
+            <MemberGrid members={members} onViewProfile={handleViewProfile} />
           ) : (
             <p className="text-center text-lg text-[#002b56]/70">
               We're featuring new hub members soon — check back shortly.

@@ -65,7 +65,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
 
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <div className="bg-navy-800 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-xl font-bold text-white">Reassign Task</h2>
           <button
             onClick={onClose}
@@ -93,7 +93,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
           <div className="space-y-4">
             {/* Member Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Assign To *
               </label>
               <select
@@ -103,8 +103,8 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
                   setError("");
                 }}
                 className={`w-full px-4 py-2.5 border ${
-                  error ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                  error ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent`}
                 disabled={isLoading}
               >
                 <option value="">Select a member</option>
@@ -119,14 +119,14 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
 
             {/* Optional GitHub Link */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 GitHub Issue Link (Optional)
               </label>
               <input
                 type="text"
                 value={githubIssueLink}
                 onChange={(e) => setGithubIssueLink(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
                 placeholder="https://github.com/username/repo/issues/123"
                 disabled={isLoading}
               />
@@ -138,14 +138,14 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+              className="px-5 py-2.5 text-navy-800 bg-mist-100 rounded-lg hover:bg-mist-200 transition-all font-medium"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-5 py-2.5 text-white bg-navy-800 rounded-lg hover:bg-navy-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               disabled={isLoading}
             >
               {isLoading ? (

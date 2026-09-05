@@ -33,7 +33,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Event Image Header */}
-        <div className="relative h-64 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden">
+        <div className="relative h-64 bg-navy-800 overflow-hidden">
           <img
             src={event.imageUrl}
             alt={event.title}
@@ -48,7 +48,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
           >
             <svg
-              className="w-5 h-5 text-gray-700"
+              className="w-5 h-5 text-navy-800"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -68,7 +68,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
               className={`px-3 py-1 rounded-full text-xs font-semibold ${
                 status === "upcoming"
                   ? "bg-green-500 text-white"
-                  : "bg-gray-500 text-white"
+                  : "bg-navy-700 text-white"
               }`}
             >
               {status === "upcoming" ? "Upcoming" : "Past"}
@@ -78,13 +78,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
         {/* Content */}
         <div className="p-8 overflow-y-auto max-h-[calc(90vh-256px)]">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+          <h2 className="text-3xl font-bold text-navy-800 mb-3">
             {event.title}
           </h2>
 
           {/* Date & Location */}
           <div className="space-y-2 mb-6">
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-mist-600">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -100,7 +100,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
               </svg>
               <span>{dateRange}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-mist-600">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -126,19 +126,19 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
           {/* Description */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-lg font-semibold text-navy-800 mb-3">
               About This Event
             </h3>
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <p className="text-navy-700 leading-relaxed whitespace-pre-wrap">
               {event.description}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-6 border-t">
+          <div className="flex gap-3 pt-6 border-t border-mist-200">
             <button
               onClick={onViewAttendees}
-              className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 bg-navy-800 text-white rounded-lg hover:bg-navy-700 transition-colors font-medium flex items-center justify-center gap-2"
             >
               <svg
                 className="w-5 h-5"
@@ -157,7 +157,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             </button>
             <button
               onClick={onEdit}
-              className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              className="px-4 py-3 bg-mist-100 text-navy-800 rounded-lg hover:bg-mist-200 transition-colors font-medium"
             >
               Edit
             </button>

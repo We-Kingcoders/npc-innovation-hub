@@ -22,9 +22,11 @@ describe("<HubMembersSection />", () => {
       members: [
         {
           id: "hm-1",
+          memberId: "member-1",
           name: "Jane Doe",
           imageUrl: "https://example.com/jane.jpg",
           role: "Full Stack Developer",
+          order: 0,
         },
       ],
       loading: false,

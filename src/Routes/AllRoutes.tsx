@@ -14,7 +14,9 @@ import Mission from "../pages/landing/Mission";
 import SignUpPage from "../pages/Login/SignUp";
 import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
+import { AlumniPage } from "../pages/all-member-page/AlumniPage";
 import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
+import { ApplyPage } from "../pages/apply/ApplyPage";
 import LetTalk from "../pages/HireUs/form";
 import Partners from "../pages/HireUs/partners";
 import Services from "../pages/HireUs/services";
@@ -54,6 +56,9 @@ import AdminResources from "../pages/Admin-pages/AdminResources";
 import HireUsRequests from "../pages/Admin-pages/HireUsRequests";
 import AddResource from "../pages/Admin-pages/AddResource";
 import MemberManagement from "../pages/Admin-pages/MemberManagement";
+import HeroMembersPage from "../pages/Admin-pages/HeroMembersPage";
+import HubVideoPage from "../pages/Admin-pages/HubVideoPage";
+import AlumniManagementPage from "../pages/Admin-pages/AlumniManagementPage";
 import BlogTables from "../pages/Admin-pages/BlogTables";
 import ProjectTables from "../pages/Admin-pages/ProjectTables";
 import OTPVerification from "../pages/Login/OTPVerification";
@@ -157,6 +162,24 @@ const AllRoutes: React.FC = () => {
         element={
           <>
             <MemberDetailPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/apply"
+        element={
+          <>
+            <ApplyPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/alumni"
+        element={
+          <>
+            <AlumniPage />
             <Footer />
           </>
         }
@@ -459,6 +482,30 @@ const AllRoutes: React.FC = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <MemberManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-hero-members"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <HeroMembersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-hub-video"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <HubVideoPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Admin-alumni"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AlumniManagementPage />
           </ProtectedRoute>
         }
       />

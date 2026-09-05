@@ -15,46 +15,46 @@ interface SystemHealthProps {
 const STATUS_CONFIG = {
   healthy: {
     label: "Healthy",
-    dot: "bg-emerald-400",
-    ring: "ring-emerald-200",
-    text: "text-emerald-700",
-    bg: "bg-emerald-50",
+    dot: "bg-navy-400",
+    ring: "ring-navy-200",
+    text: "text-navy-700",
+    bg: "bg-navy-50",
     pulse: true,
   },
   degraded: {
     label: "Degraded",
-    dot: "bg-amber-400",
-    ring: "ring-amber-200",
-    text: "text-amber-700",
-    bg: "bg-amber-50",
+    dot: "bg-navy-600",
+    ring: "ring-navy-300",
+    text: "text-navy-800",
+    bg: "bg-navy-100",
     pulse: false,
   },
   down: {
     label: "Down",
-    dot: "bg-rose-400",
-    ring: "ring-rose-200",
-    text: "text-rose-700",
-    bg: "bg-rose-50",
+    dot: "bg-navy-900",
+    ring: "ring-navy-800",
+    text: "text-white",
+    bg: "bg-navy-800",
     pulse: false,
   },
 };
 
 function getLatencyColor(latency: number): string {
-  if (latency === 0) return "text-rose-500";
-  if (latency < 200) return "text-emerald-600";
-  if (latency < 500) return "text-amber-600";
-  return "text-rose-600";
+  if (latency === 0) return "text-navy-900";
+  if (latency < 200) return "text-navy-500";
+  if (latency < 500) return "text-navy-700";
+  return "text-navy-900";
 }
 
 const SkeletonRow: React.FC = () => (
   <div className="flex items-center justify-between py-3 animate-pulse">
     <div className="flex items-center gap-3">
-      <div className="w-2 h-2 bg-gray-200 rounded-full" />
-      <div className="w-28 h-3 bg-gray-200 rounded" />
+      <div className="w-2 h-2 bg-mist-200 rounded-full" />
+      <div className="w-28 h-3 bg-mist-200 rounded" />
     </div>
     <div className="flex items-center gap-3">
-      <div className="w-14 h-3 bg-gray-200 rounded" />
-      <div className="w-14 h-5 bg-gray-200 rounded-full" />
+      <div className="w-14 h-3 bg-mist-200 rounded" />
+      <div className="w-14 h-5 bg-mist-200 rounded-full" />
     </div>
   </div>
 );
@@ -70,12 +70,12 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">System Health</h3>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <h3 className="font-semibold text-navy-800 text-sm">System Health</h3>
+          <p className="text-xs text-mist-500 mt-0.5">
             API endpoint monitoring
           </p>
         </div>
@@ -86,20 +86,20 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
                 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1
                 ${
                   allHealthy
-                    ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                    ? "bg-navy-50 text-navy-700 ring-navy-200"
                     : hasIssues
-                      ? "bg-rose-50 text-rose-700 ring-rose-200"
-                      : "bg-amber-50 text-amber-700 ring-amber-200"
+                      ? "bg-navy-800 text-white ring-navy-800"
+                      : "bg-navy-100 text-navy-800 ring-navy-300"
                 }
               `}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
                   allHealthy
-                    ? "bg-emerald-400 animate-pulse"
+                    ? "bg-navy-400 animate-pulse"
                     : hasIssues
-                      ? "bg-rose-400"
-                      : "bg-amber-400"
+                      ? "bg-navy-900"
+                      : "bg-navy-600"
                 }`}
               />
               {allHealthy
@@ -113,7 +113,7 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-150"
+              className="p-1.5 text-mist-500 hover:text-navy-800 hover:bg-mist-100 rounded-lg transition-colors duration-150"
               title="Refresh health check"
             >
               <svg
@@ -133,12 +133,12 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
       </div>
 
       {/* Services List */}
-      <div className="divide-y divide-gray-50">
+      <div className="divide-y divide-mist-200">
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
         ) : health.length === 0 ? (
           <div className="py-8 text-center">
-            <p className="text-gray-400 text-xs">No health data available</p>
+            <p className="text-mist-500 text-xs">No health data available</p>
           </div>
         ) : (
           health.map((service) => {
@@ -156,10 +156,10 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
                     className={`w-2 h-2 rounded-full flex-shrink-0 ${config.dot} ${config.pulse ? "animate-pulse" : ""}`}
                   />
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-gray-700 truncate">
+                    <p className="text-xs font-semibold text-navy-700 truncate">
                       {service.service}
                     </p>
-                    <p className="text-xs text-gray-400 font-mono truncate">
+                    <p className="text-xs text-mist-500 font-mono truncate">
                       {service.endpoint}
                     </p>
                   </div>
@@ -191,22 +191,22 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
 
       {/* Footer */}
       {!loading && health.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
-          <span className="text-xs text-gray-400">
+        <div className="mt-4 pt-4 border-t border-mist-200 flex items-center justify-between">
+          <span className="text-xs text-mist-500">
             {health.filter((h) => h.status === "healthy").length}/
             {health.length} services online
           </span>
-          <div className="flex gap-3 text-xs text-gray-400">
+          <div className="flex gap-3 text-xs text-mist-500">
             <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+              <span className="w-1.5 h-1.5 bg-navy-400 rounded-full" />
               Healthy
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+              <span className="w-1.5 h-1.5 bg-navy-600 rounded-full" />
               Degraded
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-rose-400 rounded-full" />
+              <span className="w-1.5 h-1.5 bg-navy-900 rounded-full" />
               Down
             </span>
           </div>

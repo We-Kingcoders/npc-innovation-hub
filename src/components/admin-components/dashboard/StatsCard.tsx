@@ -394,83 +394,28 @@ function useCountUp(target: number, duration = 1400): number {
 interface StatsCardProps {
   metric: GrowthMetric;
   loading?: boolean;
+  index?: number;
 }
 
-const COLOR_MAP: Record<
-  GrowthMetric["color"],
-  {
-    cardBg: string; // gradient on card background
-    border: string;
-    glow: string;
-    icon: string; // icon pill bg + text
-    numBg: string; // full circle behind count number
-    numText: string; // number text color inside circle
-    cornerAccent: string;
-  }
-> = {
-  blue: {
-    cardBg: "from-blue-50/80 to-white",
-    border: "border-blue-100",
-    glow: "hover:shadow-blue-100",
-    icon: "bg-blue-100 text-blue-600",
-    numBg: "bg-blue-500",
-    numText: "text-white",
-    cornerAccent: "bg-blue-100",
-  },
-  green: {
-    cardBg: "from-emerald-50/80 to-white",
-    border: "border-emerald-100",
-    glow: "hover:shadow-emerald-100",
-    icon: "bg-emerald-100 text-emerald-600",
-    numBg: "bg-emerald-500",
-    numText: "text-white",
-    cornerAccent: "bg-emerald-100",
-  },
-  purple: {
-    cardBg: "from-violet-50/80 to-white",
-    border: "border-violet-100",
-    glow: "hover:shadow-violet-100",
-    icon: "bg-violet-100 text-violet-600",
-    numBg: "bg-violet-500",
-    numText: "text-white",
-    cornerAccent: "bg-violet-100",
-  },
-  orange: {
-    cardBg: "from-orange-50/80 to-white",
-    border: "border-orange-100",
-    glow: "hover:shadow-orange-100",
-    icon: "bg-orange-100 text-orange-600",
-    numBg: "bg-orange-500",
-    numText: "text-white",
-    cornerAccent: "bg-orange-100",
-  },
-  red: {
-    cardBg: "from-rose-50/80 to-white",
-    border: "border-rose-100",
-    glow: "hover:shadow-rose-100",
-    icon: "bg-rose-100 text-rose-600",
-    numBg: "bg-rose-500",
-    numText: "text-white",
-    cornerAccent: "bg-rose-100",
-  },
-  indigo: {
-    cardBg: "from-indigo-50/80 to-white",
-    border: "border-indigo-100",
-    glow: "hover:shadow-indigo-100",
-    icon: "bg-indigo-100 text-indigo-600",
-    numBg: "bg-indigo-500",
-    numText: "text-white",
-    cornerAccent: "bg-indigo-100",
-  },
-  teal: {
-    cardBg: "from-teal-50/80 to-white",
-    border: "border-teal-100",
-    glow: "hover:shadow-teal-100",
-    icon: "bg-teal-100 text-teal-600",
-    numBg: "bg-teal-500",
-    numText: "text-white",
-    cornerAccent: "bg-teal-100",
-  },
+// All metric types share one navy/mist look — no per-metric rainbow coding.
+const NAVY_CARD = {
+  cardBg: "from-mist-50 to-white",
+  border: "border-mist-300",
+  glow: "hover:shadow-mist-200",
+  icon: "bg-navy-50 text-navy-700",
+  numBg: "bg-navy-800",
+  numText: "text-white",
+  cornerAccent: "bg-navy-50",
+};
+
+const COLOR_MAP: Record<GrowthMetric["color"], typeof NAVY_CARD> = {
+  blue: NAVY_CARD,
+  green: NAVY_CARD,
+  purple: NAVY_CARD,
+  orange: NAVY_CARD,
+  red: NAVY_CARD,
+  indigo: NAVY_CARD,
+  teal: NAVY_CARD,
 };
 
 // ─── Icon paths ───────────────────────────────────────────────────────────────
@@ -608,20 +553,24 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 export const StatsCardSkeleton: React.FC = () => (
-  <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm animate-pulse">
+  <div className="bg-white rounded-2xl p-5 border border-mist-300 shadow-sm animate-pulse">
     <div className="flex items-start justify-between mb-4">
-      <div className="w-8 h-8 bg-gray-200 rounded-lg" />
-      <div className="w-12 h-5 bg-gray-200 rounded-full" />
+      <div className="w-8 h-8 bg-mist-200 rounded-lg" />
+      <div className="w-12 h-5 bg-mist-200 rounded-full" />
     </div>
     {/* Circular number skeleton */}
-    <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-3" />
-    <div className="w-20 h-3 bg-gray-100 rounded mx-auto" />
+    <div className="w-16 h-16 bg-mist-200 rounded-full mx-auto mb-3" />
+    <div className="w-20 h-3 bg-mist-200 rounded mx-auto" />
   </div>
 );
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
-const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
+const StatsCard: React.FC<StatsCardProps> = ({
+  metric,
+  loading,
+  index = 0,
+}) => {
   const displayValue = useCountUp(
     loading || typeof metric.value !== "number" ? 0 : metric.value,
   );
@@ -634,12 +583,16 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
 
   return (
     <div
+      style={{
+        animationDelay: `${index * 60}ms`,
+        animationFillMode: "backwards",
+      }}
       className={`
-        group relative bg-gradient-to-b ${c.cardBg}
+        group relative isolate bg-gradient-to-b ${c.cardBg}
         rounded-2xl p-5 border ${c.border}
         shadow-sm hover:shadow-lg ${c.glow}
         transition-all duration-300 hover:-translate-y-0.5
-        overflow-hidden cursor-default
+        overflow-hidden cursor-default animate-slide-up
       `}
     >
       {/* Decorative corner circle */}
@@ -648,7 +601,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
           opacity-40 group-hover:opacity-70 transition-opacity duration-300`}
       />
 
-      <div className="relative z-10 flex flex-col items-center text-center gap-3">
+      <div className="relative flex flex-col items-center text-center gap-3">
         {/* Top row: icon (left) + growth badge (right) */}
         <div className="w-full flex items-center justify-between">
           <div className={`p-2 rounded-lg ${c.icon}`}>
@@ -657,15 +610,8 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
 
           {/* Growth badge */}
           <span
-            className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
-              text-[10px] font-bold ring-1
-              ${
-                isPositive
-                  ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
-                  : isNegative
-                    ? "bg-rose-50 text-rose-700 ring-rose-200"
-                    : "bg-gray-50 text-gray-500 ring-gray-200"
-              }`}
+            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
+              text-[10px] font-bold ring-1 bg-navy-50 text-navy-700 ring-navy-200"
           >
             {isPositive ? (
               <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 10 10">
@@ -698,7 +644,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ metric, loading }) => {
         </div>
 
         {/* Label */}
-        <p className="text-xs font-semibold text-gray-600 leading-tight">
+        <p className="text-xs font-semibold text-navy-700 leading-tight">
           {metric.label}
         </p>
       </div>

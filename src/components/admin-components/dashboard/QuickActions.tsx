@@ -20,9 +20,9 @@ const ACTIONS: QuickAction[] = [
     label: "Create Project",
     description: "Add a new project",
     href: "/dashboard/projects/new",
-    color: "text-indigo-700",
-    hoverColor: "hover:bg-indigo-50",
-    iconBg: "bg-indigo-100",
+    color: "text-navy-800",
+    hoverColor: "hover:bg-navy-50",
+    iconBg: "bg-navy-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -45,9 +45,9 @@ const ACTIONS: QuickAction[] = [
     label: "Create Event",
     description: "Schedule an event",
     href: "/Admin-events",
-    color: "text-violet-700",
-    hoverColor: "hover:bg-violet-50",
-    iconBg: "bg-violet-100",
+    color: "text-navy-700",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-50",
     icon: (
       <svg
         className="w-5 h-5"
@@ -69,9 +69,9 @@ const ACTIONS: QuickAction[] = [
     label: "Add Task",
     description: "Create a new task",
     href: "/Admin-tasks",
-    color: "text-amber-700",
-    hoverColor: "hover:bg-amber-50",
-    iconBg: "bg-amber-100",
+    color: "text-navy-600",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-mist-200",
     icon: (
       <svg
         className="w-5 h-5"
@@ -95,9 +95,9 @@ const ACTIONS: QuickAction[] = [
     label: "Add Resource",
     description: "Upload a resource",
     href: "/add-resource",
-    color: "text-teal-700",
-    hoverColor: "hover:bg-teal-50",
-    iconBg: "bg-teal-100",
+    color: "text-navy-800",
+    hoverColor: "hover:bg-navy-50",
+    iconBg: "bg-mist-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -125,9 +125,9 @@ const ACTIONS: QuickAction[] = [
     label: "Manage Members",
     description: "View all members",
     href: "/Admin-members",
-    color: "text-blue-700",
-    hoverColor: "hover:bg-blue-50",
-    iconBg: "bg-blue-100",
+    color: "text-navy-700",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-100",
     icon: (
       <svg
         className="w-5 h-5"
@@ -159,9 +159,9 @@ const ACTIONS: QuickAction[] = [
     label: "Hire Requests",
     description: "View inquiries",
     href: "/hire-requests",
-    color: "text-orange-700",
-    hoverColor: "hover:bg-orange-50",
-    iconBg: "bg-orange-100",
+    color: "text-navy-600",
+    hoverColor: "hover:bg-mist-100",
+    iconBg: "bg-navy-50",
     icon: (
       <svg
         className="w-5 h-5"
@@ -185,16 +185,16 @@ const ACTIONS: QuickAction[] = [
 
 const QuickActions: React.FC = () => {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">Quick Actions</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Common admin tasks</p>
+          <h3 className="font-semibold text-navy-800 text-sm">Quick Actions</h3>
+          <p className="text-xs text-mist-500 mt-0.5">Common admin tasks</p>
         </div>
-        <div className="p-2 bg-gray-100 rounded-xl">
+        <div className="p-2 bg-mist-100 rounded-xl">
           <svg
-            className="w-4 h-4 text-gray-500"
+            className="w-4 h-4 text-mist-600"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
@@ -213,7 +213,7 @@ const QuickActions: React.FC = () => {
             href={action.href}
             className={`
               group flex flex-col items-center gap-2 p-3.5 rounded-xl border border-transparent
-              hover:border-gray-200 ${action.hoverColor}
+              hover:border-mist-300 ${action.hoverColor}
               transition-all duration-200 hover:shadow-sm cursor-pointer
               text-center
             `}
@@ -228,7 +228,7 @@ const QuickActions: React.FC = () => {
               <p className={`text-xs font-semibold ${action.color}`}>
                 {action.label}
               </p>
-              <p className="text-xs text-gray-400 leading-tight mt-0.5">
+              <p className="text-xs text-mist-500 leading-tight mt-0.5">
                 {action.description}
               </p>
             </div>

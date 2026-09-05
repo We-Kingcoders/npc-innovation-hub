@@ -62,7 +62,7 @@ export default function ChangePasswordForm({
     color: string;
   } => {
     if (password.length === 0)
-      return { strength: "None", color: "bg-gray-300" };
+      return { strength: "None", color: "bg-mist-300" };
     if (password.length < 6) return { strength: "Weak", color: "bg-red-500" };
     if (password.length < 8)
       return { strength: "Fair", color: "bg-orange-500" };
@@ -154,11 +154,11 @@ export default function ChangePasswordForm({
   return (
     <div className="bg-white rounded-xl shadow-lg p-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <Lock className="text-blue-600" size={28} />
+        <h2 className="text-2xl font-bold text-navy-800 flex items-center gap-2">
+          <Lock className="text-navy-700" size={28} />
           Change Password
         </h2>
-        <p className="text-gray-600 mt-1">
+        <p className="text-mist-600 mt-1">
           Update your password to keep your account secure
         </p>
       </div>
@@ -168,7 +168,7 @@ export default function ChangePasswordForm({
         <div>
           <label
             htmlFor="currentPassword"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-navy-800 mb-2"
           >
             Current Password <span className="text-red-500">*</span>
           </label>
@@ -182,7 +182,7 @@ export default function ChangePasswordForm({
               className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 errors.currentPassword
                   ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-blue-500"
+                  : "border-mist-300 focus:ring-navy-500"
               }`}
               placeholder="Enter current password"
             />
@@ -194,7 +194,7 @@ export default function ChangePasswordForm({
                   current: !prev.current,
                 }))
               }
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.current ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -211,7 +211,7 @@ export default function ChangePasswordForm({
         <div>
           <label
             htmlFor="newPassword"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-navy-800 mb-2"
           >
             New Password <span className="text-red-500">*</span>
           </label>
@@ -225,7 +225,7 @@ export default function ChangePasswordForm({
               className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 errors.newPassword
                   ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-blue-500"
+                  : "border-mist-300 focus:ring-navy-500"
               }`}
               placeholder="Enter new password"
             />
@@ -234,7 +234,7 @@ export default function ChangePasswordForm({
               onClick={() =>
                 setShowPasswords((prev) => ({ ...prev, new: !prev.new }))
               }
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.new ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -244,7 +244,7 @@ export default function ChangePasswordForm({
           {formData.newPassword && (
             <div className="mt-2">
               <div className="flex items-center gap-2 mb-1">
-                <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-mist-200 rounded-full overflow-hidden">
                   <div
                     className={`h-full ${passwordStrength.color} transition-all duration-300`}
                     style={{
@@ -261,11 +261,11 @@ export default function ChangePasswordForm({
                     }}
                   />
                 </div>
-                <span className="text-xs font-medium text-gray-600">
+                <span className="text-xs font-medium text-mist-600">
                   {passwordStrength.strength}
                 </span>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-mist-500">
                 Use 8+ characters with uppercase, lowercase, numbers & symbols
               </p>
             </div>
@@ -283,7 +283,7 @@ export default function ChangePasswordForm({
         <div>
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-navy-800 mb-2"
           >
             Confirm New Password <span className="text-red-500">*</span>
           </label>
@@ -300,7 +300,7 @@ export default function ChangePasswordForm({
                   : formData.confirmPassword &&
                       formData.newPassword === formData.confirmPassword
                     ? "border-green-300 focus:ring-green-500"
-                    : "border-gray-300 focus:ring-blue-500"
+                    : "border-mist-300 focus:ring-navy-500"
               }`}
               placeholder="Confirm new password"
             />
@@ -312,7 +312,7 @@ export default function ChangePasswordForm({
                   confirm: !prev.confirm,
                 }))
               }
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.confirm ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -342,8 +342,8 @@ export default function ChangePasswordForm({
             disabled={isLoading}
             className={`flex-1 py-3 px-6 rounded-lg font-semibold text-white transition-colors ${
               isLoading
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-navy-400 cursor-not-allowed"
+                : "bg-navy-800 hover:bg-navy-700"
             }`}
           >
             {isLoading ? "Updating..." : "Update Password"}
@@ -352,7 +352,7 @@ export default function ChangePasswordForm({
             type="button"
             onClick={handleCancel}
             disabled={isLoading}
-            className="px-6 py-3 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 border border-mist-300 rounded-lg font-semibold text-navy-800 hover:bg-mist-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>

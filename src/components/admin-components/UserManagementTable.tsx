@@ -27,6 +27,7 @@ interface UserManagementTableProps {
   isLoading: boolean;
   onRoleChange: (userId: string, newRole: UserRole) => Promise<void>;
   onStatusToggle: (userId: string) => Promise<void>;
+  onAlumniToggle: (userId: string, isAlumni: boolean) => Promise<void>;
   onDeleteUser: (userId: string) => Promise<void>;
 }
 
@@ -37,6 +38,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   isLoading,
   onRoleChange,
   onStatusToggle,
+  onAlumniToggle,
   onDeleteUser,
 }) => {
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
@@ -62,6 +64,19 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     setLoadingUsers((prev) => new Set(prev).add(userId));
     try {
       await onStatusToggle(userId);
+    } finally {
+      setLoadingUsers((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
+  const handleAlumniToggle = async (userId: string, isAlumni: boolean) => {
+    setLoadingUsers((prev) => new Set(prev).add(userId));
+    try {
+      await onAlumniToggle(userId, isAlumni);
     } finally {
       setLoadingUsers((prev) => {
         const next = new Set(prev);
@@ -100,7 +115,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-700"></div>
       </div>
     );
   }
@@ -110,11 +125,11 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   if (users.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg shadow">
-        <div className="text-gray-400 text-5xl mb-4">👥</div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="text-mist-400 text-5xl mb-4">👥</div>
+        <h3 className="text-lg font-semibold text-navy-800 mb-2">
           No users found
         </h3>
-        <p className="text-gray-500">There are no users in the system yet.</p>
+        <p className="text-mist-600">There are no users in the system yet.</p>
       </div>
     );
   }
@@ -125,43 +140,46 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     <>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-mist-200">
             {/* TABLE HEADER */}
-            <thead className="bg-gray-50">
+            <thead className="bg-mist-100">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Gender
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Role
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Verified
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
+                  Alumni
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Joined
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-mist-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
 
             {/* TABLE BODY */}
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-mist-200">
               {users.map((user) => (
                 <tr
                   key={user.id}
-                  className={`hover:bg-gray-50 transition-colors ${
+                  className={`hover:bg-mist-100 transition-colors ${
                     isUserLoading(user.id)
                       ? "opacity-50 pointer-events-none"
                       : ""
@@ -176,10 +194,10 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         alt={getUserFullName(user)}
                       />
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-navy-800">
                           {getUserFullName(user)}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-mist-600">
                           {user.email}
                         </div>
                       </div>
@@ -188,12 +206,12 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
 
                   {/* CONTACT COLUMN */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.phone}</div>
+                    <div className="text-sm text-navy-800">{user.phone}</div>
                   </td>
 
                   {/* GENDER COLUMN */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 capitalize">
+                    <div className="text-sm text-navy-800 capitalize">
                       {user.gender}
                     </div>
                   </td>
@@ -206,7 +224,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         handleRoleChange(user.id, e.target.value as UserRole)
                       }
                       disabled={isUserLoading(user.id)}
-                      className="text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-sm border border-mist-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="Member">Member</option>
                       <option value="Admin">Admin</option>
@@ -229,18 +247,40 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   {/* VERIFIED COLUMN */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     {user.verified ? (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-navy-50 text-navy-700">
                         ✓ Verified
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-mist-200 text-mist-600">
                         Unverified
                       </span>
                     )}
                   </td>
 
+                  {/* ALUMNI COLUMN */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button
+                      onClick={() =>
+                        handleAlumniToggle(user.id, !user.isAlumni)
+                      }
+                      disabled={isUserLoading(user.id)}
+                      title={
+                        user.isAlumni
+                          ? "Demote from alumni"
+                          : "Promote to alumni"
+                      }
+                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
+                        user.isAlumni
+                          ? "bg-navy-800 text-white"
+                          : "bg-mist-200 text-mist-600"
+                      }`}
+                    >
+                      {user.isAlumni ? "Alumni" : "Current"}
+                    </button>
+                  </td>
+
                   {/* JOINED DATE COLUMN */}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-mist-600">
                     {formatUserDate(user.createdAt)}
                   </td>
 

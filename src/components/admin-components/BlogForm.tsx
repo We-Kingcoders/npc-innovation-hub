@@ -140,7 +140,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-navy-800 mb-2">
           Blog Title *
         </label>
         <input
@@ -148,8 +148,8 @@ export const BlogForm: React.FC<BlogFormProps> = ({
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           className={`w-full px-4 py-2.5 border ${
-            errors.title ? "border-red-500" : "border-gray-300"
-          } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+            errors.title ? "border-red-500" : "border-mist-300"
+          } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
           placeholder="Enter blog title..."
           disabled={isLoading}
         />
@@ -160,7 +160,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
 
       {/* Summary */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-navy-800 mb-2">
           Summary *
         </label>
         <textarea
@@ -170,8 +170,8 @@ export const BlogForm: React.FC<BlogFormProps> = ({
           }
           rows={3}
           className={`w-full px-4 py-2.5 border ${
-            errors.summary ? "border-red-500" : "border-gray-300"
-          } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+            errors.summary ? "border-red-500" : "border-mist-300"
+          } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
           placeholder="Brief summary of the blog..."
           disabled={isLoading}
         />
@@ -182,7 +182,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
 
       {/* Category */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-navy-800 mb-2">
           Category *
         </label>
         <select
@@ -191,8 +191,8 @@ export const BlogForm: React.FC<BlogFormProps> = ({
             setFormData({ ...formData, category: e.target.value })
           }
           className={`w-full px-4 py-2.5 border ${
-            errors.category ? "border-red-500" : "border-gray-300"
-          } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+            errors.category ? "border-red-500" : "border-mist-300"
+          } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
           disabled={isLoading}
         >
           <option value="">Select a category</option>
@@ -209,7 +209,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
 
       {/* Content */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-navy-800 mb-2">
           Content * (Markdown supported)
         </label>
         <textarea
@@ -219,8 +219,8 @@ export const BlogForm: React.FC<BlogFormProps> = ({
           }
           rows={12}
           className={`w-full px-4 py-2.5 border ${
-            errors.content ? "border-red-500" : "border-gray-300"
-          } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono text-sm`}
+            errors.content ? "border-red-500" : "border-mist-300"
+          } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all font-mono text-sm`}
           placeholder="Write your blog content here... (Markdown supported)"
           disabled={isLoading}
         />
@@ -231,7 +231,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
 
       {/* Image Upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-navy-800 mb-2">
           Cover Image
         </label>
         <div className="space-y-3">
@@ -239,11 +239,11 @@ export const BlogForm: React.FC<BlogFormProps> = ({
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
+            className="w-full px-4 py-2 border border-mist-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-navy-50 file:text-navy-700 hover:file:bg-navy-100 transition-all"
             disabled={isLoading}
           />
           {imagePreview && (
-            <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-200">
+            <div className="relative w-full h-48 rounded-lg overflow-hidden border border-mist-300">
               <img
                 src={imagePreview}
                 alt="Preview"
@@ -266,12 +266,12 @@ export const BlogForm: React.FC<BlogFormProps> = ({
           onChange={(e) =>
             setFormData({ ...formData, isPublished: e.target.checked })
           }
-          className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          className="w-5 h-5 text-navy-700 border-mist-300 rounded focus:ring-2 focus:ring-navy-500"
           disabled={isLoading}
         />
         <label
           htmlFor="isPublished"
-          className="text-sm font-medium text-gray-700"
+          className="text-sm font-medium text-navy-800"
         >
           Publish immediately
         </label>
@@ -282,14 +282,14 @@ export const BlogForm: React.FC<BlogFormProps> = ({
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+          className="px-6 py-2.5 text-navy-800 bg-mist-100 rounded-lg hover:bg-mist-200 transition-all font-medium"
           disabled={isLoading}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-6 py-2.5 text-white bg-[#343a5e] rounded-lg hover:bg-[#20253a] transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 text-white bg-navy-800 rounded-lg hover:bg-navy-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isLoading}
         >
           {isLoading

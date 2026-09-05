@@ -112,27 +112,30 @@ const formatDuration = (seconds: number): string => {
 const TableSkeleton = () => (
   <>
     {[...Array(5)].map((_, idx) => (
-      <tr key={idx} className="border-b bg-gray-50 animate-pulse">
+      <tr
+        key={idx}
+        className="border-b border-mist-200 bg-mist-100 animate-pulse"
+      >
         <td className="py-4 px-6">
-          <div className="h-4 bg-gray-300 rounded w-20"></div>
+          <div className="h-4 bg-mist-200 rounded w-20"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-4 bg-gray-300 rounded w-16"></div>
+          <div className="h-4 bg-mist-200 rounded w-16"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-10 bg-gray-300 rounded-lg w-full"></div>
+          <div className="h-10 bg-mist-200 rounded-lg w-full"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-4 bg-gray-300 rounded w-24"></div>
+          <div className="h-4 bg-mist-200 rounded w-24"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-4 bg-gray-300 rounded w-20"></div>
+          <div className="h-4 bg-mist-200 rounded w-20"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-4 bg-gray-300 rounded w-20"></div>
+          <div className="h-4 bg-mist-200 rounded w-20"></div>
         </td>
         <td className="py-4 px-6">
-          <div className="h-8 bg-gray-300 rounded w-8"></div>
+          <div className="h-8 bg-mist-200 rounded w-8"></div>
         </td>
       </tr>
     ))}
@@ -146,7 +149,7 @@ const EmptyState = ({ onAddNew }: { onAddNew: () => void }) => (
     <td colSpan={7} className="py-12 text-center">
       <div className="flex flex-col items-center gap-4">
         <svg
-          className="w-16 h-16 text-gray-300"
+          className="w-16 h-16 text-mist-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -159,16 +162,16 @@ const EmptyState = ({ onAddNew }: { onAddNew: () => void }) => (
           />
         </svg>
         <div>
-          <p className="text-gray-500 text-lg font-medium mb-1">
+          <p className="text-mist-600 text-lg font-medium mb-1">
             No resources found
           </p>
-          <p className="text-gray-400 text-sm">
+          <p className="text-mist-500 text-sm">
             Get started by creating your first resource
           </p>
         </div>
         <button
           onClick={onAddNew}
-          className="mt-2 bg-[#2d3155] text-white px-6 py-2 rounded-lg hover:bg-[#1f2340] transition-colors"
+          className="mt-2 bg-navy-800 text-white px-6 py-2 rounded-lg hover:bg-navy-700 transition-colors"
         >
           Add New Resource
         </button>
@@ -194,12 +197,12 @@ const ActionsDropdown = ({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-1 hover:bg-gray-200 rounded transition-colors"
+        className="p-1 hover:bg-mist-200 rounded transition-colors"
       >
         <svg width="24" height="24" fill="none">
-          <circle cx="12" cy="6" r="2" fill="#444" />
-          <circle cx="12" cy="12" r="2" fill="#444" />
-          <circle cx="12" cy="18" r="2" fill="#444" />
+          <circle cx="12" cy="6" r="2" fill="#0C2340" />
+          <circle cx="12" cy="12" r="2" fill="#0C2340" />
+          <circle cx="12" cy="18" r="2" fill="#0C2340" />
         </svg>
       </button>
 
@@ -209,13 +212,13 @@ const ActionsDropdown = ({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
+          <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-mist-300 py-1 z-20">
             <button
               onClick={() => {
                 onView();
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-mist-100 transition-colors flex items-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -243,7 +246,7 @@ const ActionsDropdown = ({
                 onEdit();
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-mist-100 transition-colors flex items-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -307,7 +310,7 @@ export default function ResourceTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-[#2d3155] text-white">
+            <tr className="bg-navy-800 text-white">
               <th className="py-4 px-6 font-medium">Date</th>
               <th className="py-4 px-6 font-medium">Time</th>
               <th className="py-4 px-6 font-medium">Resource Details</th>
@@ -326,15 +329,15 @@ export default function ResourceTable({
               resources.map((resource) => (
                 <tr
                   key={resource.id}
-                  className="border-b last:border-b-0 bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="border-b border-mist-200 last:border-b-0 bg-white hover:bg-mist-100 transition-colors"
                 >
                   {/* Date */}
-                  <td className="py-4 px-6 text-sm text-gray-700">
+                  <td className="py-4 px-6 text-sm text-mist-600">
                     {formatDate(resource.createdAt)}
                   </td>
 
                   {/* Time */}
-                  <td className="py-4 px-6 text-sm text-gray-700">
+                  <td className="py-4 px-6 text-sm text-mist-600">
                     {formatTime(resource.createdAt)}
                   </td>
 
@@ -342,7 +345,7 @@ export default function ResourceTable({
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       {/* Image/Video Avatar */}
-                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-mist-200">
                         {resource.imageUrl ? (
                           <img
                             src={resource.imageUrl}
@@ -350,7 +353,7 @@ export default function ResourceTable({
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <div className="w-full h-full flex items-center justify-center text-mist-400">
                             <svg
                               className="w-6 h-6"
                               fill="none"
@@ -370,24 +373,24 @@ export default function ResourceTable({
 
                       {/* Title & Description */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 className="font-semibold text-navy-800 truncate">
                           {resource.title}
                         </h3>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-mist-600 truncate">
                           {resource.description}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
                           {/* Author */}
-                          <span className="text-xs text-gray-600">
+                          <span className="text-xs text-mist-600">
                             by {resource.author}
                           </span>
                           {/* Paid/Free Badge */}
                           {resource.isPaid ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
                               ${resource.price}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-mist-200 text-mist-600">
                               Free
                             </span>
                           )}
@@ -410,13 +413,13 @@ export default function ResourceTable({
                             {resource.tags.slice(0, 3).map((tag, idx) => (
                               <span
                                 key={idx}
-                                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-200 text-gray-700"
+                                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-mist-200 text-mist-700"
                               >
                                 {tag}
                               </span>
                             ))}
                             {resource.tags.length > 3 && (
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-mist-500">
                                 +{resource.tags.length - 3}
                               </span>
                             )}
@@ -428,14 +431,14 @@ export default function ResourceTable({
 
                   {/* Category */}
                   <td className="py-4 px-6">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-700">
                       {resource.category}
                     </span>
                   </td>
 
                   {/* Type */}
                   <td className="py-4 px-6">
-                    <span className="inline-flex items-center gap-1 text-sm text-gray-700">
+                    <span className="inline-flex items-center gap-1 text-sm text-mist-600">
                       {resource.type === "Video" && (
                         <svg
                           className="w-4 h-4"
@@ -493,7 +496,7 @@ export default function ResourceTable({
 
                   {/* Stats */}
                   <td className="py-4 px-6">
-                    <div className="flex flex-col gap-1 text-xs text-gray-600">
+                    <div className="flex flex-col gap-1 text-xs text-mist-600">
                       <div className="flex items-center gap-1">
                         <svg
                           className="w-4 h-4"
@@ -546,13 +549,13 @@ export default function ResourceTable({
 
       {/* Footer with Pagination */}
       {!loading && resources.length > 0 && (
-        <div className="px-6 py-4 flex justify-between items-center border-t bg-gray-50">
+        <div className="px-6 py-4 flex justify-between items-center border-t border-mist-200 bg-mist-100">
           {/* Pagination */}
           <div className="flex gap-2 items-center">
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded bg-mist-200 hover:bg-mist-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               &lt;
             </button>
@@ -577,8 +580,8 @@ export default function ResourceTable({
                   onClick={() => onPageChange(pageNum)}
                   className={`px-3 py-1 rounded transition-colors ${
                     currentPage === pageNum
-                      ? "bg-[#2d3155] text-white"
-                      : "bg-gray-200 hover:bg-gray-300"
+                      ? "bg-navy-800 text-white"
+                      : "bg-mist-200 hover:bg-mist-300"
                   }`}
                 >
                   {pageNum}
@@ -588,10 +591,10 @@ export default function ResourceTable({
 
             {totalPages > 5 && currentPage < totalPages - 2 && (
               <>
-                <span className="text-gray-500">...</span>
+                <span className="text-mist-500">...</span>
                 <button
                   onClick={() => onPageChange(totalPages)}
-                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
+                  className="px-3 py-1 rounded bg-mist-200 hover:bg-mist-300 transition-colors"
                 >
                   {totalPages}
                 </button>
@@ -601,7 +604,7 @@ export default function ResourceTable({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded bg-mist-200 hover:bg-mist-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               &gt;
             </button>
@@ -610,7 +613,7 @@ export default function ResourceTable({
           {/* Add New Button */}
           <button
             onClick={onAddNew}
-            className="bg-[#2d3155] text-white px-6 py-2 rounded-lg hover:bg-[#1f2340] transition-colors"
+            className="bg-navy-800 text-white px-6 py-2 rounded-lg hover:bg-navy-700 transition-colors"
           >
             Add new resource
           </button>

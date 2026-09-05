@@ -253,7 +253,7 @@ const LastUpdatedBadge: React.FC<{
 }> = ({ lastUpdated, refreshing, onRefresh }) => (
   <div className="flex items-center gap-3">
     {lastUpdated && (
-      <span className="text-xs text-gray-400">
+      <span className="text-xs text-mist-500">
         Updated{" "}
         {lastUpdated.toLocaleTimeString("en-US", {
           hour: "2-digit",
@@ -266,9 +266,9 @@ const LastUpdatedBadge: React.FC<{
       disabled={refreshing}
       className={`
         inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg
-        border border-gray-200 text-gray-600 hover:bg-gray-50
+        border border-mist-300 text-navy-700 hover:bg-mist-100
         transition-all duration-200
-        ${refreshing ? "opacity-50 cursor-not-allowed" : "hover:border-gray-300"}
+        ${refreshing ? "opacity-50 cursor-not-allowed" : "hover:border-mist-400"}
       `}
     >
       <svg
@@ -309,7 +309,7 @@ export default function AdminDashboard() {
   }, [refresh]);
 
   return (
-    <div className="flex min-h-screen bg-[#f7f8fa]">
+    <div className="flex min-h-screen bg-mist-100">
       {/* Sidebar */}
       <Sidebar />
 
@@ -322,10 +322,10 @@ export default function AdminDashboard() {
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-navy-800 tracking-tight">
                 Dashboard
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-sm text-mist-600 mt-0.5">
                 Innovation Hub — Analytics Command Center
               </p>
             </div>
