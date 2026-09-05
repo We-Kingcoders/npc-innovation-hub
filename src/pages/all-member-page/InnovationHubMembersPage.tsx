@@ -344,7 +344,9 @@ export const InnovationHubMembersPage: React.FC = () => {
         setTotalPages(result.totalPages);
         setTotalMembers(result.totalMembers);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error("Failed to fetch public members:", err);
+        const apiErr = err as { statusCode?: number; message?: string };
+        setError(apiErr.message ?? "Failed to load members.");
       } finally {
         setLoading(false);
       }
@@ -427,7 +429,7 @@ export const InnovationHubMembersPage: React.FC = () => {
             {members.map((member, i) => (
               <div key={member.id} style={{ animationDelay: `${i * 0.06}s` }}>
                 <MemberCard
-                  id={member.id}
+                  id={member.userId}
                   name={member.name}
                   role={member.role}
                   imageUrl={member.imageUrl}

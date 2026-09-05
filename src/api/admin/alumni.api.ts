@@ -14,7 +14,7 @@ const toFormData = (
   payload: CreateAlumniPayload | UpdateAlumniPayload,
 ): FormData => {
   const fd = new FormData();
-  if (payload.name !== undefined) fd.append("name", payload.name);
+  if (payload.name !== undefined) fd.append("fullName", payload.name);
   if (payload.role !== undefined) fd.append("role", payload.role);
   if (payload.image) fd.append("image", payload.image);
   return fd;

@@ -484,7 +484,7 @@ const HeroSection = () => {
                 </Link>
 
                 <Link
-                  to="/abouthub"
+                  to="/Hub-information"
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center justify-between px-4 py-3 text-[#002B56] font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
                 >
@@ -576,7 +576,7 @@ const HeroSection = () => {
               Home
             </Link>
             <Link
-              to="/abouthub"
+              to="/Hub-information"
               className="text-[#002B56] font-medium text-[1.125rem] xl:text-[1.25rem] hover:text-[#00A0E3] transition-colors duration-200"
             >
               AboutHub
