@@ -8,6 +8,7 @@ import {
   deleteAlumni,
 } from "../../api/admin/alumni.api";
 import type { Alumni } from "../../types/alumni.types";
+import { MEMBER_ROLES } from "../../types/member.types";
 
 const EMPTY_FORM = { name: "", role: "" };
 
@@ -152,16 +153,21 @@ const AlumniManagement: React.FC = () => {
               >
                 Role
               </label>
-              <input
+              <select
                 id="alumni-role"
-                type="text"
                 value={form.role}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, role: e.target.value }))
                 }
                 className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
-                placeholder="Software Engineer at Acme"
-              />
+              >
+                <option value="">Select a role</option>
+                {MEMBER_ROLES.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -231,47 +237,56 @@ const AlumniManagement: React.FC = () => {
           </p>
         ) : (
           <ul className="space-y-3">
-            {alumni.map((entry) => (
-              <li
-                key={entry.id}
-                className="flex items-center gap-3 p-3 border border-mist-200 rounded-xl"
-              >
-                <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 overflow-hidden">
-                  {entry.imageUrl ? (
-                    <img
-                      src={entry.imageUrl}
-                      alt={entry.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    entry.name.slice(0, 2).toUpperCase()
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-navy-800 truncate">
-                    {entry.name}
-                  </p>
-                  <p className="text-xs text-mist-500 truncate">{entry.role}</p>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => startEdit(entry)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-navy-700 hover:bg-mist-100 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(entry)}
-                    disabled={deletingId === entry.id}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 transition-colors"
-                  >
-                    {deletingId === entry.id ? "Deleting…" : "Delete"}
-                  </button>
-                </div>
-              </li>
-            ))}
+            {alumni.map((entry, index) => {
+              // Defensive backstop: a malformed entry should degrade to a
+              // broken-looking row, not take down the whole page.
+              if (!entry) return null;
+              const name = entry.name ?? "Unknown";
+
+              return (
+                <li
+                  key={entry.id ?? index}
+                  className="flex items-center gap-3 p-3 border border-mist-200 rounded-xl"
+                >
+                  <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 overflow-hidden">
+                    {entry.imageUrl ? (
+                      <img
+                        src={entry.imageUrl}
+                        alt={name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      name.slice(0, 2).toUpperCase()
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-navy-800 truncate">
+                      {name}
+                    </p>
+                    <p className="text-xs text-mist-500 truncate">
+                      {entry.role ?? "—"}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(entry)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-navy-700 hover:bg-mist-100 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(entry)}
+                      disabled={deletingId === entry.id}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                    >
+                      {deletingId === entry.id ? "Deleting…" : "Delete"}
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
