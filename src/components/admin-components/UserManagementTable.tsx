@@ -27,7 +27,11 @@ interface UserManagementTableProps {
   isLoading: boolean;
   onRoleChange: (userId: string, newRole: UserRole) => Promise<void>;
   onStatusToggle: (userId: string) => Promise<void>;
-  onAlumniToggle: (userId: string, isAlumni: boolean) => Promise<void>;
+  onAlumniToggle: (
+    userId: string,
+    memberId: string,
+    isAlumni: boolean,
+  ) => Promise<void>;
   onDeleteUser: (userId: string) => Promise<void>;
 }
 
@@ -73,10 +77,14 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     }
   };
 
-  const handleAlumniToggle = async (userId: string, isAlumni: boolean) => {
+  const handleAlumniToggle = async (
+    userId: string,
+    memberId: string,
+    isAlumni: boolean,
+  ) => {
     setLoadingUsers((prev) => new Set(prev).add(userId));
     try {
-      await onAlumniToggle(userId, isAlumni);
+      await onAlumniToggle(userId, memberId, isAlumni);
     } finally {
       setLoadingUsers((prev) => {
         const next = new Set(prev);
@@ -259,24 +267,37 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
 
                   {/* ALUMNI COLUMN */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      onClick={() =>
-                        handleAlumniToggle(user.id, !user.isAlumni)
-                      }
-                      disabled={isUserLoading(user.id)}
-                      title={
-                        user.isAlumni
-                          ? "Demote from alumni"
-                          : "Promote to alumni"
-                      }
-                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
-                        user.isAlumni
-                          ? "bg-navy-800 text-white"
-                          : "bg-mist-200 text-mist-600"
-                      }`}
-                    >
-                      {user.isAlumni ? "Alumni" : "Current"}
-                    </button>
+                    {user.memberId ? (
+                      <button
+                        onClick={() =>
+                          handleAlumniToggle(
+                            user.id,
+                            user.memberId as string,
+                            !user.isAlumni,
+                          )
+                        }
+                        disabled={isUserLoading(user.id)}
+                        title={
+                          user.isAlumni
+                            ? "Demote from alumni"
+                            : "Promote to alumni"
+                        }
+                        className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
+                          user.isAlumni
+                            ? "bg-navy-800 text-white"
+                            : "bg-mist-200 text-mist-600"
+                        }`}
+                      >
+                        {user.isAlumni ? "Alumni" : "Current"}
+                      </button>
+                    ) : (
+                      <span
+                        className="text-xs text-mist-400"
+                        title="No member profile to promote or demote"
+                      >
+                        —
+                      </span>
+                    )}
                   </td>
 
                   {/* JOINED DATE COLUMN */}

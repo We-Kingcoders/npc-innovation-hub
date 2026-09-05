@@ -133,9 +133,13 @@ const MembersManagement: React.FC = () => {
     }
   };
 
-  const handleAlumniToggle = async (userId: string, isAlumni: boolean) => {
+  const handleAlumniToggle = async (
+    userId: string,
+    memberId: string,
+    isAlumni: boolean,
+  ) => {
     try {
-      await setMemberAlumniStatus(userId, isAlumni);
+      await setMemberAlumniStatus(memberId, isAlumni);
 
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
