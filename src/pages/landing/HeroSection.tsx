@@ -314,6 +314,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import JoinUsModal from "../../components/JoinUsModal";
+import { useHeroMembers } from "../../hooks/useHeroMembers";
 
 /**
  * HeroSection Component
@@ -341,71 +342,18 @@ const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
-  const teamMembers = [
-    {
-      name: "Sarah Chen",
-      role: "Lead Frontend Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Marcus Johnson",
-      role: "Senior Backend Engineer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Elena Rodriguez",
-      role: "Full Stack Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "James Park",
-      role: "DevOps Engineer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Priya Sharma",
-      role: "UI/UX Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Alex Thompson",
-      role: "Software Architect",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Maya Patel",
-      role: "Frontend Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "David Kim",
-      role: "Backend Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Sophie Laurent",
-      role: "Mobile Developer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Ryan O'Brien",
-      role: "Cloud Engineer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Aisha Mohammed",
-      role: "QA Engineer",
-      image: "/assets/images/hero.png",
-    },
-    {
-      name: "Lucas Silva",
-      role: "Tech Lead",
-      image: "/assets/images/hero.png",
-    },
-  ];
+  const { members: heroMembers } = useHeroMembers();
+
+  const teamMembers = heroMembers.map((hm) => ({
+    name: hm.name,
+    role: hm.role,
+    image: hm.imageUrl ?? "/assets/images/hero.png",
+  }));
 
   // Automatic looping
   useEffect(() => {
+    if (teamMembers.length === 0) return undefined;
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % teamMembers.length);
     }, 3500); // Change slide every 3.5 seconds
@@ -418,10 +366,12 @@ const HeroSection = () => {
   };
 
   const nextSlide = () => {
+    if (teamMembers.length === 0) return;
     setCurrentSlide((prev) => (prev + 1) % teamMembers.length);
   };
 
   const prevSlide = () => {
+    if (teamMembers.length === 0) return;
     setCurrentSlide(
       (prev) => (prev - 1 + teamMembers.length) % teamMembers.length,
     );
