@@ -194,7 +194,7 @@ const STATUS_CONFIG: Record<
   { label: string; color: string }
 > = {
   completed: { label: "Completed", color: "#10b981" },
-  "in-progress": { label: "In Progress", color: "#6366f1" },
+  "in-progress": { label: "In Progress", color: "#14375F" },
   pending: { label: "Pending", color: "#f59e0b" },
 };
 
@@ -209,25 +209,25 @@ const CustomTooltip: React.FC<{
 }> = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-sm">
-      <span className="font-semibold text-gray-800">{payload[0].name}</span>
-      <span className="ml-2 text-gray-500">{payload[0].value} tasks</span>
+    <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-mist-300 text-sm">
+      <span className="font-semibold text-navy-800">{payload[0].name}</span>
+      <span className="ml-2 text-mist-600">{payload[0].value} tasks</span>
     </div>
   );
 };
 
 const SkeletonWidget: React.FC = () => (
-  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-pulse">
+  <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm animate-pulse">
     <div className="flex justify-between items-center mb-4">
-      <div className="w-32 h-5 bg-gray-200 rounded" />
-      <div className="w-20 h-5 bg-gray-200 rounded-full" />
+      <div className="w-32 h-5 bg-mist-200 rounded" />
+      <div className="w-20 h-5 bg-mist-200 rounded-full" />
     </div>
-    <div className="w-40 h-40 bg-gray-200 rounded-full mx-auto my-6" />
+    <div className="w-40 h-40 bg-mist-200 rounded-full mx-auto my-6" />
     <div className="space-y-2">
       {[1, 2, 3].map((i) => (
         <div key={i} className="flex justify-between">
-          <div className="w-24 h-3 bg-gray-200 rounded" />
-          <div className="w-8 h-3 bg-gray-200 rounded" />
+          <div className="w-24 h-3 bg-mist-200 rounded" />
+          <div className="w-8 h-3 bg-mist-200 rounded" />
         </div>
       ))}
     </div>
@@ -242,8 +242,8 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
 
   if (!analytics) {
     return (
-      <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center justify-center h-72">
-        <p className="text-gray-400 text-sm">No task data available</p>
+      <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm flex items-center justify-center h-72">
+        <p className="text-mist-500 text-sm">No task data available</p>
       </div>
     );
   }
@@ -264,12 +264,12 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
   const hasData = chartData.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-gray-900 text-sm">Task Overview</h3>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <h3 className="font-semibold text-navy-800 text-sm">Task Overview</h3>
+          <p className="text-xs text-mist-500 mt-0.5">
             {analytics.total} total tasks
           </p>
         </div>
@@ -284,12 +284,12 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
       {/* Completion Rate bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-xs text-gray-500">Completion Rate</span>
+          <span className="text-xs text-mist-600">Completion Rate</span>
           <span className="text-xs font-bold text-emerald-600">
             {analytics.completionRate}%
           </span>
         </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-mist-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700"
             style={{ width: `${analytics.completionRate}%` }}
@@ -319,7 +319,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
         </ResponsiveContainer>
       ) : (
         <div className="h-[180px] flex items-center justify-center">
-          <p className="text-gray-400 text-xs">No task data to display</p>
+          <p className="text-mist-500 text-xs">No task data to display</p>
         </div>
       )}
 
@@ -339,9 +339,9 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
                   className="w-2 h-2 rounded-full flex-shrink-0"
                   style={{ backgroundColor: config.color }}
                 />
-                <span className="text-xs text-gray-500">{config.label}</span>
+                <span className="text-xs text-mist-600">{config.label}</span>
               </div>
-              <span className="text-xs font-semibold text-gray-700">
+              <span className="text-xs font-semibold text-navy-700">
                 {count}
               </span>
             </div>
@@ -350,7 +350,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
 
         {/* Overdue shown as a separate warning row if any */}
         {analytics.overdue > 0 && (
-          <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-1">
+          <div className="flex items-center justify-between pt-1 border-t border-mist-200 mt-1">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-rose-400 flex-shrink-0" />
               <span className="text-xs text-rose-500">Overdue</span>

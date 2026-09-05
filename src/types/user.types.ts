@@ -33,6 +33,7 @@ export interface User {
   verified: boolean;
   role: UserRole;
   isActive: boolean;
+  isAlumni?: boolean;
   createdAt: string;
   updatedAt: string;
 }

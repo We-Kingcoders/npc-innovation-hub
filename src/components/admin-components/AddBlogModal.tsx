@@ -32,11 +32,11 @@ export const AddBlogModal: React.FC<AddBlogModalProps> = ({
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-gray-900">Create New Blog</h2>
+        <div className="sticky top-0 bg-white border-b border-mist-300 px-8 py-5 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-bold text-navy-800">Create New Blog</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-mist-400 hover:text-mist-600 transition-colors"
             disabled={isLoading}
           >
             <svg

@@ -87,10 +87,10 @@ export default function ApplicationsList() {
         {[...Array(3)].map((_, i) => (
           <div key={i} className="bg-white rounded-xl shadow p-6 animate-pulse">
             <div className="flex items-center">
-              <div className="w-14 h-14 rounded-full bg-gray-200 mr-5" />
+              <div className="w-14 h-14 rounded-full bg-mist-200 mr-5" />
               <div className="flex-1 space-y-3">
-                <div className="h-4 bg-gray-200 rounded w-1/3" />
-                <div className="h-3 bg-gray-200 rounded w-1/4" />
+                <div className="h-4 bg-mist-200 rounded w-1/3" />
+                <div className="h-3 bg-mist-200 rounded w-1/4" />
               </div>
             </div>
           </div>
@@ -108,12 +108,12 @@ export default function ApplicationsList() {
           placeholder="Search by name or email..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 min-w-[250px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="flex-1 min-w-[250px] px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
         >
           {STATUS_OPTIONS.map((status) => (
             <option key={status} value={status}>
@@ -134,7 +134,7 @@ export default function ApplicationsList() {
       {!loading && pageApplications.length === 0 && !error && (
         <div className="bg-white rounded-2xl p-12 text-center">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
+            className="mx-auto h-12 w-12 text-mist-400 mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -146,10 +146,10 @@ export default function ApplicationsList() {
               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
             />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-navy-800 mb-2">
             No applications found
           </h3>
-          <p className="text-gray-600">
+          <p className="text-mist-600">
             {searchQuery || statusFilter !== "All"
               ? "Try adjusting your filters"
               : "No membership applications yet"}
@@ -161,10 +161,10 @@ export default function ApplicationsList() {
       {pageApplications.map((application) => (
         <div
           key={application.id}
-          className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 mb-4 border border-gray-100 flex items-start"
+          className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 mb-4 border border-mist-300 flex items-start"
         >
           {/* Avatar */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mr-5 flex-shrink-0 overflow-hidden">
+          <div className="w-14 h-14 rounded-full bg-navy-700 flex items-center justify-center mr-5 flex-shrink-0 overflow-hidden">
             {application.imageUrl ? (
               <img
                 src={application.imageUrl}
@@ -182,10 +182,10 @@ export default function ApplicationsList() {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                <h3 className="font-semibold text-navy-800 text-lg mb-1">
                   {application.fullName}
                 </h3>
-                <p className="text-sm text-gray-500">{application.email}</p>
+                <p className="text-sm text-mist-600">{application.email}</p>
               </div>
               <span
                 className={`text-xs px-3 py-1 rounded-full font-medium ${getStatusColor(application.status)} flex-shrink-0`}
@@ -195,12 +195,12 @@ export default function ApplicationsList() {
             </div>
 
             <div className="flex items-center justify-between mt-3">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-mist-500">
                 {formatDate(application.createdAt)}
               </p>
               <Link
                 to={`/admin/applications/${application.id}`}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-navy-700 hover:text-navy-800 font-medium"
               >
                 View Details →
               </Link>
@@ -213,17 +213,17 @@ export default function ApplicationsList() {
       {filteredApplications.length > PAGE_SIZE && (
         <div className="flex justify-end items-center gap-3 mt-8">
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
+            className="px-4 py-2 rounded-lg bg-white border border-mist-300 hover:bg-mist-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
           >
             Previous
           </button>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-mist-600">
             Page {page} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
+            className="px-4 py-2 rounded-lg bg-white border border-mist-300 hover:bg-mist-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
           >

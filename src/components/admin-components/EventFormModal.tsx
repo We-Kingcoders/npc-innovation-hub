@@ -161,13 +161,13 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="sticky top-0 bg-white border-b border-mist-300 px-8 py-5 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-bold text-navy-800">
             {initialData ? "Edit Event" : "Create New Event"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-mist-400 hover:text-mist-600 transition-colors"
             disabled={isLoading}
           >
             <svg
@@ -194,7 +194,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           <div className="space-y-5">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Event Title *
               </label>
               <input
@@ -204,8 +204,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                   setFormData({ ...formData, title: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  errors.title ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 placeholder="E.g., Cybersecurity Workshop 2026"
                 disabled={isLoading}
               />
@@ -216,7 +216,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Location *
               </label>
               <input
@@ -226,8 +226,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                   setFormData({ ...formData, location: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.location ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  errors.location ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 placeholder="E.g., NPC Innovation Hub, Kigali"
                 disabled={isLoading}
               />
@@ -238,7 +238,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Description *
               </label>
               <textarea
@@ -248,8 +248,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                 }
                 rows={4}
                 className={`w-full px-4 py-2.5 border ${
-                  errors.description ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none`}
+                  errors.description ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all resize-none`}
                 placeholder="Describe your event..."
                 disabled={isLoading}
               />
@@ -264,7 +264,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
             <div className="grid grid-cols-2 gap-4">
               {/* Start Time */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-navy-800 mb-2">
                   Start Date & Time *
                 </label>
                 <input
@@ -274,8 +274,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     setFormData({ ...formData, startTime: e.target.value })
                   }
                   className={`w-full px-4 py-2.5 border ${
-                    errors.startTime ? "border-red-500" : "border-gray-300"
-                  } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                    errors.startTime ? "border-red-500" : "border-mist-300"
+                  } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                   disabled={isLoading}
                 />
                 {errors.startTime && (
@@ -287,7 +287,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
               {/* End Time */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-navy-800 mb-2">
                   End Date & Time *
                 </label>
                 <input
@@ -297,8 +297,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     setFormData({ ...formData, endTime: e.target.value })
                   }
                   className={`w-full px-4 py-2.5 border ${
-                    errors.endTime ? "border-red-500" : "border-gray-300"
-                  } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                    errors.endTime ? "border-red-500" : "border-mist-300"
+                  } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                   disabled={isLoading}
                 />
                 {errors.endTime && (
@@ -309,7 +309,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
             {/* Image URL */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-navy-800 mb-2">
                 Event Image URL *
               </label>
               <input
@@ -319,8 +319,8 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                   setFormData({ ...formData, imageUrl: e.target.value })
                 }
                 className={`w-full px-4 py-2.5 border ${
-                  errors.imageUrl ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  errors.imageUrl ? "border-red-500" : "border-mist-300"
+                } rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-all`}
                 placeholder="https://example.com/event-image.jpg"
                 disabled={isLoading}
               />
@@ -335,14 +335,14 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all font-medium"
+              className="px-6 py-2.5 text-navy-800 bg-mist-100 rounded-lg hover:bg-mist-200 transition-all font-medium"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 text-white bg-[#343a5e] rounded-lg hover:bg-[#20253a] transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2.5 text-white bg-navy-800 rounded-lg hover:bg-navy-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               disabled={isLoading}
             >
               {isLoading ? (

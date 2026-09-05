@@ -53,7 +53,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6 text-white">
+        <div className="bg-navy-800 px-8 py-6 text-white">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-3">{task.title}</h2>
@@ -88,10 +88,10 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
           {/* Status Progress */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-navy-800">
                 Task Progress
               </span>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-mist-600">
                 {task.status === "completed"
                   ? "100%"
                   : task.status === "in-progress"
@@ -99,13 +99,13 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                     : "0%"}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-mist-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all ${
                   task.status === "completed"
                     ? "bg-green-500 w-full"
                     : task.status === "in-progress"
-                      ? "bg-blue-500 w-1/2"
+                      ? "bg-navy-700 w-1/2"
                       : "bg-yellow-500 w-0"
                 }`}
               />
@@ -114,10 +114,10 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 
           {/* Description */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-lg font-semibold text-navy-800 mb-3">
               Description
             </h3>
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+            <p className="text-navy-700 leading-relaxed whitespace-pre-wrap bg-mist-100 p-4 rounded-lg">
               {task.description}
             </p>
           </div>
@@ -126,47 +126,47 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
           <div className="grid grid-cols-2 gap-6 mb-6">
             {/* Creator */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-500 mb-2">
+              <h4 className="text-sm font-semibold text-mist-500 mb-2">
                 Created By
               </h4>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-semibold shadow-md">
+                <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-white font-semibold shadow-md">
                   {getUserInitials(task.creator)}
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-navy-800">
                     {getUserFullName(task.creator)}
                   </p>
-                  <p className="text-sm text-gray-500">{task.creator.email}</p>
+                  <p className="text-sm text-mist-500">{task.creator.email}</p>
                 </div>
               </div>
             </div>
 
             {/* Assignee */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-500 mb-2">
+              <h4 className="text-sm font-semibold text-mist-500 mb-2">
                 Assigned To
               </h4>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold shadow-md">
+                <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-white font-semibold shadow-md">
                   {getUserInitials(task.assignee)}
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-navy-800">
                     {getUserFullName(task.assignee)}
                   </p>
-                  <p className="text-sm text-gray-500">{task.assignee.email}</p>
+                  <p className="text-sm text-mist-500">{task.assignee.email}</p>
                 </div>
               </div>
             </div>
 
             {/* Due Date */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-500 mb-2">
+              <h4 className="text-sm font-semibold text-mist-500 mb-2">
                 Due Date
               </h4>
               <div
-                className={`${isOverdue ? "text-red-600" : "text-gray-900"}`}
+                className={`${isOverdue ? "text-red-600" : "text-navy-800"}`}
               >
                 <p className="font-medium">
                   {new Date(task.dueDate).toLocaleDateString("en-US", {
@@ -176,7 +176,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                   })}
                 </p>
                 <p
-                  className={`text-sm ${isOverdue ? "font-semibold" : "text-gray-500"}`}
+                  className={`text-sm ${isOverdue ? "font-semibold" : "text-mist-500"}`}
                 >
                   {daysInfo}
                 </p>
@@ -185,7 +185,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 
             {/* GitHub Link */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-500 mb-2">
+              <h4 className="text-sm font-semibold text-mist-500 mb-2">
                 GitHub Issue
               </h4>
               {task.githubIssueLink ? (
@@ -194,7 +194,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                     href={task.githubIssueLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-indigo-600 hover:text-indigo-700 text-sm truncate flex items-center gap-1"
+                    className="text-navy-700 hover:text-navy-800 text-sm truncate flex items-center gap-1"
                   >
                     <svg
                       className="w-4 h-4"
@@ -207,11 +207,11 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                   </a>
                   <button
                     onClick={() => copyToClipboard(task.githubIssueLink)}
-                    className="p-1 hover:bg-gray-100 rounded"
+                    className="p-1 hover:bg-mist-100 rounded"
                     title="Copy link"
                   >
                     <svg
-                      className="w-4 h-4 text-gray-500"
+                      className="w-4 h-4 text-mist-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -226,14 +226,14 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
                   </button>
                 </div>
               ) : (
-                <p className="text-gray-400 text-sm">No link provided</p>
+                <p className="text-mist-400 text-sm">No link provided</p>
               )}
             </div>
           </div>
 
           {/* Timestamps */}
-          <div className="pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="pt-6 border-t border-mist-200">
+            <div className="flex items-center justify-between text-xs text-mist-500">
               <span>Created: {new Date(task.createdAt).toLocaleString()}</span>
               <span>Updated: {new Date(task.updatedAt).toLocaleString()}</span>
             </div>
@@ -241,16 +241,16 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         </div>
 
         {/* Actions Footer */}
-        <div className="border-t border-gray-200 px-8 py-4 bg-gray-50 flex justify-end gap-3">
+        <div className="border-t border-mist-200 px-8 py-4 bg-mist-100 flex justify-end gap-3">
           <button
             onClick={onReassign}
-            className="px-4 py-2 text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors font-medium"
+            className="px-4 py-2 text-navy-700 bg-navy-50 rounded-lg hover:bg-navy-100 transition-colors font-medium"
           >
             Reassign
           </button>
           <button
             onClick={onEdit}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            className="px-4 py-2 text-navy-800 bg-white border border-mist-300 rounded-lg hover:bg-mist-100 transition-colors font-medium"
           >
             Edit Task
           </button>

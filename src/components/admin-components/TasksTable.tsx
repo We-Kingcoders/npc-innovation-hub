@@ -769,8 +769,8 @@ export default function TasksTable({
         {[...Array(5)].map((_, i) => (
           <div key={i} className="bg-white rounded-2xl p-6 animate-pulse">
             <div className="space-y-3">
-              <div className="h-4 bg-gray-200 rounded w-3/4" />
-              <div className="h-3 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-mist-200 rounded w-3/4" />
+              <div className="h-3 bg-mist-200 rounded w-1/2" />
             </div>
           </div>
         ))}
@@ -804,7 +804,7 @@ export default function TasksTable({
       {!loading && filteredTasks.length === 0 && (
         <div className="bg-white rounded-2xl p-12 text-center">
           <svg
-            className="mx-auto h-16 w-16 text-gray-400 mb-4"
+            className="mx-auto h-16 w-16 text-mist-400 mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -816,10 +816,10 @@ export default function TasksTable({
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
             />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-navy-800 mb-2">
             No tasks found
           </h3>
-          <p className="text-gray-600">
+          <p className="text-mist-600">
             {searchQuery ||
             statusFilter !== "all" ||
             priorityFilter !== "all" ||
@@ -832,11 +832,11 @@ export default function TasksTable({
 
       {/* Tasks Table */}
       {filteredTasks.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-mist-300 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                <tr className="bg-navy-800 text-white">
                   <th className="px-6 py-4 text-left text-sm font-semibold">
                     Task
                   </th>
@@ -860,7 +860,7 @@ export default function TasksTable({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-mist-200">
                 {filteredTasks.map((task) => {
                   const isOverdue = isTaskOverdue(task.dueDate, task.status);
                   const daysInfo = getDaysUntilDue(task.dueDate);
@@ -868,16 +868,16 @@ export default function TasksTable({
                   return (
                     <tr
                       key={task.id}
-                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      className="hover:bg-mist-100 transition-colors cursor-pointer"
                       onClick={() => handleView(task)}
                     >
                       {/* Task Title */}
                       <td className="px-6 py-4">
                         <div className="max-w-md">
-                          <p className="font-semibold text-gray-900 truncate">
+                          <p className="font-semibold text-navy-800 truncate">
                             {task.title}
                           </p>
-                          <p className="text-sm text-gray-500 truncate">
+                          <p className="text-sm text-mist-600 truncate">
                             {task.description}
                           </p>
                         </div>
@@ -902,7 +902,7 @@ export default function TasksTable({
                       <td className="px-6 py-4">
                         <div
                           className={
-                            isOverdue ? "text-red-600" : "text-gray-900"
+                            isOverdue ? "text-red-600" : "text-navy-800"
                           }
                         >
                           <p className="text-sm font-medium">
@@ -916,7 +916,7 @@ export default function TasksTable({
                             )}
                           </p>
                           <p
-                            className={`text-xs ${isOverdue ? "font-semibold" : "text-gray-500"}`}
+                            className={`text-xs ${isOverdue ? "font-semibold" : "text-mist-500"}`}
                           >
                             {daysInfo}
                           </p>
@@ -931,7 +931,7 @@ export default function TasksTable({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center text-indigo-600 hover:text-indigo-700"
+                            className="inline-flex items-center text-navy-700 hover:text-navy-800"
                             title="View GitHub Issue"
                           >
                             <svg
@@ -943,7 +943,7 @@ export default function TasksTable({
                             </svg>
                           </a>
                         ) : (
-                          <span className="text-gray-300">-</span>
+                          <span className="text-mist-400">-</span>
                         )}
                       </td>
 
@@ -954,10 +954,10 @@ export default function TasksTable({
                       >
                         <button
                           onClick={(e) => toggleActionMenu(task.id, e)}
-                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors mx-auto block"
+                          className="p-2 hover:bg-mist-100 rounded-lg transition-colors mx-auto block"
                         >
                           <svg
-                            className="w-5 h-5 text-gray-600"
+                            className="w-5 h-5 text-navy-700"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -969,11 +969,11 @@ export default function TasksTable({
                         {actionMenuId === task.id && (
                           <div
                             ref={menuRef}
-                            className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px] z-10"
+                            className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-mist-300 py-1 min-w-[160px] z-10"
                           >
                             <button
                               onClick={() => handleView(task)}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-mist-100 flex items-center gap-2 text-navy-800"
                             >
                               <svg
                                 className="w-4 h-4"
@@ -998,7 +998,7 @@ export default function TasksTable({
                             </button>
                             <button
                               onClick={() => handleEdit(task)}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-mist-100 flex items-center gap-2 text-navy-800"
                             >
                               <svg
                                 className="w-4 h-4"
@@ -1046,8 +1046,8 @@ export default function TasksTable({
           </div>
 
           {/* Table Footer */}
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-            <p className="text-sm text-gray-600">
+          <div className="px-6 py-4 bg-mist-100 border-t border-mist-200">
+            <p className="text-sm text-mist-600">
               Showing{" "}
               <span className="font-semibold">{filteredTasks.length}</span> of{" "}
               <span className="font-semibold">{tasks.length}</span> tasks

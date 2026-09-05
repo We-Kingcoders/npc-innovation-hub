@@ -6,11 +6,21 @@ export interface SkillDetail {
   technologies: string[];
 }
 
+export interface SkillCategory {
+  category: string;
+  overall: number;
+  skills: SkillDetail[];
+}
+
 export interface Education {
   degree: string;
   institution: string;
   description: string;
   imageUrl: string;
+  department?: string;
+  startYear?: number;
+  endYear?: number | null;
+  status?: string;
 }
 
 export interface Contacts {
@@ -19,6 +29,7 @@ export interface Contacts {
   twitter?: string;
   telegram?: string;
   instagram?: string;
+  portfolio?: string;
 }
 
 export interface Member {
@@ -31,7 +42,11 @@ export interface Member {
   education: Education | null;
   contacts: Contacts | null;
   skillDetails: SkillDetail[];
+  skillCategories?: SkillCategory[];
   skills: string[];
+  hashtags?: string[];
+  resumeUrl?: string | null;
+  cvUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }

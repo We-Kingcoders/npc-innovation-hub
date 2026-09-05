@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MemberCard } from "../../components/membercard/MemberCard";
+import { getPublicMembers } from "../../api/member/member.api";
+import type { PublicMemberSummary } from "../../api/member/member.api";
 
 const PAGE_SIZE = 6;
-
-interface Member {
-  id: string;
-  userId: string;
-  name: string;
-  role: string;
-  imageUrl?: string;
-  techStack?: string[];
-  tagline?: string;
-  available?: boolean;
-}
 
 /* ── Page-level styles injected once into <head> ──────────────────── */
 const PAGE_STYLE_ID = "ihp-styles";
@@ -331,9 +322,10 @@ function injectPageStyles() {
 }
 
 export const InnovationHubMembersPage: React.FC = () => {
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<PublicMemberSummary[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalMembers, setTotalMembers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -346,17 +338,11 @@ export const InnovationHubMembersPage: React.FC = () => {
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `http://localhost:5000/api/members?page=${page}&limit=${PAGE_SIZE}`,
-        );
-        if (!response.ok) throw new Error("Failed to fetch members");
-        const data = await response.json();
-        if (Array.isArray(data.data?.members)) {
-          setMembers(data.data.members);
-          setTotalPages(data.totalPages || 1);
-        } else {
-          throw new Error("Invalid response format");
-        }
+        setError(null);
+        const result = await getPublicMembers(page, PAGE_SIZE);
+        setMembers(result.members);
+        setTotalPages(result.totalPages);
+        setTotalMembers(result.totalMembers);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
@@ -367,7 +353,6 @@ export const InnovationHubMembersPage: React.FC = () => {
   }, [page]);
 
   const openCount = members.filter((m) => m.available === true).length;
-  const totalMembers = members.length > 0 ? members.length * totalPages : 0;
 
   return (
     <div className="ihp-root">

@@ -40,9 +40,9 @@ export const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
           />
         </svg>
       ),
-      color: "from-blue-500 to-indigo-600",
-      bgColor: "bg-blue-50",
-      textColor: "text-blue-600",
+      color: "bg-navy-800",
+      bgColor: "bg-navy-50",
+      textColor: "text-navy-800",
     },
     {
       label: "In Progress",
@@ -62,9 +62,9 @@ export const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
           />
         </svg>
       ),
-      color: "from-orange-500 to-amber-600",
-      bgColor: "bg-orange-50",
-      textColor: "text-orange-600",
+      color: "bg-navy-700",
+      bgColor: "bg-navy-50",
+      textColor: "text-navy-700",
     },
     {
       label: "Completed",
@@ -117,19 +117,17 @@ export const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-105"
+          className="bg-white rounded-2xl p-6 shadow-sm border border-mist-300 hover:shadow-md transition-all duration-200 hover:scale-105"
         >
           <div className="flex items-center justify-between mb-4">
-            <div
-              className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-lg`}
-            >
+            <div className={`p-3 rounded-xl ${stat.color} shadow-lg`}>
               <div className="text-white">{stat.icon}</div>
             </div>
             <span className={`text-3xl font-bold ${stat.textColor}`}>
               {stat.value}
             </span>
           </div>
-          <p className="text-gray-600 font-medium">{stat.label}</p>
+          <p className="text-mist-600 font-medium">{stat.label}</p>
         </div>
       ))}
     </div>
