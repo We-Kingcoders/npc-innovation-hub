@@ -49,7 +49,7 @@ const AlumniSection: React.FC = () => {
                       <img
                         src={person.imageUrl}
                         alt={name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-400 text-2xl font-bold">
