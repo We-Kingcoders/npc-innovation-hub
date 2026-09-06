@@ -6,6 +6,10 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
 // Define types
 interface MemberData {
   id: string;
+  // The HeroMember curation record's own id — always present, unlike `id`
+  // above (which is the linked Member's id and may be missing). Used only
+  // as the React list key so a data gap here can't also break rendering.
+  heroId: string;
   name: string;
   role: string;
   location?: string;
@@ -36,6 +40,13 @@ interface HeaderProps {
 
 /**
  * Member Card Component - Displays individual member information
+ *
+ * This is a separate implementation from
+ * `src/components/membercard/MemberCard.tsx` (used by the /members
+ * directory page) — different visual design and a different data shape
+ * (this one maps from `HeroMember`, that one from `PublicMemberSummary`),
+ * so they weren't consolidated. If you fix a navigation/id bug in one,
+ * check the other too.
  */
 const MemberCard: React.FC<MemberCardProps> = ({ member, onViewProfile }) => {
   return (
@@ -194,12 +205,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onViewProfile }) => {
             </div>
           )}
 
-          <button
-            onClick={() => onViewProfile(member.id)}
-            className="mt-6 bg-[#002b56] text-white py-2 px-6 rounded-full hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
-          >
-            View Full Profile
-          </button>
+          {member.id && (
+            <button
+              onClick={() => onViewProfile(member.id)}
+              className="mt-6 bg-[#002b56] text-white py-2 px-6 rounded-full hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+            >
+              View Full Profile
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -214,7 +227,7 @@ const MemberGrid: React.FC<MemberGridProps> = ({ members, onViewProfile }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {members.map((member) => (
         <MemberCard
-          key={member.id}
+          key={member.heroId}
           member={member}
           onViewProfile={onViewProfile}
         />
@@ -269,6 +282,7 @@ const HubMembersSection: React.FC = () => {
 
   const members: MemberData[] = heroMembers.map((hm) => ({
     id: hm.memberId,
+    heroId: hm.id,
     name: hm.name,
     role: hm.role,
     image: hm.imageUrl ?? "/public/assets/images/hero.png",
