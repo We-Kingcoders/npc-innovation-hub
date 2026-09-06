@@ -11,7 +11,7 @@ jest.mock("../client", () => ({
 }));
 
 import apiClient from "../client";
-import { createAlumni, updateAlumni } from "./alumni.api";
+import { createAlumni, updateAlumni, getAlumniList } from "./alumni.api";
 
 describe("alumni.api toFormData", () => {
   afterEach(() => jest.clearAllMocks());
@@ -53,5 +53,80 @@ describe("alumni.api toFormData", () => {
     const sentFormData = (apiClient.patch as jest.Mock).mock
       .calls[0][1] as FormData;
     expect(sentFormData.get("fullName")).toBe("Updated Name");
+  });
+});
+
+describe("alumni.api response normalization", () => {
+  afterEach(() => jest.clearAllMocks());
+
+  test("createAlumni reads the created record's name from fullName, not name", async () => {
+    (apiClient.post as jest.Mock).mockResolvedValue({
+      data: {
+        status: "success",
+        data: {
+          alumni: {
+            id: "a1",
+            fullName: "Jane Doe",
+            role: "Frontend Developer",
+            imageUrl: null,
+            createdAt: "2026-01-01T00:00:00.000Z",
+            updatedAt: "2026-01-01T00:00:00.000Z",
+          },
+        },
+      },
+    });
+
+    const created = await createAlumni({
+      name: "Jane Doe",
+      role: "Frontend Developer",
+    });
+
+    expect(created.name).toBe("Jane Doe");
+  });
+
+  test("updateAlumni reads the updated record's name from fullName, not name", async () => {
+    (apiClient.patch as jest.Mock).mockResolvedValue({
+      data: {
+        status: "success",
+        data: {
+          alumni: {
+            id: "a1",
+            fullName: "Updated Name",
+            role: "Backend Developer",
+            imageUrl: null,
+            createdAt: "2026-01-01T00:00:00.000Z",
+            updatedAt: "2026-01-01T00:00:00.000Z",
+          },
+        },
+      },
+    });
+
+    const updated = await updateAlumni("a1", { name: "Updated Name" });
+
+    expect(updated.name).toBe("Updated Name");
+  });
+
+  test("getAlumniList reads each entry's name from fullName, not name", async () => {
+    (apiClient.get as jest.Mock).mockResolvedValue({
+      data: {
+        status: "success",
+        data: {
+          alumni: [
+            {
+              id: "a1",
+              fullName: "Grace Uwase",
+              role: "UI/UX Designer",
+              imageUrl: null,
+              createdAt: "2026-01-01T00:00:00.000Z",
+              updatedAt: "2026-01-01T00:00:00.000Z",
+            },
+          ],
+        },
+      },
+    });
+
+    const list = await getAlumniList();
+
+    expect(list[0].name).toBe("Grace Uwase");
   });
 });

@@ -72,4 +72,35 @@ describe("AlumniPage", () => {
       expect(screen.getByText("Network error")).toBeInTheDocument();
     });
   });
+
+  test("renders a promoted member and a standalone alumnus together", async () => {
+    // Both sources come back through the same AlumniSummary shape from the
+    // backend's merged response — the page shouldn't need to know which
+    // underlying model (Member vs Alumnus) each entry came from.
+    mockedGetAlumni.mockResolvedValue([
+      { name: "Promoted Member", imageUrl: null, role: "Backend Developer" },
+      { name: "Standalone Alumnus", imageUrl: null, role: "Other" },
+    ]);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Promoted Member")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Standalone Alumnus")).toBeInTheDocument();
+  });
+
+  test("does not crash when the response contains a malformed entry", async () => {
+    mockedGetAlumni.mockResolvedValue([
+      undefined as unknown as AlumniSummary,
+      { name: "", imageUrl: null, role: "Other" },
+      sampleAlumni[0],
+    ]);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Grace Uwase")).toBeInTheDocument();
+    });
+    // The entry with a blank name falls back instead of crashing on .split().
+    expect(screen.getByText("Unknown")).toBeInTheDocument();
+  });
 });

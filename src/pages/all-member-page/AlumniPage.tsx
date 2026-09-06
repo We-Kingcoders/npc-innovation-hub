@@ -98,38 +98,45 @@ export const AlumniPage: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {alumni.map((person, idx) => (
-              <div
-                key={`${person.name}-${idx}`}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden
+            {alumni.map((person, idx) => {
+              if (!person) return null;
+              const name = person.name || "Unknown";
+
+              return (
+                <div
+                  key={`${name}-${idx}`}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden
                   hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <div className="w-full h-40 bg-slate-100 overflow-hidden">
-                  {person.imageUrl ? (
-                    <img
-                      src={person.imageUrl}
-                      alt={person.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-2xl font-bold">
-                      {person.name
-                        .split(" ")
-                        .slice(0, 2)
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()}
-                    </div>
-                  )}
+                >
+                  <div className="w-full h-40 bg-slate-100 overflow-hidden">
+                    {person.imageUrl ? (
+                      <img
+                        src={person.imageUrl}
+                        alt={name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-2xl font-bold">
+                        {name
+                          .split(" ")
+                          .slice(0, 2)
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4 text-center">
+                    <h3 className="font-bold text-[#002b56] text-base leading-tight">
+                      {name}
+                    </h3>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {person.role ?? "—"}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4 text-center">
-                  <h3 className="font-bold text-[#002b56] text-base leading-tight">
-                    {person.name}
-                  </h3>
-                  <p className="text-sm text-slate-500 mt-1">{person.role}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
