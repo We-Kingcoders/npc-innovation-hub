@@ -20,6 +20,14 @@ const toFormData = (
   return fd;
 };
 
+// The backend stores and returns the name under `fullName` (matching what
+// CREATE/UPDATE send), not `name` — normalize it here so the rest of the
+// frontend can keep using the shorter `name` field consistently.
+const normalizeAlumni = (raw: Alumni & { fullName?: string }): Alumni => ({
+  ...raw,
+  name: raw.fullName ?? raw.name,
+});
+
 export const setMemberAlumniStatus = async (
   memberId: string,
   isAlumni: boolean,
@@ -38,7 +46,7 @@ export const getAlumniList = async (): Promise<Alumni[]> => {
     const response = await apiClient.get<AlumniListResponse>(
       ALUMNI_ROUTES.GET_ALUMNI,
     );
-    return response.data.data.alumni;
+    return response.data.data.alumni.map(normalizeAlumni);
   } catch (error) {
     throw new Error(`Failed to fetch alumni: ${handleApiError(error)}`);
   }
@@ -53,7 +61,7 @@ export const createAlumni = async (
       toFormData(payload),
       { headers: { "Content-Type": "multipart/form-data" } },
     );
-    return response.data.data.alumni;
+    return normalizeAlumni(response.data.data.alumni);
   } catch (error) {
     throw new Error(`Failed to create alumni entry: ${handleApiError(error)}`);
   }
@@ -69,7 +77,7 @@ export const updateAlumni = async (
       toFormData(payload),
       { headers: { "Content-Type": "multipart/form-data" } },
     );
-    return response.data.data.alumni;
+    return normalizeAlumni(response.data.data.alumni);
   } catch (error) {
     throw new Error(`Failed to update alumni entry: ${handleApiError(error)}`);
   }
