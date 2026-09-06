@@ -12,10 +12,10 @@ import HeroSection from "../pages/landing/HeroSection";
 import Expertise from "../pages/landing/Expertise";
 import Mission from "../pages/landing/Mission";
 import HubIntroVideo from "../pages/landing/HubIntroVideo";
+import AlumniSection from "../pages/landing/AlumniSection";
 import SignUpPage from "../pages/Login/SignUp";
 import ProjectsPage from "../pages/project-page/ProjectsPage";
 import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
-import { AlumniPage } from "../pages/all-member-page/AlumniPage";
 import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
 import { ApplyPage } from "../pages/apply/ApplyPage";
 import LetTalk from "../pages/HireUs/form";
@@ -95,6 +95,7 @@ const AllRoutes: React.FC = () => {
             <Skills />
             <Mission />
             <HubIntroVideo />
+            <AlumniSection />
             <TeamCaptain />
             <Footer />
           </>
@@ -173,15 +174,6 @@ const AllRoutes: React.FC = () => {
         element={
           <>
             <ApplyPage />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/alumni"
-        element={
-          <>
-            <AlumniPage />
             <Footer />
           </>
         }
