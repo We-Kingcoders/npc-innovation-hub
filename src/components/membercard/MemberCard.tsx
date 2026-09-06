@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
 
+// NOTE: `src/pages/landing/HubMembersSection.tsx` defines its own separate
+// MemberCard for the landing-page hero teaser (different visual design and
+// data shape — it maps from `HeroMember`, this one from `PublicMemberSummary`).
+// If you fix a navigation/id bug here, check that file too, and vice versa.
+
 export interface MemberCardProps {
   id: string;
   name: string;
