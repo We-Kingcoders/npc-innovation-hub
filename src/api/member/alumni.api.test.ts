@@ -48,4 +48,42 @@ describe("getAlumni", () => {
 
     expect(result).toEqual([]);
   });
+
+  test("parses the exact confirmed live response shape from GET /api/alumni", async () => {
+    mockedGet.mockResolvedValue({
+      data: {
+        status: "success",
+        results: 2,
+        data: {
+          alumni: [
+            {
+              name: "Entue MUGABO",
+              imageUrl: "https://example.com/entue.jpg",
+              role: "Full-Stack Developer",
+            },
+            {
+              name: "Olivier IRADUKUNDA",
+              imageUrl: "https://example.com/olivier.jpg",
+              role: "Cybersecurity Specialist",
+            },
+          ],
+        },
+      },
+    });
+
+    const result = await getAlumni();
+
+    expect(result).toEqual([
+      {
+        name: "Entue MUGABO",
+        imageUrl: "https://example.com/entue.jpg",
+        role: "Full-Stack Developer",
+      },
+      {
+        name: "Olivier IRADUKUNDA",
+        imageUrl: "https://example.com/olivier.jpg",
+        role: "Cybersecurity Specialist",
+      },
+    ]);
+  });
 });
