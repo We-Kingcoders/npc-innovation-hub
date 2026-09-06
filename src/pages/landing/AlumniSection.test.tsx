@@ -43,6 +43,27 @@ describe("<AlumniSection />", () => {
     expect(screen.getByText("Standalone Alumnus")).toBeInTheDocument();
   });
 
+  test("crops each photo from the top instead of the center, so heads aren't cut off", () => {
+    mockedUseAlumni.mockReturnValue({
+      alumni: [
+        {
+          name: "Grace Uwase",
+          imageUrl: "https://example.com/grace.jpg",
+          role: "Product Manager",
+        },
+      ],
+      loading: false,
+      error: null,
+      fetchAlumni: jest.fn(),
+    });
+
+    render(<AlumniSection />);
+
+    const photo = screen.getByAltText("Grace Uwase");
+    expect(photo).toHaveClass("object-cover");
+    expect(photo).toHaveClass("object-top");
+  });
+
   test("renders nothing when there are no alumni yet", () => {
     mockedUseAlumni.mockReturnValue({
       alumni: [],
