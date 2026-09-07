@@ -1,5 +1,5 @@
 import React from "react";
-import type { Project } from "../../data/projectsData";
+import type { MemberProject as Project } from "../../api/member/project.api";
 
 interface ProjectCardProps extends Project {
   variant?: "default" | "featured";
