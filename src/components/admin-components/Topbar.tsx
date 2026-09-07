@@ -1,11 +1,11 @@
-import { Search, Sun, Moon, Bell, User, Settings } from "lucide-react";
+import { Search, Sun, Moon, User, Settings } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserFullName } from "../../types/user.types";
+import NotificationBell from "../notifications/NotificationBell";
 
 export default function Topbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -76,55 +76,7 @@ export default function Topbar() {
           </button>
 
           {/* Notifications */}
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="
-                relative p-2.5 rounded-lg
-                bg-white border border-mist-300
-                text-navy-700
-                transition-all duration-200
-                hover:bg-navy-800 hover:border-navy-800 hover:text-white
-                active:scale-95
-              "
-              aria-label="Notifications"
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-navy-600 rounded-full border-2 border-white animate-pulse" />
-            </button>
-
-            {/* Notifications Dropdown */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-mist-300 overflow-hidden">
-                <div className="px-4 py-3 border-b border-mist-200">
-                  <h3 className="font-semibold text-navy-800">Notifications</h3>
-                  <p className="text-xs text-mist-600 mt-0.5">
-                    You have 3 unread notifications
-                  </p>
-                </div>
-                <div className="max-h-96 overflow-y-auto">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="px-4 py-3 hover:bg-mist-100 border-b border-mist-200 cursor-pointer transition-colors"
-                    >
-                      <p className="text-sm text-navy-800 font-medium">
-                        New hire request received
-                      </p>
-                      <p className="text-xs text-mist-500 mt-1">
-                        2 minutes ago
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-4 py-3 text-center border-t border-mist-200">
-                  <button className="text-sm text-navy-700 hover:text-navy-800 font-medium">
-                    View all notifications
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          <NotificationBell />
 
           {/* Settings */}
           <button
