@@ -1,13 +1,14 @@
 const HubInfo = () => {
   return (
     <div>
-      {/* Yellow Header Bar */}
-      <div className="bg-yellow-400 h-20 w-full flex items-center px-6"></div>
+      {/* Header bar - navy, matching the site's brand color everywhere else
+          (this used to be an off-brand yellow bar). */}
+      <div className="bg-[#002B56] h-20 w-full flex items-center px-6"></div>
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto p-14">
         <h1 className="text-4xl font-bold text-center mb-12 text-gray-800 py-12">
-          NPCInnovationHub information
+          NPC INNOVATION HUB information
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

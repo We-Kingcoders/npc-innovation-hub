@@ -3,7 +3,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "../components/button/Footer";
-import Header from "../components/Header";
+import Navbar from "../components/Navbar";
 import LoginPage from "../pages/Login/LoginPage";
 import HubMembersSection from "../pages/landing/HubMembersSection";
 import Skills from "../pages/landing/Skills";
@@ -89,6 +89,7 @@ const AllRoutes: React.FC = () => {
         path="/"
         element={
           <>
+            <Navbar />
             <HeroSection />
             <HubMembersSection />
             <Expertise />
@@ -105,6 +106,7 @@ const AllRoutes: React.FC = () => {
         path="/hire-us"
         element={
           <>
+            <Navbar />
             <InnovationHub />
             <Services />
             <Partners />
@@ -127,7 +129,7 @@ const AllRoutes: React.FC = () => {
         element={
           <PublicRoute>
             <>
-              <Header />
+              <Navbar />
               <SignUpPage />
             </>
           </PublicRoute>
@@ -146,6 +148,7 @@ const AllRoutes: React.FC = () => {
         path="/projects"
         element={
           <>
+            <Navbar />
             <ProjectsPage />
             <Footer />
           </>
@@ -155,6 +158,7 @@ const AllRoutes: React.FC = () => {
         path="/members"
         element={
           <>
+            <Navbar />
             <InnovationHubMembersPage />
             <Footer />
           </>
@@ -164,6 +168,7 @@ const AllRoutes: React.FC = () => {
         path="/members/:id"
         element={
           <>
+            <Navbar />
             <MemberDetailPage />
             <Footer />
           </>
@@ -173,6 +178,7 @@ const AllRoutes: React.FC = () => {
         path="/apply"
         element={
           <>
+            <Navbar />
             <ApplyPage />
             <Footer />
           </>
@@ -184,7 +190,7 @@ const AllRoutes: React.FC = () => {
         path="/blog"
         element={
           <>
-            <Header />
+            <Navbar />
             <BlogDesign />
             <Footer />
           </>
@@ -194,7 +200,7 @@ const AllRoutes: React.FC = () => {
         path="/blogs"
         element={
           <>
-            <Header />
+            <Navbar />
             <BlogDesign />
             <Footer />
           </>
@@ -204,7 +210,7 @@ const AllRoutes: React.FC = () => {
         path="/blogs/:id"
         element={
           <>
-            <Header />
+            <Navbar />
             <BlogDetails />
             <Footer />
           </>
@@ -215,7 +221,7 @@ const AllRoutes: React.FC = () => {
         path="/Hub-information"
         element={
           <>
-            <Header />
+            <Navbar />
             <MissionSection />
             <WhyHub />
             <FAQs />
@@ -228,6 +234,7 @@ const AllRoutes: React.FC = () => {
         path="/resources-room"
         element={
           <>
+            <Navbar />
             <Home />
             <Footer />
           </>
@@ -237,6 +244,7 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/categories"
         element={
           <>
+            <Navbar />
             <Categories />
             <Footer />
           </>
@@ -246,6 +254,7 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/categories/:subcategory"
         element={
           <>
+            <Navbar />
             <SubcategoryResults />
             <Footer />
           </>
@@ -255,6 +264,7 @@ const AllRoutes: React.FC = () => {
         path="/resources-room/all-resources"
         element={
           <>
+            <Navbar />
             <AllResources />
             <Footer />
           </>
@@ -264,7 +274,7 @@ const AllRoutes: React.FC = () => {
         path="/chatcard"
         element={
           <>
-            <Header />
+            <Navbar />
             <ChatCard />
           </>
         }
