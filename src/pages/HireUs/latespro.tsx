@@ -11,7 +11,7 @@ function LatestPro() {
           <div className="relative w-full h-[400px] rounded-xl shadow-lg overflow-hidden border border-blue-400">
             {/* Background Image */}
             <img
-              src="/public/assets/images/hero.png"
+              src="/assets/images/hero.png"
               alt="Work Image 1"
               className="absolute w-full h-full object-cover"
             />
@@ -37,7 +37,7 @@ function LatestPro() {
                 {/* Profile section */}
                 <div className="flex items-center">
                   <img
-                    src="/public/assets/images/hero.png"
+                    src="/assets/images/hero.png"
                     alt="Event Manager"
                     className="w-8 h-8 rounded-full border-2 border-white mr-2"
                   />
@@ -56,7 +56,7 @@ function LatestPro() {
           <div className="relative w-full h-[400px] rounded-xl shadow-lg overflow-hidden border border-blue-400">
             {/* Background Image */}
             <img
-              src="/public/assets/images/hero.png"
+              src="/assets/images/hero.png"
               alt="Work Image 1"
               className="absolute w-full h-full object-cover"
             />
@@ -82,7 +82,7 @@ function LatestPro() {
                 {/* Profile section */}
                 <div className="flex items-center">
                   <img
-                    src="/public/assets/images/hero.png"
+                    src="/assets/images/hero.png"
                     alt="Event Manager"
                     className="w-8 h-8 rounded-full border-2 border-white mr-2"
                   />
@@ -101,7 +101,7 @@ function LatestPro() {
           <div className="relative w-full h-[400px] rounded-xl shadow-lg overflow-hidden border border-blue-400">
             {/* Background Image */}
             <img
-              src="/public/assets/images/hero.png"
+              src="/assets/images/hero.png"
               alt="Work Image 1"
               className="absolute w-full h-full object-cover"
             />
@@ -127,7 +127,7 @@ function LatestPro() {
                 {/* Profile section */}
                 <div className="flex items-center">
                   <img
-                    src="/public/assets/images/hero.png"
+                    src="/assets/images/hero.png"
                     alt="Event Manager"
                     className="w-8 h-8 rounded-full border-2 border-white mr-2"
                   />
@@ -146,7 +146,7 @@ function LatestPro() {
           <div className="relative w-full h-[400px] rounded-xl shadow-lg overflow-hidden border border-blue-400">
             {/* Background Image */}
             <img
-              src="../public/assets/images/hero.png"
+              src="/assets/images/hero.png"
               alt="Work Image 1"
               className="absolute w-full h-full object-cover"
             />
@@ -172,7 +172,7 @@ function LatestPro() {
                 {/* Profile section */}
                 <div className="flex items-center">
                   <img
-                    src="/public/assets/images/hero.png"
+                    src="/assets/images/hero.png"
                     alt="Event Manager"
                     className="w-8 h-8 rounded-full border-2 border-white mr-2"
                   />

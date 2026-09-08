@@ -1,16 +1,20 @@
 import { useRef, useEffect, useState } from "react";
 import ProjectCard from "../../components/projects/ProjectCard";
 import ProjectHero from "../../components/projects/ProjectHero";
-import {
-  projects,
-  featuredProject,
-  allProjects,
-} from "../../data/projectsData";
 import ProjectsHighlightSection from "../../components/projects/ProjectsHighlightSection";
+import {
+  getAllProjects,
+  type MemberProject,
+} from "../../api/member/project.api";
 
 const ProjectsPage = () => {
   const projectsRef = useRef<HTMLDivElement | null>(null);
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+
+  const [allProjects, setAllProjects] = useState<MemberProject[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const scrollToProjects = () => {
     if (projectsRef.current) {
@@ -18,10 +22,35 @@ const ProjectsPage = () => {
     }
   };
 
+  const loadProjects = () => {
+    setLoading(true);
+    setError(null);
+    getAllProjects()
+      .then((res) => {
+        setAllProjects(res.data.projects);
+        setTotalCount(res.totalItems ?? res.data.projects.length);
+      })
+      .catch(() => {
+        setError("Couldn't load projects right now. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
   // Remove duplicates by creating a Set of unique project IDs
   const uniqueProjects = Array.from(
     new Map(allProjects.map((proj) => [proj.id, proj])).values(),
   );
+
+  // Most recently created project stands in as the showcase "Featured Project"
+  const featuredProject = [...allProjects].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )[0];
+
+  const topProjects = allProjects.slice(0, 2);
 
   // Scroll-triggered animations observer for All Projects section
   useEffect(() => {
@@ -101,18 +130,116 @@ const ProjectsPage = () => {
             </p>
           </div>
 
-          {/* Top Featured Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-16 sm:mb-20 lg:mb-24">
-            {projects.slice(0, 2).map((proj, index) => (
-              <div
-                key={proj.id}
-                className="group relative bg-white rounded-2xl lg:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2"
+          {/* Loading state */}
+          {loading && (
+            <div className="flex flex-col items-center justify-center py-24 text-gray-400">
+              <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4" />
+              <p className="text-sm">Loading projects…</p>
+            </div>
+          )}
+
+          {/* Error state */}
+          {!loading && error && (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <p className="text-red-500 font-medium mb-4">{error}</p>
+              <button
+                onClick={loadProjects}
+                className="px-6 py-2 rounded-full border border-blue-300 text-blue-600 hover:bg-blue-50 transition text-sm font-medium"
               >
-                {/* Decorative Corner Icon */}
-                <div className="absolute top-4 right-4 z-10 group-hover:scale-110 transition-transform duration-300">
-                  {index === 0 ? (
+                Try again
+              </button>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!loading && !error && allProjects.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <p className="text-gray-500 font-medium">
+                No projects to show yet.
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                Check back soon — our members are building.
+              </p>
+            </div>
+          )}
+
+          {!loading && !error && allProjects.length > 0 && (
+            <>
+              {/* Top Featured Projects Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-16 sm:mb-20 lg:mb-24">
+                {topProjects.map((proj, index) => (
+                  <div
+                    key={proj.id}
+                    className="group relative bg-white rounded-2xl lg:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2"
+                  >
+                    {/* Decorative Corner Icon */}
+                    <div className="absolute top-4 right-4 z-10 group-hover:scale-110 transition-transform duration-300">
+                      {index === 0 ? (
+                        <svg
+                          className="w-8 h-8 text-blue-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-8 h-8 text-cyan-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                      )}
+                    </div>
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-cyan-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="relative p-6 sm:p-8">
+                      <ProjectCard {...proj} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Featured Project Section */}
+              <div className="text-center mb-16 sm:mb-20 lg:mb-24">
+                <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full">
+                  <svg
+                    className="w-8 h-8 text-amber-500 mx-auto"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#00A0E3] bg-clip-text text-transparent mb-4 sm:mb-6">
+                  Featured Project
+                </h2>
+                <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed mb-10 sm:mb-12 px-4">
+                  Explore our most impactful and innovative work. This project
+                  showcases our commitment to quality, creativity, and
+                  real-world results.
+                </p>
+
+                <div className="relative group max-w-5xl mx-auto">
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-6 -left-6 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
                     <svg
-                      className="w-8 h-8 text-blue-500"
+                      className="w-16 h-16 text-blue-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -121,99 +248,39 @@ const ProjectsPage = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                  ) : (
+                  </div>
+                  <div className="absolute -bottom-6 -right-6 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
                     <svg
-                      className="w-8 h-8 text-cyan-500"
-                      fill="none"
-                      stroke="currentColor"
+                      className="w-16 h-16 text-amber-500"
+                      fill="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
-                  )}
-                </div>
+                  </div>
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-cyan-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <div className="relative p-6 sm:p-8">
-                  <ProjectCard {...proj} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Featured Project Section */}
-          <div className="text-center mb-16 sm:mb-20 lg:mb-24">
-            <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full">
-              <svg
-                className="w-8 h-8 text-amber-500 mx-auto"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#00A0E3] bg-clip-text text-transparent mb-4 sm:mb-6">
-              Featured Project
-            </h2>
-            <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed mb-10 sm:mb-12 px-4">
-              Explore our most impactful and innovative work. This project
-              showcases our commitment to quality, creativity, and real-world
-              results.
-            </p>
-
-            <div className="relative group max-w-5xl mx-auto">
-              {/* Decorative Elements */}
-              <div className="absolute -top-6 -left-6 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
-                <svg
-                  className="w-16 h-16 text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="absolute -bottom-6 -right-6 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
-                <svg
-                  className="w-16 h-16 text-amber-500"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-              </div>
-
-              <div className="relative bg-white rounded-2xl lg:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-blue-100 hover:border-blue-300 transform hover:-translate-y-1">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative p-6 sm:p-8 lg:p-10">
-                  <ProjectCard {...featuredProject} variant="featured" />
+                  <div className="relative bg-white rounded-2xl lg:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-blue-100 hover:border-blue-300 transform hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative p-6 sm:p-8 lg:p-10">
+                      <ProjectCard {...featuredProject} variant="featured" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* 30+ Projects Highlight Section */}
-          <div className="mb-16 sm:mb-20 lg:mb-24">
-            <ProjectsHighlightSection
-              projects={projects}
-              onExploreAll={scrollToProjects}
-            />
-          </div>
+              {/* Projects Highlight Section */}
+              <div className="mb-16 sm:mb-20 lg:mb-24">
+                <ProjectsHighlightSection
+                  projects={allProjects}
+                  totalCount={totalCount}
+                  onExploreAll={scrollToProjects}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -380,28 +447,88 @@ const ProjectsPage = () => {
           </div>
 
           {/* Projects Gallery - Asymmetric Grid with Glass Cards */}
-          <div className="space-y-12">
-            {(() => {
-              const rowPattern = [2, 3, 3, 2];
-              const chunked = [];
-              let i = 0;
-              let patternIndex = 0;
+          {loading && (
+            <div className="flex justify-center py-16 text-gray-400">
+              <div className="w-8 h-8 border-4 border-gray-700 border-t-cyan-400 rounded-full animate-spin" />
+            </div>
+          )}
+          {!loading && !error && uniqueProjects.length === 0 && (
+            <p className="text-center text-gray-400 py-16">
+              No projects to show yet.
+            </p>
+          )}
+          {!loading && uniqueProjects.length > 0 && (
+            <div className="space-y-12">
+              {(() => {
+                const rowPattern = [2, 3, 3, 2];
+                const chunked = [];
+                let i = 0;
+                let patternIndex = 0;
 
-              while (i < uniqueProjects.length) {
-                const size = rowPattern[patternIndex % rowPattern.length];
-                chunked.push(uniqueProjects.slice(i, i + size));
-                i += size;
-                patternIndex++;
-              }
+                while (i < uniqueProjects.length) {
+                  const size = rowPattern[patternIndex % rowPattern.length];
+                  chunked.push(uniqueProjects.slice(i, i + size));
+                  i += size;
+                  patternIndex++;
+                }
 
-              return chunked.map((row, rowIndex) => {
-                const baseIndex = 200 + rowIndex * 10;
+                return chunked.map((row, rowIndex) => {
+                  const baseIndex = 200 + rowIndex * 10;
 
-                if (row.length === 2) {
+                  if (row.length === 2) {
+                    return (
+                      <div
+                        key={rowIndex}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto"
+                      >
+                        {row.map((proj, idx) => (
+                          <div
+                            key={proj.id}
+                            data-index={baseIndex + idx}
+                            className="animate-on-scroll opacity-0"
+                            style={{
+                              transitionDelay: `${idx * 150}ms`,
+                              opacity: visibleCards.has(baseIndex + idx)
+                                ? 1
+                                : 0,
+                              transform: visibleCards.has(baseIndex + idx)
+                                ? "translateY(0) scale(1)"
+                                : "translateY(2rem) scale(0.95)",
+                              transition:
+                                "all 0.7s cubic-bezier(0.4, 0, 0.2, 1)",
+                            }}
+                          >
+                            <div className="group relative h-full">
+                              {/* Neon glow on hover */}
+                              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-500" />
+
+                              {/* Glass card with pressed effect */}
+                              <div className="relative h-full bg-gray-800/30 backdrop-blur-2xl border border-gray-700/50 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 active:translate-y-0">
+                                {/* Subtle inner shadow for depth */}
+                                <div className="absolute inset-0 rounded-3xl shadow-inner opacity-50" />
+
+                                {/* Raised effect background */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-gray-700/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                <div className="relative">
+                                  <ProjectCard {...proj} />
+                                </div>
+
+                                {/* Micro-interaction indicator */}
+                                <div className="absolute top-6 right-6 w-3 h-3 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+
+                  // 3-column layout
                   return (
                     <div
                       key={rowIndex}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto"
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
                     >
                       {row.map((proj, idx) => (
                         <div
@@ -418,15 +545,22 @@ const ProjectsPage = () => {
                           }}
                         >
                           <div className="group relative h-full">
-                            {/* Neon glow on hover */}
-                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-500" />
+                            {/* Colored glow variations */}
+                            <div
+                              className={`absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-500 ${
+                                idx % 3 === 0
+                                  ? "bg-gradient-to-r from-cyan-500 to-blue-500"
+                                  : idx % 3 === 1
+                                    ? "bg-gradient-to-r from-purple-500 to-pink-500"
+                                    : "bg-gradient-to-r from-blue-500 to-purple-500"
+                              }`}
+                            />
 
-                            {/* Glass card with pressed effect */}
-                            <div className="relative h-full bg-gray-800/30 backdrop-blur-2xl border border-gray-700/50 rounded-3xl p-8 sm:p-10 shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 active:translate-y-0">
-                              {/* Subtle inner shadow for depth */}
+                            {/* Glass card */}
+                            <div className="relative h-full bg-gray-800/30 backdrop-blur-2xl border border-gray-700/50 rounded-3xl p-8 shadow-xl hover:shadow-2xl hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 active:translate-y-0">
                               <div className="absolute inset-0 rounded-3xl shadow-inner opacity-50" />
 
-                              {/* Raised effect background */}
+                              {/* Raised effect */}
                               <div className="absolute inset-0 bg-gradient-to-br from-gray-700/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                               <div className="relative">
@@ -434,69 +568,17 @@ const ProjectsPage = () => {
                               </div>
 
                               {/* Micro-interaction indicator */}
-                              <div className="absolute top-6 right-6 w-3 h-3 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+                              <div className="absolute top-6 right-6 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   );
-                }
-
-                // 3-column layout
-                return (
-                  <div
-                    key={rowIndex}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-                  >
-                    {row.map((proj, idx) => (
-                      <div
-                        key={proj.id}
-                        data-index={baseIndex + idx}
-                        className="animate-on-scroll opacity-0"
-                        style={{
-                          transitionDelay: `${idx * 150}ms`,
-                          opacity: visibleCards.has(baseIndex + idx) ? 1 : 0,
-                          transform: visibleCards.has(baseIndex + idx)
-                            ? "translateY(0) scale(1)"
-                            : "translateY(2rem) scale(0.95)",
-                          transition: "all 0.7s cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
-                      >
-                        <div className="group relative h-full">
-                          {/* Colored glow variations */}
-                          <div
-                            className={`absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-500 ${
-                              idx % 3 === 0
-                                ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                                : idx % 3 === 1
-                                  ? "bg-gradient-to-r from-purple-500 to-pink-500"
-                                  : "bg-gradient-to-r from-blue-500 to-purple-500"
-                            }`}
-                          />
-
-                          {/* Glass card */}
-                          <div className="relative h-full bg-gray-800/30 backdrop-blur-2xl border border-gray-700/50 rounded-3xl p-8 shadow-xl hover:shadow-2xl hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 active:translate-y-0">
-                            <div className="absolute inset-0 rounded-3xl shadow-inner opacity-50" />
-
-                            {/* Raised effect */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-gray-700/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                            <div className="relative">
-                              <ProjectCard {...proj} />
-                            </div>
-
-                            {/* Micro-interaction indicator */}
-                            <div className="absolute top-6 right-6 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              });
-            })()}
-          </div>
+                });
+              })()}
+            </div>
+          )}
 
           {/* Bottom CTA Section - Dark Theme */}
           <div className="text-center py-24 mt-24">

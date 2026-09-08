@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import type { Project } from "../../data/projectsData";
+import type { MemberProject as Project } from "../../api/member/project.api";
 
 interface ProjectsHighlightSectionProps {
   projects: Project[];
+  totalCount?: number;
   onExploreAll?: () => void;
 }
 
@@ -15,6 +16,7 @@ const DOTS_HEIGHT = CARD1_HEIGHT - CARD2_HEIGHT;
 
 const ProjectsHighlightSection: React.FC<ProjectsHighlightSectionProps> = ({
   projects,
+  totalCount,
   onExploreAll,
 }) => {
   const [index, setIndex] = useState(0);
@@ -92,13 +94,13 @@ const ProjectsHighlightSection: React.FC<ProjectsHighlightSectionProps> = ({
         {/* Text section */}
         <div className="w-full max-w-[260px] flex flex-col items-center md:items-start">
           <h3 className="text-gray-200 text-[28px] font-semibold mb-2 text-center md:text-left leading-tight">
-            30+ Projects have been created
+            {totalCount ?? projects.length}+ Projects have been created
           </h3>
           <p className="text-gray-300 text-md mt-8 text-center md:text-left leading-snug">
-            Our portfolio includes over 30 full-stack projects, showcasing
-            robust frontend interfaces backed by powerful and scalable backend
-            systems. Each project demonstrates our ability to build complete,
-            responsive, and user-centric digital solutions from the ground up.
+            Our portfolio showcases robust frontend interfaces backed by
+            powerful and scalable backend systems. Each project demonstrates our
+            ability to build complete, responsive, and user-centric digital
+            solutions from the ground up.
           </p>
 
           <button

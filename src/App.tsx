@@ -6,6 +6,7 @@
  */
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { SocketProvider } from "./contexts/SocketContext";
 import AllRoutes from "./Routes/AllRoutes";
 import "./index.css";
 
@@ -13,7 +14,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AllRoutes />
+        <SocketProvider>
+          <AllRoutes />
+        </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
   );

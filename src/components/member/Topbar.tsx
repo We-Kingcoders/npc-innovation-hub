@@ -1,5 +1,6 @@
 import React from "react";
-import { Bell, Mail, UserCircle, Search } from "lucide-react";
+import { Mail, UserCircle, Search } from "lucide-react";
+import NotificationBell from "../notifications/NotificationBell";
 
 export const Topbar: React.FC = () => {
   return (
@@ -17,7 +18,8 @@ export const Topbar: React.FC = () => {
 
       {/* Icons Section */}
       <div className="flex gap-3 items-center">
-        {[Bell, Mail, UserCircle].map((Icon, i) => (
+        <NotificationBell />
+        {[Mail, UserCircle].map((Icon, i) => (
           <button
             key={i}
             className="w-10 h-10 rounded-xl bg-white border border-mist-300 text-navy-700

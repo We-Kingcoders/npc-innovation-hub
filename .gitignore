@@ -4,6 +4,26 @@
 ### dotenv ###
 .env*
 .env
+!.env.example
+
+### Security: credentials, keys, certs ###
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.der
+*serviceAccountKey*.json
+*firebase-adminsdk*.json
+*credentials*.json
+.aws/
+.ssh/
+
+### Build output ###
+dist/
+dist-ssr/
+build/
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:

@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
               {/* Left side - Image */}
               <div className="md:w-1/2 overflow-hidden">
                 <img
-                  src="/public/assets/images/hero.png"
+                  src="/assets/images/hero.png"
                   alt="Person with glasses"
                   className="w-full h-full object-cover"
                 />
