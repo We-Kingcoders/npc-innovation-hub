@@ -146,8 +146,8 @@ const MemberForm: React.FC = () => {
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
   const [twitter, setTwitter] = useState("");
-  const [telegram, setTelegram] = useState("");
   const [instagram, setInstagram] = useState("");
+  const [portfolio, setPortfolio] = useState("");
 
   // Skills
   const [skills, setSkills] = useState<SkillDetail[]>([]);
@@ -199,8 +199,8 @@ const MemberForm: React.FC = () => {
         setLinkedin(member.contacts.linkedin ?? "");
         setGithub(member.contacts.github ?? "");
         setTwitter(member.contacts.twitter ?? "");
-        setTelegram(member.contacts.telegram ?? "");
         setInstagram(member.contacts.instagram ?? "");
+        setPortfolio(member.contacts.portfolio ?? "");
       }
       // Skills
       if (member.skillDetails?.length) {
@@ -267,8 +267,8 @@ const MemberForm: React.FC = () => {
       linkedin,
       github,
       twitter,
-      telegram,
       instagram,
+      portfolio,
     });
   };
 
@@ -566,20 +566,20 @@ const MemberForm: React.FC = () => {
                   onChange={(e) => setTwitter(e.target.value)}
                 />
                 <Input
-                  label="Telegram"
-                  accent="green"
-                  type="url"
-                  placeholder="https://t.me/username"
-                  value={telegram}
-                  onChange={(e) => setTelegram(e.target.value)}
-                />
-                <Input
                   label="Instagram"
                   accent="green"
                   type="url"
                   placeholder="https://instagram.com/username"
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value)}
+                />
+                <Input
+                  label="Portfolio"
+                  accent="green"
+                  type="url"
+                  placeholder="https://yourportfolio.com"
+                  value={portfolio}
+                  onChange={(e) => setPortfolio(e.target.value)}
                 />
               </div>
               <button

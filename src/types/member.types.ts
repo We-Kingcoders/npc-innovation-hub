@@ -40,11 +40,15 @@ export interface Education {
   status?: string;
 }
 
+// `telegram` was retired in favor of `instagram` on the backend (see
+// toPublicContacts in member.controller.ts) - it's permanently stripped from
+// every API response now, so it's deliberately not a field here. Adding it
+// back would silently resurrect the exact bug this type once had: a value a
+// member enters just vanishes on next load since the API never returns it.
 export interface Contacts {
   linkedin?: string;
   github?: string;
   twitter?: string;
-  telegram?: string;
   instagram?: string;
   portfolio?: string;
 }
@@ -95,8 +99,8 @@ export interface ContactsPayload {
   linkedin?: string;
   github?: string;
   twitter?: string;
-  telegram?: string;
   instagram?: string;
+  portfolio?: string;
 }
 
 export interface EducationPayload {
