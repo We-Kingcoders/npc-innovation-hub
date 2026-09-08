@@ -11,6 +11,7 @@ import {
   markAllNotificationsAsRead,
   deleteNotification as apiDeleteNotification,
 } from "../api/member/notification.api";
+import { useSocket } from "../contexts/SocketContext";
 
 const POLL_INTERVAL_MS = 45_000;
 
@@ -26,6 +27,7 @@ interface UseNotificationsReturn {
 }
 
 export function useNotifications(): UseNotificationsReturn {
+  const { socket } = useSocket();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -72,6 +74,36 @@ export function useNotifications(): UseNotificationsReturn {
     }, POLL_INTERVAL_MS);
     return () => clearInterval(interval);
   }, [fetchNotifications, refreshUnreadCount]);
+
+  // Live push: the backend emits these over the shared socket (see
+  // socketio.ts). Polling above stays as a fallback for when the socket
+  // is briefly disconnected, so this is additive, not a replacement.
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNew = (notification: AppNotification) => {
+      setNotifications((prev) => {
+        if (prev.some((n) => n.id === notification.id)) return prev;
+        return [notification, ...prev];
+      });
+      if (!notification.isRead) {
+        setUnreadCount((prev) => prev + 1);
+      }
+    };
+
+    const handleUpdate = (updated: AppNotification[]) => {
+      setNotifications(updated);
+      setUnreadCount(updated.filter((n) => !n.isRead).length);
+    };
+
+    socket.on("new_notification", handleNew);
+    socket.on("notifications_update", handleUpdate);
+
+    return () => {
+      socket.off("new_notification", handleNew);
+      socket.off("notifications_update", handleUpdate);
+    };
+  }, [socket]);
 
   const markAsRead = async (id: string) => {
     const target = notifications.find((n) => n.id === id);
