@@ -13,12 +13,7 @@ import { DeleteConfirmModal } from "./DeleteConfirmModal";
 import { Toast, useToast } from "./Toast";
 import type { InquiryStatus } from "../../types/hire.types";
 
-const STATUS_OPTIONS: InquiryStatus[] = [
-  "Pending",
-  "Reviewed",
-  "Contacted",
-  "Rejected",
-];
+const STATUS_OPTIONS: InquiryStatus[] = ["Pending", "Contacted", "Closed"];
 
 export default function HireRequestDetail() {
   const { id } = useParams<{ id: string }>();
@@ -43,10 +38,8 @@ export default function HireRequestDetail() {
     switch (status) {
       case "Contacted":
         return "bg-green-100 text-green-800 border-green-200";
-      case "Reviewed":
-        return "bg-navy-100 text-navy-800 border-navy-200";
-      case "Rejected":
-        return "bg-red-100 text-red-800 border-red-200";
+      case "Closed":
+        return "bg-mist-200 text-navy-800 border-mist-300";
       default:
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
     }

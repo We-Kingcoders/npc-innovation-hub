@@ -6,10 +6,13 @@ export const sidebarLinks = [
     notification: 0,
   },
   {
+    // notification count for this entry is filled in at render time by
+    // Sidebar.tsx from the real pending-inquiries count (see HIRE_REQUESTS_LABEL
+    // below) - the static 0 here is just the fallback before that loads.
     icon: "notification",
     label: "Hire Us Requests",
     path: "/hire-requests",
-    notification: 6,
+    notification: 0,
   },
   {
     icon: "applications", // ← new
@@ -21,13 +24,13 @@ export const sidebarLinks = [
     icon: "resources",
     label: "Resources",
     path: "/resources",
-    notification: 5,
+    notification: 0,
   },
   {
     icon: "projects",
     label: "Projects",
     path: "/Admin-projects",
-    notification: 30,
+    notification: 0,
   },
   {
     icon: "blog",

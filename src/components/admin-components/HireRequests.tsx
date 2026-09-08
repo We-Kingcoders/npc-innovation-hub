@@ -33,7 +33,7 @@ export default function HireRequests() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "Pending" | "Reviewed" | "Contacted" | "Rejected"
+    "all" | "Pending" | "Contacted" | "Closed"
   >("all");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
@@ -90,10 +90,8 @@ export default function HireRequests() {
     switch (status) {
       case "Contacted":
         return "bg-green-100 text-green-800";
-      case "Reviewed":
-        return "bg-navy-100 text-navy-800";
-      case "Rejected":
-        return "bg-red-100 text-red-800";
+      case "Closed":
+        return "bg-mist-200 text-navy-800";
       default:
         return "bg-yellow-100 text-yellow-800";
     }
@@ -181,9 +179,8 @@ export default function HireRequests() {
         >
           <option value="all">All Status</option>
           <option value="Pending">Pending</option>
-          <option value="Reviewed">Reviewed</option>
           <option value="Contacted">Contacted</option>
-          <option value="Rejected">Rejected</option>
+          <option value="Closed">Closed</option>
         </select>
       </div>
 

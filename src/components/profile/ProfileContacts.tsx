@@ -15,8 +15,12 @@ const CONTACT_META: Record<
   linkedin: { label: "LinkedIn", color: "text-blue-700", bg: "bg-blue-50" },
   github: { label: "GitHub", color: "text-gray-800", bg: "bg-gray-100" },
   twitter: { label: "Twitter/X", color: "text-sky-600", bg: "bg-sky-50" },
-  telegram: { label: "Telegram", color: "text-blue-500", bg: "bg-blue-50" },
   instagram: { label: "Instagram", color: "text-pink-600", bg: "bg-pink-50" },
+  portfolio: {
+    label: "Portfolio",
+    color: "text-indigo-600",
+    bg: "bg-indigo-50",
+  },
 };
 
 const ProfileContacts: React.FC<ProfileContactsProps> = ({ member }) => {

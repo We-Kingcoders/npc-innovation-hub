@@ -21,10 +21,17 @@ const HIRE_ROUTES = {
 };
 
 /**
- * Get all hire inquiries
+ * Get all hire inquiries.
+ *
+ * The backend paginates (default limit: 10). The admin list view does its
+ * own client-side search/filter/pagination over whatever this returns, so
+ * we ask for a high limit here to make sure "all inquiries" actually means
+ * all of them rather than silently just the most recent 10.
  */
 export const getHireInquiries = async (): Promise<HireInquiriesResponse> => {
-  const response = await apiClient.get(HIRE_ROUTES.GET_ALL_INQUIRIES);
+  const response = await apiClient.get(HIRE_ROUTES.GET_ALL_INQUIRIES, {
+    params: { limit: 1000 },
+  });
   return response.data as HireInquiriesResponse;
 };
 
@@ -36,6 +43,19 @@ export const getHireInquiry = async (
 ): Promise<HireInquiryResponse> => {
   const response = await apiClient.get(HIRE_ROUTES.GET_INQUIRY_BY_ID(id));
   return response.data as HireInquiryResponse;
+};
+
+/**
+ * Get the count of hire inquiries still awaiting a response (status "Pending").
+ * Used for the admin sidebar's notification badge - asks the backend to filter
+ * and paginate down to nothing so this stays a cheap call.
+ */
+export const getPendingHireInquiriesCount = async (): Promise<number> => {
+  const response = await apiClient.get(HIRE_ROUTES.GET_ALL_INQUIRIES, {
+    params: { status: "Pending", limit: 1 },
+  });
+  const data = response.data as HireInquiriesResponse;
+  return data.data.pagination?.total ?? 0;
 };
 
 /**
