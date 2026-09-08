@@ -213,7 +213,7 @@
 //           <div className="hidden lg:block absolute left-[42vw] top-[5vw] z-20">
 //             <div className="rounded-[18px] overflow-hidden shadow-lg w-[798px] h-[650px]">
 //               <img
-//                 src="/public/assets/images/hero.png"
+//                 src="/assets/images/hero.png"
 //                 alt="Developer working on laptop"
 //                 className="w-full h-full object-cover"
 //                 draggable={false}

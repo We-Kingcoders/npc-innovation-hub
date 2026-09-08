@@ -285,7 +285,7 @@ const HubMembersSection: React.FC = () => {
     heroId: hm.id,
     name: hm.name,
     role: hm.role,
-    image: hm.imageUrl ?? "/public/assets/images/hero.png",
+    image: hm.imageUrl ?? "/assets/images/hero.png",
   }));
 
   const handleViewAllMembers = () => {
