@@ -106,10 +106,20 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      <aside className="w-64 ml-6 rounded-xl bg-navy-800 min-h-screen flex flex-col justify-between py-8 px-6 text-white shadow-lg">
-        <div>
+      <aside className="w-64 ml-6 rounded-xl bg-navy-800 h-screen lg:sticky lg:top-0 flex flex-col py-6 px-6 text-white shadow-lg">
+        {/* Brand - sized (not truncated) to stay fully visible on one line
+            within the sidebar's own width, no horizontal scroll needed. */}
+        <div className="pb-4 flex-shrink-0">
+          <span className="block text-sm font-extrabold tracking-tight text-white whitespace-nowrap">
+            NPC INNOVATION HUB
+          </span>
+        </div>
+
+        {/* Scrolls internally so a tall menu never pushes Logout off-screen
+            or forces the whole sidebar (rather than the page) to scroll. */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
           {/* Profile Section */}
-          <div className="flex flex-col items-center mb-10">
+          <div className="flex flex-col items-center mb-10 px-1">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
@@ -122,19 +132,19 @@ export const Sidebar: React.FC = () => {
               </div>
             )}
 
-            <span className="text-xl font-semibold text-center leading-tight">
+            <span className="text-xl font-bold uppercase text-center leading-tight truncate max-w-full">
               {shownName}
             </span>
 
             {(member?.role || user?.role) && (
-              <span className="text-xs text-navy-200 mt-1">
+              <span className="text-xs uppercase text-navy-200 mt-1 truncate max-w-full">
                 {member?.role || user?.role}
               </span>
             )}
           </div>
 
           {/* Menu label */}
-          <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-medium">
+          <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-bold">
             Menu
           </div>
 
@@ -146,9 +156,9 @@ export const Sidebar: React.FC = () => {
                 key={item.name}
                 end={item.link === "/dashboard"}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 ${
+                  `group flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 min-w-0 ${
                     isActive
-                      ? "bg-navy-700 font-medium shadow-md border-l-4 border-white"
+                      ? "bg-navy-700 shadow-md border-l-4 border-white"
                       : "text-navy-100 hover:bg-navy-700 hover:text-white"
                   }`
                 }
@@ -156,7 +166,7 @@ export const Sidebar: React.FC = () => {
                 {({ isActive }) => (
                   <>
                     <span
-                      className={`rounded-lg p-2 relative transition-colors duration-200 ${
+                      className={`flex-shrink-0 rounded-lg p-2 relative transition-colors duration-200 ${
                         isActive
                           ? "bg-white text-navy-800"
                           : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
@@ -164,12 +174,14 @@ export const Sidebar: React.FC = () => {
                     >
                       {item.icon}
                       {item.badge !== undefined && (
-                        <span className="absolute -top-2 -right-2 text-xs bg-white text-navy-800 ring-2 ring-navy-800 rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                        <span className="absolute -top-2 -right-2 text-xs bg-white text-navy-800 ring-2 ring-navy-800 rounded-full w-5 h-5 flex items-center justify-center font-bold">
                           {item.badge > 99 ? "99+" : item.badge}
                         </span>
                       )}
                     </span>
-                    <span className="flex-1">{item.name}</span>
+                    <span className="flex-1 min-w-0 truncate font-bold uppercase">
+                      {item.name}
+                    </span>
                   </>
                 )}
               </NavLink>
@@ -177,11 +189,11 @@ export const Sidebar: React.FC = () => {
           </nav>
         </div>
 
-        {/* Logout Button */}
+        {/* Logout Button - pinned below the scrollable region, always visible */}
         <button
           onClick={() => setShowLogoutConfirm(true)}
           disabled={isLoggingOut}
-          className="flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-medium text-navy-100 hover:text-navy-800 mt-10 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-shrink-0 flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-bold uppercase text-navy-100 hover:text-navy-800 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <LogOut size={20} />
           <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>

@@ -42,8 +42,9 @@ const BlogDesign: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Yellow accent bar */}
-      <div className="bg-yellow-400 h-20 w-full" />
+      {/* Header bar - navy, matching the site's brand color everywhere else
+          (this used to be an off-brand yellow bar). */}
+      <div className="bg-[#002B56] h-20 w-full" />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Header row */}

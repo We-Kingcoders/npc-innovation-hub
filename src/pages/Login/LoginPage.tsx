@@ -473,8 +473,8 @@ const LoginPage = () => {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="text-2xl font-bold text-gray-800">
-              NpcInnovationHub
+            <div className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+              NPC INNOVATION HUB
             </div>
 
             {/* Navigation Links */}

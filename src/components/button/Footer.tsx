@@ -116,7 +116,7 @@ const Footer: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white mb-24">
             {/* Left column */}
             <div>
-              <h4 className="text-xl font-bold mb-4">NpcInnovationHub</h4>
+              <h4 className="text-xl font-bold mb-4">NPC INNOVATION HUB</h4>
               <ul className="space-y-2">
                 <li>
                   <a href="#" className="hover:text-gray-300 transition-colors">
@@ -198,7 +198,7 @@ const Footer: React.FC = () => {
               Privacy
             </a>
             <div className="mb-2 md:mb-0">© Copyright {currentYear}</div>
-            <div>NpcInnovationHub</div>
+            <div className="font-bold">NPC INNOVATION HUB</div>
           </div>
         </div>
       </div>

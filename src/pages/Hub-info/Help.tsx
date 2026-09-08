@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import type { KeyboardEvent } from "react";
 import axios from "axios";
 
 // FastAPI endpoint URL hardcoded directly
@@ -95,7 +96,7 @@ const ChatDesign = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       sendMessage();
     }
@@ -114,8 +115,9 @@ const ChatDesign = () => {
 
       {/* Content container */}
       <div className="relative z-10 min-h-screen w-full flex flex-col items-center py-8">
-        {/* Yellow header bar */}
-        <div className="bg-yellow-400/80 h-20 w-full flex items-center px-6 mb-8"></div>
+        {/* Header bar - navy, matching the site's brand color everywhere else
+            (this used to be an off-brand yellow bar). */}
+        <div className="bg-[#002B56]/90 h-20 w-full flex items-center px-6 mb-8"></div>
 
         {/* Profile section with transparent background */}
         <div className="max-w-4xl mx-auto p-6 bg-white/0 rounded-3xl flex items-center space-x-8 mb-8 backdrop-blur-sm">
@@ -124,7 +126,9 @@ const ChatDesign = () => {
             src="/assets/images/hero.png"
             alt="Profile"
           />
-          <h2 className="text-4xl font-bold text-gray-800">NPCInnovationHub</h2>
+          <h2 className="text-4xl font-bold text-gray-800">
+            NPC INNOVATION HUB
+          </h2>
         </div>
 
         {/* Chat container */}
