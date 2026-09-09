@@ -28,17 +28,17 @@ const Footer: React.FC = () => {
         onClose={() => setIsJoinModalOpen(false)}
       />
 
-      {/* Main footer with angled background */}
+      {/* Flat navy background - a diagonal white wedge used to sit at the
+          top here, left over from when a stock-photo card overlapped this
+          edge (removed in fix/footer-cleanup-and-trusted-by). With that
+          card gone, the diagonal cut had no purpose left and read as a
+          rendering glitch; a plain flat edge also matches every other navy
+          section on the site (AboutIntro, AlumniPage, ContactUs, ...),
+          none of which use a diagonal. */}
       <div
         className="w-full pt-16 pb-12 relative"
         style={{ backgroundColor: "#002B56" }}
       >
-        {/* White angled overlay at the top */}
-        <div
-          className="absolute top-0 left-0 right-0 h-20 bg-white"
-          style={{ clipPath: "polygon(0 0, 100% 0, 100% 0%, 0% 100%)" }}
-        ></div>
-
         <div className="max-w-5xl mx-auto px-4">
           {/* Footer main content */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white mb-16">

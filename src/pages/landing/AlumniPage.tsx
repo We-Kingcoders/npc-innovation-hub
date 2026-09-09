@@ -22,8 +22,8 @@ const AlumniPage = () => {
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
           Our Alumni
         </h1>
-        <p className="text-white/70 max-w-2xl mx-auto text-lg">
-          Members who've moved from NPC Innovation Hub to continue building
+        <p className="text-white/70 text-xs sm:text-sm md:text-base lg:text-lg whitespace-nowrap">
+          Members who&apos;ve moved from NPC Innovation Hub to continue building
           great things.
         </p>
       </div>
