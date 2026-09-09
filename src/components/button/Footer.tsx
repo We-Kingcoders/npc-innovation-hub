@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    to="/"
+                    to="/#home"
                     className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
                     <HomeIcon
@@ -104,7 +104,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    to="/members"
+                    to="/#members"
                     className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
                     <Users
