@@ -8,6 +8,10 @@ jest.mock("../../api/client", () => ({
   default: { get: jest.fn() },
 }));
 
+jest.mock("react-router-dom", () => ({
+  useNavigate: () => jest.fn(),
+}));
+
 import { render, screen, waitFor } from "@testing-library/react";
 import apiClient from "../../api/client";
 import AlumniSection from "./AlumniSection";

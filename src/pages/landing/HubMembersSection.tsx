@@ -242,9 +242,10 @@ const MemberGrid: React.FC<MemberGridProps> = ({ members, onViewProfile }) => {
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
   return (
     <div className="text-center mb-12">
-      <h1 className="text-4xl md:text-5xl font-bold text-[#002b56] mb-4">
+      {/* h2, not h1 - HeroSection.tsx already owns this page's one <h1>. */}
+      <h2 className="text-4xl md:text-5xl font-bold text-[#002b56] mb-4">
         {title}
-      </h1>
+      </h2>
       <p className="text-xl font-medium text-[#002b56] max-w-4xl mx-auto">
         {subtitle}
       </p>
@@ -304,8 +305,8 @@ const HubMembersSection: React.FC = () => {
       <header className="pt-12 pb-6 px-4 md:px-8">
         <div className="container mx-auto pt-28 max-w-7xl">
           <Header
-            title="Hub Members Profile"
-            subtitle="Meet our talented tech professionals who are driving innovation and collaboration within our hub. Each member brings unique expertise and perspective to our community."
+            title="Our Team Members"
+            subtitle="Meet the student innovators building real projects and driving collaboration at NPC Innovation Hub. Each member brings hands-on skills and a genuine stake in our community."
           />
         </div>
       </header>
@@ -315,7 +316,7 @@ const HubMembersSection: React.FC = () => {
           HeroSection.tsx already owns that <main> landmark. Two <main>
           elements on one page is invalid HTML5 and leaves assistive tech
           unable to tell which one is actually "main". */}
-      <section aria-label="Hub Members Profile" className="py-8 px-4 md:px-8">
+      <section aria-label="Our Team Members" className="py-8 px-4 md:px-8">
         <div className="container mx-auto max-w-7xl">
           {loading ? (
             <SkeletonGrid />
