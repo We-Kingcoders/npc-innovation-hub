@@ -14,6 +14,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
+import { API_BASE_URL } from "../config/env";
 
 interface SocketContextValue {
   socket: Socket | null;
@@ -25,7 +26,7 @@ const SocketContext = createContext<SocketContextValue>({
   connected: false,
 });
 
-const SOCKET_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const SOCKET_URL = API_BASE_URL;
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

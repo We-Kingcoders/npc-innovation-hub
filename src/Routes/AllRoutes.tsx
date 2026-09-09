@@ -1,583 +1,679 @@
 // src/Routes/AllRoutes.tsx
+//
+// Every route element below is lazy-loaded (React.lazy + Suspense), so a
+// visitor only downloads the code for the page they're actually on instead
+// of the whole app - the entire admin dashboard (recharts included),
+// member dashboard, and every other page used to ship in one ~1.45MB/
+// 383KB-gzip bundle on the very first request, homepage included. Footer,
+// Navbar, and the two route guards stay eager: they render on (almost)
+// every route, so lazy-loading them would just add a loading flicker for
+// no bundle-size benefit.
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "../components/button/Footer";
 import Navbar from "../components/Navbar";
-import LoginPage from "../pages/Login/LoginPage";
-import HubMembersSection from "../pages/landing/HubMembersSection";
-import Skills from "../pages/landing/Skills";
-import TeamCaptain from "../pages/landing/TeamCaptain";
-import HeroSection from "../pages/landing/HeroSection";
-import Expertise from "../pages/landing/Expertise";
-import Mission from "../pages/landing/Mission";
-import HubIntroVideo from "../pages/landing/HubIntroVideo";
-import AlumniSection from "../pages/landing/AlumniSection";
-import SignUpPage from "../pages/Login/SignUp";
-import ProjectsPage from "../pages/project-page/ProjectsPage";
-import { InnovationHubMembersPage } from "../pages/all-member-page/InnovationHubMembersPage";
-import { MemberDetailPage } from "../pages/all-member-page/MemberDetailPage";
-import { ApplyPage } from "../pages/apply/ApplyPage";
-import LetTalk from "../pages/HireUs/form";
-import Partners from "../pages/HireUs/partners";
-import Services from "../pages/HireUs/services";
-import LatestPro from "../pages/HireUs/latespro";
-import InnovationHub from "../pages/HireUs/FirstSection";
-import BlogDesign from "../pages/AboutHub/Topics";
-import BlogDetails from "../pages/blog/BlogDetails";
-import MissionSection from "../pages/Hub-info/MissionSection";
-import WhyHub from "../pages/Hub-info/WhyHub";
-import FAQs from "../pages/Hub-info/FAQs";
-import SupportCard from "../pages/Hub-info/Support";
-import ChatCard from "../pages/Hub-info/Help";
+import { ProtectedRoute, PublicRoute } from "../components/ProtectedRoute";
+
+const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
+const HubMembersSection = lazy(
+  () => import("../pages/landing/HubMembersSection"),
+);
+const Skills = lazy(() => import("../pages/landing/Skills"));
+const TeamCaptain = lazy(() => import("../pages/landing/TeamCaptain"));
+const HeroSection = lazy(() => import("../pages/landing/HeroSection"));
+const Expertise = lazy(() => import("../pages/landing/Expertise"));
+const Mission = lazy(() => import("../pages/landing/Mission"));
+const HubIntroVideo = lazy(() => import("../pages/landing/HubIntroVideo"));
+const AlumniSection = lazy(() => import("../pages/landing/AlumniSection"));
+const SignUpPage = lazy(() => import("../pages/Login/SignUp"));
+const ProjectsPage = lazy(() => import("../pages/project-page/ProjectsPage"));
+const InnovationHubMembersPage = lazy(() =>
+  import("../pages/all-member-page/InnovationHubMembersPage").then((m) => ({
+    default: m.InnovationHubMembersPage,
+  })),
+);
+const MemberDetailPage = lazy(() =>
+  import("../pages/all-member-page/MemberDetailPage").then((m) => ({
+    default: m.MemberDetailPage,
+  })),
+);
+const ApplyPage = lazy(() =>
+  import("../pages/apply/ApplyPage").then((m) => ({ default: m.ApplyPage })),
+);
+const LetTalk = lazy(() => import("../pages/HireUs/form"));
+const Partners = lazy(() => import("../pages/HireUs/partners"));
+const Services = lazy(() => import("../pages/HireUs/services"));
+const LatestPro = lazy(() => import("../pages/HireUs/latespro"));
+const InnovationHub = lazy(() => import("../pages/HireUs/FirstSection"));
+const BlogDesign = lazy(() => import("../pages/AboutHub/Topics"));
+const BlogDetails = lazy(() => import("../pages/blog/BlogDetails"));
+const MissionSection = lazy(() => import("../pages/Hub-info/MissionSection"));
+const WhyHub = lazy(() => import("../pages/Hub-info/WhyHub"));
+const FAQs = lazy(() => import("../pages/Hub-info/FAQs"));
+const SupportCard = lazy(() => import("../pages/Hub-info/Support"));
+const ChatCard = lazy(() => import("../pages/Hub-info/Help"));
 
 // Resources Room
-import Home from "../pages/resources-room/Home";
-import Categories from "../pages/resources-room/Categories";
-import SubcategoryResults from "../pages/resources-room/SubcategoryResults";
-import AllResources from "../pages/resources-room/AllResources";
+const Home = lazy(() => import("../pages/resources-room/Home"));
+const Categories = lazy(() => import("../pages/resources-room/Categories"));
+const SubcategoryResults = lazy(
+  () => import("../pages/resources-room/SubcategoryResults"),
+);
+const AllResources = lazy(() => import("../pages/resources-room/AllResources"));
 
 // Member Dashboard
-import { DashboardLayout } from "../components/member/layouts/DashboardLayout";
-import { Dashboard } from "../pages/member-page/Dashboard";
-import { Resources } from "../pages/resources-page/Resources";
-import { Projects } from "../pages/projects-page/Projects";
-import AddProject from "../pages/add-project-page/AddProject";
-import { Events } from "../pages/events-page/Events";
-import { Messages } from "../pages/messages-page/Messages";
-import { HubChannel } from "../pages/messages-page/HubChannel";
-import MemberForm from "../components/member/MemberForm";
-import MyTasks from "../pages/tasks/MyTasks";
-import TaskDetails from "../pages/tasks/TaskDetails";
-import ProfilePage from "../pages/profile/ProfilePage";
+const DashboardLayout = lazy(() =>
+  import("../components/member/layouts/DashboardLayout").then((m) => ({
+    default: m.DashboardLayout,
+  })),
+);
+const Dashboard = lazy(() =>
+  import("../pages/member-page/Dashboard").then((m) => ({
+    default: m.Dashboard,
+  })),
+);
+const Resources = lazy(() =>
+  import("../pages/resources-page/Resources").then((m) => ({
+    default: m.Resources,
+  })),
+);
+const Projects = lazy(() =>
+  import("../pages/projects-page/Projects").then((m) => ({
+    default: m.Projects,
+  })),
+);
+const AddProject = lazy(() => import("../pages/add-project-page/AddProject"));
+const Events = lazy(() =>
+  import("../pages/events-page/Events").then((m) => ({
+    default: m.Events,
+  })),
+);
+const Messages = lazy(() =>
+  import("../pages/messages-page/Messages").then((m) => ({
+    default: m.Messages,
+  })),
+);
+const HubChannel = lazy(() =>
+  import("../pages/messages-page/HubChannel").then((m) => ({
+    default: m.HubChannel,
+  })),
+);
+const MemberForm = lazy(() => import("../components/member/MemberForm"));
+const MyTasks = lazy(() => import("../pages/tasks/MyTasks"));
+const TaskDetails = lazy(() => import("../pages/tasks/TaskDetails"));
+const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
 
 // Admin pages
-import AdminDashboard from "../pages/Admin-pages/AdminDashboard";
-import AdminResources from "../pages/Admin-pages/AdminResources";
-import HireUsRequests from "../pages/Admin-pages/HireUsRequests";
-import AddResource from "../pages/Admin-pages/AddResource";
-import MemberManagement from "../pages/Admin-pages/MemberManagement";
-import HeroMembersPage from "../pages/Admin-pages/HeroMembersPage";
-import HubVideoPage from "../pages/Admin-pages/HubVideoPage";
-import AlumniManagementPage from "../pages/Admin-pages/AlumniManagementPage";
-import BlogTables from "../pages/Admin-pages/BlogTables";
-import ProjectTables from "../pages/Admin-pages/ProjectTables";
-import OTPVerification from "../pages/Login/OTPVerification";
-import ForgotPassword from "../pages/Login/ForgotPassword";
-import HireRequestDetail from "../components/admin-components/HireRequestDetail";
-import ApplicationsPage from "../pages/Admin-pages/ApplicationsPage";
-import ApplicationDetail from "../components/admin-components/ApplicationDetail";
-import EventTables from "../pages/Admin-pages/EventTables";
-import TaskManagement from "../pages/Admin-pages/TaskManagement";
-import ViewProfile from "../pages/Admin-pages/Profile/ViewProfile";
-import ProfileSettings from "../pages/Admin-pages/Profile/ProfileSettings";
+const AdminDashboard = lazy(
+  () => import("../pages/Admin-pages/AdminDashboard"),
+);
+const AdminResources = lazy(
+  () => import("../pages/Admin-pages/AdminResources"),
+);
+const HireUsRequests = lazy(
+  () => import("../pages/Admin-pages/HireUsRequests"),
+);
+const AddResource = lazy(() => import("../pages/Admin-pages/AddResource"));
+const MemberManagement = lazy(
+  () => import("../pages/Admin-pages/MemberManagement"),
+);
+const HeroMembersPage = lazy(
+  () => import("../pages/Admin-pages/HeroMembersPage"),
+);
+const HubVideoPage = lazy(() => import("../pages/Admin-pages/HubVideoPage"));
+const AlumniManagementPage = lazy(
+  () => import("../pages/Admin-pages/AlumniManagementPage"),
+);
+const BlogTables = lazy(() => import("../pages/Admin-pages/BlogTables"));
+const ProjectTables = lazy(() => import("../pages/Admin-pages/ProjectTables"));
+const OTPVerification = lazy(() => import("../pages/Login/OTPVerification"));
+const ForgotPassword = lazy(() => import("../pages/Login/ForgotPassword"));
+const HireRequestDetail = lazy(
+  () => import("../components/admin-components/HireRequestDetail"),
+);
+const ApplicationsPage = lazy(
+  () => import("../pages/Admin-pages/ApplicationsPage"),
+);
+const ApplicationDetail = lazy(
+  () => import("../components/admin-components/ApplicationDetail"),
+);
+const EventTables = lazy(() => import("../pages/Admin-pages/EventTables"));
+const TaskManagement = lazy(
+  () => import("../pages/Admin-pages/TaskManagement"),
+);
+const ViewProfile = lazy(
+  () => import("../pages/Admin-pages/Profile/ViewProfile"),
+);
+const ProfileSettings = lazy(
+  () => import("../pages/Admin-pages/Profile/ProfileSettings"),
+);
 
 // Admin Chat pages
-import AdminMessages from "../pages/Admin-pages/AdminMessages";
-import AdminHubChannel from "../pages/Admin-pages/AdminHubChannel";
-import AdminChatLayout from "../components/admin-components/AdminChatLayout";
+const AdminMessages = lazy(() => import("../pages/Admin-pages/AdminMessages"));
+const AdminHubChannel = lazy(
+  () => import("../pages/Admin-pages/AdminHubChannel"),
+);
+const AdminChatLayout = lazy(
+  () => import("../components/admin-components/AdminChatLayout"),
+);
 
-// Auth
-import { ProtectedRoute, PublicRoute } from "../components/ProtectedRoute";
+// A minimal, brand-consistent loading state while a lazy route chunk
+// downloads - shown only on the first visit to a given route (browser
+// caches the chunk after that).
+const RouteLoadingFallback: React.FC = () => (
+  <div
+    role="status"
+    aria-label="Loading"
+    className="min-h-screen w-full flex items-center justify-center bg-white"
+  >
+    <div
+      className="w-10 h-10 rounded-full border-4 border-[#E2E8F0] border-t-[#002B56] animate-spin"
+      aria-hidden="true"
+    />
+  </div>
+);
 
 const AllRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* ==================== PUBLIC ROUTES ==================== */}
+    <Suspense fallback={<RouteLoadingFallback />}>
+      <Routes>
+        {/* ==================== PUBLIC ROUTES ==================== */}
 
-      <Route
-        path="/"
-        element={
-          <>
-            <Navbar />
-            <HeroSection />
-            <HubMembersSection />
-            <Expertise />
-            <Skills />
-            <Mission />
-            <HubIntroVideo />
-            <AlumniSection />
-            <TeamCaptain />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/hire-us"
-        element={
-          <>
-            <Navbar />
-            <InnovationHub />
-            <Services />
-            <Partners />
-            <LatestPro />
-            <LetTalk />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <PublicRoute>
+        <Route
+          path="/"
+          element={
             <>
               <Navbar />
-              <SignUpPage />
+              <HeroSection />
+              <HubMembersSection />
+              <Expertise />
+              <Skills />
+              <Mission />
+              <HubIntroVideo />
+              <AlumniSection />
+              <TeamCaptain />
+              <Footer />
             </>
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          <PublicRoute>
-            <ForgotPassword />
-          </PublicRoute>
-        }
-      />
-      <Route path="/otp" element={<OTPVerification />} />
-      <Route
-        path="/projects"
-        element={
-          <>
-            <Navbar />
-            <ProjectsPage />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/members"
-        element={
-          <>
-            <Navbar />
-            <InnovationHubMembersPage />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/members/:id"
-        element={
-          <>
-            <Navbar />
-            <MemberDetailPage />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/apply"
-        element={
-          <>
-            <Navbar />
-            <ApplyPage />
-            <Footer />
-          </>
-        }
-      />
+          }
+        />
+        <Route
+          path="/hire-us"
+          element={
+            <>
+              <Navbar />
+              <InnovationHub />
+              <Services />
+              <Partners />
+              <LatestPro />
+              <LetTalk />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <>
+                <Navbar />
+                <SignUpPage />
+              </>
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+        <Route path="/otp" element={<OTPVerification />} />
+        <Route
+          path="/projects"
+          element={
+            <>
+              <Navbar />
+              <ProjectsPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/members"
+          element={
+            <>
+              <Navbar />
+              <InnovationHubMembersPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/members/:id"
+          element={
+            <>
+              <Navbar />
+              <MemberDetailPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/apply"
+          element={
+            <>
+              <Navbar />
+              <ApplyPage />
+              <Footer />
+            </>
+          }
+        />
 
-      {/* ── Blog routes ── */}
-      <Route
-        path="/blog"
-        element={
-          <>
-            <Navbar />
-            <BlogDesign />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/blogs"
-        element={
-          <>
-            <Navbar />
-            <BlogDesign />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/blogs/:id"
-        element={
-          <>
-            <Navbar />
-            <BlogDetails />
-            <Footer />
-          </>
-        }
-      />
+        {/* ── Blog routes ── */}
+        <Route
+          path="/blog"
+          element={
+            <>
+              <Navbar />
+              <BlogDesign />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/blogs"
+          element={
+            <>
+              <Navbar />
+              <BlogDesign />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/blogs/:id"
+          element={
+            <>
+              <Navbar />
+              <BlogDetails />
+              <Footer />
+            </>
+          }
+        />
 
-      <Route
-        path="/Hub-information"
-        element={
-          <>
-            <Navbar />
-            <MissionSection />
-            <WhyHub />
-            <FAQs />
-            <SupportCard />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/resources-room"
-        element={
-          <>
-            <Navbar />
-            <Home />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/resources-room/categories"
-        element={
-          <>
-            <Navbar />
-            <Categories />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/resources-room/categories/:subcategory"
-        element={
-          <>
-            <Navbar />
-            <SubcategoryResults />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/resources-room/all-resources"
-        element={
-          <>
-            <Navbar />
-            <AllResources />
-            <Footer />
-          </>
-        }
-      />
-      <Route
-        path="/chatcard"
-        element={
-          <>
-            <Navbar />
-            <ChatCard />
-          </>
-        }
-      />
+        <Route
+          path="/Hub-information"
+          element={
+            <>
+              <Navbar />
+              <MissionSection />
+              <WhyHub />
+              <FAQs />
+              <SupportCard />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/resources-room"
+          element={
+            <>
+              <Navbar />
+              <Home />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/resources-room/categories"
+          element={
+            <>
+              <Navbar />
+              <Categories />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/resources-room/categories/:subcategory"
+          element={
+            <>
+              <Navbar />
+              <SubcategoryResults />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/resources-room/all-resources"
+          element={
+            <>
+              <Navbar />
+              <AllResources />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/chatcard"
+          element={
+            <>
+              <Navbar />
+              <ChatCard />
+            </>
+          }
+        />
 
-      {/* ==================== PROTECTED MEMBER ROUTES ==================== */}
+        {/* ==================== PROTECTED MEMBER ROUTES ==================== */}
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/resources"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Resources />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/projects"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Projects />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/projects/new"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <AddProject />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/events"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Events />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Dashboard />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/resources"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Resources />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/projects"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Projects />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/projects/new"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <AddProject />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/events"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Events />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      {/* ── Member Tasks ── */}
-      <Route
-        path="/dashboard/tasks"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <MyTasks />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/tasks/:id"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <TaskDetails />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* ── Member Tasks ── */}
+        <Route
+          path="/dashboard/tasks"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <MyTasks />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/tasks/:id"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <TaskDetails />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Member Messages */}
-      <Route
-        path="/messages"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Messages />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/messages/:id"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <Messages />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/hub-channel"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <HubChannel />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/edit-profile"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <MemberForm />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/profile"
-        element={
-          <ProtectedRoute requiredRole="Member">
-            <DashboardLayout>
-              <ProfilePage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* Member Messages */}
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages/:id"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/hub-channel"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <HubChannel />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/edit-profile"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <MemberForm />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/profile"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <ProfilePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      {/* ==================== PROTECTED ADMIN ROUTES ==================== */}
+        {/* ==================== PROTECTED ADMIN ROUTES ==================== */}
 
-      <Route
-        path="/Admindashboard"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-tasks"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <TaskManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-events"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <EventTables />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/resources"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AdminResources />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/hire-requests"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <HireUsRequests />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/hire-inquiries/:id"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <HireRequestDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/applications"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <ApplicationsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/applications/:id"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <ApplicationDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/add-resource"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AddResource />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-members"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <MemberManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-hero-members"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <HeroMembersPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-hub-video"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <HubVideoPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-alumni"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AlumniManagementPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-blogs"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <BlogTables />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Admin-projects"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <ProjectTables />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/profile"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <ViewProfile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/profile/settings"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <ProfileSettings />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/Admindashboard"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-tasks"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <TaskManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-events"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <EventTables />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resources"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminResources />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/hire-requests"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <HireUsRequests />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/hire-inquiries/:id"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <HireRequestDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/applications"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <ApplicationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/applications/:id"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <ApplicationDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-resource"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AddResource />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-members"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <MemberManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-hero-members"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <HeroMembersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-hub-video"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <HubVideoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-alumni"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AlumniManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-blogs"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <BlogTables />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-projects"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <ProjectTables />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/profile"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <ViewProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/profile/settings"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <ProfileSettings />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* ── Admin Chat Routes ── */}
-      <Route
-        path="/admin/messages"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AdminChatLayout>
-              <AdminMessages />
-            </AdminChatLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/messages/:id"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AdminChatLayout>
-              <AdminMessages />
-            </AdminChatLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/hub-channel"
-        element={
-          <ProtectedRoute requiredRole="Admin">
-            <AdminChatLayout>
-              <AdminHubChannel />
-            </AdminChatLayout>
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        {/* ── Admin Chat Routes ── */}
+        <Route
+          path="/admin/messages"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminChatLayout>
+                <AdminMessages />
+              </AdminChatLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/messages/:id"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminChatLayout>
+                <AdminMessages />
+              </AdminChatLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/hub-channel"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminChatLayout>
+                <AdminHubChannel />
+              </AdminChatLayout>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 };
 

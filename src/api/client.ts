@@ -9,6 +9,7 @@
  */
 
 import axios from "axios";
+import { API_BASE_URL } from "../config/env";
 
 // ==================== TYPES ====================
 
@@ -24,7 +25,7 @@ interface ApiErrorResponse {
  * Create and configure the main API client
  */
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000",
+  baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

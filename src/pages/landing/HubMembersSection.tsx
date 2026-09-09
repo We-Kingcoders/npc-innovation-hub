@@ -307,7 +307,12 @@ const HubMembersSection: React.FC = () => {
         </div>
       </header>
 
-      <main className="py-8 px-4 md:px-8">
+      {/* This is one section of a longer single page (Home → Hub Members →
+          Expertise → ... → Footer), not the page's own main content region -
+          HeroSection.tsx already owns that <main> landmark. Two <main>
+          elements on one page is invalid HTML5 and leaves assistive tech
+          unable to tell which one is actually "main". */}
+      <section aria-label="Hub Members Profile" className="py-8 px-4 md:px-8">
         <div className="container mx-auto max-w-7xl">
           {loading ? (
             <SkeletonGrid />
@@ -328,7 +333,7 @@ const HubMembersSection: React.FC = () => {
             </button>
           </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 };
