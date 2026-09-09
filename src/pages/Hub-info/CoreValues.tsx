@@ -6,22 +6,25 @@ const VALUES = [
   {
     title: "Innovation First",
     description:
-      "We champion creative thinking and hands-on problem-solving to tackle real challenges.",
+      "We champion creative thinking and breakthrough solutions to address real-world challenges.",
   },
   {
     title: "Community Driven",
     description:
-      "Our strength is our community of student developers, designers, and innovators.",
+      "Our strength lies in our vibrant community of student developers, designers, and innovators.",
   },
   {
-    title: "Continuous Learning",
+    title: "Service to Our Institution",
+    // Swapped in place of kLab's "Entrepreneurship" value - the Hub exists
+    // to serve the National Police College, not to launch businesses, so
+    // that framing doesn't fit here.
     description:
-      "We nurture curiosity and help members grow their technical and professional skills.",
+      "We channel our skills, projects, and innovation toward strengthening the National Police College and supporting its mission.",
   },
   {
     title: "Collaboration",
     description:
-      "We believe in teamwork and knowledge-sharing to build better solutions together.",
+      "We believe in the power of partnerships and knowledge sharing to drive collective growth.",
   },
 ];
 

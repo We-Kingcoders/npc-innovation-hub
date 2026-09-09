@@ -29,15 +29,17 @@ const HubInfo = ({ showCta = false }: HubInfoProps) => {
                 <li className="flex items-start">
                   <span className="flex-shrink-0 w-2 h-2 mt-2.5 bg-green-600 rounded-full mr-3"></span>
                   <p className="text-gray-700">
-                    We craft innovative, user-centric software solutions that
-                    drive business success and enhance user experiences.
+                    We empower student innovators through a collaborative
+                    ecosystem built on technology, mentorship, and hands-on
+                    skill development.
                   </p>
                 </li>
                 <li className="flex items-start">
                   <span className="flex-shrink-0 w-2 h-2 mt-2.5 bg-green-600 rounded-full mr-3"></span>
                   <p className="text-gray-700">
-                    Our team thrives on collaboration, continuous learning, and
-                    delivering high-quality, scalable applications.
+                    Our work accelerates the National Police College&apos;s
+                    digital transformation and strengthens its institutional
+                    capacity.
                   </p>
                 </li>
               </ul>
@@ -56,15 +58,16 @@ const HubInfo = ({ showCta = false }: HubInfoProps) => {
                 <li className="flex items-start">
                   <span className="flex-shrink-0 w-2 h-2 mt-2.5 bg-green-600 rounded-full mr-3"></span>
                   <p className="text-gray-700">
-                    We envision leading the future of software innovation by
-                    crafting intelligent, scalable solutions that empower users.
+                    We envision being the National Police College&apos;s leading
+                    center for technology innovation and student-led
+                    problem-solving.
                   </p>
                 </li>
                 <li className="flex items-start">
                   <span className="flex-shrink-0 w-2 h-2 mt-2.5 bg-green-600 rounded-full mr-3"></span>
                   <p className="text-gray-700">
-                    Our commitment to excellence positions us to shape a
-                    smarter, more connected world.
+                    Our commitment to excellence positions the College as a hub
+                    of technology excellence and sustainable innovation.
                   </p>
                 </li>
               </ul>
@@ -83,8 +86,9 @@ const HubInfo = ({ showCta = false }: HubInfoProps) => {
                 <li className="flex items-start">
                   <span className="flex-shrink-0 w-2 h-2 mt-2.5 bg-green-600 rounded-full mr-3"></span>
                   <p className="text-gray-700">
-                    We aim to deliver high-quality, secure software on schedule,
-                    enhancing user satisfaction.
+                    We aim to deliver high-quality, secure software that serves
+                    the National Police College&apos;s needs, enhancing user
+                    satisfaction.
                   </p>
                 </li>
                 <li className="flex items-start">

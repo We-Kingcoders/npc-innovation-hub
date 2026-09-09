@@ -4,12 +4,12 @@
 // commitments the Hub is working through, not decoration. Only shown on
 // the full /Hub-information page - Home's "about" preview stays short.
 const OBJECTIVES = [
-  "Provide hands-on infrastructure and resources for student-led tech innovation and skill-building.",
-  "Foster a collaborative environment connecting student developers, designers, and mentors across the College.",
-  "Deliver practical training in software development, cybersecurity, and problem-solving.",
-  "Support member-led projects from idea to a working, demoable product.",
+  "Provide world-class infrastructure and resources for tech innovation and skill-building.",
+  "Foster a collaborative ecosystem connecting student developers, mentors, and industry experts.",
+  "Deliver high-quality training programs in software development, cybersecurity, and problem-solving.",
+  "Support member projects from idea to a working, demoable product through mentorship and resources.",
   "Build partnerships within the National Police College and the wider tech community to expand opportunities for members.",
-  "Contribute to a culture of innovation and continuous learning within the National Police College.",
+  "Contribute to the National Police College's position as a leader in technology-driven institutional innovation.",
 ];
 
 const StrategicObjectives = () => {

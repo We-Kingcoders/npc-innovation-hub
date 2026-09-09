@@ -49,18 +49,16 @@ const AboutIntro = () => {
 
       <div className="text-[#283D4B] space-y-4 mt-6 max-w-3xl mx-auto md:mx-0 text-center md:text-left">
         <p>
-          Since our establishment in 2024 at the National Police College, NPC
-          Innovation Hub has grown into a home for technology-driven learning
-          and student-led innovation. We are more than a workspace — we are a
-          launchpad for real-world projects, a place to build practical skills,
-          and a community for the College&apos;s most driven tech-minded
-          students.
+          Since our establishment in 2024, NPC Innovation Hub has been at the
+          forefront of technology-driven learning at the National Police
+          College. We are more than just a workspace — we are a catalyst for
+          innovation, a platform for serving and strengthening our institution,
+          and a home for the College&apos;s brightest tech minds.
         </p>
         <p>
-          Based within the National Police College, we bring developers,
-          designers, and problem-solvers together to collaborate, learn, and
-          build solutions that matter — from cybersecurity to full-stack
-          development.
+          Located within the National Police College, we provide a dynamic
+          ecosystem where developers, designers, and innovators converge to
+          collaborate, learn, and build solutions that serve our institution.
         </p>
       </div>
 
