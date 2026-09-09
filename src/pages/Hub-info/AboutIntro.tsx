@@ -52,7 +52,7 @@ const AboutIntro = () => {
         Who We Are
       </p>
       <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-2 text-center md:text-left">
-        National Police College&apos;s Innovation &amp; Technology Hub
+        National Police College Innovation Hub
       </h2>
 
       <div className="text-[#283D4B] space-y-4 mt-6 max-w-3xl mx-auto md:mx-0 text-center md:text-left">

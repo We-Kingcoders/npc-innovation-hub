@@ -215,11 +215,11 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
               className="text-white font-extrabold text-[1.75rem] leading-[1.15] mb-1.5"
               style={{ fontFamily: "'Syne', sans-serif" }}
             >
-              Let's Build Together
+              This Is the Best Choice You&apos;ve Made
             </h2>
             <p className="text-white/70 text-sm leading-[1.55] max-w-[380px] m-0">
-              Tell us about your project and we'll get back to you within 24
-              hours.
+              The smartest choice for your future. Tell us about your project
+              and we&apos;ll get back to you within 24 hours.
             </p>
           </div>
 

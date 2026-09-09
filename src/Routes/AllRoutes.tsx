@@ -42,7 +42,6 @@ const ApplyPage = lazy(() =>
   import("../pages/apply/ApplyPage").then((m) => ({ default: m.ApplyPage })),
 );
 const LetTalk = lazy(() => import("../pages/HireUs/form"));
-const Partners = lazy(() => import("../pages/HireUs/partners"));
 const Services = lazy(() => import("../pages/HireUs/services"));
 const LatestPro = lazy(() => import("../pages/HireUs/latespro"));
 const InnovationHub = lazy(() => import("../pages/HireUs/FirstSection"));
@@ -230,7 +229,6 @@ const AllRoutes: React.FC = () => {
               <Navbar />
               <InnovationHub />
               <Services />
-              <Partners />
               <LatestPro />
               <LetTalk />
               <Footer />
