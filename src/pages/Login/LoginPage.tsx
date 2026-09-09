@@ -308,6 +308,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
+import { GOOGLE_CLIENT_ID } from "../../config/env";
 
 // Extend the Window interface to include typed google object
 declare global {
@@ -326,8 +327,6 @@ declare global {
     };
   }
 }
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

@@ -6,6 +6,12 @@ export default {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    // src/config/env.ts reads import.meta.env, which Jest's transform can't
+    // parse at all (Jest doesn't actually run as native ESM here despite
+    // useESM below) - swap in the literal-only test substitute instead of
+    // ever asking Jest to parse the real file. Matches any relative import
+    // ending in config/env, regardless of the importing file's own depth.
+    '(?:^|/)config/env$': '<rootDir>/src/config/env.jest.ts',
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
@@ -27,6 +33,8 @@ export default {
     '!src/**/*.stories.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/main.tsx',
+    '!src/config/env.ts', // never actually executed under Jest - see moduleNameMapper
+    '!src/config/env.jest.ts', // test-only substitute, not app code
   ],
   coverageThreshold: {
     global: {
