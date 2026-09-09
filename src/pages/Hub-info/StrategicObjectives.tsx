@@ -29,7 +29,7 @@ const StrategicObjectives = () => {
           </h2>
           <p className="text-lg text-[#283D4B]/80 max-w-2xl mx-auto">
             Our roadmap to building a sustainable, impactful innovation culture
-            at the National Police College.
+            at NPC.
           </p>
         </div>
 

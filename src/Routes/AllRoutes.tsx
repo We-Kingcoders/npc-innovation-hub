@@ -21,6 +21,7 @@ const HubMembersSection = lazy(
 );
 const TeamCaptain = lazy(() => import("../pages/landing/TeamCaptain"));
 const HeroSection = lazy(() => import("../pages/landing/HeroSection"));
+const Offerings = lazy(() => import("../pages/landing/Offerings"));
 const HubIntroVideo = lazy(() => import("../pages/landing/HubIntroVideo"));
 const AlumniSection = lazy(() => import("../pages/landing/AlumniSection"));
 const SignUpPage = lazy(() => import("../pages/Login/SignUp"));
@@ -198,6 +199,7 @@ const AllRoutes: React.FC = () => {
             <>
               <Navbar />
               <HeroSection />
+              <Offerings />
               <section
                 id="about"
                 aria-label="About NPC Innovation Hub"
