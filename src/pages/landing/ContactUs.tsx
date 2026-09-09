@@ -1,19 +1,10 @@
 // src/pages/landing/ContactUs.tsx
 //
-// A dedicated, Navbar-linked "how to reach us" page. Location and phone
-// are confirmed real (the same values already shown on the /hire-us
-// form's contact card) - email is intentionally left unset rather than
-// reusing that page's "kingcoders@programmers.com", which reads like a
-// leftover dev-team placeholder (it matches the GitHub org name
-// "We-Kingcoders"), not a real Hub address. Fill HUB_EMAIL in once
-// confirmed and the row below appears automatically.
-import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
-
-const HUB_LOCATION = "Musanze, North, Rwanda";
-const HUB_PHONE = "+250 783 330 443";
-const HUB_PHONE_HREF = "tel:+250783330443";
-const HUB_EMAIL = ""; // TODO(content): set once the real Hub email is confirmed.
+// The standalone /contact-us page: a hero banner wrapping the same
+// ContactSection shown inline on Home's scrollable story (see
+// AllRoutes.tsx's "/" route), so a direct link or bookmark to this page
+// shows identical content to what's reachable by scrolling.
+import ContactSection from "./ContactSection";
 
 const ContactUs = () => {
   return (
@@ -29,78 +20,8 @@ const ContactUs = () => {
         </p>
       </div>
 
-      <div className="container mx-auto max-w-3xl px-4 md:px-8 py-16">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 divide-y divide-gray-100">
-          <div className="flex items-start gap-4 p-6">
-            <MapPin
-              className="w-6 h-6 text-[#00A0E3] mt-1 flex-shrink-0"
-              aria-hidden="true"
-            />
-            <div>
-              <h2 className="font-semibold text-[#002B56] mb-1">
-                Our Location
-              </h2>
-              <p className="text-gray-600">{HUB_LOCATION}</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-6">
-            <Phone
-              className="w-6 h-6 text-[#00A0E3] mt-1 flex-shrink-0"
-              aria-hidden="true"
-            />
-            <div>
-              <h2 className="font-semibold text-[#002B56] mb-1">Telephone</h2>
-              <a
-                href={HUB_PHONE_HREF}
-                className="text-gray-600 hover:text-[#00A0E3] hover:underline"
-              >
-                {HUB_PHONE}
-              </a>
-            </div>
-          </div>
-
-          {HUB_EMAIL && (
-            <div className="flex items-start gap-4 p-6">
-              <Mail
-                className="w-6 h-6 text-[#00A0E3] mt-1 flex-shrink-0"
-                aria-hidden="true"
-              />
-              <div>
-                <h2 className="font-semibold text-[#002B56] mb-1">
-                  Email Address
-                </h2>
-                <a
-                  href={`mailto:${HUB_EMAIL}`}
-                  className="text-gray-600 hover:text-[#00A0E3] hover:underline"
-                >
-                  {HUB_EMAIL}
-                </a>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-start gap-4 p-6">
-            <MessageCircle
-              className="w-6 h-6 text-[#00A0E3] mt-1 flex-shrink-0"
-              aria-hidden="true"
-            />
-            <div>
-              <h2 className="font-semibold text-[#002B56] mb-1">
-                Chat with Us
-              </h2>
-              <p className="text-gray-600 mb-2">
-                Get an instant answer from our assistant.
-              </p>
-              <Link
-                to="/chat-with-us"
-                className="text-[#00A0E3] font-semibold hover:underline"
-              >
-                Start a chat →
-              </Link>
-            </div>
-          </div>
-        </div>
+      <div className="py-16">
+        <ContactSection />
       </div>
     </div>
   );
