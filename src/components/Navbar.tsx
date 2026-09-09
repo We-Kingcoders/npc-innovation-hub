@@ -154,6 +154,12 @@ export default function Navbar() {
           scrolled ? "shadow-md" : "shadow-sm"
         }`}
       >
+        {/* Thin navy-to-blue gradient accent, same treatment as the Hero
+            section's mobile header accent line - ties this flat white bar
+            back to the homepage's signature two-tone brand gradient instead
+            of reading as a plain, disconnected white strip. */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#00A0E3] to-[#002B56]" />
+
         <div className="max-w-7xl mx-auto h-16 lg:h-20 flex items-center justify-between px-6 lg:px-12">
           {/* Logo */}
           <Link
@@ -192,7 +198,7 @@ export default function Navbar() {
                   onClick={() => setShowUserMenu((s) => !s)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="true"
-                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] transition-colors duration-200"
+                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
                 >
                   {user.firstName || "Account"}
                   <svg
@@ -231,7 +237,7 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="bg-[#002B56] text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm hover:bg-[#003366] transition-colors duration-200"
+                className="bg-[#002B56] text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
               >
                 Sign In
               </Link>
@@ -310,7 +316,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   to="/login"
-                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#003366] transition-colors duration-200"
+                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
                 >
                   Sign In
                 </Link>
@@ -322,8 +328,8 @@ export default function Navbar() {
 
       {/* Reserves the space the fixed header occupies so page content isn't
           hidden underneath it. Height must match the header's own h-16/h-20
-          above exactly. */}
-      <div aria-hidden="true" className="h-16 lg:h-20" />
+          content row plus the 3px gradient accent bar above it, exactly. */}
+      <div aria-hidden="true" className="h-[67px] lg:h-[83px]" />
     </>
   );
 }
