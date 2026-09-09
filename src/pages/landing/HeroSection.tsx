@@ -65,29 +65,19 @@ const HeroSection = () => {
   return (
     <div
       id="home"
-      className="w-full min-h-screen relative overflow-hidden flex flex-col scroll-mt-16 lg:scroll-mt-20"
+      className="w-full min-h-screen bg-white relative overflow-hidden flex flex-col scroll-mt-16 lg:scroll-mt-20"
     >
       <JoinUsModal
         isOpen={isJoinModalOpen}
         onClose={() => setIsJoinModalOpen(false)}
       />
       {/* =================================================================
-          FIXED PARALLAX BACKGROUND - stays pinned to the viewport while the
-          hero's own foreground content (text, image carousel) scrolls/moves
-          over it, instead of scrolling together as one flat image. Sits
-          under a near-opaque white wash so foreground text (dark navy on
-          white) stays fully readable - the image just gives the hero subtle
-          depth rather than being a busy visible photo.
-          ================================================================= */}
-      <div
-        className="absolute inset-0 z-0 bg-fixed bg-cover bg-center"
-        style={{ backgroundImage: "url('/assets/images/hero.png')" }}
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 z-0 bg-white/90" aria-hidden="true" />
-
-      {/* =================================================================
           BACKGROUND DESIGN - Subtle Diagonal Split
+          Pure white left / pure navy right, no background photo - a
+          background-image layer was tried here for a parallax effect, but
+          it washed out the flat white/navy this design is meant to have
+          (compare: the diagonal navy panel right below is a plain color,
+          not a photo).
           ================================================================= */}
 
       {/* Desktop: Subtle Diagonal Navy Background (pushed right with less steep angle) */}
@@ -248,12 +238,11 @@ const HeroSection = () => {
             </button>
           </div>
 
-          {/* Slogan - Positioned directly below image */}
+          {/* Slogan - Positioned directly below image, always one line */}
           <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
-            <p className="text-[2rem] xl:text-[2.5rem] font-bold select-none leading-tight">
+            <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
               <span className="text-[#000000]">Innovate.</span>{" "}
-              <span className="text-[#00A0E3]">Create.</span>
-              <br />
+              <span className="text-[#00A0E3]">Create.</span>{" "}
               <span className="text-[#00A0E3]">Lead.</span>
             </p>
           </div>
