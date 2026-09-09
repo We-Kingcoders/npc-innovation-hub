@@ -63,7 +63,10 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="w-full min-h-screen relative overflow-hidden flex flex-col">
+    <div
+      id="home"
+      className="w-full min-h-screen relative overflow-hidden flex flex-col scroll-mt-16 lg:scroll-mt-20"
+    >
       <JoinUsModal
         isOpen={isJoinModalOpen}
         onClose={() => setIsJoinModalOpen(false)}
