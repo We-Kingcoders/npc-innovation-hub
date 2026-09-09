@@ -123,7 +123,10 @@ function LetTalk() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-50 p-4 md:p-8">
+    <div
+      id="hire-us-form"
+      className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-50 p-4 md:p-8 scroll-mt-20"
+    >
       {/* Contact Info Section */}
       <div className="bg-blue-900 text-white rounded-xl shadow-lg p-8 w-full max-w-md mb-8 md:mb-0 md:mr-8">
         <div className="flex items-center mb-8">

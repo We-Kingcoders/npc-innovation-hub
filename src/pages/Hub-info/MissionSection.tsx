@@ -18,8 +18,7 @@ const CARDS = [
     title: "VISION",
     icon: Eye,
     points: [
-      "We envision being the National Police College's leading center for technology innovation and student-led problem-solving.",
-      "Our commitment to excellence positions the College as a hub of technology excellence and sustainable innovation.",
+      "To establish the National Police College as a leading hub for technology excellence and sustainable innovation, empowering students to pioneer practical, technology-driven solutions to modern security and societal challenges.",
     ],
   },
   {
