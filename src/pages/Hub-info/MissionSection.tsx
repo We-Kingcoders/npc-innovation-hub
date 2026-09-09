@@ -1,4 +1,17 @@
-const HubInfo = () => {
+import { useNavigate } from "react-router-dom";
+
+interface HubInfoProps {
+  // Home's single-page "about" section embeds these cards inline and needs
+  // a way back to the full AboutHub page (WhyHub / FAQs / Support); the
+  // dedicated /Hub-information route renders this same component as the
+  // page itself, where a link to itself would be redundant - off by
+  // default, only Home's usage opts in.
+  showCta?: boolean;
+}
+
+const HubInfo = ({ showCta = false }: HubInfoProps) => {
+  const navigate = useNavigate();
+
   return (
     <div>
       {/* Main Content */}
@@ -85,6 +98,17 @@ const HubInfo = () => {
             </div>
           </div>
         </div>
+
+        {showCta && (
+          <div className="flex justify-center mt-12">
+            <button
+              className="text-lg py-3 px-12 border-2 border-[#002b56] text-[#002b56] rounded-[33px] shadow-md hover:bg-[#e6f0ff] transition-colors focus:outline-none focus:ring-2 focus:ring-[#002b56] focus:ring-opacity-50"
+              onClick={() => navigate("/Hub-information")}
+            >
+              Learn More About Us
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
