@@ -1,7 +1,6 @@
 // src/pages/resources-room/Home.tsx
 
 import React, { useState } from "react";
-import TrustedBy from "../../components/resources/TrustedBy";
 import ResourceList from "../../components/resources/ResourceList";
 import { Link } from "react-router-dom";
 import NavMenu from "../../components/resources/NavMenu";
@@ -31,11 +30,9 @@ const Home: React.FC = () => {
       <div className="max-w-6xl mx-auto mt-12 text-center px-4">
         <h2 className="text-2xl font-semibold mb-2">Access resources</h2>
         <p className="mb-6 text-gray-700">
-          Qorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-          vulputate libero et velit interdum, ac aliquet odio mattis. Class
-          aptent taciti sociosqu ad litora torquent per conubia nostra, per
-          inceptos himenaeos. Curabitur tempus urna at turpis condimentum
-          lobortis.
+          Browse guides, templates, and reference material shared by NPC
+          Innovation Hub members, organized by category so you can find what you
+          need for your project.
         </p>
         <div className="flex justify-center gap-6 mb-12">
           <Link to="/resources-room/all-resources">
@@ -50,8 +47,6 @@ const Home: React.FC = () => {
           </Link>
         </div>
       </div>
-
-      <TrustedBy />
 
       <div className="max-w-5xl mx-auto py-12 px-4">
         <ResourceList
