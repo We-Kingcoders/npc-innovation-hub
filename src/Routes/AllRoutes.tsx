@@ -191,7 +191,7 @@ const AllRoutes: React.FC = () => {
           element={
             // One continuous story - Home -> About -> Members -> Projects ->
             // Footer - rather than the disconnected pages this used to be.
-            // Navbar's Home/AboutHub/Members/Projects links scroll to these
+            // Navbar's Home/About Us/Members/Projects links scroll to these
             // sections by id when already on "/" (see Navbar.tsx). About is
             // shown here in full (same content as /Hub-information, nothing
             // gated behind a "learn more" click); Members and Projects here

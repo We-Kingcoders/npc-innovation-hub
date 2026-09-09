@@ -23,8 +23,8 @@ const AlumniPage = () => {
           Our Alumni
         </h1>
         <p className="text-white/70 max-w-2xl mx-auto text-lg">
-          Celebrating the members who've moved on from NPC Innovation Hub to
-          continue building great things.
+          Members who've moved from NPC Innovation Hub to continue building
+          great things.
         </p>
       </div>
 
