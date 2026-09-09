@@ -1,39 +1,41 @@
-// src/pages/landing/AlumniSection.tsx
-import React from "react";
+// src/pages/landing/AlumniPage.tsx
+//
+// The full alumni directory - Home's AlumniSection shows a short preview
+// with a "View All Alumni" CTA that lands here, same preview-plus-deep-page
+// pattern as Members (/members) and Projects (/projects).
 import { useNavigate } from "react-router-dom";
+import { GraduationCap, ArrowLeft } from "lucide-react";
 import { useAlumni } from "../../hooks/useAlumni";
 
-// getAlumni() returns the full list with no pagination - unlike Members
-// and Projects, this section used to render every alumnus directly on
-// Home with no cap and no "View all" page to send the rest to. Capped
-// here to match the same short-preview-plus-deep-page pattern the rest
-// of the site uses (see HubMembersSection.tsx / ProjectsShowcase.tsx),
-// with the full list living at /alumni.
-const PREVIEW_COUNT = 8;
-
-const AlumniSection: React.FC = () => {
+const AlumniPage = () => {
   const { alumni, loading, error } = useAlumni();
   const navigate = useNavigate();
 
-  // No alumni yet (or the fetch failed) is a normal state for an optional
-  // homepage section, not something to show an error/empty card for —
-  // render nothing, matching HubIntroVideo's pattern.
-  if (!loading && (error || alumni.length === 0)) return null;
-
-  const preview = alumni.slice(0, PREVIEW_COUNT);
-
   return (
-    <section className="py-16 px-4 md:px-8 bg-[#f4f7fc]">
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-4">
-            Our Alumni
-          </h2>
-          <p className="text-lg text-[#002b56]/80 max-w-2xl mx-auto">
-            Celebrating the members who've moved on from NPC Innovation Hub to
-            continue building great things.
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#f4f7fc]">
+      {/* Hero banner - navy, matching the site's brand color everywhere else. */}
+      <div className="bg-[#002B56] py-16 px-4 md:px-8 text-center">
+        <GraduationCap
+          className="w-10 h-10 text-white mx-auto mb-4"
+          aria-hidden="true"
+        />
+        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          Our Alumni
+        </h1>
+        <p className="text-white/70 max-w-2xl mx-auto text-lg">
+          Celebrating the members who've moved on from NPC Innovation Hub to
+          continue building great things.
+        </p>
+      </div>
+
+      <div className="container mx-auto max-w-6xl px-4 md:px-8 py-12">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-[#002B56] font-semibold mb-8 hover:underline"
+        >
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+          Back
+        </button>
 
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -44,9 +46,13 @@ const AlumniSection: React.FC = () => {
               />
             ))}
           </div>
+        ) : error || alumni.length === 0 ? (
+          <p className="text-center text-lg text-[#002b56]/70 py-16">
+            {error ?? "No alumni to show yet — check back soon."}
+          </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {preview.map((person, idx) => {
+            {alumni.map((person, idx) => {
               if (!person) return null;
               const name = person.name || "Unknown";
 
@@ -87,20 +93,9 @@ const AlumniSection: React.FC = () => {
             })}
           </div>
         )}
-
-        {!loading && alumni.length > PREVIEW_COUNT && (
-          <div className="flex justify-center mt-12">
-            <button
-              className="text-lg py-3 px-10 border-2 border-[#002b56] text-[#002b56] rounded-full shadow-sm hover:bg-[#e6f0ff] transition-colors focus:outline-none focus:ring-2 focus:ring-[#002b56] focus:ring-opacity-50"
-              onClick={() => navigate("/alumni")}
-            >
-              View All Alumni
-            </button>
-          </div>
-        )}
       </div>
-    </section>
+    </div>
   );
 };
 
-export default AlumniSection;
+export default AlumniPage;
