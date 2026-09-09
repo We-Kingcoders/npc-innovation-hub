@@ -24,7 +24,7 @@ import { useActiveSection } from "../hooks/useActiveSection";
 const NAV_LINKS = [
   { label: "Home", to: "/#home", sectionId: "home", deepPath: "/" },
   {
-    label: "AboutHub",
+    label: "About Us",
     to: "/#about",
     sectionId: "about",
     deepPath: "/Hub-information",

@@ -30,8 +30,8 @@ const AlumniSection: React.FC = () => {
             Our Alumni
           </h2>
           <p className="text-lg text-[#002b56]/80 max-w-2xl mx-auto">
-            Celebrating the members who've moved on from NPC Innovation Hub to
-            continue building great things.
+            Members who've moved from NPC Innovation Hub to continue building
+            great things.
           </p>
         </div>
 
