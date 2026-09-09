@@ -16,3 +16,11 @@ export const API_BASE_URL: string =
 
 export const GOOGLE_CLIENT_ID: string | undefined = import.meta.env
   .VITE_GOOGLE_CLIENT_ID as string | undefined;
+
+// A separate FastAPI-based chatbot service (Hub-info/Help.tsx), not the
+// main Express API above - was hardcoded to localhost:8000 with no way to
+// point it at a real deployment. Configurable now; still defaults to
+// localhost so local dev (start the FastAPI service, then the frontend)
+// works exactly as before.
+export const CHATBOT_API_URL: string =
+  import.meta.env.VITE_CHATBOT_API_URL || "http://localhost:8000";

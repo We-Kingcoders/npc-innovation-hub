@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { KeyboardEvent } from "react";
 import axios from "axios";
-
-// FastAPI endpoint URL hardcoded directly
-const FASTAPI_URL = "http://localhost:8000";
+import { CHATBOT_API_URL as FASTAPI_URL } from "../../config/env";
 
 type Message = {
   id: number;
