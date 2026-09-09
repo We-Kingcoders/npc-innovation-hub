@@ -10,10 +10,9 @@ import {
   Briefcase,
   FileText,
   Users,
-  Menu,
-  X,
+  ChevronsLeft,
+  ChevronsRight,
   LogOut,
-  ChevronDown,
   Calendar,
   ClipboardList,
   MessageSquare, // ← new
@@ -24,7 +23,6 @@ import {
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
-import { getUserFullName, getUserInitials } from "../../types/user.types";
 import { getPendingHireInquiriesCount } from "../../api/admin/hire.api";
 
 // How often to re-poll the pending-hire-inquiries count for the sidebar badge.
@@ -50,10 +48,9 @@ const iconComponents = {
 export default function Sidebar() {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   // Real pending-hire-inquiries count for the "Hire Us Requests" badge.
   // null until the first successful fetch, so the link renders with no badge
@@ -97,11 +94,6 @@ export default function Sidebar() {
     }
   };
 
-  const displayName = user ? getUserFullName(user) : "Admin User";
-  const displayRole = user?.role || "Administrator";
-  const displayAvatar = user?.image || null;
-  const displayInitials = user ? getUserInitials(user) : "AU";
-
   return (
     <>
       {!isCollapsed && (
@@ -124,96 +116,44 @@ export default function Sidebar() {
       >
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="lg:hidden absolute -right-12 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
         >
-          {isCollapsed ? <Menu size={20} /> : <X size={20} />}
+          {isCollapsed ? (
+            <ChevronsRight size={20} />
+          ) : (
+            <ChevronsLeft size={20} />
+          )}
         </button>
 
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="hidden lg:block absolute -right-3 top-8 bg-white text-navy-800 p-1.5 rounded-full shadow-lg hover:shadow-xl transition-shadow z-10"
         >
-          {isCollapsed ? <Menu size={16} /> : <X size={16} />}
+          {isCollapsed ? (
+            <ChevronsRight size={16} />
+          ) : (
+            <ChevronsLeft size={16} />
+          )}
         </button>
 
         {/* Brand - sized (not truncated) to stay fully visible on one line
-            within the sidebar's own width, no horizontal scroll needed. */}
+            within the sidebar's own width, no horizontal scroll needed. Own
+            profile access (avatar, name, View Profile/Profile Settings)
+            lives in Topbar.tsx's top-right profile icon - not duplicated
+            here too. */}
         {!isCollapsed && (
-          <div className="px-6 pt-6 pb-2 flex-shrink-0">
+          <div className="px-6 pt-5 pb-3 flex-shrink-0 border-b border-navy-700">
             <span className="block text-sm font-extrabold tracking-tight text-white whitespace-nowrap">
               NPC INNOVATION HUB
             </span>
           </div>
         )}
 
-        {/* User Profile */}
-        <div className="px-6 py-8 border-b border-navy-700">
-          <div className="relative">
-            <button
-              onClick={() => !isCollapsed && setShowUserMenu(!showUserMenu)}
-              className={`flex items-center gap-3 w-full ${!isCollapsed && "hover:bg-navy-700"} rounded-xl p-2 transition-all duration-200 ${isCollapsed && "justify-center"}`}
-            >
-              <div className="relative">
-                {displayAvatar ? (
-                  <img
-                    src={displayAvatar}
-                    alt={displayName}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-navy-400"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-navy-600 border-2 border-navy-400 flex items-center justify-center text-white font-bold text-sm">
-                    {displayInitials}
-                  </div>
-                )}
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-navy-800" />
-              </div>
-              {!isCollapsed && (
-                <div className="flex-1 text-left">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0">
-                      <p className="text-white font-bold text-sm uppercase leading-tight truncate">
-                        {displayName}
-                      </p>
-                      <p className="text-navy-200 text-xs uppercase mt-0.5 truncate">
-                        {displayRole}
-                      </p>
-                    </div>
-                    <ChevronDown
-                      size={16}
-                      className={`text-navy-200 transition-transform ${showUserMenu ? "rotate-180" : ""}`}
-                    />
-                  </div>
-                </div>
-              )}
-            </button>
-
-            {showUserMenu && !isCollapsed && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-mist-300 rounded-lg shadow-xl overflow-hidden z-50">
-                <a
-                  href="/admin/profile"
-                  className="block w-full px-4 py-2.5 text-left text-sm font-bold uppercase text-navy-800 hover:bg-mist-100 transition-colors"
-                >
-                  View Profile
-                </a>
-                <a
-                  href="/admin/profile/settings"
-                  className="block w-full px-4 py-2.5 text-left text-sm font-bold uppercase text-navy-800 hover:bg-mist-100 transition-colors border-t border-mist-200"
-                >
-                  Profile Settings
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 overflow-y-auto">
-          {!isCollapsed && (
-            <span className="px-4 text-xs font-bold text-navy-300 uppercase tracking-wider mb-3 block">
-              Menu
-            </span>
-          )}
-          <ul className="space-y-1.5">
+        <nav className="flex-1 px-4 py-3 overflow-y-auto">
+          <ul className="space-y-1">
             {sidebarLinks.map(({ icon, label, notification, path }) => {
               const IconComponent =
                 iconComponents[icon as keyof typeof iconComponents];
@@ -228,20 +168,20 @@ export default function Sidebar() {
                   <Link
                     to={path}
                     className={`
-                      group flex items-center gap-3 px-3 py-2.5 rounded-lg
+                      group flex items-center gap-3 px-3 py-2 rounded-lg
                       transition-all duration-200 min-w-0
                       ${isCollapsed ? "justify-center" : ""}
                       ${
                         active
-                          ? "bg-navy-700 shadow-md border-l-4 border-white"
-                          : "text-navy-100 hover:bg-navy-700 hover:text-white"
+                          ? "bg-navy-700 shadow-md border-l-4 border-white font-bold"
+                          : "text-navy-100 hover:bg-navy-700 hover:text-white hover:font-bold"
                       }
                     `}
                     title={isCollapsed ? label : undefined}
                   >
                     <div className="relative flex-shrink-0">
                       <div
-                        className={`p-2 rounded-lg transition-colors duration-200 ${
+                        className={`p-1.5 rounded-lg transition-colors duration-200 ${
                           active
                             ? "bg-white text-navy-800"
                             : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
@@ -261,7 +201,7 @@ export default function Sidebar() {
                     </div>
                     {!isCollapsed && (
                       <span
-                        className={`flex-1 min-w-0 truncate text-sm font-bold uppercase ${active ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200`}
+                        className={`flex-1 min-w-0 truncate text-sm uppercase ${active ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200`}
                       >
                         {label}
                       </span>
@@ -279,9 +219,9 @@ export default function Sidebar() {
         </nav>
 
         {/* Logout */}
-        <div className="px-4 pb-6 mt-auto flex-shrink-0">
+        <div className="px-4 pb-4 mt-auto flex-shrink-0">
           <button
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-navy-600 hover:bg-white hover:border-white font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isCollapsed ? "justify-center px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isCollapsed ? "justify-center px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
@@ -299,9 +239,10 @@ export default function Sidebar() {
       {isCollapsed && (
         <button
           onClick={() => setIsCollapsed(false)}
+          aria-label="Expand sidebar"
           className="lg:hidden fixed bottom-6 left-6 z-50 bg-navy-800 text-white p-4 rounded-full shadow-2xl"
         >
-          <Menu size={24} />
+          <ChevronsRight size={24} />
         </button>
       )}
     </>
