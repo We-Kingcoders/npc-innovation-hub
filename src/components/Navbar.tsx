@@ -192,7 +192,7 @@ export default function Navbar() {
                   onClick={() => setShowUserMenu((s) => !s)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="true"
-                  className="flex items-center gap-2 font-bold text-[#002B56] px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] transition-colors duration-200"
                 >
                   {user.firstName || "Account"}
                   <svg
