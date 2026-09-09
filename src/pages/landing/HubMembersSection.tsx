@@ -297,7 +297,10 @@ const HubMembersSection: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-[#f3fdfe] to-[#a7e1e7]">
+    <div
+      id="members"
+      className="min-h-screen bg-gradient-to-b from-white via-[#f3fdfe] to-[#a7e1e7] scroll-mt-16 lg:scroll-mt-20"
+    >
       <header className="pt-12 pb-6 px-4 md:px-8">
         <div className="container mx-auto pt-28 max-w-7xl">
           <Header

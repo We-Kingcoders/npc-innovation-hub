@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Mission: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-5xl mx-auto py-16 px-8 font-sans">
       {/* Heading */}
@@ -46,6 +49,15 @@ const Mission: React.FC = () => {
           workforce. It's more than a hub — it's a movement shaping Africa's
           tomorrow.
         </p>
+      </div>
+
+      <div className="flex justify-center md:justify-start mt-10">
+        <button
+          className="text-lg py-3 px-12 border-2 border-[#002b56] text-[#002b56] rounded-[33px] shadow-md hover:bg-[#e6f0ff] transition-colors focus:outline-none focus:ring-2 focus:ring-[#002b56] focus:ring-opacity-50"
+          onClick={() => navigate("/Hub-information")}
+        >
+          Learn More About Us
+        </button>
       </div>
     </div>
   );

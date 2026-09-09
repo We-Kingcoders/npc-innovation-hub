@@ -10,7 +10,10 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="w-full font-sans mt-64">
+    <div
+      id="footer"
+      className="w-full font-sans mt-64 scroll-mt-16 lg:scroll-mt-20"
+    >
       <HireUsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <JoinUsModal
         isOpen={isJoinModalOpen}

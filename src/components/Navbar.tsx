@@ -14,13 +14,35 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { UserRole } from "../types/user.types";
+import { useActiveSection } from "../hooks/useActiveSection";
 
+// Primary nav points at the single-page Home story's sections, not straight
+// at the deep pages - deepPath is still real and still reachable (each
+// section has its own "View all" / "Learn more" link to it), just not what
+// the top nav jumps to anymore. On any other route, a link is "active" when
+// its deepPath matches the current page instead.
 const NAV_LINKS = [
-  { label: "Home", to: "/" },
-  { label: "AboutHub", to: "/Hub-information" },
-  { label: "Members", to: "/members" },
-  { label: "Projects", to: "/projects" },
+  { label: "Home", to: "/#home", sectionId: "home", deepPath: "/" },
+  {
+    label: "AboutHub",
+    to: "/#about",
+    sectionId: "about",
+    deepPath: "/Hub-information",
+  },
+  {
+    label: "Members",
+    to: "/#members",
+    sectionId: "members",
+    deepPath: "/members",
+  },
+  {
+    label: "Projects",
+    to: "/#projects",
+    sectionId: "projects",
+    deepPath: "/projects",
+  },
 ];
+const SECTION_IDS = NAV_LINKS.map((link) => link.sectionId);
 
 export default function Navbar() {
   const location = useLocation();
@@ -61,10 +83,62 @@ export default function Navbar() {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  const onHome = location.pathname === "/";
+
+  // Which Home section is currently in view, so the right nav link
+  // highlights while scrolling - only runs on "/" itself.
+  const activeSectionId = useActiveSection(SECTION_IDS, onHome);
+
+  // A Link to "/#section" while already on "/" only changes the hash
+  // (React Router doesn't remount the route), so this effect is what
+  // actually does the scrolling - covers both that case and arriving at
+  // "/#section" fresh from another page (or a hard reload/typed URL).
+  // Respects reduced-motion.
+  //
+  // The target section is one of AllRoutes.tsx's lazy-loaded chunks, so on
+  // a fresh load it may not be in the DOM yet the instant this runs - polls
+  // for it via requestAnimationFrame (bounded to ~3s) rather than a single
+  // check that would silently no-op while the chunk is still downloading.
+  useEffect(() => {
+    if (!onHome || !location.hash) return undefined;
+    const id = location.hash.slice(1);
+
+    let rafId: number;
+    let cancelled = false;
+    const deadline = Date.now() + 3000;
+
+    const tryScroll = () => {
+      if (cancelled) return;
+      const el = document.getElementById(id);
+      if (el) {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        el.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        return;
+      }
+      if (Date.now() < deadline) {
+        rafId = requestAnimationFrame(tryScroll);
+      }
+    };
+
+    tryScroll();
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [onHome, location.hash]);
+
   const dashboardPath =
     user?.role === UserRole.ADMIN ? "/Admindashboard" : "/dashboard";
 
-  const isActive = (to: string) => location.pathname === to;
+  const isActive = (link: (typeof NAV_LINKS)[number]) =>
+    onHome
+      ? activeSectionId === link.sectionId
+      : location.pathname === link.deepPath;
 
   const handleLogout = async () => {
     setShowUserMenu(false);
@@ -98,9 +172,9 @@ export default function Navbar() {
               <Link
                 key={link.to}
                 to={link.to}
-                aria-current={isActive(link.to) ? "page" : undefined}
+                aria-current={isActive(link) ? "page" : undefined}
                 className={`font-bold uppercase text-[1.05rem] pb-1 transition-colors duration-200 ${
-                  isActive(link.to)
+                  isActive(link)
                     ? "text-[#00A0E3] border-b-2 border-[#00A0E3]"
                     : "text-[#002B56] hover:text-[#00A0E3]"
                 }`}
@@ -202,9 +276,14 @@ export default function Navbar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  aria-current={isActive(link.to) ? "page" : undefined}
+                  // A hash-only navigation (e.g. "/#members" while already
+                  // on "/") doesn't change location.pathname, so the
+                  // route-change effect above never fires to close this
+                  // menu - close it directly on tap instead.
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-current={isActive(link) ? "page" : undefined}
                   className={`block px-4 py-3 font-bold uppercase rounded-lg transition-colors duration-200 ${
-                    isActive(link.to)
+                    isActive(link)
                       ? "text-[#002B56] bg-[#ECF7FC] border-l-4 border-[#00A0E3]"
                       : "text-[#002B56] hover:bg-gray-50"
                   }`}

@@ -28,6 +28,9 @@ const HubIntroVideo = lazy(() => import("../pages/landing/HubIntroVideo"));
 const AlumniSection = lazy(() => import("../pages/landing/AlumniSection"));
 const SignUpPage = lazy(() => import("../pages/Login/SignUp"));
 const ProjectsPage = lazy(() => import("../pages/project-page/ProjectsPage"));
+const ProjectsShowcase = lazy(
+  () => import("../pages/landing/ProjectsShowcase"),
+);
 const InnovationHubMembersPage = lazy(() =>
   import("../pages/all-member-page/InnovationHubMembersPage").then((m) => ({
     default: m.InnovationHubMembersPage,
@@ -183,13 +186,28 @@ const AllRoutes: React.FC = () => {
         <Route
           path="/"
           element={
+            // One continuous story - Home -> About -> Members -> Projects ->
+            // Footer - rather than the disconnected pages this used to be.
+            // Navbar's Home/AboutHub/Members/Projects links scroll to these
+            // sections by id when already on "/" (see Navbar.tsx). Members
+            // and Projects here are previews with a "View all" link to the
+            // full /members and /projects pages, which stay their own
+            // routes for deep exploration - nothing was removed, just
+            // introduced here too.
             <>
               <Navbar />
               <HeroSection />
+              <section
+                id="about"
+                aria-label="About NPC Innovation Hub"
+                className="scroll-mt-16 lg:scroll-mt-20"
+              >
+                <Expertise />
+                <Skills />
+                <Mission />
+              </section>
               <HubMembersSection />
-              <Expertise />
-              <Skills />
-              <Mission />
+              <ProjectsShowcase />
               <HubIntroVideo />
               <AlumniSection />
               <TeamCaptain />
