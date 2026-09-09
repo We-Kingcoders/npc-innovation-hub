@@ -6,3 +6,4 @@
 // imported directly by app code.
 export const API_BASE_URL = "http://localhost:5000";
 export const GOOGLE_CLIENT_ID: string | undefined = undefined;
+export const CHATBOT_API_URL = "http://localhost:8000";
