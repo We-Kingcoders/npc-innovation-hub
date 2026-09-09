@@ -19,7 +19,6 @@ const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
 const HubMembersSection = lazy(
   () => import("../pages/landing/HubMembersSection"),
 );
-const TeamCaptain = lazy(() => import("../pages/landing/TeamCaptain"));
 const HeroSection = lazy(() => import("../pages/landing/HeroSection"));
 const Offerings = lazy(() => import("../pages/landing/Offerings"));
 const HubIntroVideo = lazy(() => import("../pages/landing/HubIntroVideo"));
@@ -222,7 +221,6 @@ const AllRoutes: React.FC = () => {
               <ProjectsShowcase />
               <HubIntroVideo />
               <AlumniSection />
-              <TeamCaptain />
               <section
                 id="contact"
                 aria-label="Contact Us"
