@@ -114,6 +114,11 @@ export default function Sidebar() {
           shadow-2xl
         `}
       >
+        {/* Mobile-only off-canvas toggle - stays outside the brand row (and
+            outside <aside> entirely when collapsed, see the floating button
+            at the bottom of this file) since the whole sidebar translates
+            off-screen on mobile; it needs to remain reachable independent
+            of that. */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -126,33 +131,36 @@ export default function Sidebar() {
           )}
         </button>
 
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="hidden lg:block absolute -right-3 top-8 bg-white text-navy-800 p-1.5 rounded-full shadow-lg hover:shadow-xl transition-shadow z-10"
-        >
-          {isCollapsed ? (
-            <ChevronsRight size={16} />
-          ) : (
-            <ChevronsLeft size={16} />
-          )}
-        </button>
-
-        {/* Brand - sized (not truncated) to stay fully visible on one line
-            within the sidebar's own width, no horizontal scroll needed. Own
-            profile access (avatar, name, View Profile/Profile Settings)
+        {/* Brand + desktop collapse toggle share one row, the toggle at the
+            row's end rather than floating outside the sidebar's own edge.
+            Own profile access (avatar, name, View Profile/Profile Settings)
             lives in Topbar.tsx's top-right profile icon - not duplicated
             here too. */}
-        {!isCollapsed && (
-          <div className="px-6 pt-5 pb-3 flex-shrink-0 border-b border-navy-700">
-            <span className="block text-sm font-extrabold tracking-tight text-white whitespace-nowrap">
+        <div
+          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 ${
+            isCollapsed ? "justify-center px-3" : "justify-between px-6"
+          }`}
+        >
+          {!isCollapsed && (
+            <span className="text-sm font-extrabold tracking-tight text-white whitespace-nowrap truncate">
               NPC INNOVATION HUB
             </span>
-          </div>
-        )}
+          )}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="hidden lg:flex items-center justify-center flex-shrink-0 bg-white text-navy-800 p-1.5 rounded-full shadow-md hover:shadow-lg transition-shadow"
+          >
+            {isCollapsed ? (
+              <ChevronsRight size={16} />
+            ) : (
+              <ChevronsLeft size={16} />
+            )}
+          </button>
+        </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-3 overflow-y-auto">
+        <nav className="flex-1 px-4 py-3 overflow-y-auto hide-scrollbar">
           <ul className="space-y-1">
             {sidebarLinks.map(({ icon, label, notification, path }) => {
               const IconComponent =
