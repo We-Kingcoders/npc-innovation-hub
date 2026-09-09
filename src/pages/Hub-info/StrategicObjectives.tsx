@@ -1,0 +1,44 @@
+// src/pages/Hub-info/StrategicObjectives.tsx
+//
+// The Hub's roadmap, numbered because it genuinely is a sequence of
+// commitments the Hub is working through, not decoration. Only shown on
+// the full /Hub-information page - Home's "about" preview stays short.
+const OBJECTIVES = [
+  "Provide hands-on infrastructure and resources for student-led tech innovation and skill-building.",
+  "Foster a collaborative environment connecting student developers, designers, and mentors across the College.",
+  "Deliver practical training in software development, cybersecurity, and problem-solving.",
+  "Support member-led projects from idea to a working, demoable product.",
+  "Build partnerships within the National Police College and the wider tech community to expand opportunities for members.",
+  "Contribute to a culture of innovation and continuous learning within the National Police College.",
+];
+
+const StrategicObjectives = () => {
+  return (
+    <div className="bg-white py-16 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-4">
+            Strategic Objectives
+          </h2>
+          <p className="text-lg text-[#283D4B]/80 max-w-2xl mx-auto">
+            Our roadmap to building a sustainable, impactful innovation culture
+            at the National Police College.
+          </p>
+        </div>
+
+        <ol className="space-y-6">
+          {OBJECTIVES.map((objective, index) => (
+            <li key={index} className="flex items-start gap-5">
+              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-[#002B56] text-white font-bold flex items-center justify-center">
+                {index + 1}
+              </span>
+              <p className="text-[#283D4B] text-lg pt-1.5">{objective}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+};
+
+export default StrategicObjectives;
