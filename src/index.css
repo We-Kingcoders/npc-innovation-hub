@@ -26,3 +26,16 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Hides a scrollable element's scrollbar while keeping it fully
+   scrollable/functional (mouse wheel, trackpad, keyboard, touch all still
+   work) - just visually cleaner for chrome like the admin sidebar's nav
+   list, which only needs to scroll as a rare safety net on very short
+   screens. */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, modern Edge */
+}
