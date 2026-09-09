@@ -48,7 +48,12 @@ const LatestPro = lazy(() => import("../pages/HireUs/latespro"));
 const InnovationHub = lazy(() => import("../pages/HireUs/FirstSection"));
 const BlogDesign = lazy(() => import("../pages/AboutHub/Topics"));
 const BlogDetails = lazy(() => import("../pages/blog/BlogDetails"));
+const AboutIntro = lazy(() => import("../pages/Hub-info/AboutIntro"));
 const MissionSection = lazy(() => import("../pages/Hub-info/MissionSection"));
+const StrategicObjectives = lazy(
+  () => import("../pages/Hub-info/StrategicObjectives"),
+);
+const CoreValues = lazy(() => import("../pages/Hub-info/CoreValues"));
 const WhyHub = lazy(() => import("../pages/Hub-info/WhyHub"));
 const FAQs = lazy(() => import("../pages/Hub-info/FAQs"));
 const SupportCard = lazy(() => import("../pages/Hub-info/Support"));
@@ -200,17 +205,10 @@ const AllRoutes: React.FC = () => {
                 className="scroll-mt-16 lg:scroll-mt-20 py-20 px-4 md:px-8 bg-white"
               >
                 <div className="container mx-auto max-w-7xl">
-                  <div className="text-center mb-4">
-                    <h2 className="text-4xl md:text-5xl font-bold text-[#002b56] mb-4">
-                      About #OurHUB
-                    </h2>
-                    <p className="text-xl font-medium text-[#002b56]/80 max-w-3xl mx-auto">
-                      A student-led innovation space equipping members with
-                      practical skills in tech, entrepreneurship, and
-                      problem-solving.
-                    </p>
+                  <AboutIntro />
+                  <div className="mt-16">
+                    <MissionSection showCta />
                   </div>
-                  <MissionSection showCta />
                 </div>
               </section>
               <HubMembersSection />
@@ -342,7 +340,14 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
+              <div className="py-16 px-4 md:px-8 bg-white">
+                <div className="container mx-auto max-w-7xl">
+                  <AboutIntro />
+                </div>
+              </div>
               <MissionSection />
+              <StrategicObjectives />
+              <CoreValues />
               <WhyHub />
               <FAQs />
               <SupportCard />
