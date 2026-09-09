@@ -56,7 +56,6 @@ const StrategicObjectives = lazy(
 const CoreValues = lazy(() => import("../pages/Hub-info/CoreValues"));
 const WhyHub = lazy(() => import("../pages/Hub-info/WhyHub"));
 const FAQs = lazy(() => import("../pages/Hub-info/FAQs"));
-const SupportCard = lazy(() => import("../pages/Hub-info/Support"));
 const ChatCard = lazy(() => import("../pages/Hub-info/Help"));
 
 // Resources Room
@@ -191,25 +190,29 @@ const AllRoutes: React.FC = () => {
             // One continuous story - Home -> About -> Members -> Projects ->
             // Footer - rather than the disconnected pages this used to be.
             // Navbar's Home/AboutHub/Members/Projects links scroll to these
-            // sections by id when already on "/" (see Navbar.tsx). Members
-            // and Projects here are previews with a "View all" link to the
-            // full /members and /projects pages, which stay their own
-            // routes for deep exploration - nothing was removed, just
-            // introduced here too.
+            // sections by id when already on "/" (see Navbar.tsx). About is
+            // shown here in full (same content as /Hub-information, nothing
+            // gated behind a "learn more" click); Members and Projects here
+            // stay short previews with a "View all" link to the full
+            // /members and /projects pages, which remain their own routes
+            // for deep exploration.
             <>
               <Navbar />
               <HeroSection />
               <section
                 id="about"
                 aria-label="About NPC Innovation Hub"
-                className="scroll-mt-16 lg:scroll-mt-20 py-20 px-4 md:px-8 bg-white"
+                className="scroll-mt-16 lg:scroll-mt-20"
               >
-                <div className="container mx-auto max-w-7xl">
-                  <AboutIntro />
-                  <div className="mt-16">
-                    <MissionSection showCta />
+                <div className="py-20 px-4 md:px-8 bg-white">
+                  <div className="container mx-auto max-w-7xl">
+                    <AboutIntro />
                   </div>
                 </div>
+                <MissionSection />
+                <StrategicObjectives />
+                <CoreValues />
+                <WhyHub />
               </section>
               <HubMembersSection />
               <ProjectsShowcase />
@@ -349,8 +352,26 @@ const AllRoutes: React.FC = () => {
               <StrategicObjectives />
               <CoreValues />
               <WhyHub />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <>
+              <Navbar />
               <FAQs />
-              <SupportCard />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/chat-with-us"
+          element={
+            <>
+              <Navbar />
+              <ChatCard />
               <Footer />
             </>
           }
@@ -392,15 +413,6 @@ const AllRoutes: React.FC = () => {
               <Navbar />
               <AllResources />
               <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/chatcard"
-          element={
-            <>
-              <Navbar />
-              <ChatCard />
             </>
           }
         />

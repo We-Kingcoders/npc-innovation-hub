@@ -1,8 +1,11 @@
 // src/pages/Hub-info/StrategicObjectives.tsx
 //
 // The Hub's roadmap, numbered because it genuinely is a sequence of
-// commitments the Hub is working through, not decoration. Only shown on
-// the full /Hub-information page - Home's "about" preview stays short.
+// commitments the Hub is working through, not decoration. Shown directly on
+// both Home's about section and /Hub-information - no gating, no separate
+// "learn more" click needed to see it.
+import { Compass } from "lucide-react";
+
 const OBJECTIVES = [
   "Provide world-class infrastructure and resources for tech innovation and skill-building.",
   "Foster a collaborative ecosystem connecting student developers, mentors, and industry experts.",
@@ -17,6 +20,10 @@ const StrategicObjectives = () => {
     <div className="bg-white py-16 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
+          <Compass
+            className="w-10 h-10 text-[#00A0E3] mx-auto mb-4"
+            aria-hidden="true"
+          />
           <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-4">
             Strategic Objectives
           </h2>

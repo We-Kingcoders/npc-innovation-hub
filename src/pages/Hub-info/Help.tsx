@@ -1,6 +1,15 @@
+// src/pages/Hub-info/Help.tsx
+//
+// "Chat with Us" - reachable from the Footer's Support column (see
+// Footer.tsx) rather than a broken, unwired button. Previously used a
+// random Unsplash stock photo as a full-page background and a person's
+// photo (meant for the Hero carousel) as a "Profile" avatar for the Hub
+// itself - both replaced with a plain, branded navy header consistent with
+// the rest of the site.
 import { useState, useEffect, useRef } from "react";
 import type { KeyboardEvent } from "react";
 import axios from "axios";
+import { Bot, User, Send, Loader2, MessageCircle } from "lucide-react";
 import { CHATBOT_API_URL as FASTAPI_URL } from "../../config/env";
 
 type Message = {
@@ -101,145 +110,121 @@ const ChatDesign = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full relative bg-cover bg-center bg-fixed bg-no-repeat"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')",
-      }}
-    >
-      {/* Semi-transparent overlay */}
-      <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
+    <div className="min-h-screen w-full bg-[#F3F9FB] flex flex-col items-center py-8">
+      {/* Header - navy, matching the site's brand color everywhere else. */}
+      <div className="bg-[#002B56] w-full py-10 px-6 flex flex-col items-center text-center mb-8">
+        <MessageCircle
+          className="w-10 h-10 text-white mb-3"
+          aria-hidden="true"
+        />
+        <h2 className="text-3xl md:text-4xl font-bold text-white">
+          Chat with Us
+        </h2>
+        <p className="text-white/70 mt-2 max-w-md">
+          Ask NPC Innovation Hub&apos;s assistant a question and get an instant
+          answer.
+        </p>
+      </div>
 
-      {/* Content container */}
-      <div className="relative z-10 min-h-screen w-full flex flex-col items-center py-8">
-        {/* Header bar - navy, matching the site's brand color everywhere else
-            (this used to be an off-brand yellow bar). */}
-        <div className="bg-[#002B56]/90 h-20 w-full flex items-center px-6 mb-8"></div>
-
-        {/* Profile section with transparent background */}
-        <div className="max-w-4xl mx-auto p-6 bg-white/0 rounded-3xl flex items-center space-x-8 mb-8 backdrop-blur-sm">
-          <img
-            className="w-32 h-32 rounded-full border-4 border-black-500 shadow-md flex-shrink-0"
-            src="/assets/images/hero.png"
-            alt="Profile"
-          />
-          <h2 className="text-4xl font-bold text-gray-800">
-            NPC INNOVATION HUB
-          </h2>
-        </div>
-
-        {/* Chat container */}
-        <div className="w-full max-w-4xl rounded-lg shadow-sm overflow-hidden border-4 border-black-800 backdrop-blur-sm">
-          <div className="p-4 min-h-[600px] w-full flex flex-col">
-            <div className="w-full px-4 space-y-6 flex-grow overflow-y-auto">
-              {messages.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-gray-500">
-                  <p>Send a message to start chatting!</p>
-                </div>
-              ) : (
-                messages.map((message) => (
-                  <div key={message.id} className="flex flex-col w-full">
+      {/* Chat container */}
+      <div className="w-full max-w-3xl mx-4 rounded-lg shadow-sm overflow-hidden border border-gray-200 bg-white">
+        <div className="p-4 min-h-[600px] w-full flex flex-col">
+          <div className="w-full px-4 space-y-6 flex-grow overflow-y-auto">
+            {messages.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-3 py-16">
+                <Bot
+                  className="w-10 h-10 text-[#002B56]/40"
+                  aria-hidden="true"
+                />
+                <p>Send a message to start chatting!</p>
+              </div>
+            ) : (
+              messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex items-end gap-2 w-full ${message.sender === "user" ? "flex-row-reverse" : ""}`}
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#002B56] flex items-center justify-center flex-shrink-0">
                     {message.sender === "user" ? (
-                      <div className="bg-slate-700 text-white rounded-2xl px-6 py-4 w-full max-w-[90%] self-start text-base">
-                        {message.text}
-                      </div>
+                      <User className="w-4 h-4 text-white" aria-hidden="true" />
                     ) : (
-                      <div
-                        className={`${message.isError ? "bg-red-50" : "bg-white/90"} text-gray-700 rounded-2xl px-6 py-4 w-full max-w-[60%] self-end text-base border ${message.isError ? "border-red-300" : "border-gray-300"}`}
-                      >
-                        {message.text}
-                        {/* Optionally show language detected for non-English messages */}
-                        {message.language && message.language !== "en" && (
-                          <div className="text-xs text-gray-500 mt-2">
-                            Language detected: {message.language}
-                          </div>
-                        )}
-                      </div>
+                      <Bot className="w-4 h-4 text-white" aria-hidden="true" />
                     )}
                   </div>
-                ))
-              )}
-              {/* Loading indicator */}
-              {isLoading && (
-                <div className="flex flex-col w-full">
-                  <div className="bg-white/90 text-gray-700 rounded-2xl px-6 py-4 w-32 self-end text-base border border-gray-300">
-                    <div className="flex space-x-2">
-                      <div
-                        className="h-2 w-2 bg-gray-500 rounded-full animate-bounce"
-                        style={{ animationDelay: "0ms" }}
-                      ></div>
-                      <div
-                        className="h-2 w-2 bg-gray-500 rounded-full animate-bounce"
-                        style={{ animationDelay: "150ms" }}
-                      ></div>
-                      <div
-                        className="h-2 w-2 bg-gray-500 rounded-full animate-bounce"
-                        style={{ animationDelay: "300ms" }}
-                      ></div>
+                  {message.sender === "user" ? (
+                    <div className="bg-[#002B56] text-white rounded-2xl px-6 py-4 max-w-[80%] text-base">
+                      {message.text}
                     </div>
+                  ) : (
+                    <div
+                      className={`${message.isError ? "bg-red-50 border-red-300" : "bg-[#F3F9FB] border-gray-200"} text-gray-700 rounded-2xl px-6 py-4 max-w-[80%] text-base border`}
+                    >
+                      {message.text}
+                      {/* Optionally show language detected for non-English messages */}
+                      {message.language && message.language !== "en" && (
+                        <div className="text-xs text-gray-500 mt-2">
+                          Language detected: {message.language}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="flex items-end gap-2 w-full">
+                <div className="w-8 h-8 rounded-full bg-[#002B56] flex items-center justify-center flex-shrink-0">
+                  <Bot className="w-4 h-4 text-white" aria-hidden="true" />
+                </div>
+                <div className="bg-[#F3F9FB] text-gray-700 rounded-2xl px-6 py-4 max-w-[80%] text-base border border-gray-200">
+                  <div className="flex space-x-2">
+                    <div
+                      className="h-2 w-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0ms" }}
+                    ></div>
+                    <div
+                      className="h-2 w-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
+                    <div
+                      className="h-2 w-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    ></div>
                   </div>
                 </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="mt-6 px-4 flex items-center gap-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={
+                isLoading ? "Waiting for response..." : "Type your question..."
+              }
+              className="px-4 py-4 w-full border border-gray-300 rounded-full bg-white text-sm outline-none focus:border-[#00A0E3] text-gray-600"
+              disabled={isLoading}
+            />
+            <button
+              onClick={() => void sendMessage()}
+              disabled={isLoading || inputValue.trim() === ""}
+              aria-label="Send message"
+              className={`w-12 h-12 flex-shrink-0 ${isLoading ? "bg-gray-400" : "bg-[#002B56] hover:bg-[#003366]"} rounded-full flex items-center justify-center transition-colors`}
+            >
+              {isLoading ? (
+                <Loader2
+                  className="w-5 h-5 text-white animate-spin"
+                  aria-hidden="true"
+                />
+              ) : (
+                <Send className="w-5 h-5 text-white" aria-hidden="true" />
               )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <div className="flex-grow-[2]"></div>
-
-            <div className="mt-auto mb-8 px-4 flex items-center gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={
-                  isLoading ? "Waiting for response..." : "Typing........"
-                }
-                className="px-4 py-4 w-[85%] border border-gray-300 rounded-full bg-white text-sm outline-none focus:border-blue-400 text-gray-600"
-                disabled={isLoading}
-              />
-              <button
-                onClick={sendMessage}
-                disabled={isLoading || inputValue.trim() === ""}
-                className={`w-12 h-12 ${isLoading ? "bg-gray-400" : "bg-slate-700 hover:bg-slate-600"} rounded-full flex items-center justify-center transition-colors`}
-              >
-                {isLoading ? (
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                ) : (
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2"
-                    className="transform rotate-45 translate-x-0.5"
-                  >
-                    <path d="M22 2L11 13"></path>
-                    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
-                  </svg>
-                )}
-              </button>
-            </div>
+            </button>
           </div>
         </div>
       </div>

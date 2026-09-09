@@ -1,6 +1,17 @@
 // src/components/button/Footer.tsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Info,
+  Home as HomeIcon,
+  UserPlus,
+  Target,
+  Users,
+  FolderGit2,
+  HelpCircle,
+  MessageCircle,
+  Briefcase,
+} from "lucide-react";
 import HireUsModal from "../HireUsModal";
 import JoinUsModal from "../JoinUsModal";
 
@@ -125,16 +136,24 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/Hub-information"
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <Info
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     What we do
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <HomeIcon
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     Home
                   </Link>
                 </li>
@@ -142,8 +161,12 @@ const Footer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsJoinModalOpen(true)}
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <UserPlus
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     Join Us
                   </button>
                 </li>
@@ -157,24 +180,36 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/Hub-information"
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <Target
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     Our Mission &amp; Vision
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/members"
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <Users
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     Our Members
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/projects"
-                    className="hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
                   >
+                    <FolderGit2
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     Our Projects
                   </Link>
                 </li>
@@ -182,18 +217,48 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Right column */}
-            {/* TODO(content): this column had a hardcoded "#Mugisha
-                Emmanuell" heading here with social icons underneath. Left
-                out rather than guessed at - it reads like a specific
-                person's name/handle, not a generic label like the other two
-                columns, and neither it nor the social links (all led
-                nowhere - href="#") could be verified as real. Restore with
-                real destinations, or remove this column, once confirmed. */}
-
-            {/* Social links removed: none had a real destination
-                (all href="#") and no verified NPC Innovation Hub social
-                accounts were available to link instead. Add them back here
-                with real URLs once the hub has accounts to share. */}
+            <div>
+              <h4 className="text-xl font-bold mb-4">Support</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    to="/faqs"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                  >
+                    <HelpCircle
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                    FAQs
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/chat-with-us"
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                  >
+                    <MessageCircle
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                    Chat with Us
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                  >
+                    <Briefcase
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                    Hire Us
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Bottom footer */}

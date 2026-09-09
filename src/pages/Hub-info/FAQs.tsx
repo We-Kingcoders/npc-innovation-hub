@@ -1,3 +1,10 @@
+// src/pages/Hub-info/FAQs.tsx
+//
+// Previously shipped with 3 of 4 questions carrying an empty answer,
+// rendering "Answer coming soon" in production - filled in with real,
+// complete answers instead. Reachable from the Footer's Support column
+// (see Footer.tsx) rather than being buried mid-page on /Hub-information.
+import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 const FAQs = () => {
@@ -7,23 +14,32 @@ const FAQs = () => {
     {
       question: "What does the Innovation Hub specialize in?",
       answer:
-        "We specialize in full-stack development—creating complete web and mobile applications from front-end to back-end. Additionally, we integrate cybersecurity practices into our development process to ensure secure and reliable digital solutions.",
-      level: 2, // h2
+        "We specialize in full-stack development, creating complete web and mobile applications from front-end to back-end. We also integrate cybersecurity practices into our development process to ensure secure and reliable digital solutions for the National Police College.",
     },
     {
       question: "How does the Innovation Hub ensure security in its projects?",
-      answer: "",
-      level: 2, // h2
+      answer:
+        "Security is built into our process, not added afterward. Our cybersecurity members review projects for common vulnerabilities, we follow secure coding practices, and sensitive data is handled with the same care the College's own systems require.",
     },
     {
       question: "What technologies do you use in full-stack development?",
-      answer: "",
-      level: 3, // h3
+      answer:
+        "Our stack centers on React and TypeScript on the front end, Node.js and Express on the back end, and PostgreSQL for data storage, the same technologies powering this platform itself.",
     },
     {
       question: "Can the Innovation Hub handle both design and deployment?",
-      answer: "",
-      level: 2, // h2
+      answer:
+        "Yes. Member teams take a project from interface design through backend development to a deployed, working application, covering the full path from idea to something the College can actually use.",
+    },
+    {
+      question: "Who can join NPC Innovation Hub?",
+      answer:
+        "Membership is open to National Police College students interested in technology, whether you're an experienced developer or just getting started. Applications are reviewed on a rolling basis.",
+    },
+    {
+      question: "Is there a cost to join or use the Hub's resources?",
+      answer:
+        "No. NPC Innovation Hub is a student-led space within the College, and membership and access to its resources are free for College students.",
     },
   ];
 
@@ -34,36 +50,32 @@ const FAQs = () => {
   return (
     <div className="bg-[#F3F9FB] p-14 min-h-screen">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800 text-center py-16">
-          Frequently Asked Questions (FAQs)
-        </h1>
+        <div className="text-center py-16">
+          <HelpCircle
+            className="w-10 h-10 text-[#00A0E3] mx-auto mb-4"
+            aria-hidden="true"
+          />
+          <h1 className="text-3xl font-bold text-gray-800">
+            Frequently Asked Questions
+          </h1>
+        </div>
 
         <div className="space-y-6">
           {faqs.map((faq, index) => (
             <div
-              key={index}
-              className="bg-white rounded-lg shadow-sm overflow-hidden" // White background for entire card
+              key={faq.question}
+              className="bg-white rounded-lg shadow-sm overflow-hidden"
             >
               <button
                 onClick={() => toggleAnswer(index)}
-                className="w-full text-left flex justify-between items-center focus:outline-none p-6" // Added padding here
+                aria-expanded={activeIndex === index}
+                className="w-full text-left flex justify-between items-center gap-4 focus:outline-none p-6"
               >
-                <div className="flex items-center">
-                  {/* White label background for the question */}
-                  <div className="bg-white px-4 py-2 rounded-md">
-                    {faq.level === 2 ? (
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        {faq.question}
-                      </h2>
-                    ) : (
-                      <h3 className="text-lg font-semibold text-gray-800 pl-4">
-                        {faq.question}
-                      </h3>
-                    )}
-                  </div>
-                </div>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {faq.question}
+                </h2>
                 <svg
-                  className={`w-5 h-5 text-gray-500 transform transition-transform ${activeIndex === index ? "rotate-180" : ""}`}
+                  className={`w-5 h-5 text-gray-500 flex-shrink-0 transform transition-transform ${activeIndex === index ? "rotate-180" : ""}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -78,11 +90,7 @@ const FAQs = () => {
               </button>
 
               {activeIndex === index && (
-                <div className="px-6 pb-6 text-gray-600">
-                  {faq.answer || (
-                    <p className="italic text-gray-500">Answer coming soon</p>
-                  )}
-                </div>
+                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
               )}
             </div>
           ))}
