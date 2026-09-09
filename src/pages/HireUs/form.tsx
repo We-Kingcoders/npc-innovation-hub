@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
+import { API_BASE_URL } from "../../config/env";
 
 type FormData = {
   email: string;
@@ -76,7 +77,10 @@ function LetTalk() {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/hire-us", {
+      // Was hardcoded to http://localhost:5000 - the real Hire Us contact
+      // form was unreachable from the deployed site, only ever working
+      // during local dev by coincidence.
+      const response = await fetch(`${API_BASE_URL}/api/hire-us`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

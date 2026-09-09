@@ -308,7 +308,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
-import { GOOGLE_CLIENT_ID } from "../../config/env";
+import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 
 // Extend the Window interface to include typed google object
 declare global {
@@ -368,7 +368,12 @@ const LoginPage = () => {
 
             try {
               const res = await fetch(
-                "https://npc-innovation-hub-bn.onrender.com/api/users/auth/google/auth",
+                // Was hardcoded to the production onrender.com URL, which
+                // meant this specifically worked in production but broke
+                // local dev - now uses the same env-driven base URL as the
+                // rest of the app instead of a URL that's only ever right
+                // for one environment.
+                `${API_BASE_URL}/api/users/auth/google/auth`,
                 {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -424,7 +429,11 @@ const LoginPage = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      // Was hardcoded to http://localhost:5000 - the actual, literal login
+      // form submission was unreachable from the real deployed site (a
+      // user's browser has no way to reach "their own machine's port
+      // 5000"), only ever working by coincidence during local dev.
+      const response = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

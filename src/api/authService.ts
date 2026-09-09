@@ -1,6 +1,15 @@
 import type { User } from "../types/user.types";
+import { API_BASE_URL as BACKEND_BASE_URL } from "../config/env";
 
-const API_BASE_URL = "http://localhost:5000/api/users";
+// Was hardcoded to http://localhost:5000/api/users - worked by coincidence
+// in local dev (frontend and backend both on localhost) and was completely
+// unreachable from the real deployed site, where a user's browser has no
+// way to reach "their own machine's port 5000". Every login, Google auth,
+// OTP verification, password reset, and logout in the app goes through
+// this file's apiRequest, so this one line broke all of them in
+// production. Now uses the same env-driven base URL as the rest of the
+// app's real API client (src/api/client.ts / src/config/env.ts).
+const API_BASE_URL = `${BACKEND_BASE_URL}/api/users`;
 
 // ==================== TYPE DEFINITIONS ====================
 
