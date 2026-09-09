@@ -41,6 +41,12 @@ const NAV_LINKS = [
     sectionId: "projects",
     deepPath: "/projects",
   },
+  {
+    label: "Contact Us",
+    to: "/#contact",
+    sectionId: "contact",
+    deepPath: "/contact-us",
+  },
 ];
 const SECTION_IDS = NAV_LINKS.map((link) => link.sectionId);
 
@@ -188,21 +194,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {/* Its own dedicated page, not a Home section - not part of
-                NAV_LINKS/SECTION_IDS's scroll-spy tracking. */}
-            <Link
-              to="/contact-us"
-              aria-current={
-                location.pathname === "/contact-us" ? "page" : undefined
-              }
-              className={`font-bold uppercase text-[1.05rem] pb-1 transition-colors duration-200 ${
-                location.pathname === "/contact-us"
-                  ? "text-[#00A0E3] border-b-2 border-[#00A0E3]"
-                  : "text-[#002B56] hover:text-[#00A0E3]"
-              }`}
-            >
-              Contact Us
-            </Link>
           </nav>
 
           {/* Desktop right side: Sign In, or an account menu once logged in */}
@@ -312,20 +303,6 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/contact-us"
-                onClick={() => setIsMenuOpen(false)}
-                aria-current={
-                  location.pathname === "/contact-us" ? "page" : undefined
-                }
-                className={`block px-4 py-3 font-bold uppercase rounded-lg transition-colors duration-200 ${
-                  location.pathname === "/contact-us"
-                    ? "text-[#002B56] bg-[#ECF7FC] border-l-4 border-[#00A0E3]"
-                    : "text-[#002B56] hover:bg-gray-50"
-                }`}
-              >
-                Contact Us
-              </Link>
 
               {isAuthenticated && user ? (
                 <>

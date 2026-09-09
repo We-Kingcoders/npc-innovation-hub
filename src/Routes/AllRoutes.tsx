@@ -26,6 +26,7 @@ const HubIntroVideo = lazy(() => import("../pages/landing/HubIntroVideo"));
 const AlumniSection = lazy(() => import("../pages/landing/AlumniSection"));
 const AlumniPage = lazy(() => import("../pages/landing/AlumniPage"));
 const ContactUs = lazy(() => import("../pages/landing/ContactUs"));
+const ContactSection = lazy(() => import("../pages/landing/ContactSection"));
 const SignUpPage = lazy(() => import("../pages/Login/SignUp"));
 const ProjectsPage = lazy(() => import("../pages/project-page/ProjectsPage"));
 const ProjectsShowcase = lazy(
@@ -222,6 +223,13 @@ const AllRoutes: React.FC = () => {
               <HubIntroVideo />
               <AlumniSection />
               <TeamCaptain />
+              <section
+                id="contact"
+                aria-label="Contact Us"
+                className="scroll-mt-16 lg:scroll-mt-20 py-16 px-4 md:px-8 bg-white"
+              >
+                <ContactSection />
+              </section>
               <Footer />
             </>
           }
