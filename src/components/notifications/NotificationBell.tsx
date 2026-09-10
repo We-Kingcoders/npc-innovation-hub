@@ -58,8 +58,12 @@ const NotificationBell: React.FC = () => {
         )}
       </button>
 
+      {/* Fixed w-80 (320px), right-aligned to a bell icon that's never
+          flush against the screen edge - on a 320-375px phone this
+          overflowed past the left edge instead of staying on screen.
+          max-w caps it to the actual viewport width available. */}
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-mist-300 overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-mist-300 overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-mist-200 flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-navy-800">Notifications</h3>

@@ -1842,13 +1842,17 @@ const MessageInput: React.FC<MessageInputProps> = ({
       </div>
 
       {/* ── Compact Emoji Picker ──────────────────────────────────────────────
-          Fixed 300px wide, 260px tall grid area, scrollable per category.
-          Tabs scroll horizontally. Picker stays open until outside click.   */}
+          Up to 308px wide (260px tall grid area), scrollable per category.
+          Was a flat width: 308 regardless of viewport - on a ~320-375px
+          phone that overflowed past the left edge of the screen since the
+          picker is anchored to the right. Capped with calc() so it shrinks
+          to fit instead. Tabs scroll horizontally. Picker stays open until
+          outside click. */}
       {showEmoji && (
         <div
           ref={emojiPickerRef}
           className="absolute bottom-16 right-4 z-40 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col"
-          style={{ width: 308, maxHeight: 320 }}
+          style={{ width: "min(308px, calc(100vw - 2rem))", maxHeight: 320 }}
         >
           {/* Category tab strip — horizontally scrollable */}
           <div

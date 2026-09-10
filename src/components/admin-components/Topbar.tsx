@@ -113,7 +113,7 @@ export default function Topbar() {
 
             {/* Profile Dropdown */}
             {showProfile && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-mist-300 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-mist-300 overflow-hidden">
                 <div className="px-4 py-3 border-b border-mist-200">
                   <p className="font-semibold text-navy-800">{displayName}</p>
                   <p className="text-xs text-mist-500 truncate">
