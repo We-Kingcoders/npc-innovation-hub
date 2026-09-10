@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
-import { Rocket, Lightbulb, Users } from "lucide-react";
 import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
 
@@ -170,7 +169,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       {/* Header Section - was its own hand-rolled header with a broken
           "About Hub" link (/about doesn't exist - the real route is
           /Hub-information), plain <a> tags that force a full page reload
@@ -180,100 +179,38 @@ const LoginPage = () => {
           next to this page) - no reason this one page needed its own. */}
       <Navbar />
 
-      {/* Main Content - Two Column Layout. Was a bare flex with two w-1/2
-          columns and no responsive fallback - on any phone or narrow
-          tablet this squeezed the background panel and the login form
-          into two illegible half-width columns instead of stacking. */}
-      <main id="main-content" className="flex flex-col md:flex-row flex-1">
-        {/* Left Side - Image Background with Text Overlay */}
-        <div className="hidden md:block md:w-1/2 relative">
-          {/* Image Background - a real photo of NPC Innovation Hub members
-              at work, replacing a generic Unsplash stock photo. */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: "url('/assets/images/hubimage.jpg')",
-            }}
-          >
-            {/* Dark Overlay for Better Text Contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
-          </div>
-
-          {/* Content Container - Text Overlay */}
-          <div className="relative z-10 h-full flex items-center p-12">
-            <div className="max-w-lg text-white">
-              {/* Tagline - single line, in a solid white card so the navy
-                  text stays legible regardless of what's behind it in the
-                  photo. */}
-              <div className="mb-10 bg-white/90 backdrop-blur-sm rounded-xl px-6 py-5 inline-block">
-                <h1 className="text-4xl font-bold leading-tight whitespace-nowrap text-[#002B56]">
-                  Innovate. Create. Lead.
-                </h1>
-              </div>
-
-              {/* Feature Highlights */}
-              <div className="mt-12 space-y-6">
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                      <Rocket
-                        className="w-6 h-6 text-white"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Innovate Together</h3>
-                    <p className="text-gray-200">
-                      Collaborate with like-minded creators
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                      <Lightbulb
-                        className="w-6 h-6 text-white"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Create Solutions</h3>
-                    <p className="text-gray-200">
-                      Build projects that make a difference
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                      <Users
-                        className="w-6 h-6 text-white"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Lead Communities</h3>
-                    <p className="text-gray-200">
-                      Inspire and guide fellow innovators
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - Maximized Login Card */}
+      {/* Main Content - Two Column Layout. h-screen + overflow-hidden on the
+          root above, plus overflow-y-auto on the form column below, mean
+          the page itself never scrolls on any device - only the form
+          column scrolls internally if its content is ever taller than the
+          space left. Was a bare flex with two w-1/2 columns and no
+          responsive fallback - on any phone or narrow tablet this squeezed
+          the background panel and the login form into two illegible
+          half-width columns instead of stacking. */}
+      <main
+        id="main-content"
+        className="flex flex-col md:flex-row flex-1 min-h-0"
+      >
+        {/* Left Side - just the photo, full-bleed, on every device - no
+            text overlay now, so no contrast/legibility concerns either. */}
         <div
-          className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12"
+          className="h-40 sm:h-56 md:h-auto md:w-1/2 flex-shrink-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/assets/images/hubimage.jpg')",
+          }}
+          role="img"
+          aria-label="NPC Innovation Hub members collaborating"
+        />
+
+        {/* Right Side - Maximized Login Card. overflow-y-auto lets this
+            column scroll on its own if the form is taller than the space
+            left after the (now much shorter, image-only) left panel,
+            instead of the whole page scrolling. */}
+        <div
+          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-6 sm:p-12"
           style={{ backgroundColor: "#002B56" }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 w-full max-w-2xl">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 w-full max-w-2xl my-auto">
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="text-center mb-10">
                 <h1 className="text-3xl font-bold text-[#002B56] mb-4">

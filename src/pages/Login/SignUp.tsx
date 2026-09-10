@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Rocket, Lightbulb, Users } from "lucide-react";
 import { API_BASE_URL } from "../../config/env";
 
 // If using react-router-dom for navigation, import as needed
@@ -207,84 +206,26 @@ const SignUpPage = () => {
   // const navigate = useNavigate(); // If you want to navigate after signup
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      {/* Left Side - same treatment as the Login page's left panel: a real
-          photo of NPC Innovation Hub members at work, a single-line navy
-          tagline in a solid card for guaranteed legibility, and the same
-          three feature highlights with real icons instead of emoji. */}
-      <div className="hidden md:block md:w-1/2 relative">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/assets/images/hubimage.jpg')",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
-        </div>
-
-        <div className="relative z-10 h-full flex items-center p-12">
-          <div className="max-w-lg text-white">
-            <div className="mb-10 bg-white/90 backdrop-blur-sm rounded-xl px-6 py-5 inline-block">
-              <h1 className="text-4xl font-bold leading-tight whitespace-nowrap text-[#002B56]">
-                Innovate. Create. Lead.
-              </h1>
-            </div>
-
-            <div className="mt-12 space-y-6">
-              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                <div className="mr-4">
-                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                    <Rocket className="w-6 h-6 text-white" aria-hidden="true" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Innovate Together</h3>
-                  <p className="text-gray-200">
-                    Collaborate with like-minded creators
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                <div className="mr-4">
-                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                    <Lightbulb
-                      className="w-6 h-6 text-white"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Create Solutions</h3>
-                  <p className="text-gray-200">
-                    Build projects that make a difference
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                <div className="mr-4">
-                  <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-white" aria-hidden="true" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Lead Communities</h3>
-                  <p className="text-gray-200">
-                    Inspire and guide fellow innovators
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+      {/* Left Side - just the photo, full-bleed, on every device - no text
+          overlay to keep legible. h-screen + overflow-hidden above, plus
+          overflow-y-auto on the form column below, mean the page itself
+          never scrolls - only the (often long) sign-up form scrolls
+          internally within its own column when needed. */}
+      <div
+        className="h-40 sm:h-56 md:h-auto md:w-1/2 flex-shrink-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/assets/images/hubimage.jpg')",
+        }}
+        role="img"
+        aria-label="NPC Innovation Hub members collaborating"
+      />
       {/* Right Side – Sign Up Form */}
       <div
-        className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 py-12"
+        className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center px-4 md:px-8 py-12"
         style={{ backgroundColor: "#002B56" }}
       >
-        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md my-auto">
           <form onSubmit={handleSubmit} noValidate>
             <h1 className="text-2xl font-semibold text-[#002B56] text-center mb-6">
               Create an Account
