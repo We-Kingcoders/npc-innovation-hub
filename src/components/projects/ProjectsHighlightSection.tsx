@@ -113,8 +113,14 @@ const ProjectsHighlightSection: React.FC<ProjectsHighlightSectionProps> = ({
 
         {/* Carousel section */}
         <div className="flex-1 flex flex-col items-center justify-center">
+          {/* Was a hardcoded w-[600px] with no responsive fallback - on any
+              screen narrower than that (every phone) it forced the whole
+              section into horizontal overflow. The cards inside already
+              size themselves with minWidth: 0 and flex, so capping this at
+              600px while letting it shrink to the viewport on small screens
+              doesn't change how the cards lay out on larger ones. */}
           <div
-            className="relative flex w-[600px]"
+            className="relative flex w-full max-w-[600px]"
             style={{ height: CARD1_HEIGHT }}
           >
             {/* Left arrow */}

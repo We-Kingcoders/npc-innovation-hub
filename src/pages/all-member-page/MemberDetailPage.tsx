@@ -186,7 +186,7 @@ export const MemberDetailPage: React.FC = () => {
         <div className="max-w-7xl mx-auto space-y-6 animate-pulse">
           <div className="h-11 w-52 bg-gray-200 rounded-full" />
           <div className="w-full h-80 bg-gray-200 rounded-3xl" />
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div className="h-64 bg-gray-200 rounded-3xl" />
             <div className="h-64 bg-gray-200 rounded-3xl" />
             <div className="h-64 bg-gray-200 rounded-3xl" />

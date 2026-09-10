@@ -4,20 +4,23 @@ import NotificationBell from "../notifications/NotificationBell";
 
 export const Topbar: React.FC = () => {
   return (
-    <header className="flex items-center justify-between py-6 px-10">
-      {/* Search Bar */}
-      <div className="w-[540px]">
-        <div className="bg-white border border-mist-300 rounded-xl shadow-sm flex items-center px-6 py-3 focus-within:border-navy-500 transition-colors">
-          <Search className="text-mist-500 mr-3" size={20} />
+    <header className="flex items-center justify-between gap-4 py-6 px-4 sm:px-10">
+      {/* Search Bar - was a hardcoded w-[540px], which overflowed the
+          viewport on any screen narrower than ~540px plus the icons and
+          padding (every phone, and many tablets in portrait). Now grows up
+          to that same 540px on room enough, shrinks to fit otherwise. */}
+      <div className="w-full min-w-0 max-w-[540px]">
+        <div className="bg-white border border-mist-300 rounded-xl shadow-sm flex items-center px-4 sm:px-6 py-3 focus-within:border-navy-500 transition-colors">
+          <Search className="text-mist-500 mr-3 flex-shrink-0" size={20} />
           <input
-            className="w-full outline-none border-none bg-transparent text-sm text-navy-800 placeholder:text-mist-500"
+            className="w-full min-w-0 outline-none border-none bg-transparent text-sm text-navy-800 placeholder:text-mist-500"
             placeholder="Search a resource or project"
           />
         </div>
       </div>
 
       {/* Icons Section */}
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-3 items-center flex-shrink-0">
         <NotificationBell />
         {[Mail, UserCircle].map((Icon, i) => (
           <button

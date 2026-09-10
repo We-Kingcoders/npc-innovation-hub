@@ -239,7 +239,7 @@ const FilterSection = ({
     <div className="bg-white shadow rounded-xl p-6 mb-6">
       <h3 className="font-semibold text-lg mb-4">Filters</h3>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Search */}
         <div>
           <input
