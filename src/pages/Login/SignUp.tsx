@@ -215,7 +215,7 @@ const SignUpPage = () => {
           scrolls - only the (often long) sign-up form scrolls internally
           within its own column when needed. */}
       <AuthPageMain>
-        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md my-auto">
+        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
           <form onSubmit={handleSubmit} noValidate>
             <h1 className="text-2xl font-semibold text-[#002B56] text-center mb-6">
               Create an Account

@@ -47,7 +47,7 @@ const ForgotPassword: React.FC = () => {
       <Navbar />
 
       <AuthPageMain>
-        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
           {isSubmitted ? (
             <div className="text-center">
               <div className="mx-auto h-14 w-14 rounded-full bg-green-100 flex items-center justify-center">

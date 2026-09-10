@@ -86,7 +86,7 @@ const OTPVerification: React.FC = () => {
       <Navbar />
 
       <AuthPageMain>
-        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="text-center mb-2">
               <h1 className="text-2xl font-bold text-[#002B56]">
