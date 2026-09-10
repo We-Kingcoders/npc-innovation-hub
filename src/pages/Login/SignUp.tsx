@@ -206,41 +206,26 @@ const SignUpPage = () => {
   // const navigate = useNavigate(); // If you want to navigate after signup
 
   return (
-    <div
-      className="flex flex-col md:flex-row min-h-screen"
-      style={{ backgroundColor: "#002B56" }}
-    >
-      {/* Left Side Content */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-36 py-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold leading-tight">
-            <span className="text-black">Innovate. </span>
-            <span className="text-cyan-400">Create.</span>
-            <br />
-            <span className="text-cyan-400" style={{ color: "#029DE0" }}>
-              Lead.
-            </span>
-          </h1>
-        </div>
-        <div className="text-white">
-          <h2 className="text-2xl font-semibold mb-6">Welcome!</h2>
-          <p className="text-sm mb-4 max-w-sm leading-relaxed">
-            To get started, create an account or log in. You can use your email
-            address and password, or sign in quickly with Google, LinkedIn or
-            GitHub.
-          </p>
-          <p className="text-sm max-w-sm leading-relaxed">
-            If you already have an account, click the{" "}
-            <span className="text-cyan-400 font-medium">
-              "Forgot password?"
-            </span>{" "}
-            to recover your account.
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+      {/* Left Side - just the photo, full-bleed, on every device - no text
+          overlay to keep legible. h-screen + overflow-hidden above, plus
+          overflow-y-auto on the form column below, mean the page itself
+          never scrolls - only the (often long) sign-up form scrolls
+          internally within its own column when needed. */}
+      <div
+        className="h-40 sm:h-56 md:h-auto md:w-1/2 flex-shrink-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/assets/images/hubimage.jpg')",
+        }}
+        role="img"
+        aria-label="NPC Innovation Hub members collaborating"
+      />
       {/* Right Side – Sign Up Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 py-12">
-        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+      <div
+        className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center px-4 md:px-8 py-12"
+        style={{ backgroundColor: "#002B56" }}
+      >
+        <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md my-auto">
           <form onSubmit={handleSubmit} noValidate>
             <h1 className="text-2xl font-semibold text-[#002B56] text-center mb-6">
               Create an Account

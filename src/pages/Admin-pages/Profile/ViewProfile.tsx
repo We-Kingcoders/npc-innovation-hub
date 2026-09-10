@@ -59,7 +59,7 @@ export default function ViewProfile() {
     content = (
       <div className="flex items-center justify-center py-24">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#002B56] mb-4"></div>
           <p className="text-gray-600">Loading profile...</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function ViewProfile() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={fetchProfile}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-2 bg-[#002B56] text-white rounded-lg hover:bg-[#003366] transition-colors"
           >
             Try Again
           </button>
@@ -99,7 +99,7 @@ export default function ViewProfile() {
         {/* Profile Card */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header Section with Avatar */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-12 relative">
+          <div className="bg-gradient-to-r from-[#002B56] to-[#003366] px-8 py-12 relative">
             <div className="flex items-center gap-6">
               {/* Avatar */}
               <div className="relative">
@@ -111,7 +111,7 @@ export default function ViewProfile() {
                   />
                 ) : (
                   <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center ring-4 ring-white shadow-xl">
-                    <span className="text-4xl font-bold text-blue-600">
+                    <span className="text-4xl font-bold text-[#002B56]">
                       {initials}
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export default function ViewProfile() {
             </p>
             <Link
               to="/admin/profile/settings"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="px-6 py-2 bg-[#002B56] text-white rounded-lg hover:bg-[#003366] transition-colors font-medium"
             >
               Edit Profile
             </Link>

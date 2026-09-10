@@ -149,7 +149,7 @@ export default function ProfileSettings() {
           <Topbar />
           <div className="flex items-center justify-center py-24">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#002B56] mb-4"></div>
               <p className="text-gray-600">Loading...</p>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function ProfileSettings() {
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <UserIcon className="text-blue-600" size={28} />
+                <UserIcon className="text-[#002B56]" size={28} />
                 Personal Information
               </h2>
               <p className="text-gray-600 mt-1">
@@ -202,7 +202,7 @@ export default function ProfileSettings() {
                       }}
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center ring-4 ring-gray-100">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#002B56] to-[#003366] flex items-center justify-center ring-4 ring-gray-100">
                       <span className="text-3xl font-bold text-white">
                         {initials}
                       </span>
@@ -238,7 +238,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.firstName
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-500"
+                        : "border-gray-300 focus:ring-[#00A0E3]"
                     }`}
                     placeholder="Enter first name"
                   />
@@ -266,7 +266,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.lastName
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-500"
+                        : "border-gray-300 focus:ring-[#00A0E3]"
                     }`}
                     placeholder="Enter last name"
                   />
@@ -316,7 +316,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.phone
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-500"
+                        : "border-gray-300 focus:ring-[#00A0E3]"
                     }`}
                     placeholder="+1234567890"
                   />
@@ -338,7 +338,7 @@ export default function ProfileSettings() {
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A0E3] transition-colors"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -363,7 +363,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.image
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-500"
+                        : "border-gray-300 focus:ring-[#00A0E3]"
                     }`}
                     placeholder="https://example.com/image.jpg"
                   />
@@ -383,8 +383,8 @@ export default function ProfileSettings() {
                   disabled={isSaving}
                   className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-colors ${
                     isSaving
-                      ? "bg-blue-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
+                      ? "bg-[#002B56]/50 cursor-not-allowed"
+                      : "bg-[#002B56] hover:bg-[#003366]"
                   }`}
                 >
                   <Save size={20} />
