@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
+import { Rocket, Lightbulb, Users } from "lucide-react";
 import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
 
@@ -186,14 +187,12 @@ const LoginPage = () => {
       <main id="main-content" className="flex flex-col md:flex-row flex-1">
         {/* Left Side - Image Background with Text Overlay */}
         <div className="hidden md:block md:w-1/2 relative">
-          {/* Image Background */}
+          {/* Image Background - a real photo of NPC Innovation Hub members
+              at work, replacing a generic Unsplash stock photo. */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')",
-              // You can replace this URL with your actual image
-              // For local images: backgroundImage: "url('/path/to/your/image.jpg')"
+              backgroundImage: "url('/assets/images/hubimage.jpg')",
             }}
           >
             {/* Dark Overlay for Better Text Contrast */}
@@ -203,22 +202,13 @@ const LoginPage = () => {
           {/* Content Container - Text Overlay */}
           <div className="relative z-10 h-full flex items-center p-12">
             <div className="max-w-lg text-white">
-              {/* Prewritten Words with Enhanced Visibility */}
-              <div className="mb-10">
-                <h1 className="text-5xl font-bold leading-tight mb-6 drop-shadow-lg">
-                  <span className="text-white">Innovate. </span>
-                  <span className="text-cyan-300">Create.</span>
-                  <br />
-                  <span className="text-cyan-400">Lead.</span>
+              {/* Tagline - single line, in a solid white card so the navy
+                  text stays legible regardless of what's behind it in the
+                  photo. */}
+              <div className="mb-10 bg-white/90 backdrop-blur-sm rounded-xl px-6 py-5 inline-block">
+                <h1 className="text-4xl font-bold leading-tight whitespace-nowrap text-[#002B56]">
+                  Innovate. Create. Lead.
                 </h1>
-                <h2 className="text-3xl font-semibold mb-6 drop-shadow-md">
-                  Welcome Back!
-                </h2>
-                <p className="text-xl leading-relaxed drop-shadow-md backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  You can log in with email & password, or sign in quickly with
-                  Google. Join our community of innovators shaping the future
-                  together.
-                </p>
               </div>
 
               {/* Feature Highlights */}
@@ -226,7 +216,10 @@ const LoginPage = () => {
                 <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
                   <div className="mr-4">
                     <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">🚀</span>
+                      <Rocket
+                        className="w-6 h-6 text-white"
+                        aria-hidden="true"
+                      />
                     </div>
                   </div>
                   <div>
@@ -240,7 +233,10 @@ const LoginPage = () => {
                 <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
                   <div className="mr-4">
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">💡</span>
+                      <Lightbulb
+                        className="w-6 h-6 text-white"
+                        aria-hidden="true"
+                      />
                     </div>
                   </div>
                   <div>
@@ -254,7 +250,10 @@ const LoginPage = () => {
                 <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
                   <div className="mr-4">
                     <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">👥</span>
+                      <Users
+                        className="w-6 h-6 text-white"
+                        aria-hidden="true"
+                      />
                     </div>
                   </div>
                   <div>

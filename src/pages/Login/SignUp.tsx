@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Rocket, Lightbulb, Users } from "lucide-react";
 import { API_BASE_URL } from "../../config/env";
 
 // If using react-router-dom for navigation, import as needed
@@ -206,40 +207,83 @@ const SignUpPage = () => {
   // const navigate = useNavigate(); // If you want to navigate after signup
 
   return (
-    <div
-      className="flex flex-col md:flex-row min-h-screen"
-      style={{ backgroundColor: "#002B56" }}
-    >
-      {/* Left Side Content */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-36 py-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold leading-tight">
-            <span className="text-black">Innovate. </span>
-            <span className="text-cyan-400">Create.</span>
-            <br />
-            <span className="text-cyan-400" style={{ color: "#029DE0" }}>
-              Lead.
-            </span>
-          </h1>
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Left Side - same treatment as the Login page's left panel: a real
+          photo of NPC Innovation Hub members at work, a single-line navy
+          tagline in a solid card for guaranteed legibility, and the same
+          three feature highlights with real icons instead of emoji. */}
+      <div className="hidden md:block md:w-1/2 relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/assets/images/hubimage.jpg')",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
         </div>
-        <div className="text-white">
-          <h2 className="text-2xl font-semibold mb-6">Welcome!</h2>
-          <p className="text-sm mb-4 max-w-sm leading-relaxed">
-            To get started, create an account or log in. You can use your email
-            address and password, or sign in quickly with Google, LinkedIn or
-            GitHub.
-          </p>
-          <p className="text-sm max-w-sm leading-relaxed">
-            If you already have an account, click the{" "}
-            <span className="text-cyan-400 font-medium">
-              "Forgot password?"
-            </span>{" "}
-            to recover your account.
-          </p>
+
+        <div className="relative z-10 h-full flex items-center p-12">
+          <div className="max-w-lg text-white">
+            <div className="mb-10 bg-white/90 backdrop-blur-sm rounded-xl px-6 py-5 inline-block">
+              <h1 className="text-4xl font-bold leading-tight whitespace-nowrap text-[#002B56]">
+                Innovate. Create. Lead.
+              </h1>
+            </div>
+
+            <div className="mt-12 space-y-6">
+              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                <div className="mr-4">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                    <Rocket className="w-6 h-6 text-white" aria-hidden="true" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Innovate Together</h3>
+                  <p className="text-gray-200">
+                    Collaborate with like-minded creators
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                <div className="mr-4">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                    <Lightbulb
+                      className="w-6 h-6 text-white"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Create Solutions</h3>
+                  <p className="text-gray-200">
+                    Build projects that make a difference
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
+                <div className="mr-4">
+                  <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" aria-hidden="true" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Lead Communities</h3>
+                  <p className="text-gray-200">
+                    Inspire and guide fellow innovators
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {/* Right Side – Sign Up Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 py-12">
+      <div
+        className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 py-12"
+        style={{ backgroundColor: "#002B56" }}
+      >
         <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
           <form onSubmit={handleSubmit} noValidate>
             <h1 className="text-2xl font-semibold text-[#002B56] text-center mb-6">
