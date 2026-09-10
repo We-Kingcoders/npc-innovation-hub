@@ -74,10 +74,13 @@ const OTPVerification: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Main Content - Two Column Layout */}
-      <div className="flex flex-1">
+      {/* Main Content - Two Column Layout. Was a bare flex with two w-1/2
+          columns and no responsive fallback - on any phone or narrow
+          tablet this squeezed the background panel and the OTP form into
+          two illegible half-width columns instead of stacking. */}
+      <div className="flex flex-col md:flex-row flex-1">
         {/* Left Side - Image Background with Text Overlay */}
-        <div className="w-1/2 relative">
+        <div className="hidden md:block md:w-1/2 relative">
           {/* Image Background */}
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -171,10 +174,10 @@ const OTPVerification: React.FC = () => {
 
         {/* Right Side - OTP Form */}
         <div
-          className="w-1/2 flex items-center justify-center p-12"
+          className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12"
           style={{ backgroundColor: "#002B56" }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl p-12 w-full max-w-2xl">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 w-full max-w-2xl">
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="text-center mb-10">
                 <h1 className="text-3xl font-bold text-[#002B56] mb-4">
