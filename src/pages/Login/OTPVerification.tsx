@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { authService } from "../../api/authService";
+import Navbar from "../../components/Navbar";
+import AuthLeftPanel from "../../components/AuthLeftPanel";
 
 const OTPVerification: React.FC = () => {
   const [otp, setOtp] = useState("");
@@ -73,154 +75,80 @@ const OTPVerification: React.FC = () => {
   const displayError = localError || error;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Main Content - Two Column Layout. Was a bare flex with two w-1/2
-          columns and no responsive fallback - on any phone or narrow
-          tablet this squeezed the background panel and the OTP form into
-          two illegible half-width columns instead of stacking. */}
-      <div className="flex flex-col md:flex-row flex-1">
-        {/* Left Side - Image Background with Text Overlay */}
-        <div className="hidden md:block md:w-1/2 relative">
-          {/* Image Background */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')",
-            }}
-          >
-            {/* Dark Overlay for Better Text Contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
-          </div>
+    <div className="flex flex-col h-screen overflow-hidden">
+      {/* Same shell as Login/SignUp - shared Navbar, hubimage.jpg left
+          panel, and a page that never needs to scroll on its own. This
+          page used to be the odd one out: no Navbar at all, a leftover
+          Unsplash stock photo, cyan-tinted "Innovate. Create. Lead." text
+          and emoji "icons" in mismatched colors - visually a completely
+          different page from Login/SignUp instead of the next step in the
+          same flow. */}
+      <Navbar />
 
-          {/* Content Container - Text Overlay */}
-          <div className="relative z-10 h-full flex items-center p-12">
-            <div className="max-w-lg text-white">
-              {/* Heading */}
-              <div className="mb-10">
-                <h1 className="text-5xl font-bold leading-tight mb-6 drop-shadow-lg">
-                  <span className="text-white">Innovate. </span>
-                  <span className="text-cyan-300">Create.</span>
-                  <br />
-                  <span className="text-cyan-400">Lead.</span>
-                </h1>
-                <h2 className="text-3xl font-semibold mb-6 drop-shadow-md">
-                  OTP Verification
-                </h2>
-                <p className="text-xl leading-relaxed drop-shadow-md backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  Enter the OTP sent to{" "}
-                  <span className="font-semibold">{email}</span> to verify your
-                  account and continue.
-                </p>
-              </div>
+      <main
+        id="main-content"
+        className="flex flex-col md:flex-row flex-1 min-h-0"
+      >
+        <AuthLeftPanel />
 
-              {/* Feature Highlights */}
-              <div className="mt-12 space-y-6">
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">🔒</span>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Secure Access</h3>
-                    <p className="text-gray-200">
-                      Two-factor authentication keeps your account safe
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">✉️</span>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Check Your Email</h3>
-                    <p className="text-gray-200">
-                      A 6-digit code was sent to your inbox
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center backdrop-blur-sm bg-white/10 p-4 rounded-lg">
-                  <div className="mr-4">
-                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl">🛡️</span>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Never Share OTPs</h3>
-                    <p className="text-gray-200">
-                      Our team will never ask for your verification code
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Security Tips Link */}
-              <div className="mt-8">
-                <span
-                  className="text-cyan-400 font-medium cursor-pointer hover:underline text-sm"
-                  onClick={() => setShowSecurityTips(true)}
-                >
-                  View Security Tips →
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - OTP Form */}
+        {/* Right Side - OTP Form. overflow-y-auto is a fallback for an
+            unusually short viewport - the form is compact enough to fit a
+            typical device's screen on its own. */}
         <div
-          className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12"
+          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
           style={{ backgroundColor: "#002B56" }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 w-full max-w-2xl">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold text-[#002B56] mb-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="text-center mb-2">
+                <h1 className="text-2xl font-bold text-[#002B56]">
                   OTP Verification
                 </h1>
-                <p className="text-gray-600">
-                  Enter the 6-digit code sent to your email address
+                <p className="text-gray-600 text-sm mt-2">
+                  Enter the 6-digit code sent to{" "}
+                  {email ? (
+                    <span className="font-semibold">{email}</span>
+                  ) : (
+                    "your email address"
+                  )}
                 </p>
               </div>
 
               {displayError && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <p className="text-red-700 text-center">{displayError}</p>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-700 text-center text-sm">
+                    {displayError}
+                  </p>
                 </div>
               )}
 
               {resendMessage && (
-                <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
-                  <p className="text-green-700 text-center">{resendMessage}</p>
+                <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
+                  <p className="text-green-700 text-center text-sm">
+                    {resendMessage}
+                  </p>
                 </div>
               )}
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
-                    Enter OTP Code
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter 6-digit OTP"
-                    className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg tracking-widest text-center"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    maxLength={6}
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-medium mb-1.5">
+                  Enter OTP Code
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit OTP"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent text-lg tracking-widest text-center"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  maxLength={6}
+                  required
+                  disabled={isLoading}
+                />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 bg-[#002B56] text-white rounded-xl font-semibold text-lg hover:bg-blue-800 transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -251,28 +179,35 @@ const OTPVerification: React.FC = () => {
                 )}
               </button>
 
-              <div className="text-center pt-4 border-t border-gray-200">
-                <p className="text-gray-600 text-lg">
+              <div className="text-center pt-2 border-t border-gray-200">
+                <p className="text-gray-600 text-sm pt-2">
                   Didn't receive the code?{" "}
                   <button
                     type="button"
-                    className="text-blue-600 hover:text-blue-800 hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+                    className="text-[#002B56] hover:text-[#003366] hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
                     disabled={isLoading || isResending}
                     onClick={() => void handleResend()}
                   >
                     {isResending ? "Sending..." : "Resend OTP"}
                   </button>
                 </p>
+                <button
+                  type="button"
+                  className="text-[#00A0E3] font-medium hover:underline text-sm mt-2"
+                  onClick={() => setShowSecurityTips(true)}
+                >
+                  View Security Tips
+                </button>
               </div>
             </form>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Security Tips Popup */}
       {showSecurityTips && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full">
             <div className="border-b border-gray-200 py-4 px-6">
               <h1 className="text-xl font-bold text-red-500 flex items-center">
                 <svg
@@ -316,7 +251,7 @@ const OTPVerification: React.FC = () => {
             </div>
             <div className="border-t border-gray-200 py-3 px-6 flex justify-center">
               <button
-                className="py-2 px-10 bg-blue-900 text-white font-bold rounded hover:bg-blue-800 transition-colors"
+                className="py-2 px-10 bg-[#002B56] text-white font-bold rounded hover:bg-[#003366] transition-colors"
                 onClick={() => setShowSecurityTips(false)}
               >
                 Close
