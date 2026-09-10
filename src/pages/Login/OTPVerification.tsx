@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { authService } from "../../api/authService";
 import Navbar from "../../components/Navbar";
-import AuthLeftPanel, {
-  AUTH_RIGHT_PANEL_BACKGROUND,
-} from "../../components/AuthLeftPanel";
+import AuthPageMain from "../../components/AuthPageMain";
 
 const OTPVerification: React.FC = () => {
   const [otp, setOtp] = useState("");
@@ -78,133 +76,120 @@ const OTPVerification: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      {/* Same shell as Login/SignUp - shared Navbar, hubimage.jpg left
-          panel, and a page that never needs to scroll on its own. This
-          page used to be the odd one out: no Navbar at all, a leftover
-          Unsplash stock photo, cyan-tinted "Innovate. Create. Lead." text
-          and emoji "icons" in mismatched colors - visually a completely
-          different page from Login/SignUp instead of the next step in the
-          same flow. */}
+      {/* Same shell as Login/SignUp/Forgot Password - shared Navbar,
+          AuthPageMain's single hubimage.jpg backdrop, and a page that never
+          needs to scroll on its own. This page used to be the odd one out:
+          no Navbar at all, a leftover Unsplash stock photo, cyan-tinted
+          "Innovate. Create. Lead." text and emoji "icons" in mismatched
+          colors - visually a completely different page from Login/SignUp
+          instead of the next step in the same flow. */}
       <Navbar />
 
-      <main
-        id="main-content"
-        className="flex flex-col md:flex-row flex-1 min-h-0"
-      >
-        <AuthLeftPanel />
-
-        {/* Right Side - OTP Form. overflow-y-auto is a fallback for an
-            unusually short viewport - the form is compact enough to fit a
-            typical device's screen on its own. */}
-        <div
-          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
-          style={AUTH_RIGHT_PANEL_BACKGROUND}
-        >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="text-center mb-2">
-                <h1 className="text-2xl font-bold text-[#002B56]">
-                  OTP Verification
-                </h1>
-                <p className="text-gray-600 text-sm mt-2">
-                  Enter the 6-digit code sent to{" "}
-                  {email ? (
-                    <span className="font-semibold">{email}</span>
-                  ) : (
-                    "your email address"
-                  )}
-                </p>
-              </div>
-
-              {displayError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                  <p className="text-red-700 text-center text-sm">
-                    {displayError}
-                  </p>
-                </div>
-              )}
-
-              {resendMessage && (
-                <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
-                  <p className="text-green-700 text-center text-sm">
-                    {resendMessage}
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1.5">
-                  Enter OTP Code
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter 6-digit OTP"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent text-lg tracking-widest text-center"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  maxLength={6}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin h-5 w-5 mr-3 text-white"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Verifying...
-                  </span>
+      <AuthPageMain>
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="text-center mb-2">
+              <h1 className="text-2xl font-bold text-[#002B56]">
+                OTP Verification
+              </h1>
+              <p className="text-gray-600 text-sm mt-2">
+                Enter the 6-digit code sent to{" "}
+                {email ? (
+                  <span className="font-semibold">{email}</span>
                 ) : (
-                  "Verify OTP"
+                  "your email address"
                 )}
-              </button>
+              </p>
+            </div>
 
-              <div className="text-center pt-2 border-t border-gray-200">
-                <p className="text-gray-600 text-sm pt-2">
-                  Didn't receive the code?{" "}
-                  <button
-                    type="button"
-                    className="text-[#002B56] hover:text-[#003366] hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
-                    disabled={isLoading || isResending}
-                    onClick={() => void handleResend()}
-                  >
-                    {isResending ? "Sending..." : "Resend OTP"}
-                  </button>
+            {displayError && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-red-700 text-center text-sm">
+                  {displayError}
                 </p>
+              </div>
+            )}
+
+            {resendMessage && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
+                <p className="text-green-700 text-center text-sm">
+                  {resendMessage}
+                </p>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-1.5">
+                Enter OTP Code
+              </label>
+              <input
+                type="text"
+                placeholder="Enter 6-digit OTP"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent text-lg tracking-widest text-center"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={6}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-3 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Verifying...
+                </span>
+              ) : (
+                "Verify OTP"
+              )}
+            </button>
+
+            <div className="text-center pt-2 border-t border-gray-200">
+              <p className="text-gray-600 text-sm pt-2">
+                Didn't receive the code?{" "}
                 <button
                   type="button"
-                  className="text-[#00A0E3] font-medium hover:underline text-sm mt-2"
-                  onClick={() => setShowSecurityTips(true)}
+                  className="text-[#002B56] hover:text-[#003366] hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+                  disabled={isLoading || isResending}
+                  onClick={() => void handleResend()}
                 >
-                  View Security Tips
+                  {isResending ? "Sending..." : "Resend OTP"}
                 </button>
-              </div>
-            </form>
-          </div>
+              </p>
+              <button
+                type="button"
+                className="text-[#00A0E3] font-medium hover:underline text-sm mt-2"
+                onClick={() => setShowSecurityTips(true)}
+              >
+                View Security Tips
+              </button>
+            </div>
+          </form>
         </div>
-      </main>
+      </AuthPageMain>
 
       {/* Security Tips Popup */}
       {showSecurityTips && (
