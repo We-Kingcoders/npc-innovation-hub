@@ -1,15 +1,45 @@
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { authService } from "../../api/authService";
 
 const OTPVerification: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [localError, setLocalError] = useState("");
   const [showSecurityTips, setShowSecurityTips] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
 
   // Use authentication context
   const { verifyOTP, user, error, isLoading, clearError } = useAuth();
 
   const email = user?.email || localStorage.getItem("email") || "";
+
+  // Was a bare alert("Resend OTP functionality coming soon!") with no real
+  // call behind it - the backend's POST /api/users/send-otp genuinely
+  // works now (see otp.middleware.ts's resendOTP), so this sends a real
+  // request instead of pretending to.
+  const handleResend = async () => {
+    setLocalError("");
+    setResendMessage("");
+    clearError();
+
+    if (!email) {
+      setLocalError("Email is missing. Please try logging in again.");
+      return;
+    }
+
+    setIsResending(true);
+    try {
+      await authService.resendOTP(email);
+      setResendMessage("A new code has been sent to your email.");
+    } catch (err: unknown) {
+      setLocalError(
+        err instanceof Error ? err.message : "Failed to resend the code.",
+      );
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   // ==================== OTP VERIFICATION ====================
 
@@ -161,6 +191,12 @@ const OTPVerification: React.FC = () => {
                 </div>
               )}
 
+              {resendMessage && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                  <p className="text-green-700 text-center">{resendMessage}</p>
+                </div>
+              )}
+
               <div className="space-y-6">
                 <div>
                   <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -217,14 +253,11 @@ const OTPVerification: React.FC = () => {
                   Didn't receive the code?{" "}
                   <button
                     type="button"
-                    className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
-                    disabled={isLoading}
-                    onClick={() => {
-                      // You can implement resend OTP functionality here
-                      alert("Resend OTP functionality coming soon!");
-                    }}
+                    className="text-blue-600 hover:text-blue-800 hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+                    disabled={isLoading || isResending}
+                    onClick={() => void handleResend()}
                   >
-                    Resend OTP
+                    {isResending ? "Sending..." : "Resend OTP"}
                   </button>
                 </p>
               </div>

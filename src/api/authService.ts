@@ -185,6 +185,21 @@ export const authService = {
   },
 
   /**
+   * Resend a fresh OTP code to the given email - used by the "Resend OTP"
+   * link on the verification page when the original code was lost, expired,
+   * or never arrived.
+   *
+   * @param email - The account email to send a new OTP to
+   * @returns Send confirmation
+   */
+  async resendOTP(email: string): Promise<{ message: string }> {
+    return apiRequest<{ message: string }>("/send-otp", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  /**
    * Verify email address using verification token
    *
    * @param token - Verification token from email link
