@@ -13,8 +13,13 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("male");
-  const [role, setRole] = useState("Member");
   const [agreeTerms, setAgreeTerms] = useState(false);
+
+  // Every account self-registers as a Member - there is no role picker in
+  // the sign-up form. An admin promotes a member to Admin/Moderator later
+  // (via account approval/role management), rather than letting a new
+  // signup grant themselves elevated access.
+  const role = "Member";
 
   // API state
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +35,6 @@ const SignUpPage = () => {
     confirmPassword?: string;
     gender?: string;
     phone?: string;
-    role?: string;
     agreeTerms?: string;
     form?: string;
   }>({});
@@ -55,7 +59,6 @@ const SignUpPage = () => {
       )
         delete newErrors.confirmPassword;
       if (gender && newErrors.gender) delete newErrors.gender;
-      if (role && newErrors.role) delete newErrors.role;
       if (agreeTerms && newErrors.agreeTerms) delete newErrors.agreeTerms;
       return newErrors;
     });
@@ -67,7 +70,6 @@ const SignUpPage = () => {
     password,
     confirmPassword,
     gender,
-    role,
     agreeTerms,
   ]);
 
@@ -114,10 +116,6 @@ const SignUpPage = () => {
     }
     if (!gender) {
       newErrors.gender = "Gender is required";
-      isValid = false;
-    }
-    if (!role) {
-      newErrors.role = "Role is required";
       isValid = false;
     }
     if (!agreeTerms) {
@@ -187,7 +185,6 @@ const SignUpPage = () => {
       setConfirmPassword("");
       setGender("male");
       setPhone("");
-      setRole("Member");
       setAgreeTerms(false);
       setErrors({});
     } catch (err) {
@@ -343,22 +340,6 @@ const SignUpPage = () => {
                 <p className="mt-1 text-sm text-red-500">
                   {errors.confirmPassword}
                 </p>
-              )}
-            </div>
-            <div className="mb-4">
-              <select
-                className={`w-full px-4 py-3 border ${
-                  errors.role ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none`}
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="Member">Member</option>
-                <option value="Admin">Admin</option>
-                <option value="Moderator">Moderator</option>
-              </select>
-              {errors.role && (
-                <p className="mt-1 text-sm text-red-500">{errors.role}</p>
               )}
             </div>
             <div className="flex items-center mb-4">

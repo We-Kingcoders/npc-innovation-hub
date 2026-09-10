@@ -390,19 +390,6 @@ const ForgotPassword: React.FC = () => {
             </button>
           </div>
         </form>
-
-        {/* Additional Info */}
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
-            <a
-              href="/signup"
-              className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
-            >
-              Sign up here
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
