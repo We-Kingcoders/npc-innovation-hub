@@ -56,12 +56,15 @@ export default function AuthPageMain({ children }: { children: ReactNode }) {
           with a drop-shadow for contrast, not cards - large, bold type is
           the visual weight now instead of a translucent box behind it. */}
       <div className="hidden md:flex relative z-10 md:w-1/2 items-start p-8 lg:p-12">
-        <div className="w-full max-w-md">
-          <h2 className="text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-lg mb-10">
+        <div className="w-full">
+          {/* No max-w-md cap here (unlike the feature list below) and
+              whitespace-nowrap - this needs the column's full padded width
+              to stay on one line at this size instead of wrapping. */}
+          <h2 className="text-3xl lg:text-4xl font-bold leading-tight whitespace-nowrap text-white drop-shadow-lg mb-10">
             Innovate. Create. Lead.
           </h2>
 
-          <div className="space-y-6">
+          <div className="max-w-md space-y-6">
             {FEATURES.map(({ icon: Icon, title, text }) => (
               <div key={title} className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 bg-[#00A0E3] rounded-full flex items-center justify-center shadow-lg">
