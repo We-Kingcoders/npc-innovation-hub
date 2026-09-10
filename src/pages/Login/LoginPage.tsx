@@ -216,9 +216,6 @@ const LoginPage = () => {
                 <h1 className="text-3xl font-bold text-[#002B56] mb-4">
                   Login to your Account
                 </h1>
-                <p className="text-gray-600">
-                  Access your dashboard and continue your innovation journey
-                </p>
               </div>
 
               {errorMessage && (
