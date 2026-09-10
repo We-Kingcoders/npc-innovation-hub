@@ -154,7 +154,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
   const baseInput =
     "w-full font-sans text-sm text-[#1a2d4a] bg-[#f5f8fc] border-[1.5px] border-[#dce8f5] rounded-xl px-3.5 py-2.5 outline-none " +
     "transition-all duration-200 ease-in-out placeholder:text-[#a4b5cc] " +
-    "focus:border-[#0055b3] focus:bg-white focus:ring-2 focus:ring-[#0055b3]/10 " +
+    "focus:border-[#00A0E3] focus:bg-white focus:ring-2 focus:ring-[#00A0E3]/10 " +
     "hover:border-[#afc8e8]";
 
   const errorInput =
@@ -189,8 +189,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
           <div
             className="relative overflow-hidden px-9 pt-8 pb-7 rounded-t-[20px]"
             style={{
-              background:
-                "linear-gradient(135deg,#002B56 0%,#004a94 60%,#0066cc 100%)",
+              background: "linear-gradient(135deg,#002B56 0%,#003366 100%)",
             }}
           >
             {/* decorative circles */}
@@ -230,7 +229,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
               <div
                 className="anim-success flex items-center justify-center w-[72px] h-[72px] rounded-full"
                 style={{
-                  background: "linear-gradient(135deg,#002B56,#004a94)",
+                  background: "linear-gradient(135deg,#002B56,#003366)",
                   boxShadow: "0 8px 24px rgba(0,43,86,.3)",
                 }}
               >
@@ -457,7 +456,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
 
               {/* Consent */}
               <div className="mt-5">
-                <label className="flex items-start gap-3 px-4 py-3.5 bg-[#f0f6ff] border-[1.5px] border-[#dce8f5] rounded-xl cursor-pointer transition-all duration-200 hover:border-[#0055b3] hover:bg-[#e8f1ff] group">
+                <label className="flex items-start gap-3 px-4 py-3.5 bg-[#f0f6ff] border-[1.5px] border-[#dce8f5] rounded-xl cursor-pointer transition-all duration-200 hover:border-[#00A0E3] hover:bg-[#e8f1ff] group">
                   <input
                     type="checkbox"
                     name="consent"
@@ -470,7 +469,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
                     <a
                       href="#"
                       onClick={(e) => e.stopPropagation()}
-                      className="text-[#0055b3] no-underline hover:underline transition-colors"
+                      className="text-[#002B56] no-underline hover:underline transition-colors"
                     >
                       Privacy Policy
                     </a>{" "}
@@ -515,7 +514,7 @@ const HireUsModal: React.FC<HireUsModalProps> = ({ isOpen, onClose }) => {
                   ].join(" ")}
                   style={{
                     fontFamily: "'Syne', sans-serif",
-                    background: "linear-gradient(135deg,#002B56,#004a94)",
+                    background: "linear-gradient(135deg,#002B56,#003366)",
                     boxShadow: "0 4px 16px rgba(0,43,86,.3)",
                   }}
                 >

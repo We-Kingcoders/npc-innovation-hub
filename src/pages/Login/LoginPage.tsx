@@ -202,37 +202,37 @@ const LoginPage = () => {
           aria-label="NPC Innovation Hub members collaborating"
         />
 
-        {/* Right Side - Maximized Login Card. overflow-y-auto lets this
-            column scroll on its own if the form is taller than the space
-            left after the (now much shorter, image-only) left panel,
-            instead of the whole page scrolling. */}
+        {/* Right Side - Login Card. overflow-y-auto is a fallback that lets
+            this column scroll on its own on an unusually short viewport -
+            the form below is sized to fit a typical device's screen on its
+            own, without needing it. */}
         <div
-          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-6 sm:p-12"
+          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
           style={{ backgroundColor: "#002B56" }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 w-full max-w-2xl my-auto">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold text-[#002B56] mb-4">
-                  Login to your Account
-                </h1>
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="text-center mb-2">
+                <h1 className="text-2xl font-bold text-[#002B56]">Login</h1>
               </div>
 
               {errorMessage && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <p className="text-red-700 text-center">{errorMessage}</p>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-700 text-center text-sm">
+                    {errorMessage}
+                  </p>
                 </div>
               )}
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-1.5">
                     Email Address
                   </label>
                   <input
                     type="email"
                     placeholder="Enter your email address"
-                    className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -241,13 +241,13 @@ const LoginPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-1.5">
                     Password
                   </label>
                   <input
                     type="password"
                     placeholder="Enter your password"
-                    className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -258,7 +258,7 @@ const LoginPage = () => {
 
               <button
                 type="submit"
-                className="w-full py-4 bg-[#002B56] text-white rounded-xl font-semibold text-lg hover:bg-blue-800 transition-colors duration-200 shadow-lg"
+                className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -289,32 +289,32 @@ const LoginPage = () => {
                 )}
               </button>
 
-              <div className="flex justify-between items-center pt-4">
+              <div className="flex justify-between items-center">
                 <label className="flex items-center text-gray-700">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={() => setRememberMe(!rememberMe)}
-                    className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                    className="h-4 w-4 text-[#002B56] rounded focus:ring-[#00A0E3]"
                     disabled={isLoading}
                   />
-                  <span className="ml-2 text-lg">Remember me</span>
+                  <span className="ml-2 text-sm">Remember me</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => navigate("/forgot-password")}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-lg font-medium"
+                  className="text-[#002B56] hover:text-[#003366] hover:underline text-sm font-medium"
                 >
                   Forgot password?
                 </button>
               </div>
 
-              <div className="relative py-6">
+              <div className="relative py-2">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-4 bg-white text-gray-500 text-lg">
+                  <span className="px-3 bg-white text-gray-500 text-xs tracking-wide">
                     OR CONTINUE WITH
                   </span>
                 </div>

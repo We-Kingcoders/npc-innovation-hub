@@ -112,30 +112,39 @@ const ChatDesign = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F3F9FB] py-16 px-4 md:px-8">
+    <div className="min-h-screen w-full bg-[#F3F9FB] py-8 md:py-12 px-4 md:px-8">
       <div className="container mx-auto max-w-5xl">
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <MessageCircle
-            className="w-10 h-10 text-[#00A0E3] mx-auto mb-3"
+            className="w-8 h-8 md:w-10 md:h-10 text-[#00A0E3] mx-auto mb-2"
             aria-hidden="true"
           />
-          <h1 className="text-3xl md:text-4xl font-bold text-[#002B56]">
+          <h1 className="text-2xl md:text-4xl font-bold text-[#002B56]">
             Chat with Us
           </h1>
         </div>
 
         {/* Same left-info / right-content card layout as the Contact Us
-            page (ContactSection.tsx), for consistency. */}
-        <div className="flex flex-col md:flex-row rounded-xl shadow-lg overflow-hidden">
+            page (ContactSection.tsx), for consistency. The card's height
+            is a viewport-relative band (not a flat min-h-[560px], which
+            could run taller than the space actually left under the navbar
+            on a shorter screen) so it fits neatly under the navbar on
+            whatever device it's opened on instead of forcing the page to
+            scroll further than it needs to. Below md it drops the fixed
+            band and just flows - the two panels stack naturally instead
+            of squeezing into a short viewport-relative box. */}
+        <div className="flex flex-col md:flex-row rounded-xl shadow-lg overflow-hidden md:h-[min(70vh,640px)] md:min-h-[420px]">
           {/* Left - Info panel */}
-          <div className="bg-[#002B56] text-white p-8 md:w-2/5 flex flex-col">
-            <h2 className="text-2xl font-bold mb-3">NPC Innovation Hub</h2>
-            <p className="text-white/70 mb-8">
+          <div className="bg-[#002B56] text-white p-6 md:p-8 md:w-2/5 flex flex-col flex-shrink-0">
+            <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-3">
+              NPC Innovation Hub
+            </h2>
+            <p className="text-white/70 text-sm md:text-base mb-4 md:mb-8">
               Ask our assistant a question and get an instant answer, day or
               night.
             </p>
 
-            <div className="flex items-start gap-3 mt-auto">
+            <div className="flex items-start gap-3 md:mt-auto">
               <Mail
                 className="w-5 h-5 text-[#00A0E3] mt-1 flex-shrink-0"
                 aria-hidden="true"
@@ -155,9 +164,11 @@ const ChatDesign = () => {
             </div>
           </div>
 
-          {/* Right - Chat interface */}
-          <div className="bg-white p-4 md:w-3/5 flex flex-col min-h-[560px]">
-            <div className="w-full px-4 space-y-6 flex-grow overflow-y-auto">
+          {/* Right - Chat interface. min-h-0 lets this flex child shrink
+              below its content's natural height so the message list's own
+              overflow-y-auto is what scrolls, not the card or the page. */}
+          <div className="bg-white p-4 md:w-3/5 flex flex-col min-h-[420px] md:min-h-0">
+            <div className="w-full px-4 space-y-6 flex-1 min-h-0 overflow-y-auto">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-3 py-16">
                   <Bot
@@ -232,7 +243,7 @@ const ChatDesign = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="mt-6 px-4 flex items-center gap-2">
+            <div className="mt-4 px-4 flex items-center gap-2 flex-shrink-0">
               <input
                 type="text"
                 value={inputValue}
