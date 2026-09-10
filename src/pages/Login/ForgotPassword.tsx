@@ -4,17 +4,15 @@
  * Allows users to request a password reset link via email. Was a bare,
  * centered single-column form with no Navbar and none of the shared
  * Login/SignUp/OTP shell - the one auth page that looked like it belonged
- * to a different system. Now uses the same two-column layout (AuthLeftPanel
- * + Navbar + no-scroll shell) as the rest of the auth flow.
+ * to a different system. Now uses the same shell (AuthPageMain + Navbar +
+ * no-scroll layout) as the rest of the auth flow.
  */
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import Navbar from "../../components/Navbar";
-import AuthLeftPanel, {
-  AUTH_RIGHT_PANEL_BACKGROUND,
-} from "../../components/AuthLeftPanel";
+import AuthPageMain from "../../components/AuthPageMain";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -48,149 +46,139 @@ const ForgotPassword: React.FC = () => {
     <div className="flex flex-col h-screen overflow-hidden">
       <Navbar />
 
-      <main
-        id="main-content"
-        className="flex flex-col md:flex-row flex-1 min-h-0"
-      >
-        <AuthLeftPanel />
-
-        <div
-          className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
-          style={AUTH_RIGHT_PANEL_BACKGROUND}
-        >
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
-            {isSubmitted ? (
-              <div className="text-center">
-                <div className="mx-auto h-14 w-14 rounded-full bg-green-100 flex items-center justify-center">
-                  <svg
-                    className="h-8 w-8 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h1 className="mt-4 text-2xl font-bold text-[#002B56]">
-                  Check Your Email
-                </h1>
-                <p className="mt-2 text-sm text-gray-600">
-                  We've sent a password reset link to <strong>{email}</strong>
-                </p>
-                <p className="mt-3 text-sm text-gray-600">
-                  Click the link in the email to reset your password. If you
-                  don't see it, check your spam folder.
-                </p>
-
-                <div className="mt-6 space-y-3">
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors"
-                  >
-                    Back to Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setEmail("");
-                    }}
-                    className="w-full py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-                  >
-                    Try Another Email
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="text-center mb-2">
-                  <h1 className="text-2xl font-bold text-[#002B56]">
-                    Reset Your Password
-                  </h1>
-                  <p className="text-gray-600 text-sm mt-2">
-                    We'll send you a link to reset your password.
-                  </p>
-                </div>
-
-                {displayError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                    <p className="text-red-700 text-center text-sm">
-                      {displayError}
-                    </p>
-                  </div>
-                )}
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-gray-700 text-sm font-medium mb-1.5"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={isLoading}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      <AuthPageMain>
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
+          {isSubmitted ? (
+            <div className="text-center">
+              <div className="mx-auto h-14 w-14 rounded-full bg-green-100 flex items-center justify-center">
+                <svg
+                  className="h-8 w-8 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {isLoading ? (
-                    <span className="flex items-center justify-center">
-                      <svg
-                        className="animate-spin h-5 w-5 mr-3 text-white"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Sending...
-                    </span>
-                  ) : (
-                    "Send Reset Link"
-                  )}
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h1 className="mt-4 text-2xl font-bold text-[#002B56]">
+                Check Your Email
+              </h1>
+              <p className="mt-2 text-sm text-gray-600">
+                We've sent a password reset link to <strong>{email}</strong>
+              </p>
+              <p className="mt-3 text-sm text-gray-600">
+                Click the link in the email to reset your password. If you don't
+                see it, check your spam folder.
+              </p>
 
+              <div className="mt-6 space-y-3">
                 <button
-                  type="button"
                   onClick={() => navigate("/login")}
-                  disabled={isLoading}
-                  className="w-full py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50"
+                  className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors"
                 >
                   Back to Login
                 </button>
-              </form>
-            )}
-          </div>
+                <button
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setEmail("");
+                  }}
+                  className="w-full py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                >
+                  Try Another Email
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="text-center mb-2">
+                <h1 className="text-2xl font-bold text-[#002B56]">
+                  Reset Your Password
+                </h1>
+                <p className="text-gray-600 text-sm mt-2">
+                  We'll send you a link to reset your password.
+                </p>
+              </div>
+
+              {displayError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-700 text-center text-sm">
+                    {displayError}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 text-sm font-medium mb-1.5"
+                >
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Sending...
+                  </span>
+                ) : (
+                  "Send Reset Link"
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                disabled={isLoading}
+                className="w-full py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50"
+              >
+                Back to Login
+              </button>
+            </form>
+          )}
         </div>
-      </main>
+      </AuthPageMain>
     </div>
   );
 };
