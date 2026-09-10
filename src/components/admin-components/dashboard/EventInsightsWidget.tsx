@@ -230,7 +230,7 @@ function getDaysUntil(startTime: string): number {
 const SkeletonWidget: React.FC = () => (
   <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm animate-pulse">
     <div className="w-32 h-5 bg-mist-200 rounded mb-4" />
-    <div className="grid grid-cols-3 gap-3 mb-5">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
       {[1, 2, 3].map((i) => (
         <div key={i} className="bg-mist-100 rounded-xl p-3 space-y-2">
           <div className="w-8 h-6 bg-mist-200 rounded" />
@@ -318,7 +318,7 @@ const EventInsightsWidget: React.FC<EventInsightsWidgetProps> = ({
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
         {summaryStats.map((stat) => (
           <div
             key={stat.label}

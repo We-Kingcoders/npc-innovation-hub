@@ -97,7 +97,7 @@ export default function HireRequestDetail() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-10 py-8">
         <Topbar />
 
         {/* Back Button */}

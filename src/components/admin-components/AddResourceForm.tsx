@@ -823,7 +823,7 @@ export default function AddResourceForm({
       )}
 
       {/* Category, Type, Difficulty */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="flex flex-col">
           <label className="mb-2 text-navy-800 font-medium">Category</label>
           <select

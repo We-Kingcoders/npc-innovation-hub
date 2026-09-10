@@ -239,7 +239,7 @@ const FilterSection = ({
     <div className="bg-white shadow rounded-xl p-6 mb-6">
       <h3 className="font-semibold text-lg mb-4">Filters</h3>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Search */}
         <div>
           <input
@@ -399,7 +399,7 @@ export default function AdminResources() {
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
 
-      <main className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-10 py-8">
         <Topbar />
 
         {/* Header */}

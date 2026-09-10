@@ -41,7 +41,7 @@ const HubVideoPage: React.FC = () => {
 
       <div className="flex min-h-screen bg-mist-100">
         <Sidebar />
-        <main className="flex-1 px-10 py-8">
+        <main id="main-content" className="flex-1 px-10 py-8">
           <Topbar />
           <h1 className="font-bold text-2xl mb-2 ml-8 text-navy-800">
             Hub Intro Video

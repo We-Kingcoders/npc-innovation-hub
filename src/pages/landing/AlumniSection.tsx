@@ -61,6 +61,7 @@ const AlumniSection: React.FC = () => {
                       <img
                         src={person.imageUrl}
                         alt={name}
+                        loading="lazy"
                         className="w-full h-full object-cover object-top"
                       />
                     ) : (

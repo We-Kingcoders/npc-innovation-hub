@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { profileService } from "../../../api/profileService";
 import {
@@ -18,6 +20,8 @@ import {
   Activity,
   Users,
 } from "lucide-react";
+import Sidebar from "../../../components/admin-components/Sidebar";
+import Topbar from "../../../components/admin-components/Topbar";
 
 export default function ViewProfile() {
   const { user: contextUser } = useAuth();
@@ -42,20 +46,27 @@ export default function ViewProfile() {
     }
   };
 
+  // Every other admin page renders Sidebar + Topbar around its content, so
+  // an admin never loses navigation chrome moving between pages - this page
+  // (and ProfileSettings.tsx) used to render bare, with no Sidebar/Topbar at
+  // all, dropping the admin into a floating, disconnected screen the moment
+  // they opened their own profile. content is computed per state and always
+  // rendered inside the same shell, so that's true for loading/error too,
+  // not just the success state.
+  let content: ReactNode;
+
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    content = (
+      <div className="flex items-center justify-center py-24">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  } else if (error) {
+    content = (
+      <div className="flex items-center justify-center py-24">
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error</h2>
@@ -69,19 +80,15 @@ export default function ViewProfile() {
         </div>
       </div>
     );
-  }
+  } else if (!user) {
+    content = null;
+  } else {
+    const fullName = getUserFullName(user);
+    const initials = getUserInitials(user);
+    const statusLabel = getUserStatusLabel(user);
+    const statusColor = getUserStatusColor(user);
 
-  if (!user) {
-    return null;
-  }
-
-  const fullName = getUserFullName(user);
-  const initials = getUserInitials(user);
-  const statusLabel = getUserStatusLabel(user);
-  const statusColor = getUserStatusColor(user);
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    content = (
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -213,15 +220,25 @@ export default function ViewProfile() {
             <p className="text-sm text-gray-500">
               Last updated: {formatUserDate(user.updatedAt)}
             </p>
-            <a
-              href="/admin/profile/settings"
+            <Link
+              to="/admin/profile/settings"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
               Edit Profile
-            </a>
+            </Link>
           </div>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen bg-mist-100">
+      <Sidebar />
+      <main id="main-content" className="flex-1 px-10 py-8">
+        <Topbar />
+        {content}
+      </main>
     </div>
   );
 }
