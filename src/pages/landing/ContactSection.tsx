@@ -3,10 +3,9 @@
 // The actual "how to reach us" content - a navy info card on the left
 // (location/phone/email, matching the /hire-us form's existing contact
 // card layout) and, on the right, a real working message form plus a
-// chat option. Used both inline on Home (as part of the single-page
-// scroll story) and wrapped with a hero banner on the standalone
-// /contact-us page (see ContactUs.tsx) - same reuse pattern as
-// AboutIntro/MissionSection.
+// chat option. Used identically both inline on Home (as part of the
+// single-page scroll story) and on the standalone /contact-us page (see
+// ContactUs.tsx) - same reuse pattern as AboutIntro/MissionSection.
 import { MapPin, Phone, Mail, MessageCircle, Send } from "lucide-react";
 import { Link } from "react-router-dom";
 
