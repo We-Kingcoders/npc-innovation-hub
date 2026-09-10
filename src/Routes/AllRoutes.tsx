@@ -252,10 +252,12 @@ const AllRoutes: React.FC = () => {
         <Route
           path="/login"
           element={
+            // LoginPage renders its own Navbar and <main id="main-content">
+            // internally now (it used to have its own bare hand-rolled
+            // header instead of the shared Navbar) - wrapping it in another
+            // <main> here would nest one inside the other.
             <PublicRoute>
-              <main id="main-content">
-                <LoginPage />
-              </main>
+              <LoginPage />
             </PublicRoute>
           }
         />
