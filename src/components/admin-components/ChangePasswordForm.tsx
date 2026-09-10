@@ -194,6 +194,12 @@ export default function ChangePasswordForm({
                   current: !prev.current,
                 }))
               }
+              aria-label={
+                showPasswords.current
+                  ? "Hide current password"
+                  : "Show current password"
+              }
+              aria-pressed={showPasswords.current}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.current ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -234,6 +240,10 @@ export default function ChangePasswordForm({
               onClick={() =>
                 setShowPasswords((prev) => ({ ...prev, new: !prev.new }))
               }
+              aria-label={
+                showPasswords.new ? "Hide new password" : "Show new password"
+              }
+              aria-pressed={showPasswords.new}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.new ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -312,6 +322,12 @@ export default function ChangePasswordForm({
                   confirm: !prev.confirm,
                 }))
               }
+              aria-label={
+                showPasswords.confirm
+                  ? "Hide password confirmation"
+                  : "Show password confirmation"
+              }
+              aria-pressed={showPasswords.confirm}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-mist-400 hover:text-mist-600"
             >
               {showPasswords.confirm ? <EyeOff size={20} /> : <Eye size={20} />}
