@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../../config/env";
-import AuthLeftPanel from "../../components/AuthLeftPanel";
+import AuthLeftPanel, {
+  AUTH_RIGHT_PANEL_BACKGROUND,
+} from "../../components/AuthLeftPanel";
 
 // If using react-router-dom for navigation, import as needed
 // import { useNavigate } from "react-router-dom";
@@ -215,7 +217,7 @@ const SignUpPage = () => {
       {/* Right Side – Sign Up Form */}
       <div
         className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center px-4 md:px-8 py-12"
-        style={{ backgroundColor: "#002B56" }}
+        style={AUTH_RIGHT_PANEL_BACKGROUND}
       >
         <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md my-auto">
           <form onSubmit={handleSubmit} noValidate>

@@ -278,10 +278,12 @@ const AllRoutes: React.FC = () => {
         <Route
           path="/forgot-password"
           element={
+            // ForgotPassword renders its own Navbar and <main
+            // id="main-content"> internally now, matching LoginPage/
+            // OTPVerification - wrapping it in another <main> here would
+            // nest one inside the other.
             <PublicRoute>
-              <main id="main-content">
-                <ForgotPassword />
-              </main>
+              <ForgotPassword />
             </PublicRoute>
           }
         />

@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
 import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
-import AuthLeftPanel from "../../components/AuthLeftPanel";
+import AuthLeftPanel, {
+  AUTH_RIGHT_PANEL_BACKGROUND,
+} from "../../components/AuthLeftPanel";
 
 // Extend the Window interface to include typed google object
 declare global {
@@ -32,10 +34,25 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
+  // "Remember me" remembers the email for next visit (a stored token would
+  // let anyone on the machine straight into the account, so the box only
+  // ever controls the email field - never how long the session lasts).
+  useEffect(() => {
+    const remembered = localStorage.getItem("rememberedEmail");
+    if (remembered) {
+      setEmail(remembered);
+      setRememberMe(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (!document.getElementById("google-gsi-script")) {
       const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
+      // hl=en pins the rendered button (and any Google-hosted consent UI)
+      // to English regardless of the visitor's OS/browser locale - it was
+      // rendering as "Se connecter avec Google" for a French-locale
+      // browser instead of a consistent, expected label.
+      script.src = "https://accounts.google.com/gsi/client?hl=en";
       script.async = true;
       script.defer = true;
       script.id = "google-gsi-script";
@@ -100,6 +117,9 @@ const LoginPage = () => {
             theme: "outline",
             size: "large",
             width: "100%",
+            // "Continue with Google" - reads as the continuation of the
+            // "OR CONTINUE WITH" divider above it, in English.
+            text: "continue_with",
           });
           window.google.accounts.id.prompt();
         } else {
@@ -149,6 +169,11 @@ const LoginPage = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("email", email);
         localStorage.setItem("role", role);
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
         setErrorMessage("");
         navigate("/otp");
       } else {
@@ -202,7 +227,7 @@ const LoginPage = () => {
             own, without needing it. */}
         <div
           className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
-          style={{ backgroundColor: "#002B56" }}
+          style={AUTH_RIGHT_PANEL_BACKGROUND}
         >
           <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
             <form onSubmit={handleSubmit} className="space-y-5">
