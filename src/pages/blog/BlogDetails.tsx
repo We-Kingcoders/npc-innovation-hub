@@ -5,10 +5,27 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Eye, Calendar, Tag } from "lucide-react";
 import { useBlogs } from "../../hooks/useBlogs";
 
+// Escapes raw text before any markdown substitution runs, so a blog post
+// whose body literally contains "<script>...</script>" (or any other HTML)
+// renders as inert visible text instead of executing - this content reaches
+// every visitor's browser via dangerouslySetInnerHTML below, so an
+// unescaped "<" here was a real stored-XSS hole reachable by anyone able to
+// write blog content (Admin-only today, but every visitor is the blast
+// radius, not just the author). The markdown substitutions below only ever
+// wrap this already-escaped text in tags from our own trusted templates -
+// they never re-introduce raw "<"/">" from the input itself.
+const escapeHtml = (text: string): string =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 // ── Simple markdown → HTML renderer (no external deps) ──
 const renderMarkdown = (md: string): string => {
   return (
-    md
+    escapeHtml(md)
       // Headings
       .replace(
         /^### (.+)$/gm,
