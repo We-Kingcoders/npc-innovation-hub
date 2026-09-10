@@ -12,8 +12,21 @@
 // actually room to read them - below that the panel is just the plain
 // photo (shown on every device, not hidden on mobile), matching the
 // earlier "image visible on every device, no forced scrolling" direction.
+import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Rocket, Lightbulb, Users } from "lucide-react";
+
+// Shared background for the form column on every auth page - was a flat
+// backgroundColor: "#002B56" (solid navy block), visually two disconnected
+// halves next to this panel's photo. A navy-tinted layer of the same photo
+// instead, so the photo reads as covering the whole page and the form
+// column stays branded navy without being a flat, separate color block.
+export const AUTH_RIGHT_PANEL_BACKGROUND: CSSProperties = {
+  backgroundImage:
+    "linear-gradient(rgba(0,43,86,0.55), rgba(0,43,86,0.55)), url('/assets/images/hubimage.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+};
 
 const FEATURES: { icon: LucideIcon; title: string; text: string }[] = [
   {
@@ -53,8 +66,12 @@ export default function AuthLeftPanel() {
 
       <div className="hidden md:flex relative z-10 h-full items-center p-8 lg:p-12">
         <div className="w-full max-w-md">
-          <div className="mb-8 bg-white/90 backdrop-blur-sm rounded-xl px-6 py-4 inline-block">
-            <h2 className="text-3xl font-bold leading-tight whitespace-nowrap text-[#002B56]">
+          {/* Same translucent glass treatment as the feature cards below -
+              was a solid white card with navy text, which looked like a
+              different, disconnected element sitting on top of the photo
+              instead of matching the rest of this panel. */}
+          <div className="mb-8 backdrop-blur-sm bg-white/10 rounded-lg p-4 inline-block">
+            <h2 className="text-3xl font-bold leading-tight whitespace-nowrap text-white">
               Innovate. Create. Lead.
             </h2>
           </div>

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { authService } from "../../api/authService";
 import Navbar from "../../components/Navbar";
-import AuthLeftPanel from "../../components/AuthLeftPanel";
+import AuthLeftPanel, {
+  AUTH_RIGHT_PANEL_BACKGROUND,
+} from "../../components/AuthLeftPanel";
 
 const OTPVerification: React.FC = () => {
   const [otp, setOtp] = useState("");
@@ -96,7 +98,7 @@ const OTPVerification: React.FC = () => {
             typical device's screen on its own. */}
         <div
           className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center p-4 sm:p-8"
-          style={{ backgroundColor: "#002B56" }}
+          style={AUTH_RIGHT_PANEL_BACKGROUND}
         >
           <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md my-auto">
             <form onSubmit={handleSubmit} className="space-y-5">
