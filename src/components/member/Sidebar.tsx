@@ -196,19 +196,19 @@ export const Sidebar: React.FC = () => {
           className="flex-shrink-0 flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-bold uppercase text-navy-100 hover:text-navy-800 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <LogOut size={20} />
-          <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+          <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
         </button>
       </aside>
 
-      {/* Logout Confirmation Modal */}
+      {/* Sign Out Confirmation Modal */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-navy-900 bg-opacity-60">
           <div className="bg-white rounded-xl shadow-xl border border-mist-300 max-w-md w-full mx-4 p-6">
             <h2 className="text-2xl font-bold text-navy-800 mb-4">
-              Confirm Logout
+              Confirm Sign Out
             </h2>
             <p className="text-mist-600 mb-6">
-              Are you sure you want to log out? You'll need to log in again to
+              Are you sure you want to sign out? You'll need to sign in again to
               access your dashboard.
             </p>
             <div className="flex gap-3 justify-end">
@@ -242,10 +242,10 @@ export const Sidebar: React.FC = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    Logging out...
+                    Signing out...
                   </span>
                 ) : (
-                  "Yes, Logout"
+                  "Yes, Sign Out"
                 )}
               </button>
             </div>

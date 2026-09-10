@@ -81,7 +81,7 @@ const ForgotPassword: React.FC = () => {
                   onClick={() => navigate("/login")}
                   className="w-full py-3 bg-[#002B56] text-white rounded-xl font-semibold hover:bg-[#003366] transition-colors"
                 >
-                  Back to Login
+                  Back to Sign In
                 </button>
                 <button
                   onClick={() => {
@@ -173,7 +173,7 @@ const ForgotPassword: React.FC = () => {
                 disabled={isLoading}
                 className="w-full py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50"
               >
-                Back to Login
+                Back to Sign In
               </button>
             </form>
           )}

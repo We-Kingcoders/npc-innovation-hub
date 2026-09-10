@@ -178,7 +178,7 @@ const SignUpPage = () => {
       }
 
       setSuccessMessage(
-        "Registration successful! A verification link has been sent to your email. Please check your inbox and verify your account before logging in.",
+        "Registration successful! A verification link has been sent to your email. Please check your inbox and verify your account before signing in.",
       );
       setFirstName("");
       setLastName("");
@@ -448,7 +448,7 @@ const SignUpPage = () => {
                 href="/login"
                 className="text-blue-600 hover:underline font-medium"
               >
-                Login
+                Sign In
               </a>
             </div>
           </form>

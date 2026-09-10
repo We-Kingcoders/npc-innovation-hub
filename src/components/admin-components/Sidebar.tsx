@@ -240,7 +240,7 @@ export default function Sidebar() {
               className={`group-hover:scale-110 transition-transform ${isLoggingOut ? "animate-spin" : ""}`}
             />
             {!isCollapsed && (
-              <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+              <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
             )}
           </button>
         </div>

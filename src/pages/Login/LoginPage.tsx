@@ -155,7 +155,7 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMessage(data?.message || "Login failed. Please try again.");
+        setErrorMessage(data?.message || "Sign in failed. Please try again.");
         setIsLoading(false);
         return;
       }
@@ -175,7 +175,7 @@ const LoginPage = () => {
         setErrorMessage("");
         navigate("/otp");
       } else {
-        setErrorMessage("Token not received. Login failed.");
+        setErrorMessage("Token not received. Sign in failed.");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -214,7 +214,9 @@ const LoginPage = () => {
         <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="text-center mb-2">
-              <h1 className="text-2xl font-bold text-[#002B56]">Login</h1>
+              <h1 className="text-2xl font-bold text-[#002B56] whitespace-nowrap">
+                Sign In to Your Portal
+              </h1>
             </div>
 
             {errorMessage && (
@@ -283,10 +285,10 @@ const LoginPage = () => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  Logging in...
+                  Signing in...
                 </span>
               ) : (
-                "Login"
+                "Sign In"
               )}
             </button>
 
