@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { CredentialResponse } from "@react-oauth/google";
 import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
+import AuthLeftPanel from "../../components/AuthLeftPanel";
 
 // Extend the Window interface to include typed google object
 declare global {
@@ -191,16 +192,9 @@ const LoginPage = () => {
         id="main-content"
         className="flex flex-col md:flex-row flex-1 min-h-0"
       >
-        {/* Left Side - just the photo, full-bleed, on every device - no
-            text overlay now, so no contrast/legibility concerns either. */}
-        <div
-          className="h-40 sm:h-56 md:h-auto md:w-1/2 flex-shrink-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/assets/images/hubimage.jpg')",
-          }}
-          role="img"
-          aria-label="NPC Innovation Hub members collaborating"
-        />
+        {/* Left Side - shared across Login/SignUp/OTP so all three auth
+            pages stay visually identical instead of drifting apart. */}
+        <AuthLeftPanel />
 
         {/* Right Side - Login Card. overflow-y-auto is a fallback that lets
             this column scroll on its own on an unusually short viewport -

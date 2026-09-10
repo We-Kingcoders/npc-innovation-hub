@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../../config/env";
+import AuthLeftPanel from "../../components/AuthLeftPanel";
 
 // If using react-router-dom for navigation, import as needed
 // import { useNavigate } from "react-router-dom";
@@ -204,19 +205,13 @@ const SignUpPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden">
-      {/* Left Side - just the photo, full-bleed, on every device - no text
-          overlay to keep legible. h-screen + overflow-hidden above, plus
-          overflow-y-auto on the form column below, mean the page itself
-          never scrolls - only the (often long) sign-up form scrolls
-          internally within its own column when needed. */}
-      <div
-        className="h-40 sm:h-56 md:h-auto md:w-1/2 flex-shrink-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/assets/images/hubimage.jpg')",
-        }}
-        role="img"
-        aria-label="NPC Innovation Hub members collaborating"
-      />
+      {/* Left Side - shared across Login/SignUp/OTP so all three auth pages
+          stay visually identical instead of drifting apart. h-screen +
+          overflow-hidden above, plus overflow-y-auto on the form column
+          below, mean the page itself never scrolls - only the (often long)
+          sign-up form scrolls internally within its own column when
+          needed. */}
+      <AuthLeftPanel />
       {/* Right Side – Sign Up Form */}
       <div
         className="flex-1 md:w-1/2 min-h-0 overflow-y-auto flex items-center justify-center px-4 md:px-8 py-12"
