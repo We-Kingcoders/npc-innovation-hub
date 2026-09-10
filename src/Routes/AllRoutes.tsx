@@ -10,7 +10,7 @@
 // no bundle-size benefit.
 
 import React, { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Footer from "../components/button/Footer";
 import Navbar from "../components/Navbar";
 import { ProtectedRoute, PublicRoute } from "../components/ProtectedRoute";
@@ -26,7 +26,6 @@ const AlumniSection = lazy(() => import("../pages/landing/AlumniSection"));
 const AlumniPage = lazy(() => import("../pages/landing/AlumniPage"));
 const ContactUs = lazy(() => import("../pages/landing/ContactUs"));
 const ContactSection = lazy(() => import("../pages/landing/ContactSection"));
-const SignUpPage = lazy(() => import("../pages/Login/SignUp"));
 const ProjectsPage = lazy(() => import("../pages/project-page/ProjectsPage"));
 const ProjectsShowcase = lazy(
   () => import("../pages/landing/ProjectsShowcase"),
@@ -261,19 +260,12 @@ const AllRoutes: React.FC = () => {
             </PublicRoute>
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <>
-                <Navbar />
-                <main id="main-content">
-                  <SignUpPage />
-                </main>
-              </>
-            </PublicRoute>
-          }
-        />
+        {/* Self-serve sign-up is disabled for now: external users apply via
+            the "Join the Hub" form instead, an admin reviews and approves
+            the application, and the approved account is created for them
+            with default credentials tied to the email they applied with.
+            Any old /signup link or bookmark just lands on /login. */}
+        <Route path="/signup" element={<Navigate to="/login" replace />} />
         <Route
           path="/forgot-password"
           element={

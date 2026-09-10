@@ -154,7 +154,7 @@ const KEYFRAMES = `
 const baseInput =
   "w-full font-sans text-sm text-[#1a2d4a] bg-[#f5f8fc] border-[1.5px] border-[#dce8f5] rounded-xl px-3.5 py-2.5 outline-none " +
   "transition-all duration-200 ease-in-out placeholder:text-[#a4b5cc] " +
-  "focus:border-[#0055b3] focus:bg-white focus:ring-2 focus:ring-[#0055b3]/10 " +
+  "focus:border-[#00A0E3] focus:bg-white focus:ring-2 focus:ring-[#00A0E3]/10 " +
   "hover:border-[#afc8e8]";
 
 const errorInput =
@@ -324,8 +324,7 @@ const JoinUsModal: React.FC<JoinUsModalProps> = ({ isOpen, onClose }) => {
           <div
             className="relative overflow-hidden px-9 pt-8 pb-7 rounded-t-[20px]"
             style={{
-              background:
-                "linear-gradient(135deg,#002B56 0%,#004a94 60%,#0066cc 100%)",
+              background: "linear-gradient(135deg,#002B56 0%,#003366 100%)",
             }}
           >
             <span className="pointer-events-none absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/[.06]" />
@@ -361,7 +360,7 @@ const JoinUsModal: React.FC<JoinUsModalProps> = ({ isOpen, onClose }) => {
               <div
                 className="jum-anim-success flex items-center justify-center w-[72px] h-[72px] rounded-full"
                 style={{
-                  background: "linear-gradient(135deg,#002B56,#004a94)",
+                  background: "linear-gradient(135deg,#002B56,#003366)",
                   boxShadow: "0 8px 24px rgba(0,43,86,.3)",
                 }}
               >
@@ -530,7 +529,7 @@ const JoinUsModal: React.FC<JoinUsModalProps> = ({ isOpen, onClose }) => {
                     <button
                       type="button"
                       onClick={addSkill}
-                      className="px-5 rounded-xl bg-[#002B56] text-white text-sm font-bold hover:bg-[#004a94] transition-colors"
+                      className="px-5 rounded-xl bg-[#002B56] text-white text-sm font-bold hover:bg-[#003366] transition-colors"
                     >
                       Add
                     </button>
@@ -706,7 +705,7 @@ const JoinUsModal: React.FC<JoinUsModalProps> = ({ isOpen, onClose }) => {
                   ].join(" ")}
                   style={{
                     fontFamily: "'Syne', sans-serif",
-                    background: "linear-gradient(135deg,#002B56,#004a94)",
+                    background: "linear-gradient(135deg,#002B56,#003366)",
                     boxShadow: "0 4px 16px rgba(0,43,86,.3)",
                   }}
                 >

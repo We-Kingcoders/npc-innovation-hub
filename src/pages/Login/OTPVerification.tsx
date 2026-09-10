@@ -302,12 +302,9 @@ const OTPVerification: React.FC = () => {
                 </li>
                 <li>Enter that OTP in the provided form</li>
                 <li>
-                  If you don't have an account, click on the register/signup
-                  link
-                </li>
-                <li>
-                  After registering, you'll receive a verification link to
-                  verify your email
+                  If you don't have an account, apply through the "Join the Hub"
+                  form on the homepage - an admin reviews your application and,
+                  once approved, creates your account
                 </li>
               </ol>
               <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">

@@ -48,7 +48,7 @@ const formatFileSize = (bytes: number): string =>
 const baseInput =
   "w-full font-sans text-sm text-[#1a2d4a] bg-[#f5f8fc] border-[1.5px] border-[#dce8f5] rounded-xl px-3.5 py-2.5 outline-none " +
   "transition-all duration-200 ease-in-out placeholder:text-[#a4b5cc] " +
-  "focus:border-[#0055b3] focus:bg-white focus:ring-2 focus:ring-[#0055b3]/10 " +
+  "focus:border-[#00A0E3] focus:bg-white focus:ring-2 focus:ring-[#00A0E3]/10 " +
   "hover:border-[#afc8e8]";
 
 const errorInput =
@@ -211,8 +211,7 @@ export const ApplyPage: React.FC = () => {
       <div
         className="px-4 py-16 text-center text-white"
         style={{
-          background:
-            "linear-gradient(135deg,#002B56 0%,#004a94 60%,#0066cc 100%)",
+          background: "linear-gradient(135deg,#002B56 0%,#003366 100%)",
         }}
       >
         <button
@@ -255,7 +254,7 @@ export const ApplyPage: React.FC = () => {
               <div
                 className="flex items-center justify-center w-[72px] h-[72px] rounded-full"
                 style={{
-                  background: "linear-gradient(135deg,#002B56,#004a94)",
+                  background: "linear-gradient(135deg,#002B56,#003366)",
                   boxShadow: "0 8px 24px rgba(0,43,86,.3)",
                 }}
               >
@@ -420,7 +419,7 @@ export const ApplyPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={addSkill}
-                      className="px-5 rounded-xl bg-[#002B56] text-white text-sm font-bold hover:bg-[#004a94] transition-colors"
+                      className="px-5 rounded-xl bg-[#002B56] text-white text-sm font-bold hover:bg-[#003366] transition-colors"
                     >
                       Add
                     </button>
@@ -595,7 +594,7 @@ export const ApplyPage: React.FC = () => {
                       : "hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,43,86,.35)] active:translate-y-0",
                   ].join(" ")}
                   style={{
-                    background: "linear-gradient(135deg,#002B56,#004a94)",
+                    background: "linear-gradient(135deg,#002B56,#003366)",
                     boxShadow: "0 4px 16px rgba(0,43,86,.3)",
                   }}
                 >

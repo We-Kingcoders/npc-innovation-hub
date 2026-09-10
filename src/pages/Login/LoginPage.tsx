@@ -175,8 +175,8 @@ const LoginPage = () => {
           /Hub-information), plain <a> tags that force a full page reload
           on every click instead of client-side navigation, and no mobile
           menu at all. The shared Navbar already solves all three and is
-          what every other public route uses (including /signup, right
-          next to this page) - no reason this one page needed its own. */}
+          what every other public route uses - no reason this one page
+          needed its own. */}
       <Navbar />
 
       {/* Main Content - Two Column Layout. h-screen + overflow-hidden on the
@@ -321,18 +321,6 @@ const LoginPage = () => {
               </div>
 
               <div id="google-login-btn" className="w-full"></div>
-
-              <div className="text-center pt-8 border-t border-gray-200">
-                <p className="text-gray-600 text-lg">
-                  Don't have an account?{" "}
-                  <a
-                    href="/signup"
-                    className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
-                  >
-                    Sign up here
-                  </a>
-                </p>
-              </div>
             </form>
           </div>
         </div>
