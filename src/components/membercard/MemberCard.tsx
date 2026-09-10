@@ -279,6 +279,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
             <img
               src={imageUrl}
               alt={`${name} photo`}
+              loading="lazy"
               className="mc-avatar-img"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
