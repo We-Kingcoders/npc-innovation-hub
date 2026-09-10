@@ -115,8 +115,8 @@ const LoginPage = () => {
             theme: "outline",
             size: "large",
             width: "100%",
-            // "Continue with Google" - reads as the continuation of the
-            // "OR CONTINUE WITH" divider above it, in English.
+            // "Continue with Google" - reads naturally after the "OR"
+            // divider above it, in English.
             text: "continue_with",
           });
           window.google.accounts.id.prompt();
@@ -316,7 +316,7 @@ const LoginPage = () => {
               </div>
               <div className="relative flex justify-center">
                 <span className="px-3 bg-white text-gray-500 text-xs tracking-wide">
-                  OR CONTINUE WITH
+                  OR
                 </span>
               </div>
             </div>
