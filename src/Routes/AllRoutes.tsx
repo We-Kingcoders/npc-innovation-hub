@@ -226,24 +226,15 @@ const AllRoutes: React.FC = () => {
                   aria-label="Contact Us"
                   className="scroll-mt-16 lg:scroll-mt-20 py-16 px-4 md:px-8 bg-white"
                 >
-                  {/* Every other Home section (Projects, Members, ...) opens
-                      with its own centered heading + intro line - this one
-                      used to skip straight to the card with no heading at
-                      all, so scrolling here read as visually inconsistent
-                      with both its neighbors and the standalone /contact-us
-                      page (which does have this same heading, in a navy
-                      hero banner - see ContactUs.tsx). Same copy, this
-                      section's own plain heading treatment instead of a
-                      repeated hero banner mid-page. */}
-                  <div className="text-center mb-12">
-                    <h2 className="text-4xl md:text-5xl font-bold text-[#002b56] mb-4">
-                      Contact Us
-                    </h2>
-                    <p className="text-xl font-medium text-[#002b56]/80 max-w-3xl mx-auto">
-                      Have a question, or want to reach NPC Innovation Hub
-                      directly? Here is how to find us.
-                    </p>
-                  </div>
+                  {/* Was given its own "Contact Us" heading + intro line
+                      here (matching a hero banner the standalone /contact-us
+                      page also had) so this section wasn't the only Home
+                      section with no visible heading - but that intro line
+                      just repeated, in different words, the "Get in Touch"
+                      card's own intro right below it. Dropped from both
+                      places instead: the card already opens with its own
+                      heading and explanation, so a redundant outer title
+                      added noise, not missing consistency. */}
                   <ContactSection />
                 </section>
               </main>
