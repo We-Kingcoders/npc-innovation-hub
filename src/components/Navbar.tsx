@@ -237,7 +237,7 @@ export default function Navbar() {
                       onClick={() => void handleLogout()}
                       className="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 border-t border-gray-100 transition-colors duration-200"
                     >
-                      Logout
+                      Sign Out
                     </button>
                   </div>
                 )}
@@ -318,7 +318,7 @@ export default function Navbar() {
                     onClick={() => void handleLogout()}
                     className="w-full text-left mt-2 px-4 py-3 font-bold text-center bg-white text-red-600 rounded-full shadow-sm border border-gray-200 hover:bg-red-50 transition-colors duration-200"
                   >
-                    Logout
+                    Sign Out
                   </button>
                 </>
               ) : (

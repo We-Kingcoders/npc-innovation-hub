@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : "Login failed. Please check your credentials.";
+          : "Sign in failed. Please check your credentials.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -147,7 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       navigate("/otp");
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Google login failed.";
+        err instanceof Error ? err.message : "Google sign-in failed.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {

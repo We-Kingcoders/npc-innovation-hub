@@ -26,7 +26,7 @@ const OTPVerification: React.FC = () => {
     clearError();
 
     if (!email) {
-      setLocalError("Email is missing. Please try logging in again.");
+      setLocalError("Email is missing. Please try signing in again.");
       return;
     }
 
@@ -57,7 +57,7 @@ const OTPVerification: React.FC = () => {
     }
 
     if (!email) {
-      setLocalError("Email is missing. Please try logging in again.");
+      setLocalError("Email is missing. Please try signing in again.");
       return;
     }
 
@@ -213,11 +213,11 @@ const OTPVerification: React.FC = () => {
             <div className="py-4 px-6">
               <p className="mb-3">
                 To ensure your account security, please follow these steps when
-                logging in:
+                signing in:
               </p>
               <ol className="list-decimal pl-6 space-y-2">
                 <li>Fill in your email and password</li>
-                <li>Click on the login button</li>
+                <li>Click on the Sign In button</li>
                 <li>
                   You'll receive an OTP (One-Time Password) containing
                   verification digits via email

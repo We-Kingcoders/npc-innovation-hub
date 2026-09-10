@@ -98,7 +98,7 @@ const ResetPassword: React.FC = () => {
               Your password has been successfully reset.
             </p>
             <p className="mt-4 text-sm text-gray-600">
-              You will be redirected to the login page in a few seconds...
+              You will be redirected to the sign in page in a few seconds...
             </p>
           </div>
 
@@ -107,7 +107,7 @@ const ResetPassword: React.FC = () => {
               onClick={() => navigate("/login")}
               className="w-full py-3 px-4 bg-[#002B56] text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors"
             >
-              Go to Login
+              Go to Sign In
             </button>
           </div>
         </div>
@@ -231,7 +231,7 @@ const ResetPassword: React.FC = () => {
               disabled={isLoading}
               className="w-full py-3 px-4 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50"
             >
-              Back to Login
+              Back to Sign In
             </button>
           </div>
         </form>
