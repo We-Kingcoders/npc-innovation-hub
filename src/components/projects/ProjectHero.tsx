@@ -46,7 +46,11 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
           MAIN HERO CONTENT
           ================================================================= */}
 
-      <main className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
+      {/* A <div>, not <main> - this only covers the hero, not the rest of
+          /projects's content, which renders as later siblings in
+          ProjectsPage.tsx. The single <main id="main-content"> that covers
+          the whole page lives in AllRoutes.tsx. */}
+      <div className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
         {/* Left Section - Hero Text Content */}
         <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-8 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
           {/* Main Headline */}
@@ -99,7 +103,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
             </p>
           </div>{" "}
         </div>
-      </main>
+      </div>
     </div>
   );
 };

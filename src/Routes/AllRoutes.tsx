@@ -200,34 +200,36 @@ const AllRoutes: React.FC = () => {
             // for deep exploration.
             <>
               <Navbar />
-              <HeroSection />
-              <Offerings />
-              <section
-                id="about"
-                aria-label="About NPC Innovation Hub"
-                className="scroll-mt-16 lg:scroll-mt-20"
-              >
-                <div className="py-20 px-4 md:px-8 bg-white">
-                  <div className="container mx-auto max-w-7xl">
-                    <AboutIntro />
+              <main id="main-content">
+                <HeroSection />
+                <Offerings />
+                <section
+                  id="about"
+                  aria-label="About NPC Innovation Hub"
+                  className="scroll-mt-16 lg:scroll-mt-20"
+                >
+                  <div className="py-20 px-4 md:px-8 bg-white">
+                    <div className="container mx-auto max-w-7xl">
+                      <AboutIntro />
+                    </div>
                   </div>
-                </div>
-                <MissionSection />
-                <StrategicObjectives />
-                <CoreValues />
-                <WhyHub />
-              </section>
-              <HubMembersSection />
-              <ProjectsShowcase />
-              <HubIntroVideo />
-              <AlumniSection />
-              <section
-                id="contact"
-                aria-label="Contact Us"
-                className="scroll-mt-16 lg:scroll-mt-20 py-16 px-4 md:px-8 bg-white"
-              >
-                <ContactSection />
-              </section>
+                  <MissionSection />
+                  <StrategicObjectives />
+                  <CoreValues />
+                  <WhyHub />
+                </section>
+                <HubMembersSection />
+                <ProjectsShowcase />
+                <HubIntroVideo />
+                <AlumniSection />
+                <section
+                  id="contact"
+                  aria-label="Contact Us"
+                  className="scroll-mt-16 lg:scroll-mt-20 py-16 px-4 md:px-8 bg-white"
+                >
+                  <ContactSection />
+                </section>
+              </main>
               <Footer />
             </>
           }
@@ -237,10 +239,12 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <InnovationHub />
-              <Services />
-              <LatestPro />
-              <LetTalk />
+              <main id="main-content">
+                <InnovationHub />
+                <Services />
+                <LatestPro />
+                <LetTalk />
+              </main>
               <Footer />
             </>
           }
@@ -249,7 +253,9 @@ const AllRoutes: React.FC = () => {
           path="/login"
           element={
             <PublicRoute>
-              <LoginPage />
+              <main id="main-content">
+                <LoginPage />
+              </main>
             </PublicRoute>
           }
         />
@@ -259,7 +265,9 @@ const AllRoutes: React.FC = () => {
             <PublicRoute>
               <>
                 <Navbar />
-                <SignUpPage />
+                <main id="main-content">
+                  <SignUpPage />
+                </main>
               </>
             </PublicRoute>
           }
@@ -268,17 +276,28 @@ const AllRoutes: React.FC = () => {
           path="/forgot-password"
           element={
             <PublicRoute>
-              <ForgotPassword />
+              <main id="main-content">
+                <ForgotPassword />
+              </main>
             </PublicRoute>
           }
         />
-        <Route path="/otp" element={<OTPVerification />} />
+        <Route
+          path="/otp"
+          element={
+            <main id="main-content">
+              <OTPVerification />
+            </main>
+          }
+        />
         <Route
           path="/projects"
           element={
             <>
               <Navbar />
-              <ProjectsPage />
+              <main id="main-content">
+                <ProjectsPage />
+              </main>
               <Footer />
             </>
           }
@@ -288,7 +307,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <InnovationHubMembersPage />
+              <main id="main-content">
+                <InnovationHubMembersPage />
+              </main>
               <Footer />
             </>
           }
@@ -298,7 +319,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <AlumniPage />
+              <main id="main-content">
+                <AlumniPage />
+              </main>
               <Footer />
             </>
           }
@@ -308,7 +331,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <ContactUs />
+              <main id="main-content">
+                <ContactUs />
+              </main>
               <Footer />
             </>
           }
@@ -318,7 +343,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <MemberDetailPage />
+              <main id="main-content">
+                <MemberDetailPage />
+              </main>
               <Footer />
             </>
           }
@@ -328,7 +355,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <ApplyPage />
+              <main id="main-content">
+                <ApplyPage />
+              </main>
               <Footer />
             </>
           }
@@ -340,7 +369,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <BlogDesign />
+              <main id="main-content">
+                <BlogDesign />
+              </main>
               <Footer />
             </>
           }
@@ -350,7 +381,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <BlogDesign />
+              <main id="main-content">
+                <BlogDesign />
+              </main>
               <Footer />
             </>
           }
@@ -360,7 +393,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <BlogDetails />
+              <main id="main-content">
+                <BlogDetails />
+              </main>
               <Footer />
             </>
           }
@@ -371,15 +406,17 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <div className="py-16 px-4 md:px-8 bg-white">
-                <div className="container mx-auto max-w-7xl">
-                  <AboutIntro />
+              <main id="main-content">
+                <div className="py-16 px-4 md:px-8 bg-white">
+                  <div className="container mx-auto max-w-7xl">
+                    <AboutIntro />
+                  </div>
                 </div>
-              </div>
-              <MissionSection />
-              <StrategicObjectives />
-              <CoreValues />
-              <WhyHub />
+                <MissionSection />
+                <StrategicObjectives />
+                <CoreValues />
+                <WhyHub />
+              </main>
               <Footer />
             </>
           }
@@ -389,7 +426,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <FAQs />
+              <main id="main-content">
+                <FAQs />
+              </main>
               <Footer />
             </>
           }
@@ -399,7 +438,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <ChatCard />
+              <main id="main-content">
+                <ChatCard />
+              </main>
               <Footer />
             </>
           }
@@ -409,7 +450,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <Home />
+              <main id="main-content">
+                <Home />
+              </main>
               <Footer />
             </>
           }
@@ -419,7 +462,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <Categories />
+              <main id="main-content">
+                <Categories />
+              </main>
               <Footer />
             </>
           }
@@ -429,7 +474,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <SubcategoryResults />
+              <main id="main-content">
+                <SubcategoryResults />
+              </main>
               <Footer />
             </>
           }
@@ -439,7 +486,9 @@ const AllRoutes: React.FC = () => {
           element={
             <>
               <Navbar />
-              <AllResources />
+              <main id="main-content">
+                <AllResources />
+              </main>
               <Footer />
             </>
           }

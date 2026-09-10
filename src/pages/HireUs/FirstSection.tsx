@@ -10,7 +10,11 @@
 const InnovationHub = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 font-sans">
-      <main className="pt-16">
+      {/* A <div>, not <main> - this only covers this section, not the rest
+          of /hire-us's content (Services, LatestPro, LetTalk), which render
+          as later siblings in AllRoutes.tsx. The single
+          <main id="main-content"> that covers all of it lives there. */}
+      <div className="pt-16">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center py-16 md:py-24">
             {/* Left Column - Text Content */}
@@ -55,7 +59,7 @@ const InnovationHub = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

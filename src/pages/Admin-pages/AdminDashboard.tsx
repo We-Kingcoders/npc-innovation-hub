@@ -124,7 +124,7 @@ export default function AdminDashboard() {
       <Sidebar />
 
       {/* Main Content */}
-      <main className="flex-1 min-w-0 flex flex-col">
+      <main id="main-content" className="flex-1 min-w-0 flex flex-col">
         <Topbar />
 
         {/* Page Content */}

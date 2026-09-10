@@ -15,6 +15,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { UserRole } from "../types/user.types";
 import { useActiveSection } from "../hooks/useActiveSection";
+import SkipToContent from "./SkipToContent";
 
 // Primary nav points at the single-page Home story's sections, not straight
 // at the deep pages - deepPath is still real and still reachable (each
@@ -155,6 +156,7 @@ export default function Navbar() {
 
   return (
     <>
+      <SkipToContent />
       <header
         className={`fixed top-0 inset-x-0 z-50 bg-white transition-shadow duration-300 ${
           scrolled ? "shadow-md" : "shadow-sm"

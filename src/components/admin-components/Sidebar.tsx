@@ -24,6 +24,7 @@ import {
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
 import { getPendingHireInquiriesCount } from "../../api/admin/hire.api";
+import SkipToContent from "../SkipToContent";
 
 // How often to re-poll the pending-hire-inquiries count for the sidebar badge.
 const HIRE_BADGE_POLL_MS = 45_000;
@@ -96,6 +97,7 @@ export default function Sidebar() {
 
   return (
     <>
+      <SkipToContent />
       {!isCollapsed && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
