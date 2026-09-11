@@ -14,6 +14,15 @@ const extractErrorMessage = (error: unknown): string => {
   return "An unexpected error occurred";
 };
 
+// A visitor can already be on the homepage when an admin adds or
+// reorders a hero member elsewhere - without this, they'd only ever see
+// that change by refreshing the page themselves. Neither consumer of
+// this hook (HeroSection's carousel, HubMembersSection's grid) reads
+// `loading` from here, so re-fetching in the background never causes a
+// visible skeleton/flicker - it just quietly swaps `members` in once new
+// data arrives.
+const POLL_INTERVAL_MS = 15_000;
+
 interface UseHeroMembersReturn {
   members: HeroMember[];
   loading: boolean;
@@ -41,6 +50,16 @@ export const useHeroMembers = (): UseHeroMembersReturn => {
 
   useEffect(() => {
     fetchMembers();
+
+    const timer = setInterval(() => {
+      // Skip the request while the tab is backgrounded - nothing is
+      // watching the carousel, and it'll catch up on the next tick after
+      // the visitor comes back.
+      if (document.hidden) return;
+      fetchMembers();
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(timer);
   }, [fetchMembers]);
 
   return { members, loading, error, fetchMembers };
