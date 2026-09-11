@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/Hub-information"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <Info
                       className="w-4 h-4 flex-shrink-0"
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/#home"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <HomeIcon
                       className="w-4 h-4 flex-shrink-0"
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsJoinModalOpen(true)}
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <UserPlus
                       className="w-4 h-4 flex-shrink-0"
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/Hub-information"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <Target
                       className="w-4 h-4 flex-shrink-0"
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/#members"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <Users
                       className="w-4 h-4 flex-shrink-0"
@@ -117,7 +117,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/projects"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <FolderGit2
                       className="w-4 h-4 flex-shrink-0"
@@ -136,7 +136,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/faqs"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <HelpCircle
                       className="w-4 h-4 flex-shrink-0"
@@ -148,7 +148,7 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     to="/chat-with-us"
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <MessageCircle
                       className="w-4 h-4 flex-shrink-0"
@@ -161,7 +161,7 @@ const Footer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <Briefcase
                       className="w-4 h-4 flex-shrink-0"

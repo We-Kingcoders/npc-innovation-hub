@@ -48,7 +48,16 @@ const iconComponents = {
 
 export default function Sidebar() {
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // isCollapsed does double duty: on mobile it means "off-canvas/hidden",
+  // on desktop it means "narrow icon-only mode". Defaulting to false
+  // (open) meant every admin page loaded on a phone with the nav drawer
+  // and its dark backdrop covering the whole screen until the admin
+  // tapped it away - defaulting to the actual desktop-open, mobile-closed
+  // state per device instead.
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 1024; // Tailwind's lg breakpoint
+  });
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { logout } = useAuth();
