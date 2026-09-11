@@ -34,6 +34,14 @@ const ChatDesign = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // useEffect runs on mount too, and messages starts as [] - without
+    // this guard, the page auto-scrolled itself down to the (empty)
+    // message list the instant it loaded, before the visitor ever saw
+    // the "Chat with Us" heading and info card above it. Found by
+    // screenshotting the page, not by reading the code - it looked like
+    // a completely different, broken layout (the fixed Navbar appearing
+    // mid-page in a full-page capture) until traced back to this.
+    if (messages.length === 0) return;
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
