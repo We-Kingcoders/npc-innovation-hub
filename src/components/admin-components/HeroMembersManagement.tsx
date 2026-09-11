@@ -142,7 +142,7 @@ const HeroMembersManagement: React.FC = () => {
   };
 
   return (
-    <div className="ml-8 p-0 max-w-4xl">
+    <div className="ml-0 md:ml-8 p-0 max-w-4xl">
       {/* Add member picker */}
       <div className="bg-white rounded-2xl border border-mist-300 shadow-sm p-6 mb-6">
         <h2 className="font-semibold text-navy-800 text-sm mb-1">

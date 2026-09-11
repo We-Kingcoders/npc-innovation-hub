@@ -1,6 +1,7 @@
 // src/pages/Admin-pages/AdminHubChannel.tsx
 
 import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Hash, Users, ShieldCheck } from "lucide-react";
 import { useHubMessages } from "../../hooks/useHubMessages";
 import { useAuth } from "../../hooks/useAuth";
@@ -43,6 +44,7 @@ const toBubble = (
 
 const AdminHubChannel: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
 
   const {
@@ -104,11 +106,16 @@ const AdminHubChannel: React.FC = () => {
     </div>
   );
 
+  // Same as member HubChannel.tsx: below lg this is always the "chat"
+  // pane, list panel hidden, back chevron returns to the message list.
   return (
     <div className="flex gap-4 h-full min-h-0">
-      <AdminChatLeftPanel basePath="/admin" />
+      <div className="hidden lg:block lg:flex-shrink-0">
+        <AdminChatLeftPanel basePath="/admin" />
+      </div>
       <div className="flex-1 min-w-0 min-h-0">
         <ChatShell
+          onBack={() => navigate("/admin/messages")}
           headerTitle="Hub Channel"
           headerSubtitle="Admin moderation view"
           headerIcon={hubIcon}

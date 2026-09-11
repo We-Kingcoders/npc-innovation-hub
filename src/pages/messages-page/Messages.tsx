@@ -117,11 +117,29 @@ export const Messages: React.FC = () => {
 
   const bubbles: BubbleMessage[] = messages.map((m) => toBubble(m, getReplyTo));
 
+  // Below lg: show the conversation list OR the open chat, never both -
+  // LeftPanel is a fixed 320px-on-desktop panel, and side-by-side with the
+  // chat pane there's nothing left for the chat on a phone. Above lg both
+  // stay visible together as before.
   return (
     <div className="flex gap-4 h-full min-h-0">
-      <LeftPanel selectedUserId={selectedUserId} onSelect={handleSelectUser} />
-      <div className="flex-1 min-w-0 min-h-0">
+      <div
+        className={`${selectedUserId ? "hidden lg:block" : "block"} w-full lg:w-auto lg:flex-shrink-0`}
+      >
+        <LeftPanel
+          selectedUserId={selectedUserId}
+          onSelect={handleSelectUser}
+        />
+      </div>
+      <div
+        className={`${selectedUserId ? "block" : "hidden lg:block"} flex-1 min-w-0 min-h-0`}
+      >
         <ChatShell
+          onBack={() => {
+            setSelectedUserId(null);
+            setSelectedMemberName("");
+            navigate("/messages");
+          }}
           headerTitle={headerName || (selectedUserId ? "Conversation" : "")}
           showOnlineStatus
           isSelected={!!selectedUserId}

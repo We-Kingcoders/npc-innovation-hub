@@ -320,8 +320,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
         />
       )}
 
-      {/* h-full + overflow-hidden — never grows beyond its container */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-80 h-full flex flex-col flex-shrink-0 overflow-hidden">
+      {/* h-full + overflow-hidden — never grows beyond its container.
+          w-full below lg: this panel is only ever shown alone on mobile
+          (Messages.tsx/HubChannel.tsx hide it once a conversation is
+          open), so it should fill the screen there rather than stay
+          pinned at a desktop-only 320px. */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full lg:w-80 h-full flex flex-col flex-shrink-0 overflow-hidden">
         {/* ── Header — always visible, never scrolls ──────────────────────── */}
         <div className="flex-shrink-0 p-5 border-b border-gray-100">
           <div className="flex items-center justify-between mb-4">

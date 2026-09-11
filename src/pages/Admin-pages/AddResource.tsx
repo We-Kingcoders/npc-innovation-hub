@@ -30,9 +30,13 @@ const Toast = ({ message, type, onClose }: ToastProps) => {
   }, [onClose]);
 
   return (
-    <div className="fixed top-4 right-4 z-50 animate-slide-in">
+    // left-4 on mobile (sm:left-auto releases it back to a right-anchored
+    // toast) so the 300px min-width below can't push past the left edge
+    // on a narrow phone - same class of fix as the notification/profile
+    // dropdowns in NotificationBell.tsx.
+    <div className="fixed top-4 right-4 left-4 sm:left-auto z-50 animate-slide-in">
       <div
-        className={`rounded-lg shadow-lg p-4 min-w-[300px] flex items-center gap-3 ${
+        className={`rounded-lg shadow-lg p-4 w-full sm:w-auto sm:min-w-[300px] flex items-center gap-3 ${
           type === "success"
             ? "bg-green-50 border border-green-200"
             : "bg-red-50 border border-red-200"
@@ -198,11 +202,12 @@ export default function AddResource() {
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
 
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Header. flex-col below sm - title + back link had nowhere near
+            enough room at 320-390px and forced an overflow. */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
           <div>
             <h1 className="font-bold text-2xl">
               {isEditMode ? "Edit Resource" : "Add New Resource"}
