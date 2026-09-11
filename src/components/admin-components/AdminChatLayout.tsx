@@ -13,8 +13,12 @@ interface AdminChatLayoutProps {
 
 const AdminChatLayout: React.FC<AdminChatLayoutProps> = ({ children }) => {
   return (
-    // Full viewport height, no overflow on the outer shell
-    <div className="flex h-screen overflow-hidden bg-mist-100">
+    // Full viewport height, no overflow on the outer shell. h-dvh, not
+    // h-screen: 100vh runs past the actually-visible area on a phone
+    // with the address bar showing, which combined with overflow-hidden
+    // here could clip the composer below the fold. 100dvh tracks the
+    // real visible viewport instead.
+    <div className="flex h-dvh overflow-hidden bg-mist-100">
       {/* Sidebar — fixed width, full height */}
       <Sidebar />
 

@@ -99,13 +99,13 @@ export const HubChannel: React.FC = () => {
     </div>
   );
 
-  // Below lg the Hub Channel is always the "chat" pane, never the list -
+  // Below md the Hub Channel is always the "chat" pane, never the list -
   // LeftPanel is where you'd navigate away from it (to a DM, or back to
   // the list), so it stays hidden here and the back chevron returns to
-  // /messages, which shows the list. Above lg both stay visible together.
+  // /messages, which shows the list. Above md both stay visible together.
   return (
     <div className="flex gap-4 h-full min-h-0">
-      <div className="hidden lg:block lg:flex-shrink-0">
+      <div className="hidden md:block md:flex-shrink-0">
         <LeftPanel />
       </div>
       <div className="flex-1 min-w-0 min-h-0">

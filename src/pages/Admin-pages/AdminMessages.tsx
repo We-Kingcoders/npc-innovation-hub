@@ -117,12 +117,12 @@ const AdminMessages: React.FC = () => {
 
   const bubbles: BubbleMessage[] = messages.map((m) => toBubble(m, getReplyTo));
 
-  // Same mobile single-pane pattern as the member Messages.tsx: below lg,
+  // Same mobile single-pane pattern as the member Messages.tsx: below md,
   // show the list or the open chat, never both.
   return (
     <div className="flex gap-4 h-full min-h-0">
       <div
-        className={`${selectedUserId ? "hidden lg:block" : "block"} w-full lg:w-auto lg:flex-shrink-0`}
+        className={`${selectedUserId ? "hidden md:block" : "block"} w-full md:w-auto md:flex-shrink-0`}
       >
         <AdminChatLeftPanel
           selectedUserId={selectedUserId}
@@ -131,7 +131,7 @@ const AdminMessages: React.FC = () => {
         />
       </div>
       <div
-        className={`${selectedUserId ? "block" : "hidden lg:block"} flex-1 min-w-0 min-h-0`}
+        className={`${selectedUserId ? "block" : "hidden md:block"} flex-1 min-w-0 min-h-0`}
       >
         <ChatShell
           onBack={() => {

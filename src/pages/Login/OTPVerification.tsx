@@ -75,7 +75,12 @@ const OTPVerification: React.FC = () => {
   const displayError = localError || error;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    // h-dvh, not h-screen: 100vh runs past the actually-visible area on
+    // a phone with the address bar showing, which combined with
+    // overflow-hidden here could clip the verify button below the fold
+    // until the chrome auto-hides. 100dvh tracks the real visible
+    // viewport instead.
+    <div className="flex flex-col h-dvh overflow-hidden">
       {/* Same shell as Login/SignUp/Forgot Password - shared Navbar,
           AuthPageMain's single hubimage.jpg backdrop, and a page that never
           needs to scroll on its own. This page used to be the odd one out:

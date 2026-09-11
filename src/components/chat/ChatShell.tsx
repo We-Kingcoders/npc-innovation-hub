@@ -111,11 +111,11 @@ export interface ChatShellProps {
   noSelectionSubtitle?: string;
   isSelected?: boolean;
 
-  // Below lg, the parent page shows either the conversation list or this
-  // chat pane, never both (there isn't room for both at once on a phone).
-  // When set, a back chevron appears in the header - lg:hidden, since
-  // above that breakpoint the list is always visible alongside the chat
-  // and there's nothing to "go back" to.
+  // Below md, the parent page shows either the conversation list or this
+  // chat pane, never both (there isn't room for both at once on a
+  // portrait phone). When set, a back chevron appears in the header -
+  // md:hidden, since above that breakpoint the list is always visible
+  // alongside the chat and there's nothing to "go back" to.
   onBack?: () => void;
 
   onSend: (
@@ -213,7 +213,7 @@ const ChatShell: React.FC<ChatShellProps> = ({
               type="button"
               onClick={onBack}
               aria-label="Back to conversations"
-              className="lg:hidden -ml-1.5 p-2 -mr-1 hover:bg-gray-100 rounded-lg text-gray-500 flex-shrink-0"
+              className="md:hidden -ml-1.5 p-2 -mr-1 hover:bg-gray-100 rounded-lg text-gray-500 flex-shrink-0"
             >
               <ChevronLeft size={20} />
             </button>

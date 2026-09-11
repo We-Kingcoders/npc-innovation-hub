@@ -193,7 +193,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    // h-dvh, not h-screen: 100vh runs past the actually-visible area on
+    // a phone with the address bar showing, which combined with
+    // overflow-hidden here could clip the submit button below the fold
+    // until the chrome auto-hides. 100dvh tracks the real visible
+    // viewport instead.
+    <div className="flex flex-col h-dvh overflow-hidden">
       {/* Header Section - was its own hand-rolled header with a broken
           "About Hub" link (/about doesn't exist - the real route is
           /Hub-information), plain <a> tags that force a full page reload
@@ -203,7 +208,7 @@ const LoginPage = () => {
           needed its own. */}
       <Navbar />
 
-      {/* h-screen + overflow-hidden on the root above, plus overflow-y-auto
+      {/* h-dvh + overflow-hidden on the root above, plus overflow-y-auto
           on AuthPageMain's form column, mean the page itself never scrolls
           on any device - only the form column scrolls internally if its
           content is ever taller than the space left. AuthPageMain is
