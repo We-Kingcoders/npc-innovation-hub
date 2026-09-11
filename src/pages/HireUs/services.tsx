@@ -87,23 +87,32 @@ export default function Services() {
   ];
 
   return (
-    <section className="m-12 p-12 lg:p-16">
+    // m-12 p-12 (48px margin + 48px padding, all sides, unconditionally)
+    // left only ~128px of usable width on a 320px phone before the card's
+    // own p-10 even started - "Cybersecurity" at text-3xl bold couldn't
+    // fit in what was left and bled a few pixels past the edge (confirmed
+    // via a real 320px-viewport render, not just reading the CSS - the
+    // page-wide scrollWidth was 10px over). Both the section spacing and
+    // the card/type scale now start mobile-sized and grow from md: up,
+    // matching the m-12 p-12/text-3xl/text-xl treatment this originally
+    // had unconditionally.
+    <section className="px-4 py-12 md:m-12 md:p-12 lg:p-16">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-xl p-10 border-2 border-blue-100 hover:shadow-2xl transition-all duration-300 text-left"
+              className="bg-white rounded-2xl shadow-xl p-6 md:p-10 border-2 border-blue-100 hover:shadow-2xl transition-all duration-300 text-left"
             >
               {/* Icon positioned above content */}
               <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6">
                 {service.icon}
               </div>
               <div>
-                <h3 className="text-3xl font-bold mb-4 text-blue-800">
+                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-blue-800">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 text-xl leading-relaxed">
+                <p className="text-gray-600 text-lg md:text-xl leading-relaxed">
                   {service.description}
                 </p>
               </div>

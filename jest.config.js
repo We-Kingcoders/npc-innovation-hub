@@ -2,6 +2,11 @@
 export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  // e2e/ holds the Playwright responsive suite (run via `npm run
+  // test:responsive`, not Jest) - its *.spec.ts files match Jest's default
+  // testMatch, and requiring @playwright/test's `test`/`expect` outside
+  // Playwright's own runner throws deep inside playwright-core.
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/e2e/'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js', '<rootDir>/src/setupTests.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
