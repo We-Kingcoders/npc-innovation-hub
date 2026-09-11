@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
 import AuthPageMain from "../../components/AuthPageMain";
+import PasswordInput from "../../components/PasswordInput";
 
 // If using react-router-dom for navigation, import as needed
 // import { useNavigate } from "react-router-dom";
@@ -311,8 +312,7 @@ const SignUpPage = () => {
               )}
             </div>
             <div className="mb-4">
-              <input
-                type="password"
+              <PasswordInput
                 placeholder="Password"
                 className={`w-full px-4 py-3 border ${
                   errors.password ? "border-red-500" : "border-gray-300"
@@ -325,8 +325,7 @@ const SignUpPage = () => {
               )}
             </div>
             <div className="mb-4">
-              <input
-                type="password"
+              <PasswordInput
                 placeholder="Confirm Password"
                 className={`w-full px-4 py-3 border ${
                   errors.confirmPassword ? "border-red-500" : "border-gray-300"

@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MailCheck } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { authService } from "../../api/authService";
 import Navbar from "../../components/Navbar";
 import AuthPageMain from "../../components/AuthPageMain";
+import OtpInput from "../../components/OtpInput";
+
+// A code was just sent to get to this page, so the cooldown starts
+// immediately on load, not only after a manual resend click - matches
+// how the email was actually delivered, and stops a visitor mashing
+// "Resend" the instant the page renders.
+const RESEND_COOLDOWN_SECONDS = 45;
 
 const OTPVerification: React.FC = () => {
   const [otp, setOtp] = useState("");
@@ -10,11 +19,19 @@ const OTPVerification: React.FC = () => {
   const [showSecurityTips, setShowSecurityTips] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN_SECONDS);
 
   // Use authentication context
   const { verifyOTP, user, error, isLoading, clearError } = useAuth();
 
   const email = user?.email || localStorage.getItem("email") || "";
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setResendCooldown((s) => (s <= 0 ? 0 : s - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Was a bare alert("Resend OTP functionality coming soon!") with no real
   // call behind it - the backend's POST /api/users/send-otp genuinely
@@ -34,6 +51,8 @@ const OTPVerification: React.FC = () => {
     try {
       await authService.resendOTP(email);
       setResendMessage("A new code has been sent to your email.");
+      setResendCooldown(RESEND_COOLDOWN_SECONDS);
+      setOtp("");
     } catch (err: unknown) {
       setLocalError(
         err instanceof Error ? err.message : "Failed to resend the code.",
@@ -45,13 +64,16 @@ const OTPVerification: React.FC = () => {
 
   // ==================== OTP VERIFICATION ====================
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // Takes the code directly rather than reading the `otp` state - when
+  // OtpInput's onComplete fires (typing/pasting the last digit), it hands
+  // over the just-completed code as an argument because `otp` state
+  // itself hasn't re-rendered yet at that exact moment.
+  const submitOtp = async (code: string) => {
     setLocalError("");
     clearError();
 
     // Validation
-    if (!otp) {
+    if (!code) {
       setLocalError("Please enter the OTP.");
       return;
     }
@@ -63,12 +85,17 @@ const OTPVerification: React.FC = () => {
 
     try {
       // Use auth context for OTP verification
-      await verifyOTP({ email, otp });
+      await verifyOTP({ email, otp: code });
       // Navigation is handled by AuthContext based on user role
     } catch (err: unknown) {
       // Error is already set in context, but we can display it locally too
       setLocalError(err instanceof Error ? err.message : "An error occurred");
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await submitOtp(otp);
   };
 
   // Display error from either local state or auth context
@@ -94,6 +121,12 @@ const OTPVerification: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="text-center mb-2">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E8F4FC]">
+                <MailCheck
+                  className="h-7 w-7 text-[#00A0E3]"
+                  aria-hidden="true"
+                />
+              </div>
               <h1 className="text-2xl font-bold text-[#002B56]">
                 OTP Verification
               </h1>
@@ -124,18 +157,20 @@ const OTPVerification: React.FC = () => {
             )}
 
             <div>
-              <label className="block text-gray-700 text-sm font-medium mb-1.5">
+              <label
+                htmlFor="otp-digit-0"
+                className="block text-gray-700 text-sm font-medium mb-2 text-center"
+              >
                 Enter OTP Code
               </label>
-              <input
-                type="text"
-                placeholder="Enter 6-digit OTP"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent text-lg tracking-widest text-center"
+              <OtpInput
+                id="otp-digit-0"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                maxLength={6}
-                required
+                onChange={setOtp}
+                onComplete={(code) => void submitOtp(code)}
                 disabled={isLoading}
+                autoFocus
+                hasError={!!displayError}
               />
             </div>
 
@@ -175,14 +210,20 @@ const OTPVerification: React.FC = () => {
             <div className="text-center pt-2 border-t border-gray-200">
               <p className="text-gray-600 text-sm pt-2">
                 Didn't receive the code?{" "}
-                <button
-                  type="button"
-                  className="text-[#002B56] hover:text-[#003366] hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
-                  disabled={isLoading || isResending}
-                  onClick={() => void handleResend()}
-                >
-                  {isResending ? "Sending..." : "Resend OTP"}
-                </button>
+                {resendCooldown > 0 ? (
+                  <span className="text-gray-400 font-semibold">
+                    Resend in {resendCooldown}s
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    className="text-[#002B56] hover:text-[#003366] hover:underline font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+                    disabled={isLoading || isResending}
+                    onClick={() => void handleResend()}
+                  >
+                    {isResending ? "Sending..." : "Resend OTP"}
+                  </button>
+                )}
               </p>
               <button
                 type="button"
@@ -191,6 +232,14 @@ const OTPVerification: React.FC = () => {
               >
                 View Security Tips
               </button>
+              <p className="text-sm mt-3">
+                <Link
+                  to="/login"
+                  className="text-gray-500 hover:text-[#002B56] hover:underline"
+                >
+                  ← Back to Login
+                </Link>
+              </p>
             </div>
           </form>
         </div>
