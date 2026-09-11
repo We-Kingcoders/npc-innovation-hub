@@ -873,8 +873,9 @@ export default function AddResourceForm({
         </div>
       </div>
 
-      {/* URL & Author */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* URL & Author - was a bare grid-cols-2 with no mobile fallback,
+          squeezing two text inputs into half a narrow phone screen each. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Resource URL - Only show for non-Video types */}
         {type !== "Video" && (
           <div>
@@ -949,8 +950,10 @@ export default function AddResourceForm({
         )}
       </div>
 
-      {/* Platform & Duration */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* Platform & Duration - was a bare grid-cols-2 with no mobile
+          fallback, squeezing two text inputs into half a narrow phone
+          screen each. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <input
             type="text"

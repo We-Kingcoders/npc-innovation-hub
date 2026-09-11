@@ -260,8 +260,11 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               )}
             </div>
 
-            {/* Date & Time Row */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Date & Time Row - was a bare grid-cols-2 with no mobile
+                fallback, squeezing two datetime-local inputs (which need
+                real width for their native picker controls) into ~half a
+                narrow phone screen each. */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Start Time */}
               <div>
                 <label className="block text-sm font-medium text-navy-800 mb-2">
