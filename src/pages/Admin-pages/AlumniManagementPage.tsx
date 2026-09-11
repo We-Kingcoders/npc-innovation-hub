@@ -42,10 +42,12 @@ const AlumniManagementPage: React.FC = () => {
 
       <div className="flex min-h-screen bg-mist-100">
         <Sidebar />
-        <main id="main-content" className="flex-1 px-10 py-8">
+        <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
           <Topbar />
-          <h1 className="font-bold text-2xl mb-2 ml-8 text-navy-800">Alumni</h1>
-          <p className="text-sm text-mist-600 mb-8 ml-8">
+          <h1 className="font-bold text-2xl mb-2 ml-0 md:ml-8 text-navy-800">
+            Alumni
+          </h1>
+          <p className="text-sm text-mist-600 mb-8 ml-0 md:ml-8">
             Manage the alumni directory shown on the public site. To promote or
             demote an existing member, use the Members page.
           </p>

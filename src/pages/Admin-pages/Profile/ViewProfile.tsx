@@ -235,7 +235,7 @@ export default function ViewProfile() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
         {content}
       </main>

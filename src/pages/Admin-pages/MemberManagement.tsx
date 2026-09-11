@@ -47,7 +47,7 @@ const MemberManagement: React.FC = () => {
         <Sidebar />
 
         {/* Main Content */}
-        <main id="main-content" className="flex-1 px-10 py-8">
+        <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
           <Topbar />
           <MembersManagement />
         </main>

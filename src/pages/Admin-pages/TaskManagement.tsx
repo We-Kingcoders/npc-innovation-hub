@@ -86,12 +86,13 @@ export default function TaskManagement() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
 
-        {/* Page Header */}
+        {/* Page Header. flex-col below sm - title + create button had
+            nowhere near enough room at 320-390px and forced an overflow. */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <h1 className="font-bold text-3xl text-gray-900 mb-2">
                 Task Management

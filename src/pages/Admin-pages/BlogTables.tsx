@@ -158,14 +158,16 @@ export default function BlogTables() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
 
-        <div className="flex justify-between items-center mb-8 ml-8">
+        {/* flex-col below sm - title + create button had nowhere near
+            enough room at 320-390px and forced an overflow. */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8 ml-0 md:ml-8">
           <h1 className="font-bold text-2xl">Blogs</h1>
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-[#343a5e] text-white rounded-xl px-10 py-3 font-bold text-lg shadow hover:bg-[#20253a] transition-all flex items-center gap-2"
+            className="bg-[#343a5e] text-white rounded-xl px-6 sm:px-10 py-3 font-bold text-lg shadow hover:bg-[#20253a] transition-all flex items-center gap-2 justify-center"
           >
             <svg
               className="w-5 h-5"
@@ -186,7 +188,7 @@ export default function BlogTables() {
 
         {/* Error State */}
         {error && (
-          <div className="ml-8 mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="ml-0 md:ml-8 mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
             {error}
           </div>
         )}
