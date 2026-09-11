@@ -1,7 +1,13 @@
 // src/components/chat/ChatShell.tsx
 
 import React, { useRef, useState, useCallback } from "react";
-import { MessageSquare, Search, X, MoreHorizontal } from "lucide-react";
+import {
+  MessageSquare,
+  Search,
+  X,
+  MoreHorizontal,
+  ChevronLeft,
+} from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import type { BubbleMessage } from "./MessageBubble";
 import type { ReplyTarget } from "./MessageInput";
@@ -105,6 +111,13 @@ export interface ChatShellProps {
   noSelectionSubtitle?: string;
   isSelected?: boolean;
 
+  // Below md, the parent page shows either the conversation list or this
+  // chat pane, never both (there isn't room for both at once on a
+  // portrait phone). When set, a back chevron appears in the header -
+  // md:hidden, since above that breakpoint the list is always visible
+  // alongside the chat and there's nothing to "go back" to.
+  onBack?: () => void;
+
   onSend: (
     content: string,
     attachments: AttachmentFile[],
@@ -147,6 +160,7 @@ const ChatShell: React.FC<ChatShellProps> = ({
   noSelectionTitle = "Select a conversation",
   noSelectionSubtitle = "Choose from the list or start a new one",
   isSelected = true,
+  onBack,
   onSend,
   onEdit,
   onDelete,
@@ -194,6 +208,16 @@ const ChatShell: React.FC<ChatShellProps> = ({
       {/* Header */}
       <div className="flex-shrink-0 flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
         <div className="flex items-center gap-3 min-w-0">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back to conversations"
+              className="md:hidden -ml-1.5 p-2 -mr-1 hover:bg-gray-100 rounded-lg text-gray-500 flex-shrink-0"
+            >
+              <ChevronLeft size={20} />
+            </button>
+          )}
           {headerIcon ??
             (isSelected && headerTitle ? (
               <HeaderAvatar name={headerTitle} />

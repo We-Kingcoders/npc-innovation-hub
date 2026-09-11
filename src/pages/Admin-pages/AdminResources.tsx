@@ -71,7 +71,7 @@ const ResourceDetailsModal = ({
           )}
 
           {/* Details Grid */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
               <p className="text-sm text-gray-500 mb-1">Category</p>
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
@@ -399,11 +399,12 @@ export default function AdminResources() {
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
 
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Header. flex-col below sm - title + button side by side had
+            nowhere near enough room at 320-390px and forced an overflow. */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
           <h1 className="font-bold text-2xl">Resource Management</h1>
           <button
             onClick={handleAddNew}

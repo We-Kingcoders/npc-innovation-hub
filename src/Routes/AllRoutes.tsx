@@ -73,6 +73,13 @@ const DashboardLayout = lazy(() =>
     default: m.DashboardLayout,
   })),
 );
+// Messages/HubChannel need a height-bounded shell (see the file's own
+// comment) rather than DashboardLayout's ordinary document-flow one.
+const MemberChatLayout = lazy(() =>
+  import("../components/member/layouts/MemberChatLayout").then((m) => ({
+    default: m.MemberChatLayout,
+  })),
+);
 const Dashboard = lazy(() =>
   import("../pages/member-page/Dashboard").then((m) => ({
     default: m.Dashboard,
@@ -576,14 +583,15 @@ const AllRoutes: React.FC = () => {
           }
         />
 
-        {/* Member Messages */}
+        {/* Member Messages - MemberChatLayout, not DashboardLayout: see
+            that file's comment for why chat needs a height-bounded shell. */}
         <Route
           path="/messages"
           element={
             <ProtectedRoute requiredRole="Member">
-              <DashboardLayout>
+              <MemberChatLayout>
                 <Messages />
-              </DashboardLayout>
+              </MemberChatLayout>
             </ProtectedRoute>
           }
         />
@@ -591,9 +599,9 @@ const AllRoutes: React.FC = () => {
           path="/messages/:id"
           element={
             <ProtectedRoute requiredRole="Member">
-              <DashboardLayout>
+              <MemberChatLayout>
                 <Messages />
-              </DashboardLayout>
+              </MemberChatLayout>
             </ProtectedRoute>
           }
         />
@@ -601,9 +609,9 @@ const AllRoutes: React.FC = () => {
           path="/hub-channel"
           element={
             <ProtectedRoute requiredRole="Member">
-              <DashboardLayout>
+              <MemberChatLayout>
                 <HubChannel />
-              </DashboardLayout>
+              </MemberChatLayout>
             </ProtectedRoute>
           }
         />

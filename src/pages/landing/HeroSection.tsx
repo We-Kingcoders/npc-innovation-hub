@@ -123,8 +123,16 @@ const HeroSection = () => {
           <main id="main-content"> that covers all of it lives there instead
           - see that file's comment for why. */}
       <div className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
-        {/* Left Section - Hero Text Content */}
-        <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-8 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
+        {/* Left Section - Hero Text Content. pt-8 was nowhere near enough
+            to clear the mobile-only decorative gradient band above (h-48 =
+            192px, absolutely positioned behind this at inset-0) - this
+            heading rendered starting right at the top of the hero, inside
+            that band, its own "Innovate. Create. Lead." tagline included:
+            two headings occupying the same space, and #29476E text is
+            very low-contrast directly on the navy gradient showing
+            through behind it. pt-52 clears the band with room to spare;
+            lg:pt-20 is unchanged since the band itself is lg:hidden. */}
+        <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-52 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
           {/* Main Headline */}
           <h1 className="text-[#29476E] font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
             Empowering

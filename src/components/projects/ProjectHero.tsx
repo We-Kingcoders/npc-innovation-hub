@@ -51,8 +51,14 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
           ProjectsPage.tsx. The single <main id="main-content"> that covers
           the whole page lives in AllRoutes.tsx. */}
       <div className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
-        {/* Left Section - Hero Text Content */}
-        <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-8 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
+        {/* Left Section - Hero Text Content. Same fix as HeroSection.tsx
+            (this component is a near-duplicate of it): pt-8 didn't clear
+            the mobile-only decorative gradient band above (h-48 = 192px,
+            absolutely positioned behind this), so this heading rendered
+            starting inside that band - overlapping its own "Innovate.
+            Create. Lead." tagline, with #29476E text at very low contrast
+            against the navy gradient showing through behind it. */}
+        <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-52 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
           {/* Main Headline */}
           <h1 className="text-[#29476E] font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
             Empowering

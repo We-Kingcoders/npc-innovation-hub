@@ -205,12 +205,17 @@ const SignUpPage = () => {
   // const navigate = useNavigate(); // If you want to navigate after signup
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    // h-dvh, not h-screen: 100vh runs past the actually-visible area on
+    // a phone with the address bar showing, which combined with
+    // overflow-hidden here could clip the submit button below the fold
+    // until the chrome auto-hides. 100dvh tracks the real visible
+    // viewport instead.
+    <div className="flex flex-col h-dvh overflow-hidden">
       <Navbar />
       {/* AuthPageMain is shared across Login/SignUp/OTP/Forgot Password so
           all four auth pages stay visually identical - one background
           behind the whole row, not a photo next to a separately-colored
-          form column. h-screen + overflow-hidden above, plus
+          form column. h-dvh + overflow-hidden above, plus
           overflow-y-auto on the form column, mean the page itself never
           scrolls - only the (often long) sign-up form scrolls internally
           within its own column when needed. */}

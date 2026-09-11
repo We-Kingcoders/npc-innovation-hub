@@ -215,14 +215,16 @@ export default function ViewProfile() {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="px-8 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+          {/* Footer. flex-col below sm - "Last updated: <date>" plus the
+              button had nowhere near enough room at 320-390px, especially
+              stacked under this card's own unconditional px-8. */}
+          <div className="px-4 sm:px-8 py-4 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <p className="text-sm text-gray-500">
               Last updated: {formatUserDate(user.updatedAt)}
             </p>
             <Link
               to="/admin/profile/settings"
-              className="px-6 py-2 bg-[#002B56] text-white rounded-lg hover:bg-[#003366] transition-colors font-medium"
+              className="px-6 py-2 bg-[#002B56] text-white rounded-lg hover:bg-[#003366] transition-colors font-medium text-center"
             >
               Edit Profile
             </Link>
@@ -235,7 +237,7 @@ export default function ViewProfile() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
         {content}
       </main>

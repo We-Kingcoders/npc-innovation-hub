@@ -81,9 +81,12 @@ export const Toast: React.FC<ToastProps> = ({
   };
 
   return (
-    <div className="fixed top-4 right-4 z-[100] animate-slideIn">
+    // Same fix as the AddResource.tsx page-local Toast: left-4 + full
+    // width below sm keeps the 300px min-width from pushing past the
+    // left edge of a narrow phone.
+    <div className="fixed top-4 right-4 left-4 sm:left-auto z-[100] animate-slideIn">
       <div
-        className={`flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg min-w-[300px] ${typeStyles[type]}`}
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg w-full sm:w-auto sm:min-w-[300px] ${typeStyles[type]}`}
       >
         <div className="flex-shrink-0">{icons[type]}</div>
         <p className="flex-1 text-sm font-medium">{message}</p>

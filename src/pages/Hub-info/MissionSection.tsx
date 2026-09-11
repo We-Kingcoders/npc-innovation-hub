@@ -34,8 +34,9 @@ const CARDS = [
 const HubInfo = () => {
   return (
     <div>
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto p-14">
+      {/* Main Content. p-14 (56px) was unconditional - scaled down for
+          mobile, restored at md: */}
+      <div className="max-w-6xl mx-auto px-4 py-14 md:p-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {CARDS.map(({ title, icon: Icon, points }) => (
             <div
@@ -51,7 +52,7 @@ const HubInfo = () => {
                   {title}
                 </h2>
               </div>
-              <div className="p-12">
+              <div className="p-6 md:p-12">
                 <ul className="space-y-4">
                   {points.map((point) => (
                     <li key={point} className="flex items-start">

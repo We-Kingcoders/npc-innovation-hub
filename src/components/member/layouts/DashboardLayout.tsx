@@ -19,7 +19,10 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         {/* Right side: Topbar + main page content */}
         <div className="flex-1 flex flex-col">
           <Topbar />
-          <main id="main-content" className="flex-1 px-10 py-6">
+          {/* px-10 (40px) unconditionally cost a 320px phone 80px of
+              width - a quarter of the screen - before any content even
+              started. Matches Topbar's own px-4 sm:px-10 scale. */}
+          <main id="main-content" className="flex-1 px-4 sm:px-10 py-6">
             {children}
           </main>
         </div>

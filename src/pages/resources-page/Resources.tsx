@@ -98,11 +98,14 @@ export const Resources: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      {/* flex-col below sm - title + link were both text-2xl side by side,
+          together wider than a phone screen. Link drops back to text-2xl
+          once there's room for both on one line. */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
         <h2 className="text-2xl font-bold">Resources</h2>
         <button
           onClick={() => navigate("/resources-room")}
-          className="text-2xl text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 cursor-pointer"
+          className="text-base sm:text-2xl text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 cursor-pointer text-left"
         >
           Resources Room →
         </button>

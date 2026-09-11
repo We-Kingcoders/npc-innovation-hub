@@ -1,6 +1,9 @@
 function LatestPro() {
   return (
-    <section className="m-12">
+    // Same bare m-12 (48px, all sides, unconditional) bug already fixed
+    // in services.tsx on this same page - 96px lost to margin alone
+    // before any padding/content on a 320px phone.
+    <section className="px-4 py-12 md:m-12">
       <div className="max-w-6xl mx-auto">
         {" "}
         {/* Changed from max-w-5xl to max-w-6xl */}
@@ -22,7 +25,7 @@ function LatestPro() {
             {/* Content container */}
             <div className="relative h-full flex flex-col justify-end p-6">
               {/* Project Name - Increased bottom margin */}
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
                 Music Festival
               </h2>
 
@@ -67,7 +70,7 @@ function LatestPro() {
             {/* Content container */}
             <div className="relative h-full flex flex-col justify-end p-6">
               {/* Project Name - Increased bottom margin */}
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
                 Music Festival
               </h2>
 
@@ -112,7 +115,7 @@ function LatestPro() {
             {/* Content container */}
             <div className="relative h-full flex flex-col justify-end p-6">
               {/* Project Name - Increased bottom margin */}
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
                 Music Festival
               </h2>
 
@@ -157,7 +160,7 @@ function LatestPro() {
             {/* Content container */}
             <div className="relative h-full flex flex-col justify-end p-6">
               {/* Project Name - Increased bottom margin */}
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
                 Music Festival
               </h2>
 

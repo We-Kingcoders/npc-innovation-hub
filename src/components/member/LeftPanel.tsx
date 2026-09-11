@@ -320,8 +320,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ selectedUserId, onSelect }) => {
         />
       )}
 
-      {/* h-full + overflow-hidden — never grows beyond its container */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-80 h-full flex flex-col flex-shrink-0 overflow-hidden">
+      {/* h-full + overflow-hidden — never grows beyond its container.
+          w-full below md: this panel is only ever shown alone below that
+          breakpoint (Messages.tsx/HubChannel.tsx hide it once a
+          conversation is open), so it should fill the screen there
+          rather than stay pinned at a desktop-only 320px. md, not lg -
+          an 844px-wide landscape phone already has plenty of room for
+          the list beside the chat pane, it's only portrait phones that
+          need the single-pane treatment. */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full md:w-80 h-full flex flex-col flex-shrink-0 overflow-hidden">
         {/* ── Header — always visible, never scrolls ──────────────────────── */}
         <div className="flex-shrink-0 p-5 border-b border-gray-100">
           <div className="flex items-center justify-between mb-4">

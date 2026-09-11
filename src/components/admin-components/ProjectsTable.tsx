@@ -146,7 +146,7 @@ export default function ProjectsTable() {
   // Skeleton loader
   if (loading && projects.length === 0) {
     return (
-      <div className="ml-8 p-0">
+      <div className="ml-0 md:ml-8 p-0">
         <div className="w-full max-w-[98%]">
           <div className="animate-pulse space-y-4">
             <div className="h-12 bg-mist-200 rounded-2xl" />
@@ -160,7 +160,7 @@ export default function ProjectsTable() {
   }
 
   return (
-    <div className="ml-8 p-0">
+    <div className="ml-0 md:ml-8 p-0">
       <div className="w-full max-w-[98%]">
         {/* Search Bar */}
         <div className="mb-6">

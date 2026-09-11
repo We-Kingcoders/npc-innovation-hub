@@ -1,6 +1,7 @@
 // src/pages/messages-page/HubChannel.tsx
 
 import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Hash, Users } from "lucide-react";
 import LeftPanel from "../../components/member/LeftPanel";
 import { useHubMessages } from "../../hooks/useHubMessages";
@@ -43,6 +44,7 @@ const toBubble = (
 
 export const HubChannel: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
 
   const {
@@ -97,11 +99,18 @@ export const HubChannel: React.FC = () => {
     </div>
   );
 
+  // Below md the Hub Channel is always the "chat" pane, never the list -
+  // LeftPanel is where you'd navigate away from it (to a DM, or back to
+  // the list), so it stays hidden here and the back chevron returns to
+  // /messages, which shows the list. Above md both stay visible together.
   return (
     <div className="flex gap-4 h-full min-h-0">
-      <LeftPanel />
+      <div className="hidden md:block md:flex-shrink-0">
+        <LeftPanel />
+      </div>
       <div className="flex-1 min-w-0 min-h-0">
         <ChatShell
+          onBack={() => navigate("/messages")}
           headerTitle="Hub Channel"
           headerSubtitle="General discussions and collaboration"
           headerIcon={hubIcon}

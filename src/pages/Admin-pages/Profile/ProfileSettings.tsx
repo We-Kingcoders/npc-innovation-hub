@@ -145,7 +145,7 @@ export default function ProfileSettings() {
     return (
       <div className="flex min-h-screen bg-mist-100">
         <Sidebar />
-        <main id="main-content" className="flex-1 px-10 py-8">
+        <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
           <Topbar />
           <div className="flex items-center justify-center py-24">
             <div className="text-center">
@@ -163,7 +163,7 @@ export default function ProfileSettings() {
   return (
     <div className="flex min-h-screen bg-mist-100">
       <Sidebar />
-      <main id="main-content" className="flex-1 px-10 py-8">
+      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
         <Topbar />
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header */}

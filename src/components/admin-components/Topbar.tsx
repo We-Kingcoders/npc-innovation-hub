@@ -1,5 +1,6 @@
 import { Search, Sun, Moon, User, Settings } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserFullName } from "../../types/user.types";
 import NotificationBell from "../notifications/NotificationBell";
@@ -120,18 +121,23 @@ export default function Topbar() {
                     {displayEmail}
                   </p>
                 </div>
-                <a
-                  href="/admin/profile"
+                {/* Were plain <a href> tags - forced a full page reload
+                    (losing all client state) on every click instead of
+                    client-side navigation. */}
+                <Link
+                  to="/admin/profile"
+                  onClick={() => setShowProfile(false)}
                   className="block w-full px-4 py-2.5 text-left text-sm text-navy-800 hover:bg-mist-100 transition-colors"
                 >
                   View Profile
-                </a>
-                <a
-                  href="/admin/profile/settings"
+                </Link>
+                <Link
+                  to="/admin/profile/settings"
+                  onClick={() => setShowProfile(false)}
                   className="block w-full px-4 py-2.5 text-left text-sm text-navy-800 hover:bg-mist-100 transition-colors"
                 >
                   Account Settings
-                </a>
+                </Link>
                 <div className="border-t border-mist-200">
                   <button
                     onClick={handleLogout}
