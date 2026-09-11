@@ -16,6 +16,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useProfile } from "../../hooks/useProfile";
 import { useMember } from "../../hooks/useMember";
 import type { SkillDetail } from "../../types/member.types";
+import PasswordInput from "../PasswordInput";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -24,17 +25,23 @@ const Input: React.FC<
     label: string;
     accent?: string;
   }
-> = ({ label, accent = "blue", ...props }) => (
-  <div className="space-y-1.5">
-    <label className="block text-sm font-medium text-gray-700">{label}</label>
-    <input
-      {...props}
-      className={`w-full px-4 py-3 border border-gray-300 rounded-lg
+> = ({ label, accent = "blue", type, ...props }) => {
+  const fieldClassName = `w-full px-4 py-3 border border-gray-300 rounded-lg
                   focus:ring-2 focus:ring-${accent}-500 focus:border-transparent
-                  transition-colors text-sm ${props.className ?? ""}`}
-    />
-  </div>
-);
+                  transition-colors text-sm ${props.className ?? ""}`;
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      {/* Password fields get the show/hide eye toggle automatically -
+          every other type renders exactly as before. */}
+      {type === "password" ? (
+        <PasswordInput {...props} className={fieldClassName} />
+      ) : (
+        <input {...props} type={type} className={fieldClassName} />
+      )}
+    </div>
+  );
+};
 
 const Textarea: React.FC<
   React.TextareaHTMLAttributes<HTMLTextAreaElement> & {

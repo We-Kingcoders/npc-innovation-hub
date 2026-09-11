@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import PasswordInput from "../../components/PasswordInput";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -144,10 +145,9 @@ const ResetPassword: React.FC = () => {
               >
                 New Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -165,10 +165,9 @@ const ResetPassword: React.FC = () => {
               >
                 Confirm New Password
               </label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

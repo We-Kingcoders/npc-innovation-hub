@@ -4,6 +4,7 @@ import type { CredentialResponse } from "@react-oauth/google";
 import { GOOGLE_CLIENT_ID, API_BASE_URL } from "../../config/env";
 import Navbar from "../../components/Navbar";
 import AuthPageMain from "../../components/AuthPageMain";
+import PasswordInput from "../../components/PasswordInput";
 
 // Extend the Window interface to include typed google object
 declare global {
@@ -252,8 +253,7 @@ const LoginPage = () => {
                 <label className="block text-gray-700 text-sm font-medium mb-1.5">
                   Password
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   placeholder="Enter your password"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent"
                   value={password}
