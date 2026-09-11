@@ -35,6 +35,18 @@ const HeroSection = () => {
     image: hm.imageUrl ?? "/assets/images/hero.png",
   }));
 
+  // The hero member list now refreshes in the background (see
+  // useHeroMembers) so an admin's changes show up without a page
+  // reload - which means it can shrink while a visitor is mid-carousel.
+  // Without this, an in-range currentSlide could point past the end of
+  // a newly-shorter list and every slide would render opacity-0 until
+  // the interval below happened to wrap back into range.
+  useEffect(() => {
+    if (teamMembers.length > 0 && currentSlide >= teamMembers.length) {
+      setCurrentSlide(0);
+    }
+  }, [teamMembers.length, currentSlide]);
+
   // Automatic looping
   useEffect(() => {
     if (teamMembers.length === 0) return undefined;

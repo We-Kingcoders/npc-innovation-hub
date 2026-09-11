@@ -1,5 +1,6 @@
 // src/components/admin-components/HeroMembersManagement.tsx
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   getHeroMembers,
@@ -22,6 +23,12 @@ const HeroMembersManagement: React.FC = () => {
   const [pickerResults, setPickerResults] = useState<MemberPickerOption[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerLoading, setPickerLoading] = useState(false);
+  // Selecting a member from the dropdown no longer adds them immediately -
+  // it just fills this in, so the admin has to deliberately click "Add
+  // Member" to confirm. Typing again after selecting clears it, since the
+  // search text no longer matches what was picked.
+  const [selectedMember, setSelectedMember] =
+    useState<MemberPickerOption | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [reordering, setReordering] = useState(false);
@@ -77,12 +84,24 @@ const HeroMembersManagement: React.FC = () => {
     };
   }, [search, heroMembers]);
 
-  const handleAdd = async (member: MemberPickerOption) => {
+  // Picking a row just selects it - handleConfirmAdd below is what
+  // actually adds them, once the admin clicks "Add Member".
+  const handleSelect = (member: MemberPickerOption) => {
+    setSelectedMember(member);
+    setSearch(member.name);
+    setPickerOpen(false);
+    setPickerResults([]);
+  };
+
+  const handleConfirmAdd = async () => {
+    if (!selectedMember) return;
+    const member = selectedMember;
     setAddingId(member.id);
     try {
       await addHeroMember(member.id);
       toast.success(`${member.name} added to hero section`);
       setSearch("");
+      setSelectedMember(null);
       setPickerOpen(false);
       setPickerResults([]);
       await fetchHeroMembers();
@@ -157,6 +176,9 @@ const HeroMembersManagement: React.FC = () => {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
+              // The previous selection no longer matches what's typed -
+              // require picking again before "Add Member" works.
+              setSelectedMember(null);
               setPickerOpen(true);
             }}
             onFocus={() => setPickerOpen(true)}
@@ -176,9 +198,8 @@ const HeroMembersManagement: React.FC = () => {
                   <button
                     key={member.id}
                     type="button"
-                    onClick={() => handleAdd(member)}
-                    disabled={addingId === member.id}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-mist-100 transition-colors disabled:opacity-50"
+                    onClick={() => handleSelect(member)}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-mist-100 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0 overflow-hidden">
                       {member.imageUrl ? (
@@ -199,16 +220,59 @@ const HeroMembersManagement: React.FC = () => {
                         {member.role}
                       </p>
                     </div>
-                    {addingId === member.id && (
-                      <span className="ml-auto text-xs text-mist-500">
-                        Adding…
-                      </span>
-                    )}
                   </button>
                 ))
               )}
             </div>
           )}
+        </div>
+
+        {/* Selected member + confirm - nothing is added to the hero
+            section until this button is clicked. */}
+        <div className="mt-3 flex items-center gap-3">
+          {selectedMember ? (
+            <div className="flex items-center gap-2 flex-1 min-w-0 bg-mist-100 rounded-lg px-3 py-2">
+              <div className="w-6 h-6 rounded-full bg-navy-700 flex items-center justify-center text-white text-[10px] font-semibold flex-shrink-0 overflow-hidden">
+                {selectedMember.imageUrl ? (
+                  <img
+                    src={selectedMember.imageUrl}
+                    alt={selectedMember.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  selectedMember.name.slice(0, 2).toUpperCase()
+                )}
+              </div>
+              <span className="text-sm font-medium text-navy-800 truncate">
+                {selectedMember.name}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedMember(null);
+                  setSearch("");
+                }}
+                aria-label="Clear selection"
+                className="ml-auto text-mist-400 hover:text-mist-600 transition-colors flex-shrink-0"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ) : (
+            <p className="text-xs text-mist-400 flex-1">
+              Select a member from the search results above
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={() => void handleConfirmAdd()}
+            disabled={!selectedMember || addingId === selectedMember.id}
+            className="px-4 py-2 bg-navy-800 text-white rounded-lg text-sm font-semibold hover:bg-navy-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+          >
+            {selectedMember && addingId === selectedMember.id
+              ? "Adding…"
+              : "Add Member"}
+          </button>
         </div>
       </div>
 

@@ -75,7 +75,7 @@ describe("HeroMembersManagement", () => {
     });
   });
 
-  test("searches the picker and adds a selected member", async () => {
+  test("searches the picker, selects a member, then adds them on confirm", async () => {
     mockedGetHeroMembers.mockResolvedValue([]);
     mockedGetMembersPicker.mockResolvedValue([
       { id: "member-3", name: "Grace Uwase", role: "Designer", imageUrl: null },
@@ -112,8 +112,15 @@ describe("HeroMembersManagement", () => {
       { timeout: 2000 },
     );
 
+    // Clicking the search result only selects it - not added yet.
     await act(async () => {
       await user.click(screen.getByText("Grace Uwase"));
+    });
+    expect(mockedAddHeroMember).not.toHaveBeenCalled();
+
+    // Confirming with "Add Member" is what actually adds them.
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Add Member" }));
     });
 
     await waitFor(() => {
