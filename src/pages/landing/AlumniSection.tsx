@@ -29,7 +29,11 @@ const AlumniSection: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-4">
             Our Alumni
           </h2>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-[#002b56]/80 whitespace-nowrap">
+          {/* whitespace-nowrap here forced this full sentence onto one
+              line regardless of container width - confirmed via a real
+              320px-viewport render (not just reading the CSS) to overflow
+              the page by ~150px. Wraps normally now. */}
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-[#002b56]/80">
             Members who&apos;ve moved from NPC Innovation Hub to continue
             building great things.
           </p>

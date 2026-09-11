@@ -70,7 +70,15 @@ const AboutIntro = () => {
         </p>
       </div>
 
-      <div className="flex flex-wrap justify-center md:justify-start divide-x divide-[#002b56]/10 mt-10 -mx-6">
+      {/* -mx-6 cancels each StatBadge's own px-6 so the row's edges line up
+          with the paragraph text above at md:justify-start - but this
+          container has no matching horizontal padding of its own to
+          absorb it, so applied unconditionally it just made the row 48px
+          wider than its parent and overflowed the viewport on mobile,
+          where the row is centered anyway and the alignment doesn't
+          matter. Scoped to md: where both the intent and the room for it
+          actually apply. */}
+      <div className="flex flex-wrap justify-center md:justify-start divide-x divide-[#002b56]/10 mt-10 md:-mx-6">
         <StatBadge
           icon={CalendarClock}
           value={yearsStrong}
