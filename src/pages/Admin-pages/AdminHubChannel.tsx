@@ -106,11 +106,11 @@ const AdminHubChannel: React.FC = () => {
     </div>
   );
 
-  // Same as member HubChannel.tsx: below lg this is always the "chat"
+  // Same as member HubChannel.tsx: below md this is always the "chat"
   // pane, list panel hidden, back chevron returns to the message list.
   return (
     <div className="flex gap-4 h-full min-h-0">
-      <div className="hidden lg:block lg:flex-shrink-0">
+      <div className="hidden md:block md:flex-shrink-0">
         <AdminChatLeftPanel basePath="/admin" />
       </div>
       <div className="flex-1 min-w-0 min-h-0">

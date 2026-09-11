@@ -83,10 +83,12 @@ const AdminChatLeftPanel: React.FC<AdminChatLeftPanelProps> = ({
         />
       )}
 
-      {/* Panel — fixed width on lg+, full height, own scroll. w-full below
-          lg: only ever shown alone on mobile (the admin pages hide it once
-          a conversation is open), same as the member LeftPanel. */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full lg:w-72 h-full flex flex-col flex-shrink-0 overflow-hidden">
+      {/* Panel — fixed width on md+, full height, own scroll. w-full below
+          md: only ever shown alone there (the admin pages hide it once a
+          conversation is open), same as the member LeftPanel - md, not
+          lg, so a landscape phone gets the list beside the chat instead
+          of being forced into single-pane it has room to avoid. */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full md:w-72 h-full flex flex-col flex-shrink-0 overflow-hidden">
         {/* Header */}
         <div className="px-4 pt-4 pb-3 border-b border-gray-100 flex-shrink-0">
           <div className="flex items-center justify-between mb-3">
