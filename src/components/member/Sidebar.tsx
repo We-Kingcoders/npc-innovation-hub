@@ -1,7 +1,7 @@
 // src/components/member/Sidebar.tsx
 
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Bell,
@@ -12,6 +12,8 @@ import {
   LogOut,
   BookOpen,
   ClipboardList,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useMember } from "../../hooks/useMember";
@@ -76,11 +78,27 @@ export const Sidebar: React.FC = () => {
   const { member, fetchMember } = useMember();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  // Was a bare w-64 ml-6 (280px) rendered inline unconditionally - on a
+  // 320-375px phone that alone left almost no room for the actual page
+  // content next to it in DashboardLayout's flex row (the admin sidebar
+  // already had this off-canvas treatment; this one never did). Closed
+  // by default so a phone doesn't load into the drawer covering the
+  // page - matches the admin sidebar's own default, fixed for the same
+  // reason there.
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const location = useLocation();
 
   // Fetch member profile once to get the uploaded avatar
   useEffect(() => {
     if (user?.id) fetchMember(user.id);
   }, [user?.id, fetchMember]);
+
+  // Close the mobile drawer on navigation, same as the public Navbar -
+  // otherwise a tapped link left the new page rendered behind the still-
+  // open drawer and its backdrop, needing a second tap just to see it.
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -106,7 +124,36 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      <aside className="w-64 ml-6 rounded-xl bg-navy-800 h-screen lg:sticky lg:top-0 flex flex-col py-6 px-6 text-white shadow-lg">
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 w-64 lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-screen flex flex-col py-6 px-6 text-white shadow-lg transition-transform duration-300 ease-in-out ${
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Mobile-only toggle, positioned outside the sidebar's own right
+            edge (same trick as the admin sidebar's) so the transform that
+            slides this whole <aside> off-screen carries the button along
+            with it - it lands as a small tab right at the screen's left
+            edge when closed, instead of a separately `fixed` button that
+            would sit on top of Topbar's search bar. */}
+        <button
+          onClick={() => setIsMobileOpen((open) => !open)}
+          aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+          className="lg:hidden absolute -right-11 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
+        >
+          {isMobileOpen ? (
+            <ChevronsLeft size={20} />
+          ) : (
+            <ChevronsRight size={20} />
+          )}
+        </button>
+
         {/* Brand - sized (not truncated) to stay fully visible on one line
             within the sidebar's own width, no horizontal scroll needed. */}
         <div className="pb-4 flex-shrink-0">

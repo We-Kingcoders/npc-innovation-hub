@@ -25,7 +25,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="md:w-1/2 w-full h-60 md:h-auto">
           <img src={image} alt={title} className="w-full h-full object-cover" />
         </div>
-        <div className="flex flex-col justify-start ml-12 p-8 md:w-1/2 w-full text-gray-100 text-left">
+        {/* ml-12 was unconditional - on the mobile single-column layout
+            (flex-col) that's 48px lost on just the left edge on top of
+            this side's own p-8, on a card that can be as narrow as
+            ~300px. Scoped to md: where the row layout (and the room for
+            it) actually applies. */}
+        <div className="flex flex-col justify-start md:ml-12 p-8 md:w-1/2 w-full text-gray-100 text-left">
           <h3 className="text-gray-200 text-3xl font-light mb-3">{title}</h3>
           <p className="text-gray-300  mt-5">{description}</p>
           <div className="flex items-center justify-between">
@@ -81,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Centered content */}
         <div className="flex-grow flex flex-col items-center justify-center">
           <h3 className="text-gray-100 text-2xl font-semibold mb-2">{title}</h3>
-          <p className="text-gray-200 mt-4 ml-6">{description}</p>
+          <p className="text-gray-200 mt-4 text-center">{description}</p>
         </div>
 
         {/* Bottom content */}
