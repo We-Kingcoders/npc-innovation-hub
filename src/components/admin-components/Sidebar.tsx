@@ -120,10 +120,15 @@ export default function Sidebar() {
           ${isCollapsed ? "-translate-x-full lg:w-20" : "translate-x-0 w-64"}
           lg:translate-x-0
           bg-navy-800
-          h-screen flex flex-col
+          h-dvh flex flex-col
           transition-all duration-300 ease-in-out
           shadow-2xl
         `}
+        // h-dvh, not h-screen: this is `fixed inset-y-0` with an explicit
+        // height on mobile, which wins over the inset-derived one - 100vh
+        // runs past the actually-visible area when the browser's address
+        // bar is showing and can put the bottom nav items behind it.
+        // 100dvh tracks the real visible viewport instead.
       >
         {/* Mobile-only off-canvas toggle - stays outside the brand row (and
             outside <aside> entirely when collapsed, see the floating button

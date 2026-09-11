@@ -132,7 +132,13 @@ export const Sidebar: React.FC = () => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-screen flex flex-col py-6 px-6 text-white shadow-lg transition-transform duration-300 ease-in-out ${
+        // h-dvh, not h-screen: on mobile this is `fixed inset-y-0` with an
+        // explicit height, which wins over the inset-derived one - 100vh
+        // is measured against the largest possible viewport, so with the
+        // browser's address bar visible it runs past the actually-visible
+        // area and can put the logout button behind the browser chrome.
+        // 100dvh tracks the real visible viewport instead.
+        className={`fixed inset-y-0 left-0 z-30 w-64 lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-dvh flex flex-col py-6 px-6 text-white shadow-lg transition-transform duration-300 ease-in-out ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

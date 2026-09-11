@@ -43,7 +43,12 @@ const ForgotPassword: React.FC = () => {
   const displayError = localError || error;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    // h-dvh, not h-screen: 100vh runs past the actually-visible area on
+    // a phone with the address bar showing, which combined with
+    // overflow-hidden here could clip the submit button below the fold
+    // until the chrome auto-hides. 100dvh tracks the real visible
+    // viewport instead.
+    <div className="flex flex-col h-dvh overflow-hidden">
       <Navbar />
 
       <AuthPageMain>
