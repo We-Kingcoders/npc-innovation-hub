@@ -42,10 +42,10 @@ const Offerings = () => {
           {OFFERINGS.map(({ title, icon: Icon, description }) => (
             <div
               key={title}
-              className="rounded-lg border border-gray-200 p-6 hover:shadow-md hover:border-[#00A0E3]/40 transition-all duration-200"
+              className="rounded-lg border border-gray-200 p-6 hover:shadow-md hover:border-[#002B56]/40 transition-all duration-200"
             >
               <Icon
-                className="w-8 h-8 text-[#00A0E3] mb-3"
+                className="w-8 h-8 text-[#002B56] mb-3"
                 aria-hidden="true"
               />
               <h3 className="text-lg font-semibold text-[#002B56] mb-2">

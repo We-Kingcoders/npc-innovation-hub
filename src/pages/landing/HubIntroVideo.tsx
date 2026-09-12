@@ -68,7 +68,7 @@ const HubIntroVideo: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#002b56] to-[#00A0E3]" />
+                <div className="w-full h-full bg-gradient-to-br from-[#002b56] to-[#003366]" />
               )}
               <span className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
                 <span className="flex items-center justify-center w-20 h-20 rounded-full bg-white/90 transition-transform group-hover:scale-105">

@@ -241,7 +241,7 @@ const LoginPage = () => {
                 <input
                   type="email"
                   placeholder="Enter your email address"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:border-transparent"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -255,7 +255,7 @@ const LoginPage = () => {
                 </label>
                 <PasswordInput
                   placeholder="Enter your password"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:border-transparent"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -303,7 +303,7 @@ const LoginPage = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={() => setRememberMe(!rememberMe)}
-                  className="h-4 w-4 text-[#002B56] rounded focus:ring-[#00A0E3]"
+                  className="h-4 w-4 text-[#002B56] rounded focus:ring-[#002B56]"
                   disabled={isLoading}
                 />
                 <span className="ml-2 text-sm">Remember me</span>

@@ -31,7 +31,7 @@ const ContactSection = () => {
           <div className="space-y-6 mt-auto">
             <div className="flex items-start gap-3">
               <MapPin
-                className="w-5 h-5 text-[#00A0E3] mt-1 flex-shrink-0"
+                className="w-5 h-5 text-[#002B56] mt-1 flex-shrink-0"
                 aria-hidden="true"
               />
               <div>
@@ -41,7 +41,7 @@ const ContactSection = () => {
             </div>
             <div className="flex items-start gap-3">
               <Phone
-                className="w-5 h-5 text-[#00A0E3] mt-1 flex-shrink-0"
+                className="w-5 h-5 text-[#002B56] mt-1 flex-shrink-0"
                 aria-hidden="true"
               />
               <div>
@@ -56,7 +56,7 @@ const ContactSection = () => {
             </div>
             <div className="flex items-start gap-3">
               <Mail
-                className="w-5 h-5 text-[#00A0E3] mt-1 flex-shrink-0"
+                className="w-5 h-5 text-[#002B56] mt-1 flex-shrink-0"
                 aria-hidden="true"
               />
               <div>
@@ -101,7 +101,7 @@ const ContactSection = () => {
                     name="Name"
                     type="text"
                     required
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#00A0E3] focus:ring-2 focus:ring-[#00A0E3]/10"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#002B56] focus:ring-2 focus:ring-[#002B56]/10"
                   />
                 </div>
                 <div>
@@ -116,7 +116,7 @@ const ContactSection = () => {
                     name="Email"
                     type="email"
                     required
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#00A0E3] focus:ring-2 focus:ring-[#00A0E3]/10"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#002B56] focus:ring-2 focus:ring-[#002B56]/10"
                   />
                 </div>
               </div>
@@ -132,12 +132,12 @@ const ContactSection = () => {
                   name="Message"
                   required
                   rows={4}
-                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none resize-y focus:border-[#00A0E3] focus:ring-2 focus:ring-[#00A0E3]/10"
+                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm outline-none resize-y focus:border-[#002B56] focus:ring-2 focus:ring-[#002B56]/10"
                 />
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 w-full bg-[#002B56] text-white font-semibold py-3 rounded-lg hover:bg-[#003366] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+                className="flex items-center justify-center gap-2 w-full bg-[#002B56] text-white font-semibold py-3 rounded-lg hover:bg-[#003366] transition-colors focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
               >
                 <Send className="w-4 h-4" aria-hidden="true" />
                 Send Message
@@ -147,7 +147,7 @@ const ContactSection = () => {
 
           <div className="border-t border-gray-100 pt-6 flex items-start gap-3">
             <MessageCircle
-              className="w-5 h-5 text-[#00A0E3] mt-0.5 flex-shrink-0"
+              className="w-5 h-5 text-[#002B56] mt-0.5 flex-shrink-0"
               aria-hidden="true"
             />
             <div>
@@ -159,7 +159,7 @@ const ContactSection = () => {
               </p>
               <Link
                 to="/chat-with-us"
-                className="text-[#00A0E3] font-semibold text-sm hover:underline"
+                className="text-[#002B56] font-semibold text-sm hover:underline"
               >
                 Start a chat →
               </Link>

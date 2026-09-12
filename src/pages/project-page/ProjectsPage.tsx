@@ -120,7 +120,7 @@ const ProjectsPage = () => {
                 />
               </svg>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#00A0E3] bg-clip-text text-transparent mb-4 sm:mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#003366] bg-clip-text text-transparent mb-4 sm:mb-6">
               Explore Our Projects
             </h1>
             <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed px-4">
@@ -226,7 +226,7 @@ const ProjectsPage = () => {
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#00A0E3] bg-clip-text text-transparent mb-4 sm:mb-6">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#002B56] to-[#003366] bg-clip-text text-transparent mb-4 sm:mb-6">
                   Featured Project
                 </h2>
                 <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed mb-10 sm:mb-12 px-4">

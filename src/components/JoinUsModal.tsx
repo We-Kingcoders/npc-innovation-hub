@@ -154,7 +154,7 @@ const KEYFRAMES = `
 const baseInput =
   "w-full font-sans text-sm text-[#1a2d4a] bg-[#f5f8fc] border-[1.5px] border-[#dce8f5] rounded-xl px-3.5 py-2.5 outline-none " +
   "transition-all duration-200 ease-in-out placeholder:text-[#a4b5cc] " +
-  "focus:border-[#00A0E3] focus:bg-white focus:ring-2 focus:ring-[#00A0E3]/10 " +
+  "focus:border-[#002B56] focus:bg-white focus:ring-2 focus:ring-[#002B56]/10 " +
   "hover:border-[#afc8e8]";
 
 const errorInput =
