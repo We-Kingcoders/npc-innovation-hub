@@ -50,11 +50,14 @@ export const getMembersPicker = async (
   }
 };
 
-export const addHeroMember = async (memberId: string): Promise<HeroMember> => {
+// userId, not memberId - the picker offers every user in the system, most
+// of whom don't have a Member profile yet; the backend creates one on the
+// fly if needed. See MemberPickerOption's own comment for why.
+export const addHeroMember = async (userId: string): Promise<HeroMember> => {
   try {
     const response = await apiClient.post<AddHeroMemberResponse>(
       HERO_MEMBER_ROUTES.ADD_HERO_MEMBER,
-      { memberId },
+      { userId },
     );
     return response.data.data.heroMember;
   } catch (error) {
