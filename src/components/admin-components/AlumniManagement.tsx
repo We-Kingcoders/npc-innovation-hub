@@ -19,6 +19,10 @@ const AlumniManagement: React.FC = () => {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  // The dropdown's own selection, kept separate from form.role: when it's
+  // "Other", a text field appears and whatever's typed there becomes
+  // form.role - the literal word "Other" is never what gets saved.
+  const [roleChoice, setRoleChoice] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -48,6 +52,7 @@ const AlumniManagement: React.FC = () => {
   const resetForm = () => {
     setEditingId(null);
     setForm(EMPTY_FORM);
+    setRoleChoice("");
     setImage(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -55,6 +60,14 @@ const AlumniManagement: React.FC = () => {
   const startEdit = (entry: Alumni) => {
     setEditingId(entry.id);
     setForm({ name: entry.name, role: entry.role });
+    // A role saved before this field existed, or one that was typed in
+    // as "Other" (custom text), won't match any of the presets below -
+    // show "Other" selected with their actual text still in the field,
+    // rather than silently falling back to a blank/wrong dropdown value.
+    const isPresetRole = (MEMBER_ROLES as readonly string[]).includes(
+      entry.role,
+    );
+    setRoleChoice(isPresetRole ? entry.role : "Other");
     setImage(null);
   };
 
@@ -155,10 +168,18 @@ const AlumniManagement: React.FC = () => {
               </label>
               <select
                 id="alumni-role"
-                value={form.role}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, role: e.target.value }))
-                }
+                value={roleChoice}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setRoleChoice(value);
+                  // Anything other than "Other" is the role itself -
+                  // "Other" needs the admin to actually type one below,
+                  // so it starts blank rather than saving the word "Other".
+                  setForm((prev) => ({
+                    ...prev,
+                    role: value === "Other" ? "" : value,
+                  }));
+                }}
                 className="w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
               >
                 <option value="">Select a role</option>
@@ -168,6 +189,18 @@ const AlumniManagement: React.FC = () => {
                   </option>
                 ))}
               </select>
+              {roleChoice === "Other" && (
+                <input
+                  type="text"
+                  value={form.role}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, role: e.target.value }))
+                  }
+                  placeholder="Type their role"
+                  autoFocus
+                  className="mt-2 w-full px-4 py-2.5 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+                />
+              )}
             </div>
           </div>
 

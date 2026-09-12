@@ -144,10 +144,94 @@ describe("AlumniManagement", () => {
   test("a failed create request leaves the list unchanged and shows an error", async () => {
     mockedGetAlumniList.mockResolvedValue([]);
     mockedCreateAlumni.mockRejectedValue(
-      new Error(
-        "Failed to create alumni entry: role must be one of: Frontend Developer, ...",
-      ),
+      new Error("Failed to create alumni entry: server error"),
     );
+
+    const user = userEvent.setup();
+    render(<AlumniManagement />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("No alumni entries yet. Add one above."),
+      ).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      await user.type(screen.getByLabelText("Full Name"), "Eric Habimana");
+      await user.selectOptions(
+        screen.getByLabelText("Role"),
+        "Full-Stack Developer",
+      );
+    });
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Add Entry" }));
+    });
+
+    await waitFor(() => {
+      expect(mockedCreateAlumni).toHaveBeenCalled();
+    });
+
+    // The list must stay empty — no partial/undefined entry was appended.
+    expect(
+      screen.getByText("No alumni entries yet. Add one above."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Eric Habimana")).not.toBeInTheDocument();
+    expect(mockedToastError).toHaveBeenCalledWith(
+      "Failed to create alumni entry: server error",
+    );
+  });
+
+  test("selecting Other reveals a free-text field and submits what's typed there, not the word Other", async () => {
+    mockedGetAlumniList.mockResolvedValue([]);
+    mockedCreateAlumni.mockResolvedValue({
+      id: "alumni-3",
+      name: "Eric Habimana",
+      role: "Product Manager",
+      imageUrl: null,
+      createdAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-01-01T00:00:00.000Z",
+    });
+
+    const user = userEvent.setup();
+    render(<AlumniManagement />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("No alumni entries yet. Add one above."),
+      ).toBeInTheDocument();
+    });
+
+    // No free-text field until "Other" is chosen.
+    expect(screen.queryByPlaceholderText("Type their role")).toBeNull();
+
+    await act(async () => {
+      await user.type(screen.getByLabelText("Full Name"), "Eric Habimana");
+      await user.selectOptions(screen.getByLabelText("Role"), "Other");
+    });
+
+    const customRoleField = screen.getByPlaceholderText("Type their role");
+    expect(customRoleField).toBeInTheDocument();
+
+    await act(async () => {
+      await user.type(customRoleField, "Product Manager");
+    });
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Add Entry" }));
+    });
+
+    await waitFor(() => {
+      expect(mockedCreateAlumni).toHaveBeenCalledWith({
+        name: "Eric Habimana",
+        role: "Product Manager",
+        image: null,
+      });
+    });
+  });
+
+  test("selecting Other without typing a role is rejected client-side, not sent to the API", async () => {
+    mockedGetAlumniList.mockResolvedValue([]);
 
     const user = userEvent.setup();
     render(<AlumniManagement />);
@@ -167,17 +251,26 @@ describe("AlumniManagement", () => {
       await user.click(screen.getByRole("button", { name: "Add Entry" }));
     });
 
+    expect(mockedCreateAlumni).not.toHaveBeenCalled();
+    expect(mockedToastError).toHaveBeenCalledWith("Name and role are required");
+  });
+
+  test("editing an entry with a non-preset role shows Other selected with the real text pre-filled", async () => {
+    mockedGetAlumniList.mockResolvedValue([sampleAlumni[0]]); // role: "Product Manager"
+    render(<AlumniManagement />);
+
     await waitFor(() => {
-      expect(mockedCreateAlumni).toHaveBeenCalled();
+      expect(screen.getByText("Grace Uwase")).toBeInTheDocument();
     });
 
-    // The list must stay empty — no partial/undefined entry was appended.
-    expect(
-      screen.getByText("No alumni entries yet. Add one above."),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("Eric Habimana")).not.toBeInTheDocument();
-    expect(mockedToastError).toHaveBeenCalledWith(
-      "Failed to create alumni entry: role must be one of: Frontend Developer, ...",
+    const user = userEvent.setup();
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Edit" }));
+    });
+
+    expect(screen.getByLabelText("Role")).toHaveValue("Other");
+    expect(screen.getByPlaceholderText("Type their role")).toHaveValue(
+      "Product Manager",
     );
   });
 
