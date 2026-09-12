@@ -9,7 +9,8 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * Matches reference design with pixel-perfect accuracy
  *
  * Features:
- * - Subtle diagonal split background (white left, navy right)
+ * - Flat white background throughout - the member-carousel card's own
+ *   navy gradient fill is the hero's only color accent
  * - Responsive navigation with hamburger menu
  * - Two-column layout with hero text and image
  * - "Innovate. Create. Lead." tagline positioned below hero image
@@ -19,13 +20,13 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  *   independently of the member photo carousel on the right
  *
  * Updates:
- * - Reduced diagonal angle for softer transition
- * - Navy background pushed further right
  * - Slogan repositioned directly under hero image
  * - Added team member carousel with auto-loop
  * - Member photos now render as uniform large circular avatars
- * - Navy diagonal widened further for full coverage behind the card,
- *   which is now right-aligned flush against the viewport's right edge
+ * - Card is right-aligned flush against the viewport's right edge
+ * - Retired the diagonal navy background split (and the mobile navy
+ *   header band) in favor of a plain white hero throughout; the
+ *   "Innovate. Create. Lead." tagline is navy-toned now instead of white
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -130,55 +131,17 @@ const HeroSection = () => {
         onClose={() => setIsJoinModalOpen(false)}
       />
       {/* =================================================================
-          BACKGROUND DESIGN - Subtle Diagonal Split
-          Pure white left / pure navy right, no background photo - a
-          background-image layer was tried here for a parallax effect, but
-          it washed out the flat white/navy this design is meant to have
-          (compare: the diagonal navy panel right below is a plain color,
-          not a photo).
+          BACKGROUND DESIGN - Flat white, no diagonal
+          The diagonal navy split (and, on mobile, the matching navy
+          gradient header band) was retired in favor of a plain white
+          background across the whole hero, at every breakpoint. Color
+          now comes entirely from the member-carousel card's own
+          gradient fill on the right - one deliberate accent floating on
+          white, rather than the page itself being two-toned. Simpler,
+          and it sidesteps the recurring balancing act of how wide/steep
+          that diagonal needed to be to clear the text column while still
+          fully backing the card.
           ================================================================= */}
-
-      {/* Desktop: Diagonal Navy Background. Widened further and the
-          diagonal flattened so the navy fully backs the member-carousel
-          card - including the space around it, not just the card's own
-          opaque fill - at every height, with only a shallow diagonal
-          accent left near the very top. The bottom-left corner
-          (100% - 65% = 35%) still clears the 40%-wide text column on the
-          left with a safety margin, so this much bigger panel never
-          bleeds navy behind the rotating headline text. */}
-      <div
-        className="hidden lg:block absolute top-0 right-0 h-full w-[65%] bg-[#002B56] z-0"
-        style={{
-          clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0% 100%)",
-        }}
-      />
-
-      {/* Mobile/Tablet: Gradient Header Background */}
-      <div className="lg:hidden absolute inset-0 z-0">
-        {/* Top gradient section */}
-        <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#003366]">
-          {/* Mobile tagline in blue section */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-2xl sm:text-3xl font-bold select-none text-center">
-              <span className="text-white block">Innovate.</span>
-              <span className="text-white/90 block">Create.</span>
-              <span className="text-white/80 block">Lead.</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Decorative geometric elements */}
-        <div className="absolute top-0 right-0 w-full h-64 pointer-events-none">
-          <div className="absolute top-8 right-8 w-24 h-24 bg-white/10 rounded-full" />
-          <div className="absolute top-16 right-16 w-16 h-16 bg-white/5 rounded-full" />
-          <div className="absolute top-24 right-4 w-8 h-8 bg-white/15 rounded-full" />
-        </div>
-
-        {/* Bottom accent line - white, not the old light blue, so it still
-            reads as a highlight against this now-all-navy gradient rather
-            than disappearing into it. */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-      </div>
 
       {/* =================================================================
           MAIN HERO CONTENT
@@ -190,17 +153,12 @@ const HeroSection = () => {
           <main id="main-content"> that covers all of it lives there instead
           - see that file's comment for why. */}
       <div className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
-        {/* Left Section - Hero Text Content. pt-8 was nowhere near enough
-            to clear the mobile-only decorative gradient band above (h-48 =
-            192px, absolutely positioned behind this at inset-0) - this
-            heading rendered starting right at the top of the hero, inside
-            that band, its own "Innovate. Create. Lead." tagline included:
-            two headings occupying the same space, and #29476E text is
-            very low-contrast directly on the navy gradient showing
-            through behind it. pt-52 clears the band with room to spare;
-            lg:pt-20 is unchanged since the band itself is lg:hidden. */}
+        {/* Left Section - Hero Text Content. pt-10 is now just breathing
+            room under the fixed navbar (which reserves its own space via
+            its spacer div) - it no longer has a decorative gradient band
+            to clear now that the hero background is flat white. */}
         <section
-          className="flex flex-col justify-center w-full px-6 sm:px-8 pt-52 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20"
+          className="flex flex-col justify-center w-full px-6 sm:px-8 pt-10 sm:pt-12 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20"
           onMouseEnter={() => setTextPaused(true)}
           onMouseLeave={() => setTextPaused(false)}
         >
@@ -259,6 +217,16 @@ const HeroSection = () => {
               ))}
             </div>
           </div>
+
+          {/* Tagline - lg:hidden because the desktop version below
+              renders under the member carousel card instead, which only
+              exists at lg+. Navy-toned to match the rest of this
+              section's text now that there's no navy band behind it. */}
+          <p className="lg:hidden mt-8 text-2xl font-bold select-none">
+            <span className="text-[#002B56]">Innovate.</span>{" "}
+            <span className="text-[#002B56]/80">Create.</span>{" "}
+            <span className="text-[#002B56]/65">Lead.</span>
+          </p>
         </section>
 
         {/* Right Section - Hero Image Carousel + Slogan Container.
@@ -336,21 +304,17 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Slogan - Positioned directly below image, always one line.
-              This sits over the navy diagonal (same region the mobile
-              gradient band's identical tagline is drawn against - see
-              above), so it's white/90/80 here too now, not the old
-              light-blue-on-black-on-navy mix - "Innovate." in plain black
-              had barely any contrast against navy to begin with, and
-              light-blue "Create."/"Lead." only worked here because it was
-              functioning as a de-facto contrast color, not a real accent
-              choice - matching mobile's already-correct treatment fixes
-              both at once. */}
-          <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
+          {/* Slogan - positioned directly below image, always one line,
+              centered under it. Navy-toned now (was white/90/80) - that
+              only worked while this sat over the navy diagonal; now that
+              the hero background is flat white, it needs the same
+              dark-on-light treatment as the mobile version of this
+              tagline. */}
+          <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-center">
             <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
-              <span className="text-white">Innovate.</span>{" "}
-              <span className="text-white/90">Create.</span>{" "}
-              <span className="text-white/80">Lead.</span>
+              <span className="text-[#002B56]">Innovate.</span>{" "}
+              <span className="text-[#002B56]/80">Create.</span>{" "}
+              <span className="text-[#002B56]/65">Lead.</span>
             </p>
           </div>
         </div>
