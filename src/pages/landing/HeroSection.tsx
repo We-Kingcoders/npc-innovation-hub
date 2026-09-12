@@ -336,17 +336,21 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Slogan - Positioned directly below image, always one line.
-              This sits over the navy diagonal (same region the mobile
-              gradient band's identical tagline is drawn against - see
-              above), so it's white/90/80 here too now, not the old
-              light-blue-on-black-on-navy mix - "Innovate." in plain black
-              had barely any contrast against navy to begin with, and
-              light-blue "Create."/"Lead." only worked here because it was
-              functioning as a de-facto contrast color, not a real accent
-              choice - matching mobile's already-correct treatment fixes
-              both at once. */}
-          <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
+          {/* Slogan - Positioned directly below image, always one line,
+              centered under it (was text-right - now that the card
+              itself is right-aligned via items-end on the parent rather
+              than stretched full-width, right-aligning this too just
+              lined its edge up with the card's edge instead of reading
+              as centered under it). This sits over the navy diagonal
+              (same region the mobile gradient band's identical tagline
+              is drawn against - see above), so it's white/90/80 here too
+              now, not the old light-blue-on-black-on-navy mix -
+              "Innovate." in plain black had barely any contrast against
+              navy to begin with, and light-blue "Create."/"Lead." only
+              worked here because it was functioning as a de-facto
+              contrast color, not a real accent choice - matching
+              mobile's already-correct treatment fixes both at once. */}
+          <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-center">
             <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
               <span className="text-white">Innovate.</span>{" "}
               <span className="text-white/90">Create.</span>{" "}
