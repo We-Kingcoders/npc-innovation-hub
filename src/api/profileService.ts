@@ -17,7 +17,11 @@ export interface UpdateProfilePayload {
   lastName?: string;
   phone?: string;
   gender?: "male" | "female" | "other";
-  image?: string;
+  // A real file, not a URL - PATCH /update-profile only ever looked at
+  // req.file (via multer's upload.single('images')) to update the
+  // avatar; a plain `image: string` sent as JSON was silently ignored
+  // server-side the whole time, whatever was typed into that field.
+  image?: File | null;
 }
 
 export interface UpdatePasswordPayload {
@@ -63,9 +67,22 @@ export const profileService = {
    * @returns Updated user data
    */
   async updateProfile(payload: UpdateProfilePayload): Promise<User> {
+    // multipart/form-data, not JSON - the route expects the avatar under
+    // multer's field name "images" (upload.single('images')), same
+    // pattern as alumni.api.ts's create/update.
+    const formData = new FormData();
+    if (payload.firstName !== undefined)
+      formData.append("firstName", payload.firstName);
+    if (payload.lastName !== undefined)
+      formData.append("lastName", payload.lastName);
+    if (payload.phone !== undefined) formData.append("phone", payload.phone);
+    if (payload.gender !== undefined) formData.append("gender", payload.gender);
+    if (payload.image) formData.append("images", payload.image);
+
     const response = await apiClient.patch<UpdateProfileResponse>(
       "/api/users/update-profile",
-      payload,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
     );
     return response.data.data.user;
   },

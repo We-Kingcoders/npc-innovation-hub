@@ -1,12 +1,12 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { profileService } from "../../../api/profileService";
 import type { UpdateProfilePayload } from "../../../api/profileService";
 import ChangePasswordForm from "../../../components/admin-components/ChangePasswordForm";
 import { getUserInitials } from "../../../types/user.types";
 import type { Gender } from "../../../types/user.types";
-import { User as UserIcon, Mail, Save, X } from "lucide-react";
+import { User as UserIcon, Mail, Save, X, Camera } from "lucide-react";
 import { toast } from "react-toastify";
 import Sidebar from "../../../components/admin-components/Sidebar";
 import Topbar from "../../../components/admin-components/Topbar";
@@ -16,7 +16,6 @@ interface ProfileFormData {
   lastName: string;
   phone: string;
   gender: Gender;
-  image: string;
 }
 
 interface ValidationErrors {
@@ -24,7 +23,6 @@ interface ValidationErrors {
   lastName?: string;
   phone?: string;
   gender?: string;
-  image?: string;
 }
 
 export default function ProfileSettings() {
@@ -34,8 +32,14 @@ export default function ProfileSettings() {
     lastName: "",
     phone: "",
     gender: "male" as Gender,
-    image: "",
   });
+  // A real file to upload, not a URL - see profileService's own comment
+  // on why the old text field never actually did anything. imagePreview
+  // is what's shown: the existing avatar until a new file is picked,
+  // then an object URL for the picked file itself.
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
@@ -46,10 +50,17 @@ export default function ProfileSettings() {
         lastName: contextUser.lastName || "",
         phone: contextUser.phone || "",
         gender: contextUser.gender || "male",
-        image: contextUser.image || "",
       });
+      setImagePreview(contextUser.image || "");
     }
   }, [contextUser]);
+
+  const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -81,13 +92,6 @@ export default function ProfileSettings() {
       newErrors.phone = "Please enter a valid phone number (e.g., +1234567890)";
     }
 
-    if (
-      formData.image &&
-      !formData.image.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)
-    ) {
-      newErrors.image = "Please enter a valid image URL";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -105,7 +109,7 @@ export default function ProfileSettings() {
         lastName: formData.lastName,
         phone: formData.phone || undefined,
         gender: formData.gender,
-        image: formData.image || undefined,
+        image: imageFile,
       };
 
       await profileService.updateProfile(payload);
@@ -113,6 +117,7 @@ export default function ProfileSettings() {
       // Refresh user data in context
       await refreshUser();
 
+      setImageFile(null);
       toast.success("Profile updated successfully!");
     } catch (err) {
       const errorMessage =
@@ -130,8 +135,10 @@ export default function ProfileSettings() {
         lastName: contextUser.lastName || "",
         phone: contextUser.phone || "",
         gender: contextUser.gender || "male",
-        image: contextUser.image || "",
       });
+      setImageFile(null);
+      setImagePreview(contextUser.image || "");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setErrors({});
     }
   };
@@ -189,12 +196,14 @@ export default function ProfileSettings() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Avatar Preview */}
+              {/* Avatar Preview + upload - a real file now, not a URL to
+                  paste. Same camera-badge pattern as MemberForm.tsx's own
+                  avatar picker, for consistency across the app. */}
               <div className="flex items-center gap-6 pb-6 border-b border-gray-200">
                 <div className="relative">
-                  {formData.image ? (
+                  {imagePreview ? (
                     <img
-                      src={formData.image}
+                      src={imagePreview}
                       alt="Profile"
                       className="w-24 h-24 rounded-full object-cover ring-4 ring-gray-100"
                       onError={(e) => {
@@ -208,13 +217,31 @@ export default function ProfileSettings() {
                       </span>
                     </div>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    aria-label="Change profile photo"
+                    className="absolute -bottom-1 -right-1 w-9 h-9 bg-[#002B56] rounded-full flex items-center justify-center text-white hover:bg-[#003366] transition-colors shadow ring-2 ring-white"
+                  >
+                    <Camera size={16} />
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImagePick}
+                  />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900 mb-1">
                     Profile Picture
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Enter an image URL for your profile picture
+                    Click the camera icon to upload a photo from your device
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    JPG, PNG, GIF or WEBP
                   </p>
                 </div>
               </div>
@@ -344,35 +371,6 @@ export default function ProfileSettings() {
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                   </select>
-                </div>
-
-                {/* Image URL */}
-                <div className="md:col-span-2">
-                  <label
-                    htmlFor="image"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Profile Image URL
-                  </label>
-                  <input
-                    type="url"
-                    id="image"
-                    name="image"
-                    value={formData.image}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
-                      errors.image
-                        ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-[#00A0E3]"
-                    }`}
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  {errors.image && (
-                    <p className="mt-1 text-sm text-red-600">{errors.image}</p>
-                  )}
-                  <p className="mt-1 text-xs text-gray-500">
-                    Enter a valid image URL (jpg, jpeg, png, gif, webp)
-                  </p>
                 </div>
               </div>
 
