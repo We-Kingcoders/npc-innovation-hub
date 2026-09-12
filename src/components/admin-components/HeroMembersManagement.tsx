@@ -69,8 +69,11 @@ const HeroMembersManagement: React.FC = () => {
       setPickerLoading(true);
       try {
         const results = await getMembersPicker(search.trim());
-        const featuredIds = new Set(heroMembers.map((h) => h.memberId));
-        setPickerResults(results.filter((m) => !featuredIds.has(m.id)));
+        // The picker is keyed by User id (m.id) now, not Member id - has
+        // to exclude by userId here too, or this comparison silently
+        // never matches and already-featured users stop being excluded.
+        const featuredUserIds = new Set(heroMembers.map((h) => h.userId));
+        setPickerResults(results.filter((m) => !featuredUserIds.has(m.id)));
       } catch (err) {
         toast.error(
           err instanceof Error ? err.message : "Failed to search members",

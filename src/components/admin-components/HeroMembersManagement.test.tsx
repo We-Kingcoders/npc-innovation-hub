@@ -25,6 +25,7 @@ const sampleHeroMembers: HeroMember[] = [
   {
     id: "hero-1",
     memberId: "member-1",
+    userId: "user-1",
     name: "Jane Doe",
     role: "Backend Engineer",
     imageUrl: null,
@@ -33,6 +34,7 @@ const sampleHeroMembers: HeroMember[] = [
   {
     id: "hero-2",
     memberId: "member-2",
+    userId: "user-2",
     name: "John Smith",
     role: "Frontend Engineer",
     imageUrl: null,
@@ -77,12 +79,16 @@ describe("HeroMembersManagement", () => {
 
   test("searches the picker, selects a member, then adds them on confirm", async () => {
     mockedGetHeroMembers.mockResolvedValue([]);
+    // id here is a User id, not a Member id - the picker offers every
+    // user in the system now, most of whom don't have a Member profile
+    // yet (see MemberPickerOption's own comment).
     mockedGetMembersPicker.mockResolvedValue([
-      { id: "member-3", name: "Grace Uwase", role: "Designer", imageUrl: null },
+      { id: "user-3", name: "Grace Uwase", role: "Designer", imageUrl: null },
     ]);
     mockedAddHeroMember.mockResolvedValue({
       id: "hero-3",
       memberId: "member-3",
+      userId: "user-3",
       name: "Grace Uwase",
       role: "Designer",
       imageUrl: null,
@@ -124,7 +130,42 @@ describe("HeroMembersManagement", () => {
     });
 
     await waitFor(() => {
-      expect(mockedAddHeroMember).toHaveBeenCalledWith("member-3");
+      expect(mockedAddHeroMember).toHaveBeenCalledWith("user-3");
     });
+  });
+
+  test("excludes already-featured users from the picker search results", async () => {
+    mockedGetHeroMembers.mockResolvedValue(sampleHeroMembers); // userId "user-1" already featured
+    mockedGetMembersPicker.mockResolvedValue([
+      {
+        id: "user-1",
+        name: "Jane Doe",
+        role: "Backend Engineer",
+        imageUrl: null,
+      },
+      { id: "user-3", name: "Grace Uwase", role: "Designer", imageUrl: null },
+    ]);
+
+    const user = userEvent.setup();
+    render(<HeroMembersManagement />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Currently Featured (2)")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      await user.type(
+        screen.getByPlaceholderText("Search members by name…"),
+        "a",
+      );
+    });
+
+    // Jane Doe (user-1) is already featured - the exclusion has to match
+    // on userId now, not memberId, or she'd wrongly show up a second
+    // time in the search results dropdown alongside the featured list.
+    await waitFor(() => {
+      expect(screen.getByText("Grace Uwase")).toBeInTheDocument();
+    });
+    expect(screen.getAllByText("Jane Doe")).toHaveLength(1);
   });
 });
