@@ -24,8 +24,8 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * - Slogan repositioned directly under hero image
  * - Added team member carousel with auto-loop
  * - Member photos now render as uniform large circular avatars
- * - Navy diagonal widened/steepened for solid coverage behind the card,
- *   which now sits closer to the right edge
+ * - Navy diagonal widened further for full coverage behind the card,
+ *   which is now right-aligned flush against the viewport's right edge
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -138,17 +138,18 @@ const HeroSection = () => {
           not a photo).
           ================================================================= */}
 
-      {/* Desktop: Diagonal Navy Background. Widened and steepened so the
-          navy fills in solidly behind the member-carousel card at every
-          height, not just near the bottom - the old 53% top-cut left a
-          visible white wedge above/around the card. The bottom-left
-          corner (100% - 58% = 42%) is kept clear of the 40%-wide text
-          column on the left with a small safety margin, so this steeper
-          angle never bleeds navy behind the rotating headline text. */}
+      {/* Desktop: Diagonal Navy Background. Widened further and the
+          diagonal flattened so the navy fully backs the member-carousel
+          card - including the space around it, not just the card's own
+          opaque fill - at every height, with only a shallow diagonal
+          accent left near the very top. The bottom-left corner
+          (100% - 65% = 35%) still clears the 40%-wide text column on the
+          left with a safety margin, so this much bigger panel never
+          bleeds navy behind the rotating headline text. */}
       <div
-        className="hidden lg:block absolute top-0 right-0 h-full w-[58%] bg-[#002B56] z-0"
+        className="hidden lg:block absolute top-0 right-0 h-full w-[65%] bg-[#002B56] z-0"
         style={{
-          clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0% 100%)",
+          clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0% 100%)",
         }}
       />
 
@@ -260,11 +261,16 @@ const HeroSection = () => {
           </div>
         </section>
 
-        {/* Right Section - Hero Image Carousel + Slogan Container. Right
-            padding trimmed (was lg:pr-16 xl:pr-24) so the card sits closer
-            to the right edge, squarely inside the now-wider navy panel
-            instead of floating with a wide margin of unused blue past it. */}
-        <div className="hidden lg:flex flex-col items-start justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-8 xl:pr-12 lg:pt-20">
+        {/* Right Section - Hero Image Carousel + Slogan Container.
+            items-end (was items-start) + right padding trimmed to a sliver
+            (was lg:pr-8 xl:pr-12): the card and slogan both cap out at
+            max-w-[580px], so on any screen wider than that cap this
+            column has real slack left over - with items-start that slack
+            rendered as a wide gap of unused navy between the card and the
+            right edge. items-end pins both against the right edge
+            instead; the small remaining pr just keeps the slogan text off
+            the literal edge of the viewport. */}
+        <div className="hidden lg:flex flex-col items-end justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-4 xl:pr-6 lg:pt-20">
           {/* Hero Image Carousel. bg-gradient fill is the permanent card
               backdrop now - every member renders as a circular avatar
               (see below), not a full-bleed photo, so this navy surface is

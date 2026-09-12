@@ -177,9 +177,11 @@ export default function Navbar() {
             NPC INNOVATION HUB
           </Link>
 
-          {/* Desktop nav links */}
+          {/* Desktop nav links. gap tightened (was gap-8 xl:gap-10) - the
+              links were reading as too spread out from each other,
+              especially on wider screens. */}
           <nav
-            className="hidden lg:flex items-center gap-8 xl:gap-10"
+            className="hidden lg:flex items-center gap-4 xl:gap-6"
             aria-label="Main navigation"
           >
             {NAV_LINKS.map((link) => (
