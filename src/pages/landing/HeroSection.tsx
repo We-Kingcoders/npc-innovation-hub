@@ -23,6 +23,9 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * - Navy background pushed further right
  * - Slogan repositioned directly under hero image
  * - Added team member carousel with auto-loop
+ * - Member photos now render as uniform large circular avatars
+ * - Navy diagonal widened/steepened for solid coverage behind the card,
+ *   which now sits closer to the right edge
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -135,11 +138,17 @@ const HeroSection = () => {
           not a photo).
           ================================================================= */}
 
-      {/* Desktop: Subtle Diagonal Navy Background (pushed right with less steep angle) */}
+      {/* Desktop: Diagonal Navy Background. Widened and steepened so the
+          navy fills in solidly behind the member-carousel card at every
+          height, not just near the bottom - the old 53% top-cut left a
+          visible white wedge above/around the card. The bottom-left
+          corner (100% - 58% = 42%) is kept clear of the 40%-wide text
+          column on the left with a small safety margin, so this steeper
+          angle never bleeds navy behind the rotating headline text. */}
       <div
-        className="hidden lg:block absolute top-0 right-0 h-full w-[55%] bg-[#002B56] z-0"
+        className="hidden lg:block absolute top-0 right-0 h-full w-[58%] bg-[#002B56] z-0"
         style={{
-          clipPath: "polygon(53% 0, 100% 0, 100% 100%, 0% 100%)",
+          clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0% 100%)",
         }}
       />
 
@@ -251,14 +260,17 @@ const HeroSection = () => {
           </div>
         </section>
 
-        {/* Right Section - Hero Image Carousel + Slogan Container */}
-        <div className="hidden lg:flex flex-col items-start justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-16 xl:pr-24 lg:pt-20">
-          {/* Hero Image Carousel. bg-gradient fill (not transparent) is
-              load-bearing now that images use object-contain below - a
-              portrait photo in this landscape box leaves letterboxed
-              space on the sides, and that space needs to look like a
-              deliberate navy card, not a gap. No prev/next arrows - dots
-              are the only manual control, same as the text carousel. */}
+        {/* Right Section - Hero Image Carousel + Slogan Container. Right
+            padding trimmed (was lg:pr-16 xl:pr-24) so the card sits closer
+            to the right edge, squarely inside the now-wider navy panel
+            instead of floating with a wide margin of unused blue past it. */}
+        <div className="hidden lg:flex flex-col items-start justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-8 xl:pr-12 lg:pt-20">
+          {/* Hero Image Carousel. bg-gradient fill is the permanent card
+              backdrop now - every member renders as a circular avatar
+              (see below), not a full-bleed photo, so this navy surface is
+              always visible around it rather than only showing through
+              letterboxed gaps. No prev/next arrows - dots are the only
+              manual control, same as the text carousel. */}
           <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[420px] xl:h-[470px] bg-gradient-to-br from-[#002B56] to-[#003366]">
             {/* Slides */}
             <div className="relative w-full h-full">
@@ -269,21 +281,27 @@ const HeroSection = () => {
                     index === currentSlide ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  {/* object-contain + a flex-centered wrapper: the whole
-                      photo always shows, never cropped, whatever its own
-                      aspect ratio - object-cover was cutting off heads/
-                      edges on anything that wasn't already the exact
-                      shape of this box. */}
-                  <div className="w-full h-full flex items-center justify-center p-6">
-                    <img
-                      src={member.image}
-                      alt={`${member.name} - ${member.role}`}
-                      className="max-w-full max-h-full object-contain"
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
+                  {/* One large circular avatar per member - object-cover
+                      cropped to a fixed circle so every photo reads the
+                      same way regardless of its own aspect ratio (a tall
+                      portrait and a small square headshot both used to
+                      render completely differently under object-contain).
+                      pb-16 nudges the circle up so it sits clear of the
+                      name/role overlay below it. */}
+                  <div className="w-full h-full flex items-center justify-center pb-16">
+                    <div className="w-40 h-40 sm:w-48 sm:h-48 xl:w-56 xl:h-56 rounded-full overflow-hidden ring-4 ring-white/30 shadow-xl bg-white/10">
+                      <img
+                        src={member.image}
+                        alt={`${member.name} - ${member.role}`}
+                        className="w-full h-full object-cover"
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
+                    </div>
                   </div>
-                  {/* Text overlay with gradient */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 pb-20">
+                  {/* Name/role, bottom-left - no gradient scrim needed
+                      behind it any more, the card's own navy background
+                      already gives white text plenty of contrast. */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 pb-20">
                     <h3 className="text-white text-2xl font-bold mb-1 drop-shadow-lg">
                       {member.name}
                     </h3>
