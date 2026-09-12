@@ -9,8 +9,9 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * Matches reference design with pixel-perfect accuracy
  *
  * Features:
- * - Flat white background throughout - the member-carousel card's own
- *   navy gradient fill is the hero's only color accent
+ * - Desktop background photo (Hub students at work) under a white-to-navy
+ *   gradient - white behind the text, navy blending into the carousel
+ *   card; mobile/tablet stay flat white for guaranteed text contrast
  * - Responsive navigation with hamburger menu
  * - Two-column layout with hero text and image
  * - "Innovate. Create. Lead." tagline positioned below hero image
@@ -27,6 +28,8 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * - Retired the diagonal navy background split (and the mobile navy
  *   header band) in favor of a plain white hero throughout; the
  *   "Innovate. Create. Lead." tagline is navy-toned now instead of white
+ * - Desktop hero background is now a photo under a white-to-navy overlay,
+ *   not flat white
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -131,17 +134,36 @@ const HeroSection = () => {
         onClose={() => setIsJoinModalOpen(false)}
       />
       {/* =================================================================
-          BACKGROUND DESIGN - Flat white, no diagonal
-          The diagonal navy split (and, on mobile, the matching navy
-          gradient header band) was retired in favor of a plain white
-          background across the whole hero, at every breakpoint. Color
-          now comes entirely from the member-carousel card's own
-          gradient fill on the right - one deliberate accent floating on
-          white, rather than the page itself being two-toned. Simpler,
-          and it sidesteps the recurring balancing act of how wide/steep
-          that diagonal needed to be to clear the text column while still
-          fully backing the card.
-          ================================================================= */}
+          BACKGROUND DESIGN - Photo, white-to-navy overlay
+          A real photo of the Hub's own students at work, reusing the
+          existing public/assets/images/hubimage.jpg (already shipped and
+          used on the auth pages) rather than adding a second, much
+          heavier copy of the same picture. The gradient over it fades
+          from solid white - where the rotating headline text sits, so
+          contrast never depends on where the photo happens to be light
+          or dark underneath - to navy on the right, which blends
+          straight into the carousel card's own navy fill instead of
+          fighting it.
+          lg-only: this only works because the two-column split (text
+          left, card right) gives the gradient's white and navy ends
+          somewhere real to land. Below lg the layout is single-column,
+          so a full photo behind wrapping text would risk contrast
+          problems wherever a line happened to reach the image's darker
+          areas - mobile stays flat white instead. */}
+      <div className="hidden lg:block absolute inset-0 z-0" aria-hidden="true">
+        <img
+          src="/assets/images/hubimage.jpg"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, #ffffff 0%, #ffffff 35%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
+          }}
+        />
+      </div>
 
       {/* =================================================================
           MAIN HERO CONTENT
@@ -305,16 +327,16 @@ const HeroSection = () => {
           </div>
 
           {/* Slogan - positioned directly below image, always one line,
-              centered under it. Navy-toned now (was white/90/80) - that
-              only worked while this sat over the navy diagonal; now that
-              the hero background is flat white, it needs the same
-              dark-on-light treatment as the mobile version of this
-              tagline. */}
+              centered under it. Back to white/90/80 - this sits in the
+              solid-navy end of the background gradient above (same
+              reasoning as when this was the navy diagonal), not the
+              flat-white ground the mobile version of this tagline sits
+              on, which is the one that stays navy-toned. */}
           <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-center">
             <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
-              <span className="text-[#002B56]">Innovate.</span>{" "}
-              <span className="text-[#002B56]/80">Create.</span>{" "}
-              <span className="text-[#002B56]/65">Lead.</span>
+              <span className="text-white">Innovate.</span>{" "}
+              <span className="text-white/90">Create.</span>{" "}
+              <span className="text-white/80">Lead.</span>
             </p>
           </div>
         </div>
