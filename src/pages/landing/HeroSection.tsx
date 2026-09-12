@@ -9,9 +9,11 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * Matches reference design with pixel-perfect accuracy
  *
  * Features:
- * - Desktop background photo (Hub students at work) under a white-to-navy
- *   gradient - white behind the text, navy blending into the carousel
- *   card; mobile/tablet stay flat white for guaranteed text contrast
+ * - Desktop background photo (Hub students at work), visible under a light
+ *   wash the full width of the text column - not hidden behind a solid
+ *   white panel - transitioning to solid navy at the carousel card;
+ *   headline/paragraph/button/dots are white here for that reason.
+ *   Mobile/tablet stay flat white with navy text for guaranteed contrast
  * - Responsive navigation with hamburger menu
  * - Two-column layout with hero text and image
  * - "Innovate. Create. Lead." tagline positioned below hero image
@@ -30,6 +32,9 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  *   "Innovate. Create. Lead." tagline is navy-toned now instead of white
  * - Desktop hero background is now a photo under a white-to-navy overlay,
  *   not flat white
+ * - That overlay's light wash now spans the full text column instead of
+ *   stopping partway and giving way to solid white; text/button/dots
+ *   switched to white (lg:) to match
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -138,18 +143,25 @@ const HeroSection = () => {
           A real photo of the Hub's own students at work, reusing the
           existing public/assets/images/hubimage.jpg (already shipped and
           used on the auth pages) rather than adding a second, much
-          heavier copy of the same picture. The gradient over it fades
-          from solid white - where the rotating headline text sits, so
-          contrast never depends on where the photo happens to be light
-          or dark underneath - to navy on the right, which blends
-          straight into the carousel card's own navy fill instead of
-          fighting it.
+          heavier copy of the same picture. The photo now shows through
+          under a single light wash the whole way from the left edge to
+          where the carousel card begins - previously that wash only
+          covered a narrow middle band, with solid opaque white to its
+          left hiding the photo entirely there; the headline now sits
+          directly on the image like the rest of this stretch, not on a
+          separate white panel. Solid navy still takes over right at the
+          card, blending into its own navy fill instead of fighting it.
+          Headline/paragraph/button/dots below are white here (lg:) for
+          exactly that reason - navy text that worked on solid white
+          doesn't work on a photo - with a drop-shadow as insurance
+          against whatever the photo's own brightness happens to be at
+          any given point.
           lg-only: this only works because the two-column split (text
-          left, card right) gives the gradient's white and navy ends
+          left, card right) gives the gradient's wash and solid-navy ends
           somewhere real to land. Below lg the layout is single-column,
           so a full photo behind wrapping text would risk contrast
           problems wherever a line happened to reach the image's darker
-          areas - mobile stays flat white instead. */}
+          areas - mobile stays flat white (and navy text) instead. */}
       <div className="hidden lg:block absolute inset-0 z-0" aria-hidden="true">
         <img
           src="/assets/images/hubimage.jpg"
@@ -160,7 +172,7 @@ const HeroSection = () => {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to right, #ffffff 0%, #ffffff 35%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
+              "linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
           }}
         />
       </div>
@@ -201,10 +213,10 @@ const HeroSection = () => {
               textVisible ? "opacity-100" : "opacity-0"
             }`}
           >
-            <h1 className="text-[#29476E] font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
+            <h1 className="text-[#29476E] lg:text-white lg:drop-shadow-lg font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
               {HERO_SLIDES[textSlide].headline}
             </h1>
-            <p className="text-[#283D4B] text-lg sm:text-xl lg:text-[1.25rem] font-normal leading-relaxed max-w-md">
+            <p className="text-[#283D4B] lg:text-white/90 lg:drop-shadow-md text-lg sm:text-xl lg:text-[1.25rem] font-normal leading-relaxed max-w-md">
               {HERO_SLIDES[textSlide].text}
             </p>
           </div>
@@ -214,7 +226,7 @@ const HeroSection = () => {
               this short-lived (3s each). */}
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <button
-              className="rounded-full border-2 border-[#002B56] text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#002B56] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
+              className="rounded-full border-2 border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white lg:border-white lg:text-white lg:hover:bg-white lg:hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#002B56] lg:focus:ring-white focus:ring-offset-2"
               aria-label="Join NpcInnovationHub"
               onClick={() => setIsJoinModalOpen(true)}
             >
@@ -232,8 +244,8 @@ const HeroSection = () => {
                   aria-current={index === textSlide}
                   className={`rounded-full transition-all duration-300 ${
                     index === textSlide
-                      ? "bg-[#002B56] w-6 h-2"
-                      : "bg-[#29476E]/25 hover:bg-[#29476E]/40 w-2 h-2"
+                      ? "bg-[#002B56] lg:bg-white w-6 h-2"
+                      : "bg-[#29476E]/25 hover:bg-[#29476E]/40 lg:bg-white/40 lg:hover:bg-white/60 w-2 h-2"
                   }`}
                 />
               ))}
