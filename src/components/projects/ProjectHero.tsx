@@ -19,8 +19,8 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
 
       {/* Mobile/Tablet: Gradient Header Background */}
       <div className="lg:hidden absolute inset-0 z-0">
-        {/* Top gradient section */}
-        <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#00A0E3]">
+        {/* Top gradient section - two-tone navy, not navy-to-light-blue */}
+        <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#003366]">
           {/* Mobile tagline in blue section */}
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-2xl sm:text-3xl font-bold select-none text-center">
@@ -38,8 +38,9 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
           <div className="absolute top-24 right-4 w-8 h-8 bg-white/15 rounded-full" />
         </div>
 
-        {/* Bottom accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00A0E3] to-transparent" />
+        {/* Bottom accent line - white, not light blue, so it still reads
+            as a highlight against this now-all-navy gradient. */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
       </div>
 
       {/* =================================================================
@@ -80,7 +81,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
           <div>
             <button
               onClick={onViewProjectsClick}
-              className="rounded-full border-2 border-[#00A0E3] text-[#00A0E3] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#00A0E3] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+              className="rounded-full border-2 border-[#002B56] text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#002B56] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
               aria-label="View Projects"
             >
               View Projects
@@ -99,13 +100,19 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
               loading="eager"
             />
           </div>
-          {/* Slogan - Positioned directly below image */}
+          {/* Slogan - Positioned directly below image. This sits over the
+              navy diagonal (same as HeroSection.tsx's identical tagline),
+              so it's white/90/80 here too now - "Innovate." in plain
+              black had barely any contrast against navy to begin with,
+              and light-blue "Create."/"Lead." only worked here because it
+              was functioning as a de-facto contrast color, not a real
+              accent choice. */}
           <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
             <p className="text-[2rem] xl:text-[2.5rem] font-bold select-none leading-tight">
-              <span className="text-[#000000]">Innovate.</span>{" "}
-              <span className="text-[#00A0E3]">Create.</span>
+              <span className="text-white">Innovate.</span>{" "}
+              <span className="text-white/90">Create.</span>
               <br />
-              <span className="text-[#00A0E3]">Lead.</span>
+              <span className="text-white/80">Lead.</span>
             </p>
           </div>{" "}
         </div>

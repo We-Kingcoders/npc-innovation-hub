@@ -124,7 +124,7 @@ const ChatDesign = () => {
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-6">
           <MessageCircle
-            className="w-8 h-8 md:w-10 md:h-10 text-[#00A0E3] mx-auto mb-2"
+            className="w-8 h-8 md:w-10 md:h-10 text-[#002B56] mx-auto mb-2"
             aria-hidden="true"
           />
           <h1 className="text-2xl md:text-4xl font-bold text-[#002B56]">
@@ -154,7 +154,7 @@ const ChatDesign = () => {
 
             <div className="flex items-start gap-3 md:mt-auto">
               <Mail
-                className="w-5 h-5 text-[#00A0E3] mt-1 flex-shrink-0"
+                className="w-5 h-5 text-[#002B56] mt-1 flex-shrink-0"
                 aria-hidden="true"
               />
               <div>
@@ -164,7 +164,7 @@ const ChatDesign = () => {
                 </p>
                 <Link
                   to="/contact-us"
-                  className="text-[#00A0E3] font-semibold text-sm hover:underline"
+                  className="text-[#002B56] font-semibold text-sm hover:underline"
                 >
                   Contact Us →
                 </Link>
@@ -262,7 +262,7 @@ const ChatDesign = () => {
                     ? "Waiting for response..."
                     : "Type your question..."
                 }
-                className="px-4 py-4 w-full border border-gray-300 rounded-full bg-white text-sm outline-none focus:border-[#00A0E3] text-gray-600"
+                className="px-4 py-4 w-full border border-gray-300 rounded-full bg-white text-sm outline-none focus:border-[#002B56] text-gray-600"
                 disabled={isLoading}
               />
               <button

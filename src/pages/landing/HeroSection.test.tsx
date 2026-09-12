@@ -85,11 +85,11 @@ describe("<HeroSection /> rotating headline", () => {
     ).toBeInTheDocument();
   });
 
-  test("clicking 'Next message' advances to the second slide", async () => {
+  test("clicking a dot advances to that slide", async () => {
     const user = userEvent.setup();
     renderHero();
 
-    await user.click(screen.getByLabelText("Next message"));
+    await user.click(screen.getByLabelText("Show message 2 of 4"));
 
     await waitFor(() => {
       expect(
@@ -118,7 +118,7 @@ describe("<HeroSection /> rotating headline", () => {
     const user = userEvent.setup();
     renderHero();
 
-    await user.click(screen.getByLabelText("Next message"));
+    await user.click(screen.getByLabelText("Show message 2 of 4"));
 
     await waitFor(() => {
       expect(

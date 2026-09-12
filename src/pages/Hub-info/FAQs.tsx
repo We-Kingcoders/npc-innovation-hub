@@ -54,7 +54,7 @@ const FAQs = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center py-16">
           <HelpCircle
-            className="w-10 h-10 text-[#00A0E3] mx-auto mb-4"
+            className="w-10 h-10 text-[#002B56] mx-auto mb-4"
             aria-hidden="true"
           />
           <h1 className="text-3xl font-bold text-gray-800">

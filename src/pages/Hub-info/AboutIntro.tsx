@@ -25,7 +25,7 @@ const StatBadge = ({ icon: Icon, value, loading, label }: StatBadgeProps) => {
   return (
     <div className="flex items-center gap-3 px-6 py-4">
       <Icon
-        className="w-8 h-8 text-[#00A0E3] flex-shrink-0"
+        className="w-8 h-8 text-[#002B56] flex-shrink-0"
         aria-hidden="true"
       />
       <div>
@@ -48,7 +48,7 @@ const AboutIntro = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <p className="text-sm font-bold uppercase tracking-wider text-[#00A0E3] mb-3 text-center md:text-left">
+      <p className="text-sm font-bold uppercase tracking-wider text-[#002B56] mb-3 text-center md:text-left">
         Who We Are
       </p>
       <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-2 text-center md:text-left">

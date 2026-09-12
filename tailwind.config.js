@@ -23,11 +23,11 @@ export default {
             light: "#003366",
             dark: "#001f3f",
           },
-          blue: {
-            DEFAULT: "#00A0E3",
-            light: "#00B8FF",
-            dark: "#0090D0",
-          },
+          // npc.blue (#00A0E3) removed - the light-blue accent it defined
+          // was never actually consumed via this named class anywhere in
+          // the app (every real usage was the raw hex value directly),
+          // and keeping an unused "brand blue" token around would be a
+          // landmine for future work now that navy is the single accent.
           text: {
             primary: "#29476E",
             secondary: "#283D4B",

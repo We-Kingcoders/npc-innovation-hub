@@ -21,7 +21,7 @@ const StrategicObjectives = () => {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <Compass
-            className="w-10 h-10 text-[#00A0E3] mx-auto mb-4"
+            className="w-10 h-10 text-[#002B56] mx-auto mb-4"
             aria-hidden="true"
           />
           <h2 className="text-3xl md:text-4xl font-bold text-[#002b56] mb-4">

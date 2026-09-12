@@ -123,7 +123,7 @@ const OTPVerification: React.FC = () => {
             <div className="text-center mb-2">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E8F4FC]">
                 <MailCheck
-                  className="h-7 w-7 text-[#00A0E3]"
+                  className="h-7 w-7 text-[#002B56]"
                   aria-hidden="true"
                 />
               </div>
@@ -227,7 +227,7 @@ const OTPVerification: React.FC = () => {
               </p>
               <button
                 type="button"
-                className="text-[#00A0E3] font-medium hover:underline text-sm mt-2"
+                className="text-[#002B56] font-medium hover:underline text-sm mt-2"
                 onClick={() => setShowSecurityTips(true)}
               >
                 View Security Tips

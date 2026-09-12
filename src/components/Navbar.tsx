@@ -162,11 +162,11 @@ export default function Navbar() {
           scrolled ? "shadow-md" : "shadow-sm"
         }`}
       >
-        {/* Thin navy-to-blue gradient accent, same treatment as the Hero
+        {/* Thin two-tone navy gradient accent, same treatment as the Hero
             section's mobile header accent line - ties this flat white bar
-            back to the homepage's signature two-tone brand gradient instead
-            of reading as a plain, disconnected white strip. */}
-        <div className="h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#00A0E3] to-[#002B56]" />
+            back to the homepage's signature brand gradient instead of
+            reading as a plain, disconnected white strip. */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#003366] to-[#002B56]" />
 
         <div className="max-w-7xl mx-auto h-16 lg:h-20 flex items-center justify-between px-6 lg:px-12">
           {/* Logo */}
@@ -187,10 +187,14 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 aria-current={isActive(link) ? "page" : undefined}
-                className={`font-bold uppercase text-[1.05rem] pb-1 transition-colors duration-200 ${
+                // An outlined pill for the active page - same border-2 +
+                // rounded-full box on every link (only the border color
+                // differs, transparent vs navy) so every item keeps
+                // identical size/alignment whether or not it's active.
+                className={`font-bold uppercase text-[1.05rem] px-4 py-1.5 rounded-full border-2 transition-all duration-200 ${
                   isActive(link)
-                    ? "text-[#00A0E3] border-b-2 border-[#00A0E3]"
-                    : "text-[#002B56] hover:text-[#00A0E3]"
+                    ? "border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white"
+                    : "border-transparent text-[#002B56] hover:text-[#003366]"
                 }`}
               >
                 {link.label}
@@ -206,7 +210,7 @@ export default function Navbar() {
                   onClick={() => setShowUserMenu((s) => !s)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="true"
-                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
                 >
                   {user.firstName || "Account"}
                   <svg
@@ -245,7 +249,7 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="bg-[#002B56] text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+                className="bg-[#002B56] text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
               >
                 Sign In
               </Link>
@@ -254,7 +258,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="lg:hidden relative p-2 text-[#002B56] hover:bg-gray-50 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3]/20"
+            className="lg:hidden relative p-2 text-[#002B56] hover:bg-gray-50 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56]/20"
             onClick={() => setIsMenuOpen((o) => !o)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
@@ -296,10 +300,13 @@ export default function Navbar() {
                   // menu - close it directly on tap instead.
                   onClick={() => setIsMenuOpen(false)}
                   aria-current={isActive(link) ? "page" : undefined}
-                  className={`block px-4 py-3 font-bold uppercase rounded-lg transition-colors duration-200 ${
+                  // Same outlined-pill idea as the desktop nav: an
+                  // identical border-2 box on every row, only the active
+                  // one's border color is visible.
+                  className={`block px-4 py-3 font-bold uppercase rounded-lg border-2 transition-colors duration-200 ${
                     isActive(link)
-                      ? "text-[#002B56] bg-[#ECF7FC] border-l-4 border-[#00A0E3]"
-                      : "text-[#002B56] hover:bg-gray-50"
+                      ? "text-[#002B56] border-[#002B56] bg-white"
+                      : "text-[#002B56] border-transparent hover:bg-gray-50"
                   }`}
                 >
                   {link.label}
@@ -324,7 +331,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   to="/login"
-                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
                 >
                   Sign In
                 </Link>

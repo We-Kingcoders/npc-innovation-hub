@@ -50,8 +50,7 @@ const HERO_SLIDES = [
   },
 ];
 
-const TEXT_SLIDE_INTERVAL_MS = 6000; // longer than the photo carousel's
-// 3.5s - there's a full sentence to read here, not just a face to glance at.
+const TEXT_SLIDE_INTERVAL_MS = 3000;
 const FADE_DURATION_MS = 300;
 
 const HeroSection = () => {
@@ -72,11 +71,9 @@ const HeroSection = () => {
 
   const nextTextSlide = () =>
     changeTextSlide((textSlide + 1) % HERO_SLIDES.length);
-  const prevTextSlide = () =>
-    changeTextSlide((textSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
 
   // Re-arms on every slide change, whether that came from this timer or
-  // a manual arrow/dot click - so clicking ahead doesn't get immediately
+  // a manual dot click - so jumping ahead doesn't get immediately
   // overridden by a tick that was already mid-countdown.
   useEffect(() => {
     if (textPaused) return undefined;
@@ -120,18 +117,6 @@ const HeroSection = () => {
     setCurrentSlide(index);
   };
 
-  const nextSlide = () => {
-    if (teamMembers.length === 0) return;
-    setCurrentSlide((prev) => (prev + 1) % teamMembers.length);
-  };
-
-  const prevSlide = () => {
-    if (teamMembers.length === 0) return;
-    setCurrentSlide(
-      (prev) => (prev - 1 + teamMembers.length) % teamMembers.length,
-    );
-  };
-
   return (
     <div
       id="home"
@@ -161,7 +146,7 @@ const HeroSection = () => {
       {/* Mobile/Tablet: Gradient Header Background */}
       <div className="lg:hidden absolute inset-0 z-0">
         {/* Top gradient section */}
-        <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#00A0E3]">
+        <div className="relative h-48 bg-gradient-to-r from-[#002B56] to-[#003366]">
           {/* Mobile tagline in blue section */}
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-2xl sm:text-3xl font-bold select-none text-center">
@@ -179,8 +164,10 @@ const HeroSection = () => {
           <div className="absolute top-24 right-4 w-8 h-8 bg-white/15 rounded-full" />
         </div>
 
-        {/* Bottom accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00A0E3] to-transparent" />
+        {/* Bottom accent line - white, not the old light blue, so it still
+            reads as a highlight against this now-all-navy gradient rather
+            than disappearing into it. */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
       </div>
 
       {/* =================================================================
@@ -232,86 +219,47 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Call-to-Action + slide controls */}
+          {/* Call-to-Action + slide dots. No prev/next arrows - dots are
+              the only manual control, direct-jump is enough for 4 slides
+              this short-lived (3s each). */}
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <button
-              className="rounded-full border-2 border-[#00A0E3] text-[#00A0E3] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#00A0E3] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#00A0E3] focus:ring-offset-2"
+              className="rounded-full border-2 border-[#002B56] text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] hover:bg-[#002B56] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
               aria-label="Join NpcInnovationHub"
               onClick={() => setIsJoinModalOpen(true)}
             >
               Join Us
             </button>
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={prevTextSlide}
-                onFocus={() => setTextPaused(true)}
-                onBlur={() => setTextPaused(false)}
-                aria-label="Previous message"
-                className="w-8 h-8 flex items-center justify-center rounded-full border border-[#29476E]/25 text-[#29476E] hover:bg-[#29476E]/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A0E3]"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-
-              <div className="flex items-center gap-1.5">
-                {HERO_SLIDES.map((slide, index) => (
-                  <button
-                    key={slide.headline}
-                    onClick={() => changeTextSlide(index)}
-                    onFocus={() => setTextPaused(true)}
-                    onBlur={() => setTextPaused(false)}
-                    aria-label={`Show message ${index + 1} of ${HERO_SLIDES.length}`}
-                    aria-current={index === textSlide}
-                    className={`rounded-full transition-all duration-300 ${
-                      index === textSlide
-                        ? "bg-[#00A0E3] w-6 h-2"
-                        : "bg-[#29476E]/25 hover:bg-[#29476E]/40 w-2 h-2"
-                    }`}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={nextTextSlide}
-                onFocus={() => setTextPaused(true)}
-                onBlur={() => setTextPaused(false)}
-                aria-label="Next message"
-                className="w-8 h-8 flex items-center justify-center rounded-full border border-[#29476E]/25 text-[#29476E] hover:bg-[#29476E]/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A0E3]"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
+            <div className="flex items-center gap-1.5">
+              {HERO_SLIDES.map((slide, index) => (
+                <button
+                  key={slide.headline}
+                  onClick={() => changeTextSlide(index)}
+                  onFocus={() => setTextPaused(true)}
+                  onBlur={() => setTextPaused(false)}
+                  aria-label={`Show message ${index + 1} of ${HERO_SLIDES.length}`}
+                  aria-current={index === textSlide}
+                  className={`rounded-full transition-all duration-300 ${
+                    index === textSlide
+                      ? "bg-[#002B56] w-6 h-2"
+                      : "bg-[#29476E]/25 hover:bg-[#29476E]/40 w-2 h-2"
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </section>
 
         {/* Right Section - Hero Image Carousel + Slogan Container */}
         <div className="hidden lg:flex flex-col items-start justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-16 xl:pr-24 lg:pt-20">
-          {/* Hero Image Carousel */}
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[420px] xl:h-[470px]">
+          {/* Hero Image Carousel. bg-gradient fill (not transparent) is
+              load-bearing now that images use object-contain below - a
+              portrait photo in this landscape box leaves letterboxed
+              space on the sides, and that space needs to look like a
+              deliberate navy card, not a gap. No prev/next arrows - dots
+              are the only manual control, same as the text carousel. */}
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[420px] xl:h-[470px] bg-gradient-to-br from-[#002B56] to-[#003366]">
             {/* Slides */}
             <div className="relative w-full h-full">
               {teamMembers.map((member, index) => (
@@ -321,12 +269,19 @@ const HeroSection = () => {
                     index === currentSlide ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  <img
-                    src={member.image}
-                    alt={`${member.name} - ${member.role}`}
-                    className="w-full h-full object-cover"
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
+                  {/* object-contain + a flex-centered wrapper: the whole
+                      photo always shows, never cropped, whatever its own
+                      aspect ratio - object-cover was cutting off heads/
+                      edges on anything that wasn't already the exact
+                      shape of this box. */}
+                  <div className="w-full h-full flex items-center justify-center p-6">
+                    <img
+                      src={member.image}
+                      alt={`${member.name} - ${member.role}`}
+                      className="max-w-full max-h-full object-contain"
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                  </div>
                   {/* Text overlay with gradient */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 pb-20">
                     <h3 className="text-white text-2xl font-bold mb-1 drop-shadow-lg">
@@ -355,54 +310,23 @@ const HeroSection = () => {
                 />
               ))}
             </div>
-
-            {/* Arrow navigation */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-300 z-10"
-              aria-label="Previous slide"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-300 z-10"
-              aria-label="Next slide"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
           </div>
 
-          {/* Slogan - Positioned directly below image, always one line */}
+          {/* Slogan - Positioned directly below image, always one line.
+              This sits over the navy diagonal (same region the mobile
+              gradient band's identical tagline is drawn against - see
+              above), so it's white/90/80 here too now, not the old
+              light-blue-on-black-on-navy mix - "Innovate." in plain black
+              had barely any contrast against navy to begin with, and
+              light-blue "Create."/"Lead." only worked here because it was
+              functioning as a de-facto contrast color, not a real accent
+              choice - matching mobile's already-correct treatment fixes
+              both at once. */}
           <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
             <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
-              <span className="text-[#000000]">Innovate.</span>{" "}
-              <span className="text-[#00A0E3]">Create.</span>{" "}
-              <span className="text-[#00A0E3]">Lead.</span>
+              <span className="text-white">Innovate.</span>{" "}
+              <span className="text-white/90">Create.</span>{" "}
+              <span className="text-white/80">Lead.</span>
             </p>
           </div>
         </div>

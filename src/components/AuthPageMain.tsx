@@ -67,7 +67,7 @@ export default function AuthPageMain({ children }: { children: ReactNode }) {
           <div className="max-w-md space-y-6">
             {FEATURES.map(({ icon: Icon, title, text }) => (
               <div key={title} className="flex items-center gap-4">
-                <div className="w-12 h-12 flex-shrink-0 bg-[#00A0E3] rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 flex-shrink-0 bg-[#002B56] rounded-full flex items-center justify-center shadow-lg">
                   <Icon className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
                 <div>

@@ -265,7 +265,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.firstName
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-[#00A0E3]"
+                        : "border-gray-300 focus:ring-[#002B56]"
                     }`}
                     placeholder="Enter first name"
                   />
@@ -293,7 +293,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.lastName
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-[#00A0E3]"
+                        : "border-gray-300 focus:ring-[#002B56]"
                     }`}
                     placeholder="Enter last name"
                   />
@@ -343,7 +343,7 @@ export default function ProfileSettings() {
                     className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                       errors.phone
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-[#00A0E3]"
+                        : "border-gray-300 focus:ring-[#002B56]"
                     }`}
                     placeholder="+1234567890"
                   />
@@ -365,7 +365,7 @@ export default function ProfileSettings() {
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A0E3] transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002B56] transition-colors"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
