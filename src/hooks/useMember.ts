@@ -11,12 +11,28 @@ import type {
   SkillsPayload,
 } from "../types/member.types";
 
+// `memberService` calls go through `api/client.ts`, whose response
+// interceptor already unwraps axios errors into a plain
+// `{ message, statusCode, error }` object before this ever runs - so `err`
+// here never actually has a `.response` (that's already been consumed) and
+// isn't an `Error` instance either. The old checks below only recognized
+// those two shapes, so every real backend message (a validation error, a
+// 404, anything) silently fell through to the generic fallback - which is
+// why a specific, actionable error always rendered as just "An unexpected
+// error occurred". Checking for a plain `.message` string covers the
+// interceptor's shape and both of the previous ones (a raw axios error and
+// a native Error both have `.message` too), so this replaces all three.
 const extractMessage = (err: unknown): string => {
-  if (err && typeof err === "object" && "response" in err) {
-    const ax = err as { response?: { data?: { message?: string } } };
-    return ax.response?.data?.message ?? "An error occurred";
+  if (err && typeof err === "object") {
+    const withResponse = err as { response?: { data?: { message?: string } } };
+    if (withResponse.response?.data?.message) {
+      return withResponse.response.data.message;
+    }
+    const withMessage = err as { message?: unknown };
+    if (typeof withMessage.message === "string" && withMessage.message) {
+      return withMessage.message;
+    }
   }
-  if (err instanceof Error) return err.message;
   return "An unexpected error occurred";
 };
 
