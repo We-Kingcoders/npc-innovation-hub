@@ -338,7 +338,9 @@ export default function ApplicationDetail() {
                         Reviewed By
                       </label>
                       <p className="text-navy-800 mt-1">
-                        {application.reviewedBy || "—"}
+                        {application.reviewer
+                          ? `${application.reviewer.firstName} ${application.reviewer.lastName}`.trim()
+                          : "—"}
                       </p>
                     </div>
                     <div>

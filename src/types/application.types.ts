@@ -39,6 +39,10 @@ export interface MembershipApplication {
   applicationLetterUrl: string;
   status: string;
   reviewedBy: string | null;
+  // Populated by the backend's `reviewer` include (User.id/firstName/
+  // lastName) - reviewedBy alone is just the raw user id, never
+  // meaningful to show directly in the admin UI.
+  reviewer?: { id: string; firstName: string; lastName: string } | null;
   reviewedAt: string | null;
   createdAt: string;
   updatedAt: string;
