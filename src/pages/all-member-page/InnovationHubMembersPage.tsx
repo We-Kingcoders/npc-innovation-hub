@@ -9,22 +9,20 @@ const PAGE_SIZE = 6;
 /* ── Page-level styles injected once into <head> ──────────────────── */
 const PAGE_STYLE_ID = "ihp-styles";
 const PAGE_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+/* No Google Fonts import here any more - Syne/DM Sans were a one-off
+   pulled in just for this page, on top of the site's own default (Inter,
+   set globally in index.css). Dropped in favour of that default so this
+   page's type matches the rest of the site instead of standing apart. */
 
 /* ── Palette ───────────────────────────────────────────────────────────
-   --navy is #002B56, the exact flat colour used by the site Footer
-   (components/button/Footer.tsx). The hero uses it unmodified: no
-   gradient, no pattern, no overlay — so both sections match precisely. */
+   Reuses the site's actual navy tokens (#002B56 / #003366, matching
+   tailwind.config.js's npc.navy.DEFAULT/light and the Footer/Navbar) -
+   this page previously ran its own separate palette on top of that,
+   adding gold/cyan/violet accents that appear nowhere else on the site. */
 .ihp-root {
-  --navy:     #002B56;
-  --navy-700: #002B56;
-  --navy-600: #0a4680;
-  --navy-500: #1a6fc4;
-  --gold:     #f0a500;
-  --gold-lt:  #ffd166;
-  --cyan:     #38bdf8;
-  --violet:   #8b7cf6;
-  --page-bg:  #f4f7fc;
+  --navy:      #002B56;
+  --navy-light: #003366;
+  --page-bg:   #f4f7fc;
   min-height: 100vh;
   background: var(--page-bg);
 }
@@ -56,7 +54,6 @@ const PAGE_CSS = `
   gap: 10px;
   padding: 9px 20px 9px 10px;
   border-radius: 999px;
-  font-family: 'DM Sans', sans-serif;
   font-size: 0.92rem;
   font-weight: 700;
   color: rgba(255,255,255,0.88);
@@ -69,14 +66,14 @@ const PAGE_CSS = `
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 .ihp-back-btn:hover {
-  background: linear-gradient(135deg, var(--violet) 0%, var(--navy-500) 55%, var(--cyan) 100%);
+  background: var(--navy-light);
   border-color: rgba(255,255,255,0.34);
   color: #ffffff;
   transform: translateX(-3px) scale(1.04);
-  box-shadow: 0 8px 30px rgba(139,124,246,0.5), 0 2px 10px rgba(56,189,248,0.32);
+  box-shadow: 0 8px 30px rgba(0,43,86,0.4);
 }
 .ihp-back-btn:focus-visible {
-  outline: 2px solid var(--gold-lt);
+  outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
 .ihp-back-btn:active {
@@ -87,7 +84,7 @@ const PAGE_CSS = `
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background: linear-gradient(135deg, rgba(139,124,246,0.42) 0%, rgba(56,189,248,0.3) 100%);
+  background: rgba(255,255,255,0.12);
   border: 1px solid rgba(255,255,255,0.22);
   transition: all 0.28s ease;
 }
@@ -115,66 +112,46 @@ const PAGE_CSS = `
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-family: 'DM Sans', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gold-lt);
-  background: linear-gradient(135deg, rgba(240,165,0,0.20) 0%, rgba(139,124,246,0.16) 100%);
-  border: 1px solid rgba(255,209,102,0.34);
+  color: #ffffff;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.22);
   padding: 6px 16px;
   border-radius: 20px;
   margin-bottom: 20px;
   backdrop-filter: blur(6px);
-  box-shadow: 0 4px 20px rgba(240,165,0,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
 }
 .ihp-badge-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 10px 2px rgba(240,165,0,0.85);
+  background: #ffffff;
   animation: ihp-pulse 2s ease-in-out infinite;
 }
 @keyframes ihp-pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
 
 .ihp-h1 {
-  font-family: 'Syne', sans-serif;
   font-size: clamp(2rem, 5.2vw, 3.6rem);
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.025em;
   line-height: 1.12;
   margin: 0 0 16px;
-  text-shadow: 0 2px 30px rgba(0,0,0,0.3);
 }
-/* Animated gold sweep on the accent word */
-.ihp-h1 span {
-  background: linear-gradient(100deg,
-    var(--gold) 0%, var(--gold-lt) 22%, #fff3c4 40%,
-    var(--gold-lt) 58%, var(--gold) 80%, var(--gold) 100%);
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: ihp-sweep 6s linear infinite;
-}
-@keyframes ihp-sweep {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -50% 0; }
-}
-/* Gradient rule under the headline */
+/* Gradient rule under the headline - the same two-tone navy pairing used
+   for gradient accents elsewhere on the site (e.g. ProjectsPage.tsx's
+   heading, HubIntroVideo.tsx), not the cyan/gold/violet rainbow this page
+   used to run on its own. */
 .ihp-rule {
   width: 132px; height: 3px;
   margin: 0 auto 18px;
   border-radius: 99px;
-  background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), var(--violet), transparent);
-  background-size: 200% 100%;
-  animation: ihp-sweep 5s linear infinite;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  opacity: 0.6;
 }
 .ihp-subtitle {
-  font-family: 'DM Sans', sans-serif;
   font-size: clamp(0.9rem, 1.8vw, 1.02rem);
   color: rgba(226,236,250,0.76);
   max-width: 560px;
@@ -207,27 +184,27 @@ const PAGE_CSS = `
   margin: -36px 0 32px;
   box-shadow: 0 10px 34px rgba(33,53,99,0.16), 0 2px 8px rgba(33,53,99,0.06);
 }
-/* Colour accent along the top edge of the stats bar */
+/* Colour accent along the top edge of the stats bar - navy to navy-light,
+   the same two-tone pairing the rest of the site uses for gradients. */
 .ihp-stats::before {
   content: '';
   position: absolute; left: 24px; right: 24px; top: 0;
   height: 3px;
   border-radius: 0 0 99px 99px;
-  background: linear-gradient(90deg, var(--cyan), var(--navy-500), var(--gold), var(--violet));
+  background: linear-gradient(90deg, var(--navy), var(--navy-light));
 }
 .ihp-stats-left { display: flex; align-items: center; gap: 20px; }
 .ihp-stat { display: flex; flex-direction: column; gap: 2px; }
 .ihp-stat-num {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 700; color: var(--navy-700); line-height: 1;
+  font-size: 1.3rem; font-weight: 700; color: var(--navy); line-height: 1;
 }
 .ihp-stat-label {
   font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase; color: #8498b4;
 }
 .ihp-stat-div { width: 1px; height: 32px; background: #dde6f0; }
-.ihp-stats-right { font-size: 0.8rem; color: #8498b4; font-family: 'DM Sans', sans-serif; }
-.ihp-stats-right strong { color: var(--navy-700); }
+.ihp-stats-right { font-size: 0.8rem; color: #8498b4; }
+.ihp-stats-right strong { color: var(--navy); }
 
 /* Grid */
 .ihp-grid {
@@ -274,7 +251,6 @@ const PAGE_CSS = `
   width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 9px;
-  font-family: 'DM Sans', sans-serif;
   font-size: 0.82rem; font-weight: 600;
   border: 1.5px solid #dde6f0;
   background: #ffffff;
@@ -282,26 +258,20 @@ const PAGE_CSS = `
   cursor: pointer;
   transition: all 0.18s ease;
 }
-.ihp-page-btn:hover:not(:disabled) { border-color: var(--navy-500); color: var(--navy-600); }
+.ihp-page-btn:hover:not(:disabled) { border-color: var(--navy); color: var(--navy); }
 .ihp-page-btn.active {
-  background: linear-gradient(135deg, var(--navy-600) 0%, var(--navy-700) 100%);
+  background: var(--navy);
   border-color: transparent;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(33,53,99,0.42);
+  box-shadow: 0 4px 14px rgba(0,43,86,0.42);
 }
 .ihp-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
-  .ihp-h1 span,
-  .ihp-rule,
   .ihp-badge-dot,
   .ihp-skeleton::after {
     animation: none !important;
-  }
-  .ihp-h1 span {
-    -webkit-text-fill-color: var(--gold-lt);
-    color: var(--gold-lt);
   }
 }
 `;

@@ -25,7 +25,14 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-// ── Static fallback data (replace with backend data when ready) ──────────────
+// ── Fallback copy for a member who hasn't filled in a tagline/tech stack
+// yet ────────────────────────────────────────────────────────────────────
+// GET /api/members now sends each member's real tagline/skills (see
+// member.controller.ts) rather than always omitting them - this used to
+// be why every card fell back to this same static text regardless of
+// what a member had actually entered. Genuinely-empty fields (most real
+// profiles right now don't have a tagline set) still land here, which is
+// the fallback's actual job.
 const STATIC_ROLE = "Full-Stack Developer";
 const STATIC_TAGLINE = "Building scalable solutions that make a real impact.";
 const STATIC_TECH_STACK = ["React", "Node.js", "TypeScript", "PostgreSQL"];
@@ -34,8 +41,6 @@ const STATIC_TECH_STACK = ["React", "Node.js", "TypeScript", "PostgreSQL"];
 const MC_STYLE_ID = "mc-card-styles";
 
 const MC_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
-
 .mc-card {
   position: relative;
   display: flex;
@@ -48,18 +53,19 @@ const MC_CSS = `
   box-shadow: 0 2px 16px rgba(10,54,101,0.08), 0 1px 4px rgba(10,54,101,0.05);
   transition: transform 0.28s cubic-bezier(.22,.68,0,1.2), box-shadow 0.28s ease;
   overflow: hidden;
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   animation: mc-in 0.45s ease both;
   height: 100%;
 }
 
-/* Accent top bar — slides in on hover */
+/* Accent top bar — slides in on hover. Two-tone navy (#002B56 -> #003366),
+   the same pairing used for gradient accents elsewhere on the site -
+   not the third bright-blue stop this used to add on top of it. */
 .mc-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #0a3665 0%, #1a6fc4 60%, #3d9fff 100%);
+  background: linear-gradient(90deg, #002B56 0%, #003366 100%);
   opacity: 0;
   transition: opacity 0.25s ease;
 }
@@ -82,8 +88,8 @@ const MC_CSS = `
 }
 .mc-card:hover::before { opacity: 1; }
 .mc-card:hover::after  { opacity: 1; }
-.mc-card:hover .mc-tag { background: #d8e8f8; color: #0a3665; border-color: #b8d0ec; }
-.mc-card:hover .mc-avatar-ring { box-shadow: 0 0 0 3px #1a6fc4, 0 6px 20px rgba(10,54,101,0.25); }
+.mc-card:hover .mc-tag { background: #d8e8f8; color: #002B56; border-color: #b8d0ec; }
+.mc-card:hover .mc-avatar-ring { box-shadow: 0 0 0 3px #003366, 0 6px 20px rgba(10,54,101,0.25); }
 
 @keyframes mc-in {
   from { opacity: 0; transform: translateY(22px); }
@@ -128,7 +134,7 @@ const MC_CSS = `
   width: 108px; height: 108px;
   border-radius: 50%;
   padding: 3px;
-  background: linear-gradient(135deg, #0a3665 0%, #1a6fc4 100%);
+  background: linear-gradient(135deg, #002B56 0%, #003366 100%);
   box-shadow: 0 0 0 3px #ffffff, 0 4px 18px rgba(10,54,101,0.22);
   transition: box-shadow 0.28s ease;
 }
@@ -143,15 +149,13 @@ const MC_CSS = `
 .mc-avatar-ph {
   display: flex;
   align-items: center; justify-content: center;
-  background: linear-gradient(145deg, #0a3665 0%, #1462a8 50%, #1a6fc4 100%);
-  font-family: 'Syne', 'DM Sans', sans-serif;
+  background: linear-gradient(145deg, #002B56 0%, #003366 100%);
   font-size: 1.75rem; font-weight: 800; color: #ffffff;
   letter-spacing: -0.02em;
 }
 
 /* ── Name ────────────────────────────────────────────────────────── */
 .mc-name {
-  font-family: 'Syne', 'DM Sans', sans-serif;
   font-size: 1.05rem; font-weight: 700; color: #0d1f35;
   letter-spacing: -0.02em; text-align: center; line-height: 1.25;
   margin: 0 0 8px;
@@ -162,7 +166,7 @@ const MC_CSS = `
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: #1a6fc4; background: #e8f1fb;
+  color: #003366; background: #e8f1fb;
   padding: 5px 13px; border-radius: 20px;
   border: 1px solid #c8ddf4;
   margin-bottom: 16px;
@@ -170,7 +174,7 @@ const MC_CSS = `
 .mc-role-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: #1a6fc4;
+  background: #003366;
   flex-shrink: 0;
 }
 
@@ -208,21 +212,20 @@ const MC_CSS = `
   width: 100%;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   padding: 11px 0; border-radius: 11px;
-  background: #0a3665; color: #ffffff;
-  font-family: 'DM Sans', sans-serif;
+  background: #002B56; color: #ffffff;
   font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
   border: none; cursor: pointer;
   transition: background 0.22s, gap 0.22s, box-shadow 0.22s, transform 0.15s;
   margin-top: auto;
 }
 .mc-btn:hover {
-  background: #1a6fc4;
+  background: #003366;
   gap: 11px;
   box-shadow: 0 5px 16px rgba(26,111,196,0.38);
   transform: translateY(-1px);
 }
 .mc-btn:active { transform: translateY(0); }
-.mc-btn:focus-visible { outline: 2px solid #1a6fc4; outline-offset: 3px; }
+.mc-btn:focus-visible { outline: 2px solid #003366; outline-offset: 3px; }
 .mc-btn-arrow {
   width: 14px; height: 14px; flex-shrink: 0;
   transition: transform 0.22s;
