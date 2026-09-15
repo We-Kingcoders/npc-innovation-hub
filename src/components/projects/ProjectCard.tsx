@@ -17,6 +17,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   variant = "default",
   className = "",
 }) => {
+  // Same defensive fallback resources/ProjectTable.tsx already uses - a
+  // project created (or never since re-saved) before the owner-name
+  // backend fix landed can still have this exact literal string stored.
+  const displayOwner =
+    owner && owner !== "undefined undefined" ? owner : "Unknown";
+
   if (variant === "featured") {
     return (
       <div
@@ -37,11 +43,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="flex items-center gap-2">
               <img
                 src={ownerAvatar}
-                alt={owner}
+                alt={displayOwner}
                 className="w-7 h-7 mt-8 rounded-full border border-white"
               />
               <div>
-                <div className="text-gray-200 mt-8 text-xs">{owner}</div>
+                <div className="text-gray-200 mt-8 text-xs">{displayOwner}</div>
                 <div className="text-gray-300 italic text-[10px]">
                   {ownerRole}
                 </div>
@@ -94,11 +100,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <div className="flex items-center gap-2">
             <img
               src={ownerAvatar}
-              alt={owner}
+              alt={displayOwner}
               className="w-7 h-7 rounded-full border border-white"
             />
             <div>
-              <div className="text-gray-200 font-semibold text-xs">{owner}</div>
+              <div className="text-gray-200 font-semibold text-xs">
+                {displayOwner}
+              </div>
               <div className="text-gray-300 italic text-[10px]">
                 {ownerRole}
               </div>
