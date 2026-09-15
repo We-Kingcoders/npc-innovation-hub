@@ -1,0 +1,119 @@
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+}));
+
+jest.mock("../../hooks/useEvents", () => ({
+  __esModule: true,
+  useEvents: jest.fn(),
+}));
+
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { useEvents } from "../../hooks/useEvents";
+import EventsShowcase from "./EventsShowcase";
+
+const mockedUseEvents = useEvents as jest.Mock;
+
+const HOUR_MS = 60 * 60 * 1000;
+
+function futureEvent(overrides: Record<string, unknown> = {}) {
+  const start = new Date(Date.now() + 7 * 24 * HOUR_MS);
+  const end = new Date(start.getTime() + 2 * HOUR_MS);
+  return {
+    id: "event-future",
+    title: "Intro to AI/ML for Developers",
+    location: "Innovation Hub, Kigali",
+    description: "A hands-on session on getting started with AI/ML.",
+    startTime: start.toISOString(),
+    endTime: end.toISOString(),
+    imageUrl: "https://example.com/event.jpg",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    ...overrides,
+  };
+}
+
+function pastEvent(overrides: Record<string, unknown> = {}) {
+  const start = new Date(Date.now() - 30 * 24 * HOUR_MS);
+  const end = new Date(start.getTime() + 2 * HOUR_MS);
+  return futureEvent({
+    id: "event-past",
+    title: "Already Happened",
+    startTime: start.toISOString(),
+    endTime: end.toISOString(),
+    ...overrides,
+  });
+}
+
+function baseHookReturn(overrides: Record<string, unknown> = {}) {
+  return {
+    events: [],
+    loading: false,
+    error: null,
+    fetchEvents: jest.fn(),
+    ...overrides,
+  };
+}
+
+describe("<EventsShowcase />", () => {
+  afterEach(() => jest.clearAllMocks());
+
+  test("shows a loading skeleton before data resolves", () => {
+    mockedUseEvents.mockReturnValue(baseHookReturn({ loading: true }));
+
+    const { container } = render(<EventsShowcase />);
+
+    expect(container.querySelector(".animate-pulse")).toBeInTheDocument();
+  });
+
+  test("renders only upcoming events, not past ones", () => {
+    mockedUseEvents.mockReturnValue(
+      baseHookReturn({ events: [futureEvent(), pastEvent()] }),
+    );
+
+    render(<EventsShowcase />);
+
+    expect(screen.getByText("Upcoming Events")).toBeInTheDocument();
+    expect(
+      screen.getByText("Intro to AI/ML for Developers"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Already Happened")).not.toBeInTheDocument();
+  });
+
+  test("renders nothing when there are no upcoming events, even if past ones exist", () => {
+    mockedUseEvents.mockReturnValue(baseHookReturn({ events: [pastEvent()] }));
+
+    const { container } = render(<EventsShowcase />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("renders nothing when there are no events at all", () => {
+    mockedUseEvents.mockReturnValue(baseHookReturn());
+
+    const { container } = render(<EventsShowcase />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("renders nothing when the fetch fails, rather than showing an error banner", () => {
+    mockedUseEvents.mockReturnValue(baseHookReturn({ error: "Network error" }));
+
+    const { container } = render(<EventsShowcase />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("clicking an event card sends a signed-out visitor toward /dashboard/events (login-gated)", async () => {
+    const user = userEvent.setup();
+    mockedUseEvents.mockReturnValue(
+      baseHookReturn({ events: [futureEvent()] }),
+    );
+
+    render(<EventsShowcase />);
+    await user.click(screen.getByText("Intro to AI/ML for Developers"));
+
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard/events");
+  });
+});
