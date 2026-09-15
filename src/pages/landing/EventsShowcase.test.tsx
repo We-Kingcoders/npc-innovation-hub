@@ -81,12 +81,16 @@ describe("<EventsShowcase />", () => {
     expect(screen.queryByText("Already Happened")).not.toBeInTheDocument();
   });
 
-  test("renders nothing when there are no upcoming events, even if past ones exist", () => {
-    mockedUseEvents.mockReturnValue(baseHookReturn({ events: [pastEvent()] }));
+  test("falls back to Recent Events when nothing is upcoming but past events exist", () => {
+    mockedUseEvents.mockReturnValue(
+      baseHookReturn({ events: [pastEvent({ title: "Already Happened" })] }),
+    );
 
-    const { container } = render(<EventsShowcase />);
+    render(<EventsShowcase />);
 
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.getByText("Recent Events")).toBeInTheDocument();
+    expect(screen.getByText("Already Happened")).toBeInTheDocument();
+    expect(screen.queryByText("Upcoming Events")).not.toBeInTheDocument();
   });
 
   test("renders nothing when there are no events at all", () => {
