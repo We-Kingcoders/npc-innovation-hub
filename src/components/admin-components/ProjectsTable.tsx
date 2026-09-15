@@ -166,7 +166,7 @@ export default function ProjectsTable() {
         <div className="mb-6">
           <input
             type="text"
-            placeholder="Search projects by title, description, or owner..."
+            placeholder="Search projects by title or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-3 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
@@ -214,7 +214,6 @@ export default function ProjectsTable() {
               <thead>
                 <tr className="bg-navy-800 text-white text-left">
                   <th className="px-6 py-4 rounded-tl-2xl">Project</th>
-                  <th className="px-6 py-4">Owner</th>
                   <th className="px-6 py-4">Created</th>
                   <th className="px-6 py-4 rounded-tr-2xl">Actions</th>
                 </tr>
@@ -243,29 +242,6 @@ export default function ProjectsTable() {
                           </p>
                           <p className="text-sm text-mist-600 truncate">
                             {project.description}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Owner */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={project.ownerAvatar}
-                          alt={project.owner}
-                          className="w-8 h-8 rounded-full"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              "https://randomuser.me/api/portraits/lego/1.jpg";
-                          }}
-                        />
-                        <div>
-                          <p className="text-sm font-medium text-navy-800">
-                            {project.owner}
-                          </p>
-                          <p className="text-xs text-mist-500">
-                            {project.ownerRole}
                           </p>
                         </div>
                       </div>
