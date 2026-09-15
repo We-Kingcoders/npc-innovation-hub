@@ -63,26 +63,42 @@ const EventsShowcase: React.FC = () => {
         new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
     );
 
-  // No upcoming events right now (or the fetch failed) is a normal state
-  // for an optional homepage section, not something to show an error/empty
-  // card for - render nothing, matching AlumniSection.tsx / BlogShowcase.tsx.
-  if (!loading && (error || upcoming.length === 0)) return null;
+  // Nothing upcoming doesn't mean nothing worth showing - falls back to
+  // the most recently-ended events instead of hiding the whole section,
+  // so a real, populated events calendar isn't invisible on Home just
+  // because the next event hasn't been scheduled yet (most recent-first,
+  // the same convention BlogShowcase.tsx uses).
+  const recentPast = events
+    .filter((event) => getEventStatus(event) === "past")
+    .sort(
+      (a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime(),
+    );
 
-  const preview = upcoming.slice(0, PREVIEW_COUNT);
+  const hasUpcoming = upcoming.length > 0;
+  const displaySource = hasUpcoming ? upcoming : recentPast;
+
+  // Only truly zero events at all (or the fetch failing) hides the
+  // section - matching AlumniSection.tsx / BlogShowcase.tsx's "if
+  // available" convention.
+  if (!loading && (error || displaySource.length === 0)) return null;
+
+  const preview = displaySource.slice(0, PREVIEW_COUNT);
 
   return (
     <section
       id="events"
-      aria-label="Upcoming Events"
+      aria-label={hasUpcoming ? "Upcoming Events" : "Recent Events"}
       className="scroll-mt-16 lg:scroll-mt-20 py-20 px-4 md:px-8 bg-[#f4f7fc]"
     >
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-[#002b56] mb-4">
-            Upcoming Events
+            {hasUpcoming || loading ? "Upcoming Events" : "Recent Events"}
           </h2>
           <p className="text-xl font-medium text-[#002b56]/80 max-w-3xl mx-auto">
-            Workshops, talks, and meetups happening around the Hub.
+            {hasUpcoming || loading
+              ? "Workshops, talks, and meetups happening around the Hub."
+              : "A look back at recent workshops, talks, and meetups at the Hub."}
           </p>
         </div>
 
@@ -100,7 +116,7 @@ const EventsShowcase: React.FC = () => {
           </div>
         )}
 
-        {!loading && upcoming.length > PREVIEW_COUNT && (
+        {!loading && displaySource.length > PREVIEW_COUNT && (
           <div className="flex justify-center mt-16">
             <button
               className="text-lg py-3 px-12 border-2 border-[#002b56] text-[#002b56] rounded-[33px] shadow-md hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#002b56] focus:ring-opacity-50"
