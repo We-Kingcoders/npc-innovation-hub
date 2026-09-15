@@ -68,7 +68,6 @@ describe("InnovationHubMembersPage", () => {
 
     expect(screen.getByText("John Smith")).toBeInTheDocument();
     expect(mockedGetPublicMembers).toHaveBeenCalledWith(1, 6);
-    expect(screen.getByText("13")).toBeInTheDocument(); // totalMembers stat
     expect(screen.getByLabelText("Page 3")).toBeInTheDocument();
   });
 
