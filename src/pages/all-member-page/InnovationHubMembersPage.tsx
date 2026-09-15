@@ -15,196 +15,25 @@ const PAGE_CSS = `
    page's type matches the rest of the site instead of standing apart. */
 
 /* ── Palette ───────────────────────────────────────────────────────────
-   Reuses the site's actual navy tokens (#002B56 / #003366, matching
-   tailwind.config.js's npc.navy.DEFAULT/light and the Footer/Navbar) -
-   this page previously ran its own separate palette on top of that,
-   adding gold/cyan/violet accents that appear nowhere else on the site. */
+   Reuses the site's actual navy token (#002B56, matching
+   tailwind.config.js's npc.navy.DEFAULT and the Footer/Navbar) - this
+   page previously ran its own separate palette on top of that, adding
+   gold/cyan/violet accents that appear nowhere else on the site. */
 .ihp-root {
   --navy:      #002B56;
-  --navy-light: #003366;
   --page-bg:   #f4f7fc;
   min-height: 100vh;
   background: var(--page-bg);
-}
-
-/* Hero — flat #002B56, identical to the footer */
-.ihp-hero {
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-  padding: 56px 24px 104px;
-  color: #ffffff;
-  background: var(--navy);
-}
-
-/* ── Back button ───────────────────────────────────────────────────── */
-.ihp-back-row {
-  position: relative;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 0 28px 0;
-  max-width: 1160px;
-  margin: 0 auto;
-}
-.ihp-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 20px 9px 10px;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: rgba(255,255,255,0.88);
-  background: rgba(255,255,255,0.08);
-  border: 1.5px solid rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
-  text-decoration: none;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-}
-.ihp-back-btn:hover {
-  background: var(--navy-light);
-  border-color: rgba(255,255,255,0.34);
-  color: #ffffff;
-  transform: translateX(-3px) scale(1.04);
-  box-shadow: 0 8px 30px rgba(0,43,86,0.4);
-}
-.ihp-back-btn:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 3px;
-}
-.ihp-back-btn:active {
-  transform: translateX(-1px) scale(0.98);
-}
-.ihp-back-icon {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.22);
-  transition: all 0.28s ease;
-}
-.ihp-back-btn:hover .ihp-back-icon {
-  background: rgba(255,255,255,0.2);
-  border-color: rgba(255,255,255,0.35);
-  transform: rotate(-5deg) scale(1.1);
-}
-.ihp-back-icon svg {
-  width: 14px; height: 14px;
-  stroke: rgba(255,255,255,0.9);
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: stroke 0.2s;
-}
-.ihp-back-btn:hover .ihp-back-icon svg {
-  stroke: #ffffff;
-}
-
-/* Badge */
-.ihp-badge {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #ffffff;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.22);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  backdrop-filter: blur(6px);
-}
-.ihp-badge-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #ffffff;
-  animation: ihp-pulse 2s ease-in-out infinite;
-}
-@keyframes ihp-pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
-
-.ihp-h1 {
-  font-size: clamp(2rem, 5.2vw, 3.6rem);
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
-  margin: 0 0 16px;
-}
-/* Gradient rule under the headline - the same two-tone navy pairing used
-   for gradient accents elsewhere on the site (e.g. ProjectsPage.tsx's
-   heading, HubIntroVideo.tsx), not the cyan/gold/violet rainbow this page
-   used to run on its own. */
-.ihp-rule {
-  width: 132px; height: 3px;
-  margin: 0 auto 18px;
-  border-radius: 99px;
-  background: linear-gradient(90deg, transparent, #ffffff, transparent);
-  opacity: 0.6;
-}
-.ihp-subtitle {
-  font-size: clamp(0.9rem, 1.8vw, 1.02rem);
-  color: rgba(226,236,250,0.76);
-  max-width: 560px;
-  margin: 0 auto;
-  line-height: 1.7;
 }
 
 /* Wrapper */
 .ihp-wrap {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 0 20px 60px;
+  padding: 8px 20px 60px;
   position: relative;
   z-index: 10;
 }
-
-/* Stats bar */
-.ihp-stats {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  background: #ffffff;
-  border: 1px solid #dde6f0;
-  border-radius: 14px;
-  padding: 16px 24px;
-  margin: -36px 0 32px;
-  box-shadow: 0 10px 34px rgba(33,53,99,0.16), 0 2px 8px rgba(33,53,99,0.06);
-}
-/* Colour accent along the top edge of the stats bar - navy to navy-light,
-   the same two-tone pairing the rest of the site uses for gradients. */
-.ihp-stats::before {
-  content: '';
-  position: absolute; left: 24px; right: 24px; top: 0;
-  height: 3px;
-  border-radius: 0 0 99px 99px;
-  background: linear-gradient(90deg, var(--navy), var(--navy-light));
-}
-.ihp-stats-left { display: flex; align-items: center; gap: 20px; }
-.ihp-stat { display: flex; flex-direction: column; gap: 2px; }
-.ihp-stat-num {
-  font-size: 1.3rem; font-weight: 700; color: var(--navy); line-height: 1;
-}
-.ihp-stat-label {
-  font-size: 0.68rem; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase; color: #8498b4;
-}
-.ihp-stat-div { width: 1px; height: 32px; background: #dde6f0; }
-.ihp-stats-right { font-size: 0.8rem; color: #8498b4; }
-.ihp-stats-right strong { color: var(--navy); }
 
 /* Grid */
 .ihp-grid {
@@ -215,9 +44,6 @@ const PAGE_CSS = `
 @media (max-width: 900px) { .ihp-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) {
   .ihp-grid { grid-template-columns: 1fr; gap: 16px; }
-  .ihp-stats { margin: -28px 0 24px; padding: 14px 16px; }
-  .ihp-back-row { padding-bottom: 20px; }
-  .ihp-back-btn { font-size: 0.84rem; padding: 8px 16px 8px 8px; }
 }
 
 /* Skeleton */
@@ -269,7 +95,6 @@ const PAGE_CSS = `
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
-  .ihp-badge-dot,
   .ihp-skeleton::after {
     animation: none !important;
   }
@@ -295,7 +120,6 @@ export const InnovationHubMembersPage: React.FC = () => {
   const [members, setMembers] = useState<PublicMemberSummary[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalMembers, setTotalMembers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -312,7 +136,6 @@ export const InnovationHubMembersPage: React.FC = () => {
         const result = await getPublicMembers(page, PAGE_SIZE);
         setMembers(result.members);
         setTotalPages(result.totalPages);
-        setTotalMembers(result.totalMembers);
       } catch (err) {
         console.error("Failed to fetch public members:", err);
         const apiErr = err as { statusCode?: number; message?: string };
@@ -324,33 +147,20 @@ export const InnovationHubMembersPage: React.FC = () => {
     fetchMembers();
   }, [page]);
 
-  const openCount = members.filter((m) => m.available === true).length;
-
   return (
     <div className="ihp-root">
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <div className="ihp-hero">
-        {/* Back button — top-left inside hero */}
-        <div className="ihp-back-row">
-          <button className="ihp-back-btn" onClick={() => navigate(-1)}>
-            <span className="ihp-back-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M15 19l-7-7 7-7" />
-              </svg>
-            </span>
-            Go Back
-          </button>
-        </div>
-
-        <div className="ihp-badge">
-          <span className="ihp-badge-dot" />
-          Innovation Hub
-        </div>
-        <h1 className="ihp-h1">
-          Meet the <span>Developers</span>
+      {/* Plain centered title, no decorative hero banner - matches the
+          Header component HubMembersSection.tsx (the homepage's own
+          members teaser) already uses: navy text directly on the page
+          background, not a separate navy panel with a badge and a "Go
+          Back" button. Clicking "View All Members" on the homepage
+          should land straight on the cards, not another whole banner
+          moment first. */}
+      <div className="pt-12 pb-6 px-5 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#002B56] mb-4">
+          Meet the Developers
         </h1>
-        <div className="ihp-rule" aria-hidden="true" />
-        <p className="ihp-subtitle">
+        <p className="text-lg md:text-xl font-medium text-[#002B56]/80 max-w-2xl mx-auto">
           A team of dedicated engineers at the NPC Innovation Hub building
           scalable, user-centered software that makes a real-world impact.
         </p>
@@ -358,29 +168,6 @@ export const InnovationHubMembersPage: React.FC = () => {
 
       {/* ── Content ──────────────────────────────────────────── */}
       <div className="ihp-wrap">
-        {/* Stats bar */}
-        <div className="ihp-stats">
-          <div className="ihp-stats-left">
-            <div className="ihp-stat">
-              <span className="ihp-stat-num">{totalMembers || "—"}</span>
-              <span className="ihp-stat-label">Members</span>
-            </div>
-            <div className="ihp-stat-div" />
-            <div className="ihp-stat">
-              <span className="ihp-stat-num">{loading ? "—" : openCount}</span>
-              <span className="ihp-stat-label">Open to collab</span>
-            </div>
-            <div className="ihp-stat-div" />
-            <div className="ihp-stat">
-              <span className="ihp-stat-num">{totalPages}</span>
-              <span className="ihp-stat-label">Pages</span>
-            </div>
-          </div>
-          <div className="ihp-stats-right">
-            Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-          </div>
-        </div>
-
         {/* Cards */}
         {loading ? (
           <div className="ihp-grid">
