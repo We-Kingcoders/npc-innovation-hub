@@ -84,11 +84,11 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
           </span>
         </div>
 
-        {/* CTA */}
+        {/* CTA - was a one-off purple (#5745B2) matching no other accent
+            color on the site; navy matches every other CTA button. */}
         <button
           onClick={() => navigate(`/blogs/${blog.id}`)}
-          className="mt-1 w-full py-2 rounded-lg text-sm font-semibold text-white transition-colors duration-200"
-          style={{ backgroundColor: "#5745B2" }}
+          className="mt-1 w-full py-2 rounded-lg text-sm font-semibold text-white bg-[#002b56] hover:bg-[#003366] transition-colors duration-200"
         >
           Read More
         </button>

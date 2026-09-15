@@ -30,6 +30,8 @@ const ProjectsPage = lazy(() => import("../pages/project-page/ProjectsPage"));
 const ProjectsShowcase = lazy(
   () => import("../pages/landing/ProjectsShowcase"),
 );
+const BlogShowcase = lazy(() => import("../pages/landing/BlogShowcase"));
+const EventsShowcase = lazy(() => import("../pages/landing/EventsShowcase"));
 const InnovationHubMembersPage = lazy(() =>
   import("../pages/all-member-page/InnovationHubMembersPage").then((m) => ({
     default: m.InnovationHubMembersPage,
@@ -228,6 +230,8 @@ const AllRoutes: React.FC = () => {
                 <ProjectsShowcase />
                 <HubIntroVideo />
                 <AlumniSection />
+                <BlogShowcase />
+                <EventsShowcase />
                 <section
                   id="contact"
                   aria-label="Contact Us"
