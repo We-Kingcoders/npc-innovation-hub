@@ -7,6 +7,7 @@ const baseProps = {
   image: "https://example.com/project.jpg",
   title: "Smart Movement Platform",
   description: "A responsive, real-time coordination engine.",
+  owner: "Jane Doe",
   ownerRole: "Admin",
   ownerAvatar: "https://example.com/avatar.jpg",
   link: "https://example.com/project",
@@ -16,38 +17,50 @@ const baseProps = {
 };
 
 describe("<ProjectCard />", () => {
-  test("renders the real owner name when one is set", () => {
-    render(<ProjectCard {...baseProps} owner="Jane Doe" />);
+  test("renders the project's own content", () => {
+    render(<ProjectCard {...baseProps} />);
 
-    expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+    expect(screen.getByText("Smart Movement Platform")).toBeInTheDocument();
+    expect(
+      screen.getByText("A responsive, real-time coordination engine."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View more/i })).toHaveAttribute(
+      "href",
+      "https://example.com/project",
+    );
   });
 
-  // Regression test: a project created (or never since re-saved) before
-  // the backend owner-name fix landed can still have this exact literal
-  // string stored - showing it verbatim to a public visitor read as a
-  // broken page, not a missing name.
-  test('falls back to "Unknown" instead of showing the literal "undefined undefined"', () => {
-    render(<ProjectCard {...baseProps} owner="undefined undefined" />);
+  // This is a public showcase card, not a byline - who created a project
+  // was never something a visitor to the website needed to see, and (see
+  // git history) showing it was actively broken for projects created
+  // before an owner-name backend fix landed ("undefined undefined").
+  // Simplest fix once that data bug surfaced: don't render owner info
+  // here at all, regardless of what's actually in the field.
+  test("never renders owner/creator info, even when it's set", () => {
+    render(<ProjectCard {...baseProps} owner="Jane Doe" ownerRole="Admin" />);
 
-    expect(screen.getByText("Unknown")).toBeInTheDocument();
-    expect(screen.queryByText("undefined undefined")).not.toBeInTheDocument();
+    expect(screen.queryByText("Jane Doe")).not.toBeInTheDocument();
+    expect(screen.queryByText("Admin")).not.toBeInTheDocument();
   });
 
-  test('falls back to "Unknown" when owner is empty', () => {
-    render(<ProjectCard {...baseProps} owner="" />);
-
-    expect(screen.getByText("Unknown")).toBeInTheDocument();
-  });
-
-  test("applies the same fallback to the featured variant", () => {
+  test("never renders owner/creator info on the featured variant either", () => {
     render(
       <ProjectCard
         {...baseProps}
-        owner="undefined undefined"
+        owner="Jane Doe"
+        ownerRole="Admin"
         variant="featured"
       />,
     );
 
-    expect(screen.getByText("Unknown")).toBeInTheDocument();
+    expect(screen.queryByText("Jane Doe")).not.toBeInTheDocument();
+    expect(screen.queryByText("Admin")).not.toBeInTheDocument();
+  });
+
+  test("still renders correctly when owner is the old broken literal string", () => {
+    render(<ProjectCard {...baseProps} owner="undefined undefined" />);
+
+    expect(screen.getByText("Smart Movement Platform")).toBeInTheDocument();
+    expect(screen.queryByText("undefined undefined")).not.toBeInTheDocument();
   });
 });

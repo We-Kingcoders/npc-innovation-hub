@@ -10,19 +10,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   image,
   title,
   description,
-  owner,
-  ownerRole,
-  ownerAvatar,
   link,
   variant = "default",
   className = "",
 }) => {
-  // Same defensive fallback resources/ProjectTable.tsx already uses - a
-  // project created (or never since re-saved) before the owner-name
-  // backend fix landed can still have this exact literal string stored.
-  const displayOwner =
-    owner && owner !== "undefined undefined" ? owner : "Unknown";
-
   if (variant === "featured") {
     return (
       <div
@@ -39,23 +30,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="flex flex-col justify-start md:ml-12 p-8 md:w-1/2 w-full text-gray-100 text-left">
           <h3 className="text-gray-200 text-3xl font-light mb-3">{title}</h3>
           <p className="text-gray-300  mt-5">{description}</p>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img
-                src={ownerAvatar}
-                alt={displayOwner}
-                className="w-7 h-7 mt-8 rounded-full border border-white"
-              />
-              <div>
-                <div className="text-gray-200 mt-8 text-xs">{displayOwner}</div>
-                <div className="text-gray-300 italic text-[10px]">
-                  {ownerRole}
-                </div>
-              </div>
-            </div>
+          {/* Was a justify-between row with a "who created this" block
+              (avatar/name/role) on the left - dropped, this is a public
+              showcase card, not a byline. mt-5 preserved here (it used to
+              live on the owner block) so "View more" keeps the same
+              spacing below the description. */}
+          <div className="flex items-center justify-end mt-5">
             <a
               href={link}
-              className="flex items-center px-3 py-1.5 mt-5 text-xs rounded-full bg-white/20 text-gray-200 border border-white/30 hover:bg-white/30 transition"
+              className="flex items-center px-3 py-1.5 text-xs rounded-full bg-white/20 text-gray-200 border border-white/30 hover:bg-white/30 transition"
             >
               View more
               <svg
@@ -95,24 +78,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <p className="text-gray-200 mt-4 text-center">{description}</p>
         </div>
 
-        {/* Bottom content */}
-        <div className="flex px-6 items-center justify-between w-full">
-          <div className="flex items-center gap-2">
-            <img
-              src={ownerAvatar}
-              alt={displayOwner}
-              className="w-7 h-7 rounded-full border border-white"
-            />
-            <div>
-              <div className="text-gray-200 font-semibold text-xs">
-                {displayOwner}
-              </div>
-              <div className="text-gray-300 italic text-[10px]">
-                {ownerRole}
-              </div>
-            </div>
-          </div>
-
+        {/* Bottom content - was a justify-between row with a "who created
+            this" block (avatar/name/role) on the left; dropped, this is a
+            public showcase card, not a byline. */}
+        <div className="flex px-6 items-center justify-end w-full">
           <a
             href={link}
             className="flex items-center px-3 py-1.5 text-xs rounded-full bg-white/20 text-gray-200 border border-white/30 hover:bg-white/40 transition"
