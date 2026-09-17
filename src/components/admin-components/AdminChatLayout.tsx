@@ -6,6 +6,7 @@
 
 import React from "react";
 import Sidebar from "./Sidebar";
+import SkipToContent from "../SkipToContent";
 
 interface AdminChatLayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ const AdminChatLayout: React.FC<AdminChatLayoutProps> = ({ children }) => {
     // here could clip the composer below the fold. 100dvh tracks the
     // real visible viewport instead.
     <div className="flex h-dvh overflow-hidden bg-mist-100">
+      <SkipToContent />
       {/* Sidebar — fixed width, full height */}
       <Sidebar />
 

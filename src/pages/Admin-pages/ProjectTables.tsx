@@ -3,19 +3,13 @@
  * Main admin page for project management
  */
 
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import ProjectsTable from "../../components/admin-components/ProjectsTable";
 
 export default function ProjectTables() {
   return (
-    <div className="flex min-h-screen bg-mist-100">
-      <Sidebar />
-      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-        <Topbar />
-        <h1 className="font-bold text-2xl mb-8 ml-0 md:ml-8">Projects</h1>
-        <ProjectsTable />
-      </main>
-    </div>
+    <AdminLayout title="Projects">
+      <ProjectsTable />
+    </AdminLayout>
   );
 }

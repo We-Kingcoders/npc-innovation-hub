@@ -7,8 +7,7 @@
 
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import HeroMembersManagement from "../../components/admin-components/HeroMembersManagement";
 
 const HeroMembersPage: React.FC = () => {
@@ -39,19 +38,20 @@ const HeroMembersPage: React.FC = () => {
         }}
       />
 
-      <div className="flex min-h-screen bg-mist-100">
-        <Sidebar />
-        <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-          <Topbar />
-          <h1 className="font-bold text-2xl mb-2 ml-0 md:ml-8 text-navy-800">
-            Hero Members
-          </h1>
-          <p className="text-sm text-mist-600 mb-8 ml-0 md:ml-8">
-            Manage which members appear in the landing page hero section.
-          </p>
-          <HeroMembersManagement />
-        </main>
-      </div>
+      <AdminLayout
+        title={
+          <div>
+            <h1 className="font-bold text-2xl mb-2 text-navy-800">
+              Hero Members
+            </h1>
+            <p className="text-sm text-mist-600">
+              Manage which members appear in the landing page hero section.
+            </p>
+          </div>
+        }
+      >
+        <HeroMembersManagement />
+      </AdminLayout>
     </>
   );
 };

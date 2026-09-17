@@ -7,8 +7,7 @@
 
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import MembersManagement from "../../components/admin-components/MembersManagement";
 
 // ==================== COMPONENT ====================
@@ -42,16 +41,9 @@ const MemberManagement: React.FC = () => {
         }}
       />
 
-      <div className="flex min-h-screen bg-mist-100">
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Main Content */}
-        <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-          <Topbar />
-          <MembersManagement />
-        </main>
-      </div>
+      <AdminLayout>
+        <MembersManagement />
+      </AdminLayout>
     </>
   );
 };

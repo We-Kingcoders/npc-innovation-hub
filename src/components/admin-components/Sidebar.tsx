@@ -24,7 +24,6 @@ import {
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
 import { useAuth } from "../../hooks/useAuth";
 import { getPendingHireInquiriesCount } from "../../api/admin/hire.api";
-import SkipToContent from "../SkipToContent";
 
 // How often to re-poll the pending-hire-inquiries count for the sidebar badge.
 const HIRE_BADGE_POLL_MS = 45_000;
@@ -48,17 +47,22 @@ const iconComponents = {
 
 export default function Sidebar() {
   const location = useLocation();
-  // isCollapsed does double duty: on mobile it means "off-canvas/hidden",
-  // on desktop it means "narrow icon-only mode". Defaulting to false
-  // (open) meant every admin page loaded on a phone with the nav drawer
-  // and its dark backdrop covering the whole screen until the admin
-  // tapped it away - defaulting to the actual desktop-open, mobile-closed
-  // state per device instead.
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 1024; // Tailwind's lg breakpoint
-  });
+  // Two independent states, not one overloaded boolean: a one-time
+  // window.innerWidth read (the old approach) can never re-sync with the
+  // `lg:` CSS breakpoint after mount (resize, browser zoom, OS display
+  // scaling), which let the mobile off-canvas drawer and the desktop
+  // in-flow sidebar disagree about whether the sidebar was actually
+  // visible - the sidebar would render fixed + fully open on top of the
+  // page content. isDesktopCollapsed only ever drives lg:-prefixed
+  // classes below, so it structurally cannot affect mobile layout.
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Close the mobile drawer on navigation, matching member/Sidebar.tsx.
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
 
   const { logout } = useAuth();
 
@@ -106,22 +110,21 @@ export default function Sidebar() {
 
   return (
     <>
-      <SkipToContent />
-      {!isCollapsed && (
+      {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
-          onClick={() => setIsCollapsed(true)}
+          onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       <aside
         className={`
           fixed lg:sticky inset-y-0 lg:inset-y-auto lg:top-0 left-0 z-30
-          ${isCollapsed ? "-translate-x-full lg:w-20" : "translate-x-0 w-64"}
-          lg:translate-x-0
+          w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"}
+          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
           bg-navy-800
           h-dvh flex flex-col
-          transition-all duration-300 ease-in-out
+          transition-transform lg:transition-all duration-300 ease-in-out
           shadow-2xl
         `}
         // h-dvh, not h-screen: this is `fixed inset-y-0` with an explicit
@@ -130,20 +133,19 @@ export default function Sidebar() {
         // bar is showing and can put the bottom nav items behind it.
         // 100dvh tracks the real visible viewport instead.
       >
-        {/* Mobile-only off-canvas toggle - stays outside the brand row (and
-            outside <aside> entirely when collapsed, see the floating button
-            at the bottom of this file) since the whole sidebar translates
-            off-screen on mobile; it needs to remain reachable independent
-            of that. */}
+        {/* Mobile-only off-canvas toggle - stays outside the brand row since
+            the whole sidebar translates off-screen on mobile; it needs to
+            remain reachable independent of that (visible as an edge tab at
+            x≈0 when closed, per the translate-x-full above). */}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          aria-label={isMobileOpen ? "Collapse sidebar" : "Expand sidebar"}
           className="lg:hidden absolute -right-12 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
         >
-          {isCollapsed ? (
-            <ChevronsRight size={20} />
-          ) : (
+          {isMobileOpen ? (
             <ChevronsLeft size={20} />
+          ) : (
+            <ChevronsRight size={20} />
           )}
         </button>
 
@@ -153,21 +155,23 @@ export default function Sidebar() {
             lives in Topbar.tsx's top-right profile icon - not duplicated
             here too. */}
         <div
-          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 ${
-            isCollapsed ? "justify-center px-3" : "justify-between px-6"
+          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 justify-between px-6 ${
+            isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""
           }`}
         >
-          {!isCollapsed && (
-            <span className="text-sm font-extrabold tracking-tight text-white whitespace-nowrap truncate">
-              NPC INNOVATION HUB
-            </span>
-          )}
+          <span
+            className={`text-sm font-extrabold tracking-tight text-white whitespace-nowrap truncate ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+          >
+            NPC INNOVATION HUB
+          </span>
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
+            aria-label={
+              isDesktopCollapsed ? "Expand sidebar" : "Collapse sidebar"
+            }
             className="hidden lg:flex items-center justify-center flex-shrink-0 bg-white text-navy-800 p-1.5 rounded-full shadow-md hover:shadow-lg transition-shadow"
           >
-            {isCollapsed ? (
+            {isDesktopCollapsed ? (
               <ChevronsRight size={16} />
             ) : (
               <ChevronsLeft size={16} />
@@ -194,14 +198,14 @@ export default function Sidebar() {
                     className={`
                       group flex items-center gap-3 px-3 py-2 rounded-lg
                       transition-all duration-200 min-w-0
-                      ${isCollapsed ? "justify-center" : ""}
+                      ${isDesktopCollapsed ? "lg:justify-center" : ""}
                       ${
                         active
                           ? "bg-navy-700 shadow-md border-l-4 border-white font-bold"
                           : "text-navy-100 hover:bg-navy-700 hover:text-white hover:font-bold"
                       }
                     `}
-                    title={isCollapsed ? label : undefined}
+                    title={isDesktopCollapsed ? label : undefined}
                   >
                     <div className="relative flex-shrink-0">
                       <div
@@ -217,21 +221,21 @@ export default function Sidebar() {
                       </div>
                       {badgeCount > 0 && (
                         <span
-                          className={`absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-white text-navy-800 ring-2 ring-navy-800 text-[10px] font-bold rounded-full flex items-center justify-center ${isCollapsed ? "scale-90" : ""}`}
+                          className={`absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-white text-navy-800 ring-2 ring-navy-800 text-[10px] font-bold rounded-full flex items-center justify-center ${isDesktopCollapsed ? "lg:scale-90" : ""}`}
                         >
                           {badgeCount > 99 ? "99+" : badgeCount}
                         </span>
                       )}
                     </div>
-                    {!isCollapsed && (
+                    <span
+                      className={`flex-1 min-w-0 truncate text-sm uppercase ${active ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200 ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+                    >
+                      {label}
+                    </span>
+                    {badgeCount > 0 && (
                       <span
-                        className={`flex-1 min-w-0 truncate text-sm uppercase ${active ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200`}
+                        className={`ml-auto flex-shrink-0 bg-white text-navy-800 text-xs font-bold px-2 py-0.5 rounded-full ${isDesktopCollapsed ? "lg:hidden" : ""}`}
                       >
-                        {label}
-                      </span>
-                    )}
-                    {!isCollapsed && badgeCount > 0 && (
-                      <span className="ml-auto flex-shrink-0 bg-white text-navy-800 text-xs font-bold px-2 py-0.5 rounded-full">
                         {badgeCount > 99 ? "99+" : badgeCount}
                       </span>
                     )}
@@ -245,7 +249,7 @@ export default function Sidebar() {
         {/* Logout */}
         <div className="px-4 pb-4 mt-auto flex-shrink-0">
           <button
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isCollapsed ? "justify-center px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
@@ -253,22 +257,12 @@ export default function Sidebar() {
               size={20}
               className={`group-hover:scale-110 transition-transform ${isLoggingOut ? "animate-spin" : ""}`}
             />
-            {!isCollapsed && (
-              <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
-            )}
+            <span className={isDesktopCollapsed ? "lg:hidden" : ""}>
+              {isLoggingOut ? "Signing out..." : "Sign Out"}
+            </span>
           </button>
         </div>
       </aside>
-
-      {isCollapsed && (
-        <button
-          onClick={() => setIsCollapsed(false)}
-          aria-label="Expand sidebar"
-          className="lg:hidden fixed bottom-6 left-6 z-50 bg-navy-800 text-white p-4 rounded-full shadow-2xl"
-        >
-          <ChevronsRight size={24} />
-        </button>
-      )}
     </>
   );
 }

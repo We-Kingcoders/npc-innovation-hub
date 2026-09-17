@@ -6,8 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import ResourceTable from "../../components/admin-components/ResourceTable";
 import ConfirmationModal from "../../components/admin-components/ConfirmationModal";
 import { useAdminResources } from "../../hooks/useAdminResources";
@@ -396,87 +395,79 @@ export default function AdminResources() {
   // ==================== RENDER ====================
 
   return (
-    <div className="flex min-h-screen bg-mist-100">
-      <Sidebar />
-
-      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-        <Topbar />
-
-        {/* Header. flex-col below sm - title + button side by side had
-            nowhere near enough room at 320-390px and forced an overflow. */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-          <h1 className="font-bold text-2xl">Resource Management</h1>
-          <button
-            onClick={handleAddNew}
-            className="bg-[#2d3155] text-white px-6 py-3 rounded-lg hover:bg-[#1f2340] transition-colors flex items-center gap-2"
+    <AdminLayout
+      title="Resource Management"
+      actions={
+        <button
+          onClick={handleAddNew}
+          className="bg-[#2d3155] text-white px-6 py-3 rounded-lg hover:bg-[#1f2340] transition-colors flex items-center gap-2"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-            Add New Resource
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          Add New Resource
+        </button>
+      }
+    >
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+          <span>{error}</span>
+          <button
+            onClick={clearError}
+            className="text-red-700 hover:text-red-900"
+          >
+            ×
           </button>
         </div>
+      )}
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
-            <span>{error}</span>
-            <button
-              onClick={clearError}
-              className="text-red-700 hover:text-red-900"
-            >
-              ×
-            </button>
-          </div>
-        )}
+      {/* Filters */}
+      <FilterSection onFilterChange={handleFilterChange} />
 
-        {/* Filters */}
-        <FilterSection onFilterChange={handleFilterChange} />
+      {/* Table */}
+      <ResourceTable
+        resources={resources}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDeleteClick}
+        onView={handleView}
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        onPageChange={handlePageChange}
+        onAddNew={handleAddNew}
+      />
 
-        {/* Table */}
-        <ResourceTable
-          resources={resources}
-          loading={loading}
-          onEdit={handleEdit}
-          onDelete={handleDeleteClick}
-          onView={handleView}
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={handlePageChange}
-          onAddNew={handleAddNew}
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Resource"
+        message="Are you sure you want to delete this resource? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={loading}
+      />
+
+      {/* Resource Details Modal */}
+      {selectedResource && (
+        <ResourceDetailsModal
+          resource={selectedResource}
+          onClose={() => setSelectedResource(null)}
         />
-
-        {/* Delete Confirmation Modal */}
-        <ConfirmationModal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={handleConfirmDelete}
-          title="Delete Resource"
-          message="Are you sure you want to delete this resource? This action cannot be undone."
-          confirmText="Delete"
-          cancelText="Cancel"
-          variant="danger"
-          isLoading={loading}
-        />
-
-        {/* Resource Details Modal */}
-        {selectedResource && (
-          <ResourceDetailsModal
-            resource={selectedResource}
-            onClose={() => setSelectedResource(null)}
-          />
-        )}
-      </main>
-    </div>
+      )}
+    </AdminLayout>
   );
 }
