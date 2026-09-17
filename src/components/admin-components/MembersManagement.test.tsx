@@ -14,7 +14,7 @@ jest.mock("../../api/admin/alumni.api", () => ({
   setMemberAlumniStatus: jest.fn(),
 }));
 
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, within, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MembersManagement from "./MembersManagement";
 import { getAllUsers } from "../../api/admin/member.api";
@@ -62,11 +62,17 @@ describe("MembersManagement alumni toggle", () => {
     render(<MembersManagement />);
 
     await waitFor(() => {
-      expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+      expect(screen.getByRole("table")).toBeInTheDocument();
     });
+    // Scoped to the desktop <table>: ResponsiveTable renders both the
+    // table and the mobile card list in the DOM at once (jsdom has no
+    // Tailwind, so the hidden md:block / md:hidden split is purely
+    // visual), so an unscoped query would match "Jane Doe" twice.
+    const table = within(screen.getByRole("table"));
+    expect(table.getByText("Jane Doe")).toBeInTheDocument();
 
     await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Current" }));
+      await userEvent.click(table.getByRole("button", { name: "Current" }));
     });
 
     await waitFor(() => {
@@ -87,8 +93,10 @@ describe("MembersManagement alumni toggle", () => {
     render(<MembersManagement />);
 
     await waitFor(() => {
-      expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+      expect(screen.getByRole("table")).toBeInTheDocument();
     });
+    const table = within(screen.getByRole("table"));
+    expect(table.getByText("Jane Doe")).toBeInTheDocument();
 
     expect(
       screen.queryByRole("button", { name: /current|alumni/i }),
