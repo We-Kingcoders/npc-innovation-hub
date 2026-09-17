@@ -180,7 +180,7 @@ export type TaskStatus = "pending" | "in-progress" | "completed";
 export type TaskPriority = "low" | "medium" | "high";
 
 export interface Task {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
   status: TaskStatus;
@@ -225,7 +225,7 @@ export interface EventInsightsData {
 }
 
 export interface ProjectItem {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
   status?: string;

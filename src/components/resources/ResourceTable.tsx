@@ -122,10 +122,11 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
       {/* Table */}
       <ResponsiveTable
         table={
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 border-separate border-spacing-0">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* Sticky first column - see admin EventsTable.tsx for why. */}
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 z-10 bg-gray-50">
                   Resource
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -164,7 +165,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                     className="hover:bg-gray-50 transition-colors duration-200"
                   >
                     {/* Title + thumbnail */}
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap sticky left-0 z-[1] bg-white border-r border-gray-100">
                       <div className="flex items-center gap-3">
                         {resource.imageUrl ? (
                           <img

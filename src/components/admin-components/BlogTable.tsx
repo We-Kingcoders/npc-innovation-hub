@@ -256,12 +256,17 @@ export default function BlogTable({
             </p>
           </div>
         ) : (
+          // table's className has no overflow-hidden: it would break the
+          // sticky first column - see EventsTable.tsx for why.
           <ResponsiveTable
             table={
-              <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden">
+              <table className="w-full bg-mist-100 rounded-t-2xl border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-navy-800 text-white text-left">
-                    <th className="px-6 py-4 rounded-tl-2xl">Title</th>
+                    {/* Sticky first column - see EventsTable.tsx for why. */}
+                    <th className="px-6 py-4 rounded-tl-2xl sticky left-0 z-10 bg-navy-800">
+                      Title
+                    </th>
                     <th className="px-6 py-4">Category</th>
                     <th className="px-6 py-4">Status</th>
                     <th className="px-6 py-4">Views</th>
@@ -275,7 +280,7 @@ export default function BlogTable({
                       key={blog.id}
                       className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
                     >
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 sticky left-0 z-[1] bg-white border-r border-mist-200">
                         <div className="max-w-xs">
                           <p className="font-medium text-navy-800 truncate">
                             {blog.title}

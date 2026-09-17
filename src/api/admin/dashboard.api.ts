@@ -307,7 +307,7 @@
 //     const type: ActivityType =
 //       s === "completed" ? "task_completed" : "task_assigned";
 //     activities.push({
-//       id: `task-${task._id}`,
+//       id: `task-${task.id}`,
 //       type,
 //       title: s === "completed" ? "Task Completed" : "Task Assigned",
 //       description: task.title,
@@ -710,12 +710,12 @@ export async function getRecentActivity(): Promise<ActivityItem[]> {
 
   for (const project of projects.slice(0, 3)) {
     activities.push({
-      id: `project-${project._id}`,
+      id: `project-${project.id}`,
       type: "project_created" as ActivityType,
       title: "Project Created",
       description: project.title,
       timestamp: project.createdAt,
-      metadata: { id: project._id },
+      metadata: { id: project.id },
     });
   }
 
@@ -724,7 +724,7 @@ export async function getRecentActivity(): Promise<ActivityItem[]> {
     const type: ActivityType =
       s === "completed" ? "task_completed" : "task_assigned";
     activities.push({
-      id: `task-${task._id}`,
+      id: `task-${task.id}`,
       type,
       title: s === "completed" ? "Task Completed" : "Task Assigned",
       description: task.title,

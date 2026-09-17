@@ -327,14 +327,18 @@ export default function ProjectsTable() {
           </div>
         )}
 
-        {/* Projects Table */}
+        {/* Projects Table. table's className has no overflow-hidden: it
+            would break the sticky first column - see EventsTable.tsx. */}
         {filteredProjects.length > 0 && (
           <ResponsiveTable
             table={
-              <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden shadow-sm">
+              <table className="w-full bg-mist-100 rounded-t-2xl shadow-sm border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-navy-800 text-white text-left">
-                    <th className="px-6 py-4 rounded-tl-2xl">Project</th>
+                    {/* Sticky first column - see EventsTable.tsx for why. */}
+                    <th className="px-6 py-4 rounded-tl-2xl sticky left-0 z-10 bg-navy-800">
+                      Project
+                    </th>
                     <th className="px-6 py-4">Created</th>
                     <th className="px-6 py-4 rounded-tr-2xl">Actions</th>
                   </tr>
@@ -346,7 +350,7 @@ export default function ProjectsTable() {
                       className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
                     >
                       {/* Project Info */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 sticky left-0 z-[1] bg-white border-r border-mist-300">
                         <div className="flex items-center gap-4">
                           <img
                             src={project.image}

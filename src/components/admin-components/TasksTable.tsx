@@ -927,10 +927,11 @@ export default function TasksTable({
         <div className="bg-white rounded-2xl shadow-sm border border-mist-300 overflow-hidden">
           <ResponsiveTable
             table={
-              <table className="w-full">
+              <table className="w-full border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-navy-800 text-white">
-                    <th className="px-6 py-4 text-left text-sm font-semibold">
+                    {/* Sticky first column - see EventsTable.tsx for why. */}
+                    <th className="px-6 py-4 text-left text-sm font-semibold sticky left-0 z-10 bg-navy-800">
                       Task
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">
@@ -965,7 +966,7 @@ export default function TasksTable({
                         onClick={() => handleView(task)}
                       >
                         {/* Task Title */}
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 sticky left-0 z-[1] bg-white border-r border-mist-200">
                           <div className="max-w-md">
                             <p className="font-semibold text-navy-800 truncate">
                               {task.title}
