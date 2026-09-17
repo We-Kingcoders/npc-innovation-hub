@@ -151,11 +151,12 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ResponsiveTable
           table={
-            <table className="min-w-full divide-y divide-mist-200">
+            <table className="min-w-full divide-y divide-mist-200 border-separate border-spacing-0">
               {/* TABLE HEADER */}
               <thead className="bg-mist-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
+                  {/* Sticky first column - see EventsTable.tsx for why. */}
+                  <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider sticky left-0 z-10 bg-mist-100">
                     User
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-mist-500 uppercase tracking-wider">
@@ -197,7 +198,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                     }`}
                   >
                     {/* USER COLUMN */}
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap sticky left-0 z-[1] bg-white border-r border-mist-200">
                       <div className="flex items-center">
                         <UserAvatar
                           imageUrl={user.image}

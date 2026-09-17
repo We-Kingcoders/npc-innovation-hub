@@ -113,10 +113,11 @@ const ProjectTable: React.FC<Props> = ({ projects, onDelete, onUpdate }) => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <ResponsiveTable
           table={
-            <table className="min-w-full divide-y divide-gray-100">
+            <table className="min-w-full divide-y divide-gray-100 border-separate border-spacing-0">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {/* Sticky first column - see admin EventsTable.tsx for why. */}
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider sticky left-0 z-10 bg-gray-50">
                     Project
                   </th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -143,7 +144,7 @@ const ProjectTable: React.FC<Props> = ({ projects, onDelete, onUpdate }) => {
                     className="hover:bg-gray-50/70 transition-colors"
                   >
                     {/* Project */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 sticky left-0 z-[1] bg-white border-r border-gray-100">
                       <div className="flex items-center gap-3">
                         {project.image ? (
                           <img

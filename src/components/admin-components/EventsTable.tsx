@@ -337,14 +337,26 @@ export default function EventsTable() {
           </div>
         )}
 
-        {/* Events Table */}
+        {/* Events Table.
+            table's className has no overflow-hidden: it would establish a
+            clipping context between the sticky first column and the actual
+            scrolling ancestor (the overflow-x-auto div below), silently
+            breaking position: sticky on that column. The rounded corners
+            still render via rounded-tl-2xl/tr-2xl on the header cells
+            themselves. */}
         {filteredEvents.length > 0 && (
           <ResponsiveTable
             table={
-              <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden shadow-sm">
+              <table className="w-full bg-mist-100 rounded-t-2xl shadow-sm border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-navy-800 text-white text-left">
-                    <th className="px-6 py-4 rounded-tl-2xl">Event</th>
+                    {/* Sticky first column: the identity column must never
+                        be able to scroll out of view on a table this wide -
+                        left-0 + a solid matching bg keeps it pinned and
+                        opaque against the scrolling columns behind it. */}
+                    <th className="px-6 py-4 rounded-tl-2xl sticky left-0 z-10 bg-navy-800">
+                      Event
+                    </th>
                     <th className="px-6 py-4">Location</th>
                     <th className="px-6 py-4">Date & Time</th>
                     <th className="px-6 py-4">Status</th>
@@ -358,7 +370,7 @@ export default function EventsTable() {
                       className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
                     >
                       {/* Event Info */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 sticky left-0 z-[1] bg-white border-r border-mist-200">
                         <div className="flex items-center gap-4">
                           <img
                             src={event.imageUrl}
