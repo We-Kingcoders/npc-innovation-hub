@@ -4,8 +4,7 @@
  */
 
 import { useEffect, useState } from "react";
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import BlogTable from "../../components/admin-components/BlogTable";
 import { AddBlogModal } from "../../components/admin-components/AddBlogModal";
 import { EditBlogModal } from "../../components/admin-components/EditBlogModal";
@@ -156,52 +155,45 @@ export default function BlogTables() {
   };
 
   return (
-    <div className="flex min-h-screen bg-mist-100">
-      <Sidebar />
-      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-        <Topbar />
-
-        {/* flex-col below sm - title + create button had nowhere near
-            enough room at 320-390px and forced an overflow. */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8 ml-0 md:ml-8">
-          <h1 className="font-bold text-2xl">Blogs</h1>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="bg-[#343a5e] text-white rounded-xl px-6 sm:px-10 py-3 font-bold text-lg shadow hover:bg-[#20253a] transition-all flex items-center gap-2 justify-center"
+    <AdminLayout
+      title="Blogs"
+      actions={
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-[#343a5e] text-white rounded-xl px-6 sm:px-10 py-3 font-bold text-lg shadow hover:bg-[#20253a] transition-all flex items-center gap-2 justify-center"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add New Blog
-          </button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Add New Blog
+        </button>
+      }
+    >
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {error}
         </div>
+      )}
 
-        {/* Error State */}
-        {error && (
-          <div className="ml-0 md:ml-8 mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {error}
-          </div>
-        )}
-
-        {/* Blog Table */}
-        <BlogTable
-          blogs={blogs}
-          loading={loading}
-          onEdit={handleEdit}
-          onDelete={handleDeleteClick}
-          onTogglePublish={handleToggle}
-        />
-      </main>
+      {/* Blog Table */}
+      <BlogTable
+        blogs={blogs}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDeleteClick}
+        onTogglePublish={handleToggle}
+      />
 
       {/* Modals */}
       <AddBlogModal
@@ -241,6 +233,6 @@ export default function BlogTables() {
         isVisible={toast.isVisible}
         onClose={hideToast}
       />
-    </div>
+    </AdminLayout>
   );
 }

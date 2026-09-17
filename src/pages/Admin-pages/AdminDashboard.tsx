@@ -6,6 +6,7 @@
 import React, { useCallback } from "react";
 import Sidebar from "../../components/admin-components/Sidebar";
 import Topbar from "../../components/admin-components/Topbar";
+import SkipToContent from "../../components/SkipToContent";
 
 // New dashboard components
 import ModernStatsCards from "../../components/admin-components/dashboard/ModernStatsCards";
@@ -120,6 +121,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-screen bg-mist-100">
+      <SkipToContent />
       {/* Sidebar */}
       <Sidebar />
 

@@ -12,6 +12,8 @@ import { ProjectFormModal } from "./ProjectFormModal";
 import { ProjectDetailsModal } from "./ProjectDetailsModal";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
 import { Toast, useToast } from "./Toast";
+import ResponsiveTable from "../ui/ResponsiveTable";
+import MobileCardRow from "../ui/MobileCardRow";
 
 export default function ProjectsTable() {
   const {
@@ -163,11 +165,109 @@ export default function ProjectsTable() {
     setIsSubmitting(false);
   };
 
+  // Action menu trigger + portaled menu, shared by the desktop table row
+  // and the mobile card - reused verbatim rather than reimplemented, since
+  // it computes its position from the trigger button's own on-screen rect
+  // (see toggleActionMenu above) and doesn't care what DOM context it's
+  // triggered from.
+  const renderActionMenu = (project: Project) => (
+    <>
+      <button
+        onClick={(e) => toggleActionMenu(project.id, e)}
+        className="flex flex-col items-center gap-1 p-2 hover:bg-mist-100 rounded transition-colors"
+      >
+        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
+        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
+        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
+      </button>
+
+      {actionMenuId === project.id &&
+        menuPosition &&
+        createPortal(
+          <div
+            ref={menuRef}
+            style={{
+              position: "fixed",
+              top: menuPosition.top,
+              right: menuPosition.right,
+            }}
+            className="bg-white rounded-lg shadow-lg border border-mist-300 py-1 min-w-[160px] z-50"
+          >
+            <button
+              onClick={() => handleViewDetails(project)}
+              className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              View Details
+            </button>
+            <button
+              onClick={() => handleEdit(project)}
+              className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Edit
+            </button>
+            <hr className="my-1" />
+            <button
+              onClick={() => handleDeleteClick(project)}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 text-red-600 flex items-center gap-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Delete
+            </button>
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+
   // Skeleton loader
   if (loading && projects.length === 0) {
     return (
-      <div className="ml-0 md:ml-8 p-0">
-        <div className="w-full max-w-[98%]">
+      <div className="p-0">
+        <div className="w-full">
           <div className="animate-pulse space-y-4">
             <div className="h-12 bg-mist-200 rounded-2xl" />
             {[...Array(5)].map((_, i) => (
@@ -180,8 +280,8 @@ export default function ProjectsTable() {
   }
 
   return (
-    <div className="ml-0 md:ml-8 p-0">
-      <div className="w-full max-w-[98%]">
+    <div className="p-0">
+      <div className="w-full">
         {/* Search Bar */}
         <div className="mb-6">
           <input
@@ -229,34 +329,87 @@ export default function ProjectsTable() {
 
         {/* Projects Table */}
         {filteredProjects.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden shadow-sm">
-              <thead>
-                <tr className="bg-navy-800 text-white text-left">
-                  <th className="px-6 py-4 rounded-tl-2xl">Project</th>
-                  <th className="px-6 py-4">Created</th>
-                  <th className="px-6 py-4 rounded-tr-2xl">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+          <ResponsiveTable
+            table={
+              <table className="w-full bg-mist-100 rounded-t-2xl overflow-hidden shadow-sm">
+                <thead>
+                  <tr className="bg-navy-800 text-white text-left">
+                    <th className="px-6 py-4 rounded-tl-2xl">Project</th>
+                    <th className="px-6 py-4">Created</th>
+                    <th className="px-6 py-4 rounded-tr-2xl">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProjects.map((project) => (
+                    <tr
+                      key={project.id}
+                      className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
+                    >
+                      {/* Project Info */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-16 h-16 rounded-lg object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src =
+                                "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200";
+                            }}
+                          />
+                          <div className="max-w-md">
+                            <p className="font-semibold text-navy-800 truncate">
+                              {project.title}
+                            </p>
+                            <p className="text-sm text-mist-600 truncate">
+                              {project.description}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Created Date */}
+                      <td className="px-6 py-4 text-mist-600">
+                        {format(new Date(project.createdAt), "MMM dd, yyyy")}
+                      </td>
+
+                      {/* Actions - portaled to <body> with position: fixed
+                          instead of being positioned absolute/relative to
+                          this cell. The table wrapper above has
+                          overflow-x-auto, and per the CSS overflow spec,
+                          giving one axis a non-visible overflow value
+                          forces the other axis to effectively become
+                          "auto" too - so an absolutely-positioned menu on
+                          the last row (or any row close to the bottom)
+                          was getting its lower portion (Delete, sometimes
+                          Edit too) silently clipped by that same scroll
+                          container. Fixed positioning computed from the
+                          trigger button's real on-screen rect (see
+                          toggleActionMenu) escapes that entirely. */}
+                      <td className="px-6 py-4 relative">
+                        {renderActionMenu(project)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            }
+            cards={
+              <>
                 {filteredProjects.map((project) => (
-                  <tr
-                    key={project.id}
-                    className="border-b border-mist-300 bg-white hover:bg-mist-100 transition-colors"
-                  >
-                    {/* Project Info */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
+                  <div key={project.id} className="p-4 flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-4 min-w-0">
                         <img
                           src={project.image}
                           alt={project.title}
-                          className="w-16 h-16 rounded-lg object-cover"
+                          className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200";
                           }}
                         />
-                        <div className="max-w-md">
+                        <div className="min-w-0">
                           <p className="font-semibold text-navy-800 truncate">
                             {project.title}
                           </p>
@@ -265,123 +418,18 @@ export default function ProjectsTable() {
                           </p>
                         </div>
                       </div>
-                    </td>
-
-                    {/* Created Date */}
-                    <td className="px-6 py-4 text-mist-600">
-                      {format(new Date(project.createdAt), "MMM dd, yyyy")}
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-6 py-4 relative">
-                      <button
-                        onClick={(e) => toggleActionMenu(project.id, e)}
-                        className="flex flex-col items-center gap-1 p-2 hover:bg-mist-100 rounded transition-colors"
-                      >
-                        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
-                        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
-                        <span className="w-1.5 h-1.5 bg-navy-700 rounded-full block" />
-                      </button>
-
-                      {/* Action Menu - portaled to <body> with
-                          position: fixed instead of being positioned
-                          absolute/relative to this cell. The table wrapper
-                          above has overflow-x-auto, and per the CSS
-                          overflow spec, giving one axis a non-visible
-                          overflow value forces the other axis to
-                          effectively become "auto" too - so an
-                          absolutely-positioned menu on the last row (or
-                          any row close to the bottom) was getting its
-                          lower portion (Delete, sometimes Edit too)
-                          silently clipped by that same scroll container.
-                          Fixed positioning computed from the trigger
-                          button's real on-screen rect (see
-                          toggleActionMenu) escapes that entirely. */}
-                      {actionMenuId === project.id &&
-                        menuPosition &&
-                        createPortal(
-                          <div
-                            ref={menuRef}
-                            style={{
-                              position: "fixed",
-                              top: menuPosition.top,
-                              right: menuPosition.right,
-                            }}
-                            className="bg-white rounded-lg shadow-lg border border-mist-300 py-1 min-w-[160px] z-50"
-                          >
-                            <button
-                              onClick={() => handleViewDetails(project)}
-                              className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                              View Details
-                            </button>
-                            <button
-                              onClick={() => handleEdit(project)}
-                              className="w-full px-4 py-2 text-left text-sm text-navy-800 hover:bg-mist-100 flex items-center gap-2"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                />
-                              </svg>
-                              Edit
-                            </button>
-                            <hr className="my-1" />
-                            <button
-                              onClick={() => handleDeleteClick(project)}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 text-red-600 flex items-center gap-2"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
-                              </svg>
-                              Delete
-                            </button>
-                          </div>,
-                          document.body,
-                        )}
-                    </td>
-                  </tr>
+                      {renderActionMenu(project)}
+                    </div>
+                    <dl className="flex flex-col gap-1">
+                      <MobileCardRow label="Created">
+                        {format(new Date(project.createdAt), "MMM dd, yyyy")}
+                      </MobileCardRow>
+                    </dl>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </>
+            }
+          />
         )}
 
         {/* Add New Button */}

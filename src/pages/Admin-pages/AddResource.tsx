@@ -6,8 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import Sidebar from "../../components/admin-components/Sidebar";
-import Topbar from "../../components/admin-components/Topbar";
+import AdminLayout from "../../components/admin-components/AdminLayout";
 import AddResourceForm from "../../components/admin-components/AddResourceForm";
 import { useAdminResources } from "../../hooks/useAdminResources";
 import type {
@@ -199,15 +198,9 @@ export default function AddResource() {
   // ==================== RENDER ====================
 
   return (
-    <div className="flex min-h-screen bg-mist-100">
-      <Sidebar />
-
-      <main id="main-content" className="flex-1 px-4 sm:px-10 py-8">
-        <Topbar />
-
-        {/* Header. flex-col below sm - title + back link had nowhere near
-            enough room at 320-390px and forced an overflow. */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+    <>
+      <AdminLayout
+        title={
           <div>
             <h1 className="font-bold text-2xl">
               {isEditMode ? "Edit Resource" : "Add New Resource"}
@@ -218,7 +211,8 @@ export default function AddResource() {
                 : "Fill in the details to create a new resource"}
             </p>
           </div>
-
+        }
+        actions={
           <button
             onClick={handleCancel}
             className="text-gray-600 hover:text-gray-800 flex items-center gap-2"
@@ -238,8 +232,8 @@ export default function AddResource() {
             </svg>
             Back to Resources
           </button>
-        </div>
-
+        }
+      >
         {/* Form */}
         <AddResourceForm
           onSubmit={handleSubmit}
@@ -256,7 +250,7 @@ export default function AddResource() {
             onClose={() => setToast({ ...toast, show: false })}
           />
         )}
-      </main>
+      </AdminLayout>
 
       {/* CSS for Toast Animation */}
       <style>{`
@@ -275,6 +269,6 @@ export default function AddResource() {
           animation: slide-in 0.3s ease-out;
         }
       `}</style>
-    </div>
+    </>
   );
 }

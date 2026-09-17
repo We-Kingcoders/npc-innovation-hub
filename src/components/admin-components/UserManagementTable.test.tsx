@@ -1,4 +1,4 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import UserManagementTable from "./UserManagementTable";
 import { Gender, UserRole } from "../../types/user.types";
@@ -38,11 +38,16 @@ function renderTable(users: User[], onAlumniToggle = jest.fn(async () => {})) {
 }
 
 describe("UserManagementTable alumni toggle", () => {
+  // Scoped to the desktop <table> throughout: ResponsiveTable renders both
+  // the table and the mobile card list in the DOM at once (jsdom has no
+  // Tailwind, so the hidden md:block / md:hidden split is purely visual),
+  // so an unscoped query would match the same content twice.
   test("toggling a Member row's alumni status sends memberId, not userId", async () => {
     const { onAlumniToggle } = renderTable([baseUser]);
+    const table = within(screen.getByRole("table"));
 
     await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Current" }));
+      await userEvent.click(table.getByRole("button", { name: "Current" }));
     });
 
     expect(onAlumniToggle).toHaveBeenCalledWith("user-1", "member-1", true);
@@ -56,12 +61,13 @@ describe("UserManagementTable alumni toggle", () => {
       memberId: null,
     };
     const { onAlumniToggle } = renderTable([adminUser]);
+    const table = within(screen.getByRole("table"));
 
     expect(
-      screen.queryByRole("button", { name: /current|alumni/i }),
+      table.queryByRole("button", { name: /current|alumni/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByTitle("No member profile to promote or demote"),
+      table.getByTitle("No member profile to promote or demote"),
     ).toBeInTheDocument();
     expect(onAlumniToggle).not.toHaveBeenCalled();
   });

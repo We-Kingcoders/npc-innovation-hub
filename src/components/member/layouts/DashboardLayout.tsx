@@ -16,8 +16,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         {/* Sidebar on left, fixed width */}
         <Sidebar />
 
-        {/* Right side: Topbar + main page content */}
-        <div className="flex-1 flex flex-col">
+        {/* Right side: Topbar + main page content. min-w-0: without it a
+            flex-1 box refuses to shrink below its content's natural width -
+            e.g. the wide ProjectTable/ResourceTable at /dashboard/projects
+            and /dashboard/resources - forcing this column, and the page,
+            wider than the viewport. */}
+        <div className="flex-1 flex flex-col min-w-0">
           <Topbar />
           {/* px-10 (40px) unconditionally cost a 320px phone 80px of
               width - a quarter of the screen - before any content even

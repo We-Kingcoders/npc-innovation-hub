@@ -62,6 +62,8 @@
 
 import { useState } from "react";
 import type { Resource } from "../../types/resource.types";
+import ResponsiveTable from "../ui/ResponsiveTable";
+import MobileCardRow from "../ui/MobileCardRow";
 
 // ==================== TYPES ====================
 
@@ -292,6 +294,168 @@ const ActionsDropdown = ({
   );
 };
 
+// ==================== MOBILE CARDS ====================
+// The card's identity block (image/avatar, title, description, author,
+// paid/free + difficulty badges) is the ResourceTable table cell's JSX
+// reused verbatim. Rows below it are curated, not every column stacked:
+// Category, Type, Stats, and Date+Time merged into one "Added" row (they
+// were two columns only because a wide table had room).
+
+const ResourceCardSkeleton = () => (
+  <>
+    {[...Array(3)].map((_, idx) => (
+      <div key={idx} className="p-4 animate-pulse">
+        <div className="h-16 bg-mist-200 rounded-lg"></div>
+      </div>
+    ))}
+  </>
+);
+
+const ResourceCardEmptyState = ({ onAddNew }: { onAddNew: () => void }) => (
+  <div className="py-12 px-4 text-center">
+    <div className="flex flex-col items-center gap-4">
+      <svg
+        className="w-16 h-16 text-mist-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+      <div>
+        <p className="text-mist-600 text-lg font-medium mb-1">
+          No resources found
+        </p>
+        <p className="text-mist-500 text-sm">
+          Get started by creating your first resource
+        </p>
+      </div>
+      <button
+        onClick={onAddNew}
+        className="mt-2 bg-navy-800 text-white px-6 py-2 rounded-lg hover:bg-navy-700 transition-colors"
+      >
+        Add New Resource
+      </button>
+    </div>
+  </div>
+);
+
+const ResourceCards = ({
+  resources,
+  loading,
+  onEdit,
+  onDelete,
+  onView,
+  onAddNew,
+}: {
+  resources: Resource[];
+  loading: boolean;
+  onEdit: (resource: Resource) => void;
+  onDelete: (resourceId: string) => void;
+  onView: (resource: Resource) => void;
+  onAddNew: () => void;
+}) => {
+  if (loading) return <ResourceCardSkeleton />;
+  if (resources.length === 0)
+    return <ResourceCardEmptyState onAddNew={onAddNew} />;
+
+  return (
+    <>
+      {resources.map((resource) => (
+        <div key={resource.id} className="p-4 flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-mist-200">
+                {resource.imageUrl ? (
+                  <img
+                    src={resource.imageUrl}
+                    alt={resource.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-mist-400">
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-navy-800 truncate">
+                  {resource.title}
+                </h3>
+                <p className="text-xs text-mist-600 truncate">
+                  {resource.description}
+                </p>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <span className="text-xs text-mist-600">
+                    by {resource.author}
+                  </span>
+                  {resource.isPaid ? (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
+                      ${resource.price}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-mist-200 text-mist-600">
+                      Free
+                    </span>
+                  )}
+                  <span
+                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                      resource.difficulty === "Beginner"
+                        ? "bg-green-100 text-green-800"
+                        : resource.difficulty === "Intermediate"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {resource.difficulty}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ActionsDropdown
+              onView={() => onView(resource)}
+              onEdit={() => onEdit(resource)}
+              onDelete={() => onDelete(resource.id)}
+            />
+          </div>
+
+          <dl className="flex flex-col gap-1">
+            <MobileCardRow label="Category">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-navy-50 text-navy-700">
+                {resource.category}
+              </span>
+            </MobileCardRow>
+            <MobileCardRow label="Type">{resource.type}</MobileCardRow>
+            <MobileCardRow label="Stats">
+              {formatDuration(resource.duration)} · {resource.upvotes} upvotes
+            </MobileCardRow>
+            <MobileCardRow label="Added">
+              {formatDate(resource.createdAt)} {formatTime(resource.createdAt)}
+            </MobileCardRow>
+          </dl>
+        </div>
+      ))}
+    </>
+  );
+};
+
 // ==================== MAIN COMPONENT ====================
 
 export default function ResourceTable({
@@ -307,245 +471,257 @@ export default function ResourceTable({
 }: ResourceTableProps) {
   return (
     <div className="mt-6 bg-white shadow rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-navy-800 text-white">
-              <th className="py-4 px-6 font-medium">Date</th>
-              <th className="py-4 px-6 font-medium">Time</th>
-              <th className="py-4 px-6 font-medium">Resource Details</th>
-              <th className="py-4 px-6 font-medium">Category</th>
-              <th className="py-4 px-6 font-medium">Type</th>
-              <th className="py-4 px-6 font-medium">Stats</th>
-              <th className="py-4 px-6 font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <TableSkeleton />
-            ) : resources.length === 0 ? (
-              <EmptyState onAddNew={onAddNew} />
-            ) : (
-              resources.map((resource) => (
-                <tr
-                  key={resource.id}
-                  className="border-b border-mist-200 last:border-b-0 bg-white hover:bg-mist-100 transition-colors"
-                >
-                  {/* Date */}
-                  <td className="py-4 px-6 text-sm text-mist-600">
-                    {formatDate(resource.createdAt)}
-                  </td>
+      <ResponsiveTable
+        cards={
+          <ResourceCards
+            resources={resources}
+            loading={loading}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onView={onView}
+            onAddNew={onAddNew}
+          />
+        }
+        table={
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-navy-800 text-white">
+                <th className="py-4 px-6 font-medium">Date</th>
+                <th className="py-4 px-6 font-medium">Time</th>
+                <th className="py-4 px-6 font-medium">Resource Details</th>
+                <th className="py-4 px-6 font-medium">Category</th>
+                <th className="py-4 px-6 font-medium">Type</th>
+                <th className="py-4 px-6 font-medium">Stats</th>
+                <th className="py-4 px-6 font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <TableSkeleton />
+              ) : resources.length === 0 ? (
+                <EmptyState onAddNew={onAddNew} />
+              ) : (
+                resources.map((resource) => (
+                  <tr
+                    key={resource.id}
+                    className="border-b border-mist-200 last:border-b-0 bg-white hover:bg-mist-100 transition-colors"
+                  >
+                    {/* Date */}
+                    <td className="py-4 px-6 text-sm text-mist-600">
+                      {formatDate(resource.createdAt)}
+                    </td>
 
-                  {/* Time */}
-                  <td className="py-4 px-6 text-sm text-mist-600">
-                    {formatTime(resource.createdAt)}
-                  </td>
+                    {/* Time */}
+                    <td className="py-4 px-6 text-sm text-mist-600">
+                      {formatTime(resource.createdAt)}
+                    </td>
 
-                  {/* Resource Details */}
-                  <td className="py-4 px-6">
-                    <div className="flex items-center gap-3">
-                      {/* Image/Video Avatar */}
-                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-mist-200">
-                        {resource.imageUrl ? (
-                          <img
-                            src={resource.imageUrl}
-                            alt={resource.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-mist-400">
-                            <svg
-                              className="w-6 h-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Title & Description */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-navy-800 truncate">
-                          {resource.title}
-                        </h3>
-                        <p className="text-xs text-mist-600 truncate">
-                          {resource.description}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          {/* Author */}
-                          <span className="text-xs text-mist-600">
-                            by {resource.author}
-                          </span>
-                          {/* Paid/Free Badge */}
-                          {resource.isPaid ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
-                              ${resource.price}
-                            </span>
+                    {/* Resource Details */}
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        {/* Image/Video Avatar */}
+                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-mist-200">
+                          {resource.imageUrl ? (
+                            <img
+                              src={resource.imageUrl}
+                              alt={resource.title}
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-mist-200 text-mist-600">
-                              Free
-                            </span>
-                          )}
-                          {/* Difficulty Badge */}
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                              resource.difficulty === "Beginner"
-                                ? "bg-green-100 text-green-800"
-                                : resource.difficulty === "Intermediate"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {resource.difficulty}
-                          </span>
-                        </div>
-                        {/* Tags */}
-                        {resource.tags && resource.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {resource.tags.slice(0, 3).map((tag, idx) => (
-                              <span
-                                key={idx}
-                                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-mist-200 text-mist-700"
+                            <div className="w-full h-full flex items-center justify-center text-mist-400">
+                              <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
                               >
-                                {tag}
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Title & Description */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-navy-800 truncate">
+                            {resource.title}
+                          </h3>
+                          <p className="text-xs text-mist-600 truncate">
+                            {resource.description}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            {/* Author */}
+                            <span className="text-xs text-mist-600">
+                              by {resource.author}
+                            </span>
+                            {/* Paid/Free Badge */}
+                            {resource.isPaid ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
+                                ${resource.price}
                               </span>
-                            ))}
-                            {resource.tags.length > 3 && (
-                              <span className="text-xs text-mist-500">
-                                +{resource.tags.length - 3}
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-mist-200 text-mist-600">
+                                Free
                               </span>
                             )}
+                            {/* Difficulty Badge */}
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                resource.difficulty === "Beginner"
+                                  ? "bg-green-100 text-green-800"
+                                  : resource.difficulty === "Intermediate"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {resource.difficulty}
+                            </span>
                           </div>
+                          {/* Tags */}
+                          {resource.tags && resource.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {resource.tags.slice(0, 3).map((tag, idx) => (
+                                <span
+                                  key={idx}
+                                  className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-mist-200 text-mist-700"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                              {resource.tags.length > 3 && (
+                                <span className="text-xs text-mist-500">
+                                  +{resource.tags.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-700">
+                        {resource.category}
+                      </span>
+                    </td>
+
+                    {/* Type */}
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center gap-1 text-sm text-mist-600">
+                        {resource.type === "Video" && (
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
                         )}
+                        {resource.type === "Documentation" && (
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                        )}
+                        {resource.type === "Book" && (
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            />
+                          </svg>
+                        )}
+                        {resource.type}
+                      </span>
+                    </td>
+
+                    {/* Stats */}
+                    <td className="py-4 px-6">
+                      <div className="flex flex-col gap-1 text-xs text-mist-600">
+                        <div className="flex items-center gap-1">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          {formatDuration(resource.duration)}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                            />
+                          </svg>
+                          {resource.upvotes}
+                        </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* Category */}
-                  <td className="py-4 px-6">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-700">
-                      {resource.category}
-                    </span>
-                  </td>
-
-                  {/* Type */}
-                  <td className="py-4 px-6">
-                    <span className="inline-flex items-center gap-1 text-sm text-mist-600">
-                      {resource.type === "Video" && (
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      )}
-                      {resource.type === "Documentation" && (
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                      )}
-                      {resource.type === "Book" && (
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                          />
-                        </svg>
-                      )}
-                      {resource.type}
-                    </span>
-                  </td>
-
-                  {/* Stats */}
-                  <td className="py-4 px-6">
-                    <div className="flex flex-col gap-1 text-xs text-mist-600">
-                      <div className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        {formatDuration(resource.duration)}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-                          />
-                        </svg>
-                        {resource.upvotes}
-                      </div>
-                    </div>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="py-4 px-6">
-                    <ActionsDropdown
-                      onView={() => onView(resource)}
-                      onEdit={() => onEdit(resource)}
-                      onDelete={() => onDelete(resource.id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                    {/* Actions */}
+                    <td className="py-4 px-6">
+                      <ActionsDropdown
+                        onView={() => onView(resource)}
+                        onEdit={() => onEdit(resource)}
+                        onDelete={() => onDelete(resource.id)}
+                      />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        }
+      />
 
       {/* Footer with Pagination */}
       {!loading && resources.length > 0 && (
