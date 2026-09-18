@@ -132,7 +132,18 @@ const HeroSection = () => {
   return (
     <div
       id="home"
-      className="w-full min-h-screen bg-white relative overflow-hidden flex flex-col scroll-mt-16 lg:scroll-mt-20"
+      // No overflow-hidden here (there used to be one): per spec, if
+      // overflow-x and overflow-y aren't both `visible`, the browser
+      // forces BOTH to `auto` - so overflow-x-hidden alone (or paired
+      // with an explicit overflow-y-visible) ends up clipping vertically
+      // too, cutting off the background layer's -top-[83px] extension
+      // below before it can reach up behind Navbar.tsx's transparent
+      // header. Nothing else in this section actually overflows its box
+      // (the background layer is inset-x-0-bounded horizontally, and the
+      // carousel card clips its own corners via its own overflow-hidden),
+      // so dropping this was the only way to let that one element bleed
+      // upward without paying for it everywhere else.
+      className="w-full min-h-screen bg-white relative flex flex-col scroll-mt-16 lg:scroll-mt-20"
     >
       <JoinUsModal
         isOpen={isJoinModalOpen}
@@ -161,8 +172,27 @@ const HeroSection = () => {
           somewhere real to land. Below lg the layout is single-column,
           so a full photo behind wrapping text would risk contrast
           problems wherever a line happened to reach the image's darker
-          areas - mobile stays flat white (and navy text) instead. */}
-      <div className="hidden lg:block absolute inset-0 z-0" aria-hidden="true">
+          areas - mobile stays flat white (and navy text) instead.
+
+          -top-[83px] (not inset-0/top-0): the fixed Navbar reserves its
+          own height via a spacer div rendered ABOVE this section in the
+          page, so this section's own top edge already starts below the
+          navbar - inset-0 would leave that reserved strip showing the
+          plain white page background behind it, not this photo, which is
+          exactly the gap Navbar.tsx's transparent-at-top header state
+          needs this image behind. Extending the top edge up by the
+          navbar's own lg height (83px = its 3px accent bar + h-20) reaches
+          into that reserved strip instead, without moving this section's
+          box (bottom-0 keeps the bottom edge anchored) or the spacer's
+          height (still reserves the same space for every OTHER route/
+          state, so nothing else shifts). Needs overflow-x-hidden, not
+          overflow-hidden, on the section above - overflow-hidden would
+          clip this negative offset before it ever reaches up past the
+          section's own top. */}
+      <div
+        className="hidden lg:block absolute inset-x-0 bottom-0 -top-[83px] z-0"
+        aria-hidden="true"
+      >
         <img
           src="/assets/images/hubimage.jpg"
           alt=""
