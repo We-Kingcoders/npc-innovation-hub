@@ -62,7 +62,9 @@ export default function Navbar() {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Subtle shadow/blur once the page has scrolled, so the fixed bar reads as
-  // "responding to scroll" rather than a flat static overlay.
+  // "responding to scroll" rather than a flat static overlay. Independent of
+  // pastHero below - purely cosmetic, applies to the solid state however it
+  // was reached.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -91,6 +93,75 @@ export default function Navbar() {
   }, [location.pathname]);
 
   const onHome = location.pathname === "/";
+
+  // Whether the hero's own bottom edge has scrolled up past the header -
+  // i.e. whether what's actually behind the navbar right now is the hero's
+  // photo/navy background (false) or the plain white section below it
+  // (true). Defaults true so a route with no hero, or a moment before the
+  // hero has mounted, never sits transparent over nothing.
+  const [pastHero, setPastHero] = useState(true);
+
+  // The homepage hero (lg+ only - see HeroSection.tsx) is a photo/navy
+  // background, not a plain white one, so the navbar floats transparent
+  // over it for as long as the hero is what's actually behind it - same
+  // idea as glion.edu's navbar. Below lg, HeroSection stays flat white
+  // (see its own comment on why), so the navbar there is left untouched -
+  // see the lg:-prefixed classes further down rather than a top-level
+  // branch here.
+  //
+  // IntersectionObserver, not a scrollY/hero-height comparison: the hero's
+  // rendered height is responsive (min-h-screen plus its own content), so a
+  // fixed pixel threshold would drift out of sync with it. rootMargin
+  // shrinks the observed viewport by the header's own height from the top,
+  // so "not intersecting" fires exactly when the hero's bottom edge reaches
+  // the header - i.e. when the header stops being over the hero and starts
+  // being over the white section below it. Polls for the #home element the
+  // same bounded-rAF way the hash-scroll effect below does, since it's one
+  // of AllRoutes.tsx's lazy chunks and may not be in the DOM yet on a fresh
+  // load.
+  useEffect(() => {
+    if (!onHome) {
+      setPastHero(true);
+      return undefined;
+    }
+
+    // Not implemented in jsdom (unlike matchMedia, which the effect below
+    // relies on unguarded), and worth guarding for real degraded
+    // environments too - falls back to the always-solid state rather than
+    // an unhandled crash.
+    if (typeof IntersectionObserver === "undefined") {
+      setPastHero(true);
+      return undefined;
+    }
+
+    let observer: IntersectionObserver | undefined;
+    let rafId: number;
+    let cancelled = false;
+    const deadline = Date.now() + 3000;
+
+    const attach = () => {
+      if (cancelled) return;
+      const hero = document.getElementById("home");
+      if (hero) {
+        observer = new IntersectionObserver(
+          ([entry]) => setPastHero(!entry.isIntersecting),
+          { rootMargin: "-83px 0px 0px 0px", threshold: 0 },
+        );
+        observer.observe(hero);
+        return;
+      }
+      if (Date.now() < deadline) rafId = requestAnimationFrame(attach);
+    };
+
+    attach();
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      observer?.disconnect();
+    };
+  }, [onHome]);
+
+  const transparentAtTop = onHome && !pastHero;
 
   // Which Home section is currently in view, so the right nav link
   // highlights while scrolling - only runs on "/" itself.
@@ -158,21 +229,33 @@ export default function Navbar() {
     <>
       <SkipToContent />
       <header
-        className={`fixed top-0 inset-x-0 z-50 bg-white transition-shadow duration-300 ${
-          scrolled ? "shadow-md" : "shadow-sm"
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+          transparentAtTop
+            ? "bg-white lg:bg-transparent shadow-sm lg:shadow-none"
+            : `bg-white ${scrolled ? "shadow-md" : "shadow-sm"}`
         }`}
       >
         {/* Thin two-tone navy gradient accent, same treatment as the Hero
             section's mobile header accent line - ties this flat white bar
             back to the homepage's signature brand gradient instead of
-            reading as a plain, disconnected white strip. */}
-        <div className="h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#003366] to-[#002B56]" />
+            reading as a plain, disconnected white strip. Faded out (not
+            unmounted) at lg+ while transparentAtTop, so the header's
+            height never changes and the spacer div below stays accurate. */}
+        <div
+          className={`h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#003366] to-[#002B56] transition-opacity duration-300 ${
+            transparentAtTop ? "lg:opacity-0" : ""
+          }`}
+        />
 
         <div className="max-w-7xl mx-auto h-16 lg:h-20 flex items-center justify-between px-6 lg:px-12">
           {/* Logo */}
           <Link
             to="/"
-            className="font-bold tracking-tight text-lg lg:text-xl whitespace-nowrap text-[#002B56] hover:text-[#003366] transition-colors duration-200"
+            className={`font-bold tracking-tight text-lg lg:text-xl whitespace-nowrap transition-colors duration-200 ${
+              transparentAtTop
+                ? "text-[#002B56] lg:text-white lg:hover:text-white/80 lg:drop-shadow-md"
+                : "text-[#002B56] hover:text-[#003366]"
+            }`}
           >
             NPC INNOVATION HUB
           </Link>
@@ -194,9 +277,13 @@ export default function Navbar() {
                 // differs, transparent vs navy) so every item keeps
                 // identical size/alignment whether or not it's active.
                 className={`font-bold uppercase text-[1.05rem] px-4 py-1.5 rounded-full border-2 transition-all duration-200 ${
-                  isActive(link)
-                    ? "border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white"
-                    : "border-transparent text-[#002B56] hover:text-[#003366]"
+                  transparentAtTop
+                    ? isActive(link)
+                      ? "border-white text-white hover:bg-white hover:text-[#002B56] drop-shadow-sm"
+                      : "border-transparent text-white/90 hover:text-white drop-shadow-sm"
+                    : isActive(link)
+                      ? "border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white"
+                      : "border-transparent text-[#002B56] hover:text-[#003366]"
                 }`}
               >
                 {link.label}
@@ -212,7 +299,11 @@ export default function Navbar() {
                   onClick={() => setShowUserMenu((s) => !s)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="true"
-                  className="flex items-center gap-2 font-bold text-white bg-[#002B56] px-5 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
+                  className={`flex items-center gap-2 font-bold text-white px-5 py-2.5 rounded-full shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    transparentAtTop
+                      ? "bg-white/10 backdrop-blur-sm border-2 border-white hover:bg-white hover:text-[#002B56] focus:ring-white"
+                      : "bg-[#002B56] hover:bg-[#003366] hover:shadow-md focus:ring-[#002B56]"
+                  }`}
                 >
                   {user.firstName || "Account"}
                   <svg
@@ -251,7 +342,11 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="bg-[#002B56] text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
+                className={`text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                  transparentAtTop
+                    ? "bg-white/10 backdrop-blur-sm border-2 border-white hover:bg-white hover:text-[#002B56] focus:ring-white"
+                    : "bg-[#002B56] hover:bg-[#003366] hover:shadow-md focus:ring-[#002B56]"
+                }`}
               >
                 Sign In
               </Link>
