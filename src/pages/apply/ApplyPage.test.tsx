@@ -42,6 +42,12 @@ const fillValidForm = async () => {
   await act(async () => {
     await user.upload(letterInput, letterFile);
   });
+
+  const photoInput = document.getElementById("apply-photo") as HTMLInputElement;
+  const photoFile = new File(["content"], "photo.png", { type: "image/png" });
+  await act(async () => {
+    await user.upload(photoInput, photoFile);
+  });
 };
 
 describe("ApplyPage", () => {
