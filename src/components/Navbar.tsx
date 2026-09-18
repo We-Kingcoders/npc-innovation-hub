@@ -10,7 +10,7 @@
 // Fixed to the top of the viewport on every screen size, with a spacer
 // (rendered as part of this component) so page content never sits under it.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { UserRole } from "../types/user.types";
@@ -119,7 +119,16 @@ export default function Navbar() {
   // same bounded-rAF way the hash-scroll effect below does, since it's one
   // of AllRoutes.tsx's lazy chunks and may not be in the DOM yet on a fresh
   // load.
-  useEffect(() => {
+  //
+  // useLayoutEffect, not useEffect: each route renders its own <Navbar/>
+  // (see AllRoutes.tsx), so navigating here from another route mounts a
+  // fresh instance whose pastHero starts at its default (true, solid)
+  // until this runs. useEffect fires after the browser paints, so that
+  // default briefly paints for real - a visible flash of solid white
+  // before fading transparent on every client-side navigation back to
+  // "/". useLayoutEffect runs synchronously before paint, so the corrected
+  // value is what actually gets painted the first time.
+  useLayoutEffect(() => {
     if (!onHome) {
       setPastHero(true);
       return undefined;
@@ -134,6 +143,10 @@ export default function Navbar() {
       return undefined;
     }
 
+    // Header height at lg - must match the spacer's lg:h-[83px] below and
+    // HeroSection.tsx's matching -top-[83px] background offset.
+    const HEADER_HEIGHT_LG = 83;
+
     let observer: IntersectionObserver | undefined;
     let rafId: number;
     let cancelled = false;
@@ -143,11 +156,28 @@ export default function Navbar() {
       if (cancelled) return;
       const hero = document.getElementById("home");
       if (hero) {
-        observer = new IntersectionObserver(
-          ([entry]) => setPastHero(!entry.isIntersecting),
-          { rootMargin: "-83px 0px 0px 0px", threshold: 0 },
-        );
+        // The observer is only a "something crossed the threshold, go
+        // recheck" signal here - its own isIntersecting/rootBounds aren't
+        // trusted directly. Right after a client-side route transition
+        // inserts the hero into the DOM, the observer's very first
+        // callback can fire once with geometry from before layout has
+        // fully settled (a real, if intermittent, timing gap - observed
+        // as the navbar staying solid on navigating back to "/" from
+        // another route). Since the hero doesn't actually move again
+        // after that, there's no later crossing to self-correct it. A
+        // fresh getBoundingClientRect() read, on the other hand, always
+        // reflects current, fully-computed layout, so recomputing from it
+        // - both once synchronously now and again on every future
+        // callback - has no equivalent gap.
+        const recompute = () => {
+          setPastHero(hero.getBoundingClientRect().bottom <= HEADER_HEIGHT_LG);
+        };
+        observer = new IntersectionObserver(recompute, {
+          rootMargin: `-${HEADER_HEIGHT_LG}px 0px 0px 0px`,
+          threshold: 0,
+        });
         observer.observe(hero);
+        recompute();
         return;
       }
       if (Date.now() < deadline) rafId = requestAnimationFrame(attach);
