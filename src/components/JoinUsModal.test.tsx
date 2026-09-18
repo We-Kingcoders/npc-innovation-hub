@@ -94,8 +94,8 @@ describe("isValidPdfFile", () => {
 });
 
 describe("isValidImageFile", () => {
-  test("is valid when no file is provided (optional field)", () => {
-    expect(isValidImageFile(null)).toBe(true);
+  test("rejects when no file is provided (required field)", () => {
+    expect(isValidImageFile(null)).toBe(false);
   });
 
   test("accepts a .png file under the size limit", () => {
@@ -129,6 +129,7 @@ describe("getApplicationFormErrors", () => {
         "strengths",
         "weaknesses",
         "applicationLetter",
+        "image",
       ]),
     );
   });
@@ -137,6 +138,7 @@ describe("getApplicationFormErrors", () => {
     const pdf = new File(["content"], "letter.pdf", {
       type: "application/pdf",
     });
+    const photo = new File(["content"], "photo.png", { type: "image/png" });
     const errors = getApplicationFormErrors({
       ...EMPTY_FORM,
       fullName: "Jane Doe",
@@ -148,11 +150,12 @@ describe("getApplicationFormErrors", () => {
       strengths: "Fast learner",
       weaknesses: "Impatient",
       applicationLetter: pdf,
+      image: photo,
     });
     expect(errors).toEqual({});
   });
 
-  test("does not require the optional image field", () => {
+  test("requires a profile photo — it is not an optional field", () => {
     const pdf = new File(["content"], "letter.pdf", {
       type: "application/pdf",
     });
@@ -169,7 +172,7 @@ describe("getApplicationFormErrors", () => {
       applicationLetter: pdf,
       image: null,
     });
-    expect(errors.image).toBeUndefined();
+    expect(errors.image).toBe("Attach a profile photo");
   });
 });
 
@@ -231,6 +234,11 @@ describe("<JoinUsModal />", () => {
     });
     await act(async () => {
       await userEvent.upload(screen.getByLabelText(/application letter/i), pdf);
+    });
+
+    const photo = new File(["content"], "photo.png", { type: "image/png" });
+    await act(async () => {
+      await userEvent.upload(screen.getByLabelText(/profile photo/i), photo);
     });
   };
 

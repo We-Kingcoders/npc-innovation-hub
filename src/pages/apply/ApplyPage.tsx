@@ -519,7 +519,8 @@ export const ApplyPage: React.FC = () => {
 
                 <Field
                   id="apply-photo"
-                  label="Profile Photo (optional)"
+                  label="Profile Photo"
+                  required
                   error={getError("image")}
                 >
                   <button

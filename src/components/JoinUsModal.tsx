@@ -59,7 +59,7 @@ export const isValidPdfFile = (file: File | null): boolean => {
 };
 
 export const isValidImageFile = (file: File | null): boolean => {
-  if (!file) return true; // optional field — absence is valid
+  if (!file) return false;
   return (
     IMAGE_EXTENSION_RE.test(file.name) &&
     file.size > 0 &&
@@ -99,7 +99,8 @@ export const getApplicationFormErrors = (
   else if (!isValidPdfFile(form.applicationLetter))
     errors.applicationLetter = "Application letter must be a PDF under 5MB";
 
-  if (form.image && !isValidImageFile(form.image))
+  if (!form.image) errors.image = "Attach a profile photo";
+  else if (!isValidImageFile(form.image))
     errors.image = "Photo must be a JPG, PNG or GIF under 5MB";
 
   return errors;
@@ -629,7 +630,8 @@ const JoinUsModal: React.FC<JoinUsModalProps> = ({ isOpen, onClose }) => {
 
                 <Field
                   id="jum-photo"
-                  label="Profile Photo (optional)"
+                  label="Profile Photo"
+                  required
                   error={getError("image")}
                 >
                   <button
