@@ -62,7 +62,9 @@ export default function Navbar() {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Subtle shadow/blur once the page has scrolled, so the fixed bar reads as
-  // "responding to scroll" rather than a flat static overlay.
+  // "responding to scroll" rather than a flat static overlay. Independent of
+  // pastHero below - purely cosmetic, applies to the solid state however it
+  // was reached.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -92,15 +94,74 @@ export default function Navbar() {
 
   const onHome = location.pathname === "/";
 
+  // Whether the hero's own bottom edge has scrolled up past the header -
+  // i.e. whether what's actually behind the navbar right now is the hero's
+  // photo/navy background (false) or the plain white section below it
+  // (true). Defaults true so a route with no hero, or a moment before the
+  // hero has mounted, never sits transparent over nothing.
+  const [pastHero, setPastHero] = useState(true);
+
   // The homepage hero (lg+ only - see HeroSection.tsx) is a photo/navy
-  // background, not a plain white one, so the navbar can float transparent
-  // over it until the visitor scrolls - same idea as glion.edu's navbar.
-  // Reuses the existing `scrolled` state rather than a second scroll
-  // listener; gated to onHome so every other route keeps today's always-
-  // solid navbar exactly as it was. Below lg, HeroSection stays flat white
-  // (see its own comment on why), so the navbar there is left untouched too
-  // - see the lg:-prefixed classes below rather than a top-level branch.
-  const transparentAtTop = onHome && !scrolled;
+  // background, not a plain white one, so the navbar floats transparent
+  // over it for as long as the hero is what's actually behind it - same
+  // idea as glion.edu's navbar. Below lg, HeroSection stays flat white
+  // (see its own comment on why), so the navbar there is left untouched -
+  // see the lg:-prefixed classes further down rather than a top-level
+  // branch here.
+  //
+  // IntersectionObserver, not a scrollY/hero-height comparison: the hero's
+  // rendered height is responsive (min-h-screen plus its own content), so a
+  // fixed pixel threshold would drift out of sync with it. rootMargin
+  // shrinks the observed viewport by the header's own height from the top,
+  // so "not intersecting" fires exactly when the hero's bottom edge reaches
+  // the header - i.e. when the header stops being over the hero and starts
+  // being over the white section below it. Polls for the #home element the
+  // same bounded-rAF way the hash-scroll effect below does, since it's one
+  // of AllRoutes.tsx's lazy chunks and may not be in the DOM yet on a fresh
+  // load.
+  useEffect(() => {
+    if (!onHome) {
+      setPastHero(true);
+      return undefined;
+    }
+
+    // Not implemented in jsdom (unlike matchMedia, which the effect below
+    // relies on unguarded), and worth guarding for real degraded
+    // environments too - falls back to the always-solid state rather than
+    // an unhandled crash.
+    if (typeof IntersectionObserver === "undefined") {
+      setPastHero(true);
+      return undefined;
+    }
+
+    let observer: IntersectionObserver | undefined;
+    let rafId: number;
+    let cancelled = false;
+    const deadline = Date.now() + 3000;
+
+    const attach = () => {
+      if (cancelled) return;
+      const hero = document.getElementById("home");
+      if (hero) {
+        observer = new IntersectionObserver(
+          ([entry]) => setPastHero(!entry.isIntersecting),
+          { rootMargin: "-83px 0px 0px 0px", threshold: 0 },
+        );
+        observer.observe(hero);
+        return;
+      }
+      if (Date.now() < deadline) rafId = requestAnimationFrame(attach);
+    };
+
+    attach();
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      observer?.disconnect();
+    };
+  }, [onHome]);
+
+  const transparentAtTop = onHome && !pastHero;
 
   // Which Home section is currently in view, so the right nav link
   // highlights while scrolling - only runs on "/" itself.
