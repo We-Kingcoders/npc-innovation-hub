@@ -1,9 +1,18 @@
 // src/components/dashboard/StatsCards.tsx
+//
+// Now built on the shared ui/StatsCard (animated circular count-up, trend
+// badge) instead of its own flat static tiles - same visual language as the
+// Admin dashboard's stat cards, just fed Member-specific task data. No
+// growthPercent/previousValue history is tracked for a Member's own tasks,
+// so trend is left "neutral" and growthPercent at 0 rather than inventing a
+// number - the shared card renders that as a plain dash badge, not a
+// misleading +0%/-0%.
 
 import React from "react";
-import { CheckCircle, Clock, AlertTriangle, ListTodo } from "lucide-react";
 import type { Task } from "../../types/task.types";
 import { isTaskOverdue } from "../../types/task.types";
+import StatsCard from "../ui/StatsCard";
+import type { GrowthMetric } from "../../types/dashboard.types";
 
 interface StatsCardsProps {
   tasks: Task[];
@@ -17,87 +26,49 @@ const StatsCards: React.FC<StatsCardsProps> = ({ tasks }) => {
     isTaskOverdue(t.dueDate, t.status),
   ).length;
 
-  // Two-tone scheme: white-gray cards with dark-blue accents.
-  // The Overdue card inverts to solid dark blue when it needs attention.
-  const alert = overdue > 0;
-
-  const cards = [
+  const metrics: GrowthMetric[] = [
     {
       label: "Total Tasks",
       value: total,
-      icon: <ListTodo size={20} />,
-      sub: "All assigned tasks",
-      solid: false,
+      previousValue: total,
+      growthPercent: 0,
+      trend: "neutral",
+      icon: "list-todo",
+      color: "blue",
     },
     {
       label: "Completed",
       value: completed,
-      icon: <CheckCircle size={20} />,
-      sub: `${total > 0 ? Math.round((completed / total) * 100) : 0}% done`,
-      solid: false,
+      previousValue: completed,
+      growthPercent: total > 0 ? Math.round((completed / total) * 100) : 0,
+      trend: completed > 0 ? "up" : "neutral",
+      icon: "check-square",
+      color: "green",
     },
     {
       label: "Pending",
       value: pending,
-      icon: <Clock size={20} />,
-      sub: "Awaiting action",
-      solid: false,
+      previousValue: pending,
+      growthPercent: 0,
+      trend: "neutral",
+      icon: "clock",
+      color: "orange",
     },
     {
       label: "Overdue",
       value: overdue,
-      icon: <AlertTriangle size={20} />,
-      sub: alert ? "Needs attention!" : "All on track",
-      solid: alert,
+      previousValue: overdue,
+      growthPercent: 0,
+      trend: overdue > 0 ? "down" : "neutral",
+      icon: "alert-triangle",
+      color: "red",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
-      {cards.map((card) => (
-        <div
-          key={card.label}
-          className={`border rounded-xl p-5 transition-all duration-200
-                      hover:shadow-md hover:-translate-y-0.5
-                      ${
-                        card.solid
-                          ? "bg-navy-800 border-navy-800"
-                          : "bg-white border-mist-300"
-                      }`}
-        >
-          <div className="flex items-start justify-between mb-3">
-            <div
-              className={`p-2.5 rounded-lg ${
-                card.solid
-                  ? "bg-navy-700 text-white"
-                  : "bg-navy-50 text-navy-700"
-              }`}
-            >
-              {card.icon}
-            </div>
-          </div>
-          <div
-            className={`text-3xl font-bold mb-0.5 ${
-              card.solid ? "text-white" : "text-navy-800"
-            }`}
-          >
-            {card.value}
-          </div>
-          <div
-            className={`text-sm font-semibold ${
-              card.solid ? "text-navy-100" : "text-navy-700"
-            }`}
-          >
-            {card.label}
-          </div>
-          <div
-            className={`text-xs mt-0.5 ${
-              card.solid ? "text-navy-200" : "text-mist-500"
-            }`}
-          >
-            {card.sub}
-          </div>
-        </div>
+      {metrics.map((metric, index) => (
+        <StatsCard key={metric.label} metric={metric} index={index} />
       ))}
     </div>
   );

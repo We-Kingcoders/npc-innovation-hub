@@ -16,8 +16,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import { useMember } from "../../hooks/useMember";
-import { getUserInitials, getUserFullName } from "../../types/user.types";
 
 interface SidebarItem {
   name: string;
@@ -74,8 +72,7 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const { user, logout } = useAuth();
-  const { member, fetchMember } = useMember();
+  const { logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   // Was a bare w-64 ml-6 (280px) rendered inline unconditionally - on a
@@ -87,11 +84,6 @@ export const Sidebar: React.FC = () => {
   // reason there.
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
-
-  // Fetch member profile once to get the uploaded avatar
-  useEffect(() => {
-    if (user?.id) fetchMember(user.id);
-  }, [user?.id, fetchMember]);
 
   // Close the mobile drawer on navigation, same as the public Navbar -
   // otherwise a tapped link left the new page rendered behind the still-
@@ -111,16 +103,6 @@ export const Sidebar: React.FC = () => {
       setShowLogoutConfirm(false);
     }
   };
-
-  const displayName = user ? getUserFullName(user) : "User";
-  const initials = user ? getUserInitials(user) : "U";
-  const fallbackName = user?.email?.split("@")[0] ?? "User";
-
-  // Prefer the uploaded member image, fall back to auth image, then show initials
-  const avatarUrl = member?.imageUrl || user?.image || null;
-
-  // Prefer member display name if set (e.g. "Entue MUGABO" from profile form)
-  const shownName = member?.name || displayName || fallbackName;
 
   return (
     <>
@@ -169,33 +151,14 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Scrolls internally so a tall menu never pushes Logout off-screen
-            or forces the whole sidebar (rather than the page) to scroll. */}
-        <div className="flex-1 min-h-0 overflow-y-auto">
-          {/* Profile Section */}
-          <div className="flex flex-col items-center mb-10 px-1">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={shownName}
-                className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-navy-400"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-navy-600 border-2 border-navy-400 mb-2 flex items-center justify-center text-2xl font-bold select-none">
-                {initials}
-              </div>
-            )}
-
-            <span className="text-xl font-bold uppercase text-center leading-tight truncate max-w-full">
-              {shownName}
-            </span>
-
-            {(member?.role || user?.role) && (
-              <span className="text-xs uppercase text-navy-200 mt-1 truncate max-w-full">
-                {member?.role || user?.role}
-              </span>
-            )}
-          </div>
-
+            or forces the whole sidebar (rather than the page) to scroll.
+            Used to open with a large avatar/name/role profile block here -
+            removed to match the Admin sidebar's own convention (profile
+            access lives in Topbar's profile dropdown, not duplicated here
+            too - see admin-components/Sidebar.tsx). It was also a literal
+            duplicate of dashboard/ProfileCard.tsx shown right below it on
+            the Dashboard page. */}
+        <div className="flex-1 min-h-0 overflow-y-auto pt-2">
           {/* Menu label */}
           <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-bold">
             Menu
