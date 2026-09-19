@@ -9,11 +9,14 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * Matches reference design with pixel-perfect accuracy
  *
  * Features:
- * - Desktop background photo (Hub students at work), visible under a light
- *   wash the full width of the text column - not hidden behind a solid
- *   white panel - transitioning to solid navy at the carousel card;
- *   headline/paragraph/button/dots are white here for that reason.
- *   Mobile/tablet stay flat white with navy text for guaranteed contrast
+ * - Background photo (Hub students at work) at every breakpoint, under a
+ *   navy overlay: a light wash the full width of the text column that
+ *   transitions to solid navy at the carousel card on lg+ (two columns
+ *   give each end somewhere real to land), and a single strong navy tint
+ *   across the whole image below lg (single-column text wraps the full
+ *   width, so there's no safe lighter patch to land a wash on).
+ *   Headline/paragraph/button/dots/tagline are white throughout, with a
+ *   drop-shadow as insurance against the photo's own brightness.
  * - Responsive navigation with hamburger menu
  * - Two-column layout with hero text and image
  * - "Innovate. Create. Lead." tagline positioned below hero image
@@ -27,14 +30,10 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * - Added team member carousel with auto-loop
  * - Member photos now render as uniform large circular avatars
  * - Card is right-aligned flush against the viewport's right edge
- * - Retired the diagonal navy background split (and the mobile navy
- *   header band) in favor of a plain white hero throughout; the
- *   "Innovate. Create. Lead." tagline is navy-toned now instead of white
- * - Desktop hero background is now a photo under a white-to-navy overlay,
- *   not flat white
- * - That overlay's light wash now spans the full text column instead of
- *   stopping partway and giving way to solid white; text/button/dots
- *   switched to white (lg:) to match
+ * - Extended the desktop-only photo/navy-overlay background and white
+ *   text/button/dots/tagline treatment to every breakpoint, replacing the
+ *   flat white + navy text mobile/tablet previously had, so the hero
+ *   reads as one consistent identity regardless of device
  */
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
@@ -150,47 +149,32 @@ const HeroSection = () => {
         onClose={() => setIsJoinModalOpen(false)}
       />
       {/* =================================================================
-          BACKGROUND DESIGN - Photo, white-to-navy overlay
+          BACKGROUND DESIGN - Photo, navy overlay (all breakpoints)
           A real photo of the Hub's own students at work, reusing the
           existing public/assets/images/hubimage.jpg (already shipped and
           used on the auth pages) rather than adding a second, much
-          heavier copy of the same picture. The photo now shows through
-          under a single light wash the whole way from the left edge to
-          where the carousel card begins - previously that wash only
-          covered a narrow middle band, with solid opaque white to its
-          left hiding the photo entirely there; the headline now sits
-          directly on the image like the rest of this stretch, not on a
-          separate white panel. Solid navy still takes over right at the
-          card, blending into its own navy fill instead of fighting it.
-          Headline/paragraph/button/dots below are white here (lg:) for
-          exactly that reason - navy text that worked on solid white
-          doesn't work on a photo - with a drop-shadow as insurance
-          against whatever the photo's own brightness happens to be at
-          any given point.
-          lg-only: this only works because the two-column split (text
-          left, card right) gives the gradient's wash and solid-navy ends
-          somewhere real to land. Below lg the layout is single-column,
-          so a full photo behind wrapping text would risk contrast
-          problems wherever a line happened to reach the image's darker
-          areas - mobile stays flat white (and navy text) instead.
-
-          -top-[83px] (not inset-0/top-0): the fixed Navbar reserves its
-          own height via a spacer div rendered ABOVE this section in the
-          page, so this section's own top edge already starts below the
-          navbar - inset-0 would leave that reserved strip showing the
-          plain white page background behind it, not this photo, which is
-          exactly the gap Navbar.tsx's transparent-at-top header state
-          needs this image behind. Extending the top edge up by the
-          navbar's own lg height (83px = its 3px accent bar + h-20) reaches
-          into that reserved strip instead, without moving this section's
-          box (bottom-0 keeps the bottom edge anchored) or the spacer's
-          height (still reserves the same space for every OTHER route/
-          state, so nothing else shifts). Needs overflow-x-hidden, not
-          overflow-hidden, on the section above - overflow-hidden would
-          clip this negative offset before it ever reaches up past the
-          section's own top. */}
+          heavier copy of the same picture. Was lg-only, with mobile/
+          tablet staying flat white instead (a full photo behind wrapping
+          single-column text risked contrast problems wherever a line
+          landed on the image's darker areas) - now shown at every
+          breakpoint to match the desktop identity, with the overlay
+          below doing more work at the breakpoints that need it to keep
+          that promise.
+          -top-[83px]/-top-[67px]: the fixed Navbar reserves its own
+          height via a spacer div rendered ABOVE this section in the page
+          (67px below lg, 83px at lg - see Navbar.tsx), so this section's
+          own top edge already starts below it - inset-0/top-0 would leave
+          that reserved strip showing the plain white page background
+          instead of this photo. Extending the top edge up by the navbar's
+          own height at each breakpoint reaches into that reserved strip
+          instead, without moving this section's box (bottom-0 keeps the
+          bottom edge anchored) or the spacer's height (still reserves the
+          same space for every OTHER route/state, so nothing else shifts).
+          Needs overflow-x-hidden, not overflow-hidden, on the section
+          above - overflow-hidden would clip this negative offset before
+          it ever reaches up past the section's own top. */}
       <div
-        className="hidden lg:block absolute inset-x-0 bottom-0 -top-[83px] z-0"
+        className="absolute inset-x-0 bottom-0 -top-[67px] lg:-top-[83px] z-0"
         aria-hidden="true"
       >
         <img
@@ -198,8 +182,23 @@ const HeroSection = () => {
           alt=""
           className="w-full h-full object-cover"
         />
+        {/* Below lg: a single strong navy tint across the whole image.
+            Text wraps the full width here (no second column to give a
+            lighter wash somewhere safe to land), so this needs to
+            guarantee contrast regardless of where a line falls on the
+            photo - close to solid navy rather than a subtle wash. */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 lg:hidden"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,43,86,0.82) 0%, rgba(0,31,63,0.9) 100%)",
+          }}
+        />
+        {/* lg+: light wash under the text column, transitioning to solid
+            navy at the carousel card - works here because the two-column
+            split gives each end somewhere real to land. */}
+        <div
+          className="hidden lg:block absolute inset-0"
           style={{
             background:
               "linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
@@ -243,10 +242,10 @@ const HeroSection = () => {
               textVisible ? "opacity-100" : "opacity-0"
             }`}
           >
-            <h1 className="text-[#29476E] lg:text-white lg:drop-shadow-lg font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
+            <h1 className="text-white drop-shadow-lg font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
               {HERO_SLIDES[textSlide].headline}
             </h1>
-            <p className="text-[#283D4B] lg:text-white/90 lg:drop-shadow-md text-lg sm:text-xl lg:text-[1.25rem] font-normal leading-relaxed max-w-md">
+            <p className="text-white/90 drop-shadow-md text-lg sm:text-xl lg:text-[1.25rem] font-normal leading-relaxed max-w-md">
               {HERO_SLIDES[textSlide].text}
             </p>
           </div>
@@ -256,7 +255,7 @@ const HeroSection = () => {
               this short-lived (3s each). */}
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <button
-              className="rounded-full border-2 border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white lg:border-white lg:text-white lg:hover:bg-white lg:hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#002B56] lg:focus:ring-white focus:ring-offset-2"
+              className="rounded-full border-2 border-white text-white hover:bg-white hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
               aria-label="Join NpcInnovationHub"
               onClick={() => setIsJoinModalOpen(true)}
             >
@@ -274,8 +273,8 @@ const HeroSection = () => {
                   aria-current={index === textSlide}
                   className={`rounded-full transition-all duration-300 ${
                     index === textSlide
-                      ? "bg-[#002B56] lg:bg-white w-6 h-2"
-                      : "bg-[#29476E]/25 hover:bg-[#29476E]/40 lg:bg-white/40 lg:hover:bg-white/60 w-2 h-2"
+                      ? "bg-white w-6 h-2"
+                      : "bg-white/40 hover:bg-white/60 w-2 h-2"
                   }`}
                 />
               ))}
@@ -284,12 +283,13 @@ const HeroSection = () => {
 
           {/* Tagline - lg:hidden because the desktop version below
               renders under the member carousel card instead, which only
-              exists at lg+. Navy-toned to match the rest of this
-              section's text now that there's no navy band behind it. */}
-          <p className="lg:hidden mt-8 text-2xl font-bold select-none">
-            <span className="text-[#002B56]">Innovate.</span>{" "}
-            <span className="text-[#002B56]/80">Create.</span>{" "}
-            <span className="text-[#002B56]/65">Lead.</span>
+              exists at lg+. White-toned to match the rest of this
+              section's text now that it sits on the photo/navy overlay
+              too, with a drop-shadow for the same reason as the headline. */}
+          <p className="lg:hidden mt-8 text-2xl font-bold select-none drop-shadow-md">
+            <span className="text-white">Innovate.</span>{" "}
+            <span className="text-white/80">Create.</span>{" "}
+            <span className="text-white/65">Lead.</span>
           </p>
         </section>
 
