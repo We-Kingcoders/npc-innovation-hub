@@ -280,36 +280,35 @@ const HeroSection = () => {
               ))}
             </div>
           </div>
-
-          {/* Tagline - lg:hidden because the desktop version below
-              renders under the member carousel card instead, which only
-              exists at lg+. White-toned to match the rest of this
-              section's text now that it sits on the photo/navy overlay
-              too, with a drop-shadow for the same reason as the headline. */}
-          <p className="lg:hidden mt-8 text-2xl font-bold select-none drop-shadow-md">
-            <span className="text-white">Innovate.</span>{" "}
-            <span className="text-white/80">Create.</span>{" "}
-            <span className="text-white/65">Lead.</span>
-          </p>
         </section>
 
-        {/* Right Section - Hero Image Carousel + Slogan Container.
-            items-end (was items-start) + right padding trimmed to a sliver
-            (was lg:pr-8 xl:pr-12): the card and slogan both cap out at
+        {/* Right Section - Hero Image Carousel + Slogan Container. Used to
+            be lg:only (hidden below it), with the text section above
+            carrying its own separate mobile-only tagline instead - now
+            shown at every breakpoint so the sliding member carousel isn't
+            a desktop-exclusive feature, and that duplicate tagline was
+            removed in favor of this section's own (directly below the
+            card, same as desktop always had).
+            items-center below lg (was only relevant at lg as items-end):
+            centers the card in the single-column mobile/tablet layout;
+            items-end still pins it to the right edge in the two-column
+            desktop layout. Right padding trimmed to a sliver at lg+ (was
+            lg:pr-8 xl:pr-12): the card and slogan both cap out at
             max-w-[580px], so on any screen wider than that cap this
             column has real slack left over - with items-start that slack
             rendered as a wide gap of unused navy between the card and the
-            right edge. items-end pins both against the right edge
-            instead; the small remaining pr just keeps the slogan text off
-            the literal edge of the viewport. */}
-        <div className="hidden lg:flex flex-col items-end justify-center w-full lg:w-[60%] lg:pl-12 xl:pl-20 lg:pr-4 xl:pr-6 lg:pt-20">
+            right edge; the small remaining pr just keeps the slogan text
+            off the literal edge of the viewport. */}
+        <div className="flex flex-col items-center lg:items-end justify-center w-full px-6 sm:px-8 pb-10 lg:pb-0 lg:w-[60%] lg:px-0 lg:pl-12 xl:pl-20 lg:pr-4 xl:pr-6 lg:pt-20">
           {/* Hero Image Carousel. bg-gradient fill is the permanent card
               backdrop now - every member renders as a circular avatar
               (see below), not a full-bleed photo, so this navy surface is
               always visible around it rather than only showing through
               letterboxed gaps. No prev/next arrows - dots are the only
-              manual control, same as the text carousel. */}
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[420px] xl:h-[470px] bg-gradient-to-br from-[#002B56] to-[#003366]">
+              manual control, same as the text carousel. Height scales up
+              through the smaller breakpoints too now that this renders on
+              phones, not just a flat lg+ h-[420px]. */}
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[300px] sm:h-[360px] lg:h-[420px] xl:h-[470px] bg-gradient-to-br from-[#002B56] to-[#003366]">
             {/* Slides */}
             <div className="relative w-full h-full">
               {teamMembers.map((member, index) => (
@@ -369,13 +368,14 @@ const HeroSection = () => {
           </div>
 
           {/* Slogan - positioned directly below image, always one line,
-              centered under it. Back to white/90/80 - this sits in the
-              solid-navy end of the background gradient above (same
-              reasoning as when this was the navy diagonal), not the
-              flat-white ground the mobile version of this tagline sits
-              on, which is the one that stays navy-toned. */}
-          <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-center">
-            <p className="text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
+              centered under it. White/90/80 since this always sits on the
+              photo/navy background now (the card's own navy fill at lg+,
+              the full-bleed overlay below it) - text size steps down at
+              the smallest breakpoint so "Innovate. Create. Lead." still
+              fits the phrase's own whitespace-nowrap on a narrow phone
+              without shrinking the container's max-w-[580px]. */}
+          <div className="mt-4 lg:mt-2 xl:mt-10 w-full max-w-[580px] text-center">
+            <p className="text-xl sm:text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
               <span className="text-white">Innovate.</span>{" "}
               <span className="text-white/90">Create.</span>{" "}
               <span className="text-white/80">Lead.</span>
