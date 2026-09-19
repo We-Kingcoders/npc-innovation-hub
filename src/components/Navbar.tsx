@@ -101,13 +101,10 @@ export default function Navbar() {
   // hero has mounted, never sits transparent over nothing.
   const [pastHero, setPastHero] = useState(true);
 
-  // The homepage hero (lg+ only - see HeroSection.tsx) is a photo/navy
-  // background, not a plain white one, so the navbar floats transparent
-  // over it for as long as the hero is what's actually behind it - same
-  // idea as glion.edu's navbar. Below lg, HeroSection stays flat white
-  // (see its own comment on why), so the navbar there is left untouched -
-  // see the lg:-prefixed classes further down rather than a top-level
-  // branch here.
+  // The homepage hero (see HeroSection.tsx) is a photo/navy background at
+  // every breakpoint now, not a plain white one, so the navbar floats
+  // transparent over it for as long as the hero is what's actually behind
+  // it - same idea as glion.edu's navbar.
   //
   // IntersectionObserver, not a scrollY/hero-height comparison: the hero's
   // rendered height is responsive (min-h-screen plus its own content), so a
@@ -143,51 +140,71 @@ export default function Navbar() {
       return undefined;
     }
 
-    // Header height at lg - must match the spacer's lg:h-[83px] below and
-    // HeroSection.tsx's matching -top-[83px] background offset.
-    const HEADER_HEIGHT_LG = 83;
+    // Header height differs below/at lg (67px vs 83px - must match the
+    // spacer's h-[67px] lg:h-[83px] below and HeroSection.tsx's matching
+    // -top-[67px] lg:-top-[83px] background offset). Re-read on every
+    // (re)attach, and torn down/recreated below on a live breakpoint
+    // crossing, rather than captured once - a resize that crosses lg
+    // would otherwise leave the observer's rootMargin measuring against
+    // the wrong height until the component next remounts.
+    const isLg = () => window.matchMedia("(min-width: 1024px)").matches;
 
     let observer: IntersectionObserver | undefined;
     let rafId: number;
     let cancelled = false;
     const deadline = Date.now() + 3000;
 
+    const setup = (hero: HTMLElement) => {
+      const headerHeight = isLg() ? 83 : 67;
+      // The observer is only a "something crossed the threshold, go
+      // recheck" signal here - its own isIntersecting/rootBounds aren't
+      // trusted directly. Right after a client-side route transition
+      // inserts the hero into the DOM, the observer's very first callback
+      // can fire once with geometry from before layout has fully settled
+      // (a real, if intermittent, timing gap - observed as the navbar
+      // staying solid on navigating back to "/" from another route).
+      // Since the hero doesn't actually move again after that, there's no
+      // later crossing to self-correct it. A fresh getBoundingClientRect()
+      // read, on the other hand, always reflects current, fully-computed
+      // layout, so recomputing from it - both once synchronously now and
+      // again on every future callback - has no equivalent gap.
+      const recompute = () => {
+        setPastHero(hero.getBoundingClientRect().bottom <= headerHeight);
+      };
+      observer = new IntersectionObserver(recompute, {
+        rootMargin: `-${headerHeight}px 0px 0px 0px`,
+        threshold: 0,
+      });
+      observer.observe(hero);
+      recompute();
+    };
+
     const attach = () => {
       if (cancelled) return;
       const hero = document.getElementById("home");
       if (hero) {
-        // The observer is only a "something crossed the threshold, go
-        // recheck" signal here - its own isIntersecting/rootBounds aren't
-        // trusted directly. Right after a client-side route transition
-        // inserts the hero into the DOM, the observer's very first
-        // callback can fire once with geometry from before layout has
-        // fully settled (a real, if intermittent, timing gap - observed
-        // as the navbar staying solid on navigating back to "/" from
-        // another route). Since the hero doesn't actually move again
-        // after that, there's no later crossing to self-correct it. A
-        // fresh getBoundingClientRect() read, on the other hand, always
-        // reflects current, fully-computed layout, so recomputing from it
-        // - both once synchronously now and again on every future
-        // callback - has no equivalent gap.
-        const recompute = () => {
-          setPastHero(hero.getBoundingClientRect().bottom <= HEADER_HEIGHT_LG);
-        };
-        observer = new IntersectionObserver(recompute, {
-          rootMargin: `-${HEADER_HEIGHT_LG}px 0px 0px 0px`,
-          threshold: 0,
-        });
-        observer.observe(hero);
-        recompute();
+        setup(hero);
         return;
       }
       if (Date.now() < deadline) rafId = requestAnimationFrame(attach);
     };
 
     attach();
+
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const handleBreakpointChange = () => {
+      const hero = document.getElementById("home");
+      if (!hero) return;
+      observer?.disconnect();
+      setup(hero);
+    };
+    mql.addEventListener("change", handleBreakpointChange);
+
     return () => {
       cancelled = true;
       if (rafId) cancelAnimationFrame(rafId);
       observer?.disconnect();
+      mql.removeEventListener("change", handleBreakpointChange);
     };
   }, [onHome]);
 
@@ -261,7 +278,7 @@ export default function Navbar() {
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           transparentAtTop
-            ? "bg-white lg:bg-transparent shadow-sm lg:shadow-none"
+            ? "bg-transparent shadow-none"
             : `bg-white ${scrolled ? "shadow-md" : "shadow-sm"}`
         }`}
       >
@@ -269,11 +286,11 @@ export default function Navbar() {
             section's mobile header accent line - ties this flat white bar
             back to the homepage's signature brand gradient instead of
             reading as a plain, disconnected white strip. Faded out (not
-            unmounted) at lg+ while transparentAtTop, so the header's
-            height never changes and the spacer div below stays accurate. */}
+            unmounted) while transparentAtTop, so the header's height never
+            changes and the spacer div below stays accurate. */}
         <div
           className={`h-[3px] w-full bg-gradient-to-r from-[#002B56] via-[#003366] to-[#002B56] transition-opacity duration-300 ${
-            transparentAtTop ? "lg:opacity-0" : ""
+            transparentAtTop ? "opacity-0" : ""
           }`}
         />
 
@@ -283,7 +300,7 @@ export default function Navbar() {
             to="/"
             className={`font-bold tracking-tight text-lg lg:text-xl whitespace-nowrap transition-colors duration-200 ${
               transparentAtTop
-                ? "text-[#002B56] lg:text-white lg:hover:text-white/80 lg:drop-shadow-md"
+                ? "text-white hover:text-white/80 drop-shadow-md"
                 : "text-[#002B56] hover:text-[#003366]"
             }`}
           >
@@ -383,28 +400,37 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger. White when transparentAtTop to match the
+              logo, except once the menu is open - the panel below is
+              always solid white (readable list items need a guaranteed
+              background regardless of what's behind the header), so the
+              icon switches to its solid-state color the moment it opens
+              rather than staying white against a white panel. */}
           <button
-            className="lg:hidden relative p-2 text-[#002B56] hover:bg-gray-50 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56]/20"
+            className={`lg:hidden relative p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+              transparentAtTop && !isMenuOpen
+                ? "text-white hover:bg-white/10 focus:ring-white/40"
+                : "text-[#002B56] hover:bg-gray-50 focus:ring-[#002B56]/20"
+            }`}
             onClick={() => setIsMenuOpen((o) => !o)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
           >
             <div className="w-6 h-6 relative">
               <span
-                className={`absolute block w-6 h-0.5 bg-[#002B56] transform transition-all duration-300 ${
-                  isMenuOpen ? "rotate-45 top-2.5" : "top-0"
-                }`}
+                className={`absolute block w-6 h-0.5 transform transition-all duration-300 ${
+                  transparentAtTop && !isMenuOpen ? "bg-white" : "bg-[#002B56]"
+                } ${isMenuOpen ? "rotate-45 top-2.5" : "top-0"}`}
               />
               <span
-                className={`absolute block w-6 h-0.5 bg-[#002B56] top-2.5 transition-all duration-300 ${
-                  isMenuOpen ? "opacity-0" : "opacity-100"
-                }`}
+                className={`absolute block w-6 h-0.5 top-2.5 transition-all duration-300 ${
+                  transparentAtTop && !isMenuOpen ? "bg-white" : "bg-[#002B56]"
+                } ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
               />
               <span
-                className={`absolute block w-6 h-0.5 bg-[#002B56] transform transition-all duration-300 ${
-                  isMenuOpen ? "-rotate-45 top-2.5" : "top-5"
-                }`}
+                className={`absolute block w-6 h-0.5 transform transition-all duration-300 ${
+                  transparentAtTop && !isMenuOpen ? "bg-white" : "bg-[#002B56]"
+                } ${isMenuOpen ? "-rotate-45 top-2.5" : "top-5"}`}
               />
             </div>
           </button>
