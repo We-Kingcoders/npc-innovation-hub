@@ -70,18 +70,18 @@ export default function Sidebar({
         // explicit height, which wins over the inset-derived one - 100vh
         // runs past the actually-visible area when the browser's address
         // bar is showing and can put the bottom items behind it. 100dvh
-        // tracks the real visible viewport instead.
-        className={`fixed inset-y-0 left-0 z-30 w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"} lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-dvh flex flex-col text-white shadow-lg transition-transform lg:transition-all duration-300 ease-in-out ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        // tracks the real visible viewport instead. Flush against the
+        // edge on desktop (no rounding, no left margin, shadow-2xl) -
+        // this is Admin's actual container shape, not a floating card.
+        className={`fixed lg:sticky inset-y-0 lg:inset-y-auto lg:top-0 left-0 z-30 w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"} ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 bg-navy-800 h-dvh flex flex-col transition-transform lg:transition-all duration-300 ease-in-out shadow-2xl`}
       >
         {/* Mobile-only off-canvas toggle - stays outside the brand row
             since the whole sidebar translates off-screen on mobile; it
             needs to remain reachable independent of that. */}
         <button
-          onClick={() => setIsMobileOpen((open) => !open)}
-          aria-label={isMobileOpen ? "Close menu" : "Open menu"}
-          className="lg:hidden absolute -right-11 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          aria-label={isMobileOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className="lg:hidden absolute -right-12 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
         >
           {isMobileOpen ? (
             <ChevronsLeft size={20} />
