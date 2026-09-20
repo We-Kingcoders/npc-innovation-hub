@@ -1,7 +1,9 @@
 // src/components/admin-components/Sidebar.tsx
-// Updated to include "messages" icon and route.
+// Admin-specific data (nav items, icon mapping, live hire-inquiries badge
+// polling) wired into the shared shell in components/ui/Sidebar.tsx - the
+// shell itself (collapse, mobile drawer, active styling, sign-out) lives
+// there so Admin and Member can never drift apart again.
 
-import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   LayoutDashboard,
@@ -10,20 +12,17 @@ import {
   Briefcase,
   FileText,
   Users,
-  ChevronsLeft,
-  ChevronsRight,
-  LogOut,
   Calendar,
   ClipboardList,
-  MessageSquare, // ← new
-  UserCheck, // ← new
-  Star, // ← new
-  Video, // ← new
-  GraduationCap, // ← new
+  MessageSquare,
+  UserCheck,
+  Star,
+  Video,
+  GraduationCap,
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
-import { useAuth } from "../../hooks/useAuth";
 import { getPendingHireInquiriesCount } from "../../api/admin/hire.api";
+import SidebarShell, { type SidebarLinkItem } from "../ui/Sidebar";
 
 // How often to re-poll the pending-hire-inquiries count for the sidebar badge.
 const HIRE_BADGE_POLL_MS = 45_000;
@@ -38,37 +37,18 @@ const iconComponents = {
   members: Users,
   calendar: Calendar,
   clipboard: ClipboardList,
-  messages: MessageSquare, // ← new
-  applications: UserCheck, // ← new
-  heroMembers: Star, // ← new
-  hubVideo: Video, // ← new
-  alumni: GraduationCap, // ← new
+  messages: MessageSquare,
+  applications: UserCheck,
+  heroMembers: Star,
+  hubVideo: Video,
+  alumni: GraduationCap,
 };
 
 export default function Sidebar() {
-  const location = useLocation();
-  // Two independent states, not one overloaded boolean: a one-time
-  // window.innerWidth read (the old approach) can never re-sync with the
-  // `lg:` CSS breakpoint after mount (resize, browser zoom, OS display
-  // scaling), which let the mobile off-canvas drawer and the desktop
-  // in-flow sidebar disagree about whether the sidebar was actually
-  // visible - the sidebar would render fixed + fully open on top of the
-  // page content. isDesktopCollapsed only ever drives lg:-prefixed
-  // classes below, so it structurally cannot affect mobile layout.
-  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  // Close the mobile drawer on navigation, matching member/Sidebar.tsx.
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [location.pathname]);
-
-  const { logout } = useAuth();
-
   // Real pending-hire-inquiries count for the "Hire Us Requests" badge.
-  // null until the first successful fetch, so the link renders with no badge
-  // rather than a stale/fake number while loading or if the request fails.
+  // null until the first successful fetch, so the link renders with no
+  // badge rather than a stale/fake number while loading or if the
+  // request fails.
   const [pendingHireCount, setPendingHireCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -92,177 +72,24 @@ export default function Sidebar() {
     };
   }, []);
 
-  // A route is "active" if the pathname starts with the link path
-  // (covers /admin/messages/:id, /admin/hub-channel, etc.)
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(path + "/");
+  const links: SidebarLinkItem[] = sidebarLinks.map(
+    ({ icon, label, path, notification }) => {
+      const IconComponent = iconComponents[icon as keyof typeof iconComponents];
+      const badge =
+        label === HIRE_REQUESTS_LABEL && pendingHireCount !== null
+          ? pendingHireCount
+          : notification;
 
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true);
-      await logout();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
-  return (
-    <>
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`
-          fixed lg:sticky inset-y-0 lg:inset-y-auto lg:top-0 left-0 z-30
-          w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"}
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
-          bg-navy-800
-          h-dvh flex flex-col
-          transition-transform lg:transition-all duration-300 ease-in-out
-          shadow-2xl
-        `}
-        // h-dvh, not h-screen: this is `fixed inset-y-0` with an explicit
-        // height on mobile, which wins over the inset-derived one - 100vh
-        // runs past the actually-visible area when the browser's address
-        // bar is showing and can put the bottom nav items behind it.
-        // 100dvh tracks the real visible viewport instead.
-      >
-        {/* Mobile-only off-canvas toggle - stays outside the brand row since
-            the whole sidebar translates off-screen on mobile; it needs to
-            remain reachable independent of that (visible as an edge tab at
-            x≈0 when closed, per the translate-x-full above). */}
-        <button
-          onClick={() => setIsMobileOpen(!isMobileOpen)}
-          aria-label={isMobileOpen ? "Collapse sidebar" : "Expand sidebar"}
-          className="lg:hidden absolute -right-12 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
-        >
-          {isMobileOpen ? (
-            <ChevronsLeft size={20} />
-          ) : (
-            <ChevronsRight size={20} />
-          )}
-        </button>
-
-        {/* Brand + desktop collapse toggle share one row, the toggle at the
-            row's end rather than floating outside the sidebar's own edge.
-            Own profile access (avatar, name, View Profile/Profile Settings)
-            lives in Topbar.tsx's top-right profile icon - not duplicated
-            here too. */}
-        <div
-          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 justify-between px-6 ${
-            isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""
-          }`}
-        >
-          <span
-            className={`text-sm font-extrabold tracking-tight text-white whitespace-nowrap truncate ${isDesktopCollapsed ? "lg:hidden" : ""}`}
-          >
-            NPC INNOVATION HUB
-          </span>
-          <button
-            onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
-            aria-label={
-              isDesktopCollapsed ? "Expand sidebar" : "Collapse sidebar"
-            }
-            className="hidden lg:flex items-center justify-center flex-shrink-0 bg-white text-navy-800 p-1.5 rounded-full shadow-md hover:shadow-lg transition-shadow"
-          >
-            {isDesktopCollapsed ? (
-              <ChevronsRight size={16} />
-            ) : (
-              <ChevronsLeft size={16} />
-            )}
-          </button>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-3 overflow-y-auto hide-scrollbar">
-          <ul className="space-y-1">
-            {sidebarLinks.map(({ icon, label, notification, path }) => {
-              const IconComponent =
-                iconComponents[icon as keyof typeof iconComponents];
-              const active = isActive(path);
-              const badgeCount =
-                label === HIRE_REQUESTS_LABEL && pendingHireCount !== null
-                  ? pendingHireCount
-                  : notification;
-
-              return (
-                <li key={label}>
-                  <Link
-                    to={path}
-                    className={`
-                      group flex items-center gap-3 px-3 py-2 rounded-lg
-                      transition-all duration-200 min-w-0
-                      ${isDesktopCollapsed ? "lg:justify-center" : ""}
-                      ${
-                        active
-                          ? "bg-navy-700 shadow-md border-l-4 border-white font-bold"
-                          : "text-navy-100 hover:bg-navy-700 hover:text-white hover:font-bold"
-                      }
-                    `}
-                    title={isDesktopCollapsed ? label : undefined}
-                  >
-                    <div className="relative flex-shrink-0">
-                      <div
-                        className={`p-1.5 rounded-lg transition-colors duration-200 ${
-                          active
-                            ? "bg-white text-navy-800"
-                            : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
-                        }`}
-                      >
-                        {IconComponent && (
-                          <IconComponent size={18} strokeWidth={2.5} />
-                        )}
-                      </div>
-                      {badgeCount > 0 && (
-                        <span
-                          className={`absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-white text-navy-800 ring-2 ring-navy-800 text-[10px] font-bold rounded-full flex items-center justify-center ${isDesktopCollapsed ? "lg:scale-90" : ""}`}
-                        >
-                          {badgeCount > 99 ? "99+" : badgeCount}
-                        </span>
-                      )}
-                    </div>
-                    <span
-                      className={`flex-1 min-w-0 truncate text-sm uppercase ${active ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200 ${isDesktopCollapsed ? "lg:hidden" : ""}`}
-                    >
-                      {label}
-                    </span>
-                    {badgeCount > 0 && (
-                      <span
-                        className={`ml-auto flex-shrink-0 bg-white text-navy-800 text-xs font-bold px-2 py-0.5 rounded-full ${isDesktopCollapsed ? "lg:hidden" : ""}`}
-                      >
-                        {badgeCount > 99 ? "99+" : badgeCount}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Logout */}
-        <div className="px-4 pb-4 mt-auto flex-shrink-0">
-          <button
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-          >
-            <LogOut
-              size={20}
-              className={`group-hover:scale-110 transition-transform ${isLoggingOut ? "animate-spin" : ""}`}
-            />
-            <span className={isDesktopCollapsed ? "lg:hidden" : ""}>
-              {isLoggingOut ? "Signing out..." : "Sign Out"}
-            </span>
-          </button>
-        </div>
-      </aside>
-    </>
+      return {
+        label,
+        path,
+        badge,
+        icon: IconComponent ? (
+          <IconComponent size={18} strokeWidth={2.5} />
+        ) : null,
+      };
+    },
   );
+
+  return <SidebarShell links={links} />;
 }
