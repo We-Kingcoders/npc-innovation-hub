@@ -4,7 +4,7 @@
 // ============================================================
 
 import React from "react";
-import StatsCard, { StatsCardSkeleton } from "./StatsCard";
+import StatsCard, { StatsCardSkeleton } from "../../ui/StatsCard";
 import type { GrowthMetric } from "../../../types/dashboard.types";
 
 interface ModernStatsCardsProps {

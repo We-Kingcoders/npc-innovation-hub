@@ -15,6 +15,7 @@ import ProjectDeleteModal from "./ProjectDeleteModal";
 import ProjectEditModal from "./ProjectEditModal";
 import ResponsiveTable from "../ui/ResponsiveTable";
 import MobileCardRow from "../ui/MobileCardRow";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Props {
   projects: MemberProject[];
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const ProjectTable: React.FC<Props> = ({ projects, onDelete, onUpdate }) => {
+  const { user } = useAuth();
   const [viewProject, setViewProject] = useState<MemberProject | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<MemberProject | null>(null);
   const [editTarget, setEditTarget] = useState<MemberProject | null>(null);
@@ -74,39 +76,56 @@ const ProjectTable: React.FC<Props> = ({ projects, onDelete, onUpdate }) => {
     </div>
   );
 
-  const renderActions = (project: MemberProject) => (
-    <div className="flex items-center gap-2">
-      <button
-        title="View project"
-        onClick={() => setViewProject(project)}
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition group"
-      >
-        <Eye size={15} className="group-hover:scale-110 transition-transform" />
-      </button>
-      {onUpdate && (
+  // "All Projects" (see Projects.tsx's view toggle) lists every member's
+  // projects, not just the viewer's own - Edit/Delete used to render
+  // unconditionally for every row regardless of whose project it was. The
+  // backend already rejects an edit/delete the viewer doesn't own (see
+  // assertOwnerOrAdmin in project.controller.ts), so this was never an
+  // actual security gap, but showing an action a Member has no legitimate
+  // reason to attempt is a real UX defect - View stays available to
+  // everyone (this is a legitimate read-only showcase of others' work).
+  const renderActions = (project: MemberProject) => {
+    const isMine = !!user && project.userId === user.id;
+
+    return (
+      <div className="flex items-center gap-2">
         <button
-          title="Edit project"
-          onClick={() => setEditTarget(project)}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition group"
+          title="View project"
+          onClick={() => setViewProject(project)}
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition group"
         >
-          <Pencil
+          <Eye
             size={15}
             className="group-hover:scale-110 transition-transform"
           />
         </button>
-      )}
-      <button
-        title="Delete project"
-        onClick={() => setDeleteTarget(project)}
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition group"
-      >
-        <Trash2
-          size={15}
-          className="group-hover:scale-110 transition-transform"
-        />
-      </button>
-    </div>
-  );
+        {isMine && onUpdate && (
+          <button
+            title="Edit project"
+            onClick={() => setEditTarget(project)}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition group"
+          >
+            <Pencil
+              size={15}
+              className="group-hover:scale-110 transition-transform"
+            />
+          </button>
+        )}
+        {isMine && (
+          <button
+            title="Delete project"
+            onClick={() => setDeleteTarget(project)}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition group"
+          >
+            <Trash2
+              size={15}
+              className="group-hover:scale-110 transition-transform"
+            />
+          </button>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
