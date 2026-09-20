@@ -6,19 +6,14 @@ import { useTasks } from "../../hooks/useTasks";
 import { useBlogs } from "../../hooks/useBlogs";
 import { useResources } from "../../hooks/useResources";
 import { useMemberProjects } from "../../hooks/useMemberProjects";
-import { useConversations } from "../../hooks/useDirectMessages";
 
 // Dashboard components
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import DashboardSkeleton from "../../components/dashboard/DashboardSkeleton";
 import StatsCards from "../../components/dashboard/StatsCards";
-import ProfileCard from "../../components/dashboard/ProfileCard";
 import TaskOverview from "../../components/dashboard/TaskOverview";
 import RecentTasks from "../../components/dashboard/RecentTasks";
 import RecentProjects from "../../components/dashboard/RecentProjects";
-import RecentResources from "../../components/dashboard/RecentResources";
-import RecentBlogs from "../../components/dashboard/RecentBlogs";
-import MessagesPreview from "../../components/dashboard/MessagesPreview";
 import ActivityFeed from "../../components/dashboard/ActivityFeed";
 import QuickActions from "../../components/dashboard/QuickActions";
 
@@ -42,9 +37,6 @@ export const Dashboard: React.FC = () => {
 
   // ── Projects ───────────────────────────────────────────────────────────────
   const { projects, loading: projectsLoading } = useMemberProjects();
-
-  // ── Messages ───────────────────────────────────────────────────────────────
-  const { conversations, isLoading: convsLoading } = useConversations();
 
   // ── Track initial load ─────────────────────────────────────────────────────
   const [initialised, setInitialised] = useState(false);
@@ -94,22 +86,23 @@ export const Dashboard: React.FC = () => {
           <RecentProjects projects={projects} loading={projectsLoading} />
         </div>
 
-        {/* Right: 1 col */}
+        {/* Right: 1 col. Profile access lives in Topbar's profile dropdown
+            (see Topbar.tsx) - a dashboard-widget copy of the same name/
+            role/email was a plain duplicate, and Admin's own dashboard
+            has no profile card either. */}
         <div className="flex flex-col gap-5">
-          <ProfileCard user={user} />
           <TaskOverview tasks={tasks} />
           <QuickActions />
         </div>
       </div>
 
-      {/* ── Bottom 3-col row ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <RecentResources resources={resources} loading={resourcesLoading} />
-        <RecentBlogs blogs={blogs} loading={blogsLoading} />
-        <MessagesPreview conversations={conversations} loading={convsLoading} />
-      </div>
-
-      {/* ── Activity feed full width ── */}
+      {/* ── Activity feed full width ──
+          Resources/Blogs/Messages preview widgets used to sit in a row
+          above this - dropped since Admin's dashboard has no equivalent
+          content-preview widgets at all (Resources/Blog already have
+          their own full pages in the sidebar), and the messages one
+          added nothing a live unread badge on Topbar's Mail icon
+          doesn't already cover. */}
       <ActivityFeed tasks={tasks} blogs={blogs} resources={resources} />
     </div>
   );
