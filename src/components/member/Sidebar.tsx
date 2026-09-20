@@ -27,46 +27,46 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   {
     name: "Dashboard",
-    icon: <LayoutDashboard size={20} />,
+    icon: <LayoutDashboard size={18} strokeWidth={2.5} />,
     link: "/dashboard",
   },
   {
     name: "Notifications",
-    icon: <Bell size={20} />,
+    icon: <Bell size={18} strokeWidth={2.5} />,
     link: "/notifications",
     badge: 6,
   },
   {
     name: "Resources",
-    icon: <FolderOpen size={20} />,
+    icon: <FolderOpen size={18} strokeWidth={2.5} />,
     link: "/dashboard/resources",
     badge: 5,
   },
   {
     name: "Projects",
-    icon: <Briefcase size={20} />,
+    icon: <Briefcase size={18} strokeWidth={2.5} />,
     link: "/dashboard/projects",
     badge: 30,
   },
   {
     name: "Messages",
-    icon: <MessageSquare size={20} />,
+    icon: <MessageSquare size={18} strokeWidth={2.5} />,
     link: "/hub-channel",
   },
   {
     name: "Events",
-    icon: <Calendar size={20} />,
+    icon: <Calendar size={18} strokeWidth={2.5} />,
     link: "/dashboard/events",
     badge: 6,
   },
   {
     name: "Blog",
-    icon: <BookOpen size={20} />,
+    icon: <BookOpen size={18} strokeWidth={2.5} />,
     link: "/blog",
   },
   {
     name: "My Tasks",
-    icon: <ClipboardList size={20} />,
+    icon: <ClipboardList size={18} strokeWidth={2.5} />,
     link: "/dashboard/tasks",
   },
 ];
@@ -83,6 +83,11 @@ export const Sidebar: React.FC = () => {
   // page - matches the admin sidebar's own default, fixed for the same
   // reason there.
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  // Desktop icon-only collapse, matching admin-components/Sidebar.tsx -
+  // self-contained here since this <aside> is a plain flex sibling of the
+  // content column in DashboardLayout, so narrowing it on `lg:` classes
+  // alone reflows the page without any layout-level wiring.
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const location = useLocation();
 
   // Close the mobile drawer on navigation, same as the public Navbar -
@@ -120,7 +125,7 @@ export const Sidebar: React.FC = () => {
         // browser's address bar visible it runs past the actually-visible
         // area and can put the logout button behind the browser chrome.
         // 100dvh tracks the real visible viewport instead.
-        className={`fixed inset-y-0 left-0 z-30 w-64 lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-dvh flex flex-col py-6 px-6 text-white shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"} lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-dvh flex flex-col text-white shadow-lg transition-transform lg:transition-all duration-300 ease-in-out ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -142,78 +147,109 @@ export const Sidebar: React.FC = () => {
           )}
         </button>
 
-        {/* Brand - sized (not truncated) to stay fully visible on one line
-            within the sidebar's own width, no horizontal scroll needed. */}
-        <div className="pb-4 flex-shrink-0">
-          <span className="block text-sm font-extrabold tracking-tight text-white whitespace-nowrap">
+        {/* Brand + desktop collapse toggle share one row, matching
+            admin-components/Sidebar.tsx exactly. Own profile access lives
+            in Topbar.tsx's profile dropdown, not duplicated here - this
+            used to also carry a large avatar/name/role block, removed for
+            the same reason (and because it duplicated dashboard/ProfileCard.tsx
+            shown right below it on the Dashboard page). */}
+        <div
+          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 justify-between px-6 ${
+            isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""
+          }`}
+        >
+          <span
+            className={`text-sm font-extrabold tracking-tight text-white whitespace-nowrap truncate ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+          >
             NPC INNOVATION HUB
           </span>
+          <button
+            onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
+            aria-label={
+              isDesktopCollapsed ? "Expand sidebar" : "Collapse sidebar"
+            }
+            className="hidden lg:flex items-center justify-center flex-shrink-0 bg-white text-navy-800 p-1.5 rounded-full shadow-md hover:shadow-lg transition-shadow"
+          >
+            {isDesktopCollapsed ? (
+              <ChevronsRight size={16} />
+            ) : (
+              <ChevronsLeft size={16} />
+            )}
+          </button>
         </div>
 
-        {/* Scrolls internally so a tall menu never pushes Logout off-screen
-            or forces the whole sidebar (rather than the page) to scroll.
-            Used to open with a large avatar/name/role profile block here -
-            removed to match the Admin sidebar's own convention (profile
-            access lives in Topbar's profile dropdown, not duplicated here
-            too - see admin-components/Sidebar.tsx). It was also a literal
-            duplicate of dashboard/ProfileCard.tsx shown right below it on
-            the Dashboard page. */}
-        <div className="flex-1 min-h-0 overflow-y-auto pt-2">
-          {/* Menu label */}
-          <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-bold">
-            Menu
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex flex-col gap-2">
+        {/* Navigation - scrolls internally so a tall menu never pushes
+            Logout off-screen or forces the whole sidebar (rather than the
+            page) to scroll. */}
+        <nav className="flex-1 px-4 py-3 overflow-y-auto hide-scrollbar">
+          <ul className="space-y-1">
             {sidebarItems.map((item) => (
-              <NavLink
-                to={item.link}
-                key={item.name}
-                end={item.link === "/dashboard"}
-                className={({ isActive }) =>
-                  `group flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 min-w-0 ${
-                    isActive
-                      ? "bg-navy-700 shadow-md border-l-4 border-white"
-                      : "text-navy-100 hover:bg-navy-700 hover:text-white"
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span
-                      className={`flex-shrink-0 rounded-lg p-2 relative transition-colors duration-200 ${
-                        isActive
-                          ? "bg-white text-navy-800"
-                          : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
-                      }`}
-                    >
-                      {item.icon}
-                      {item.badge !== undefined && (
-                        <span className="absolute -top-2 -right-2 text-xs bg-white text-navy-800 ring-2 ring-navy-800 rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                          {item.badge > 99 ? "99+" : item.badge}
-                        </span>
-                      )}
-                    </span>
-                    <span className="flex-1 min-w-0 truncate font-bold uppercase">
-                      {item.name}
-                    </span>
-                  </>
-                )}
-              </NavLink>
+              <li key={item.name}>
+                <NavLink
+                  to={item.link}
+                  end={item.link === "/dashboard"}
+                  title={isDesktopCollapsed ? item.name : undefined}
+                  className={({ isActive }) =>
+                    `group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 ${
+                      isDesktopCollapsed ? "lg:justify-center" : ""
+                    } ${
+                      isActive
+                        ? "bg-navy-700 shadow-md border-l-4 border-white font-bold"
+                        : "text-navy-100 hover:bg-navy-700 hover:text-white hover:font-bold"
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <div className="relative flex-shrink-0">
+                        <div
+                          className={`p-1.5 rounded-lg transition-colors duration-200 ${
+                            isActive
+                              ? "bg-white text-navy-800"
+                              : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
+                          }`}
+                        >
+                          {item.icon}
+                        </div>
+                        {item.badge !== undefined && (
+                          <span
+                            className={`absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-white text-navy-800 ring-2 ring-navy-800 text-[10px] font-bold rounded-full flex items-center justify-center px-1 ${isDesktopCollapsed ? "lg:scale-90" : ""}`}
+                          >
+                            {item.badge > 99 ? "99+" : item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className={`flex-1 min-w-0 truncate text-sm uppercase ${isActive ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200 ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+                      >
+                        {item.name}
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
             ))}
-          </nav>
-        </div>
+          </ul>
+        </nav>
 
         {/* Logout Button - pinned below the scrollable region, always visible */}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          disabled={isLoggingOut}
-          className="flex-shrink-0 flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-bold uppercase text-navy-100 hover:text-navy-800 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+        <div
+          className={`px-4 pb-4 mt-auto flex-shrink-0 ${isDesktopCollapsed ? "lg:px-3" : ""}`}
         >
-          <LogOut size={20} />
-          <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
-        </button>
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            disabled={isLoggingOut}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""}`}
+          >
+            <LogOut
+              size={20}
+              className="group-hover:scale-110 transition-transform"
+            />
+            <span className={isDesktopCollapsed ? "lg:hidden" : ""}>
+              {isLoggingOut ? "Signing out..." : "Sign Out"}
+            </span>
+          </button>
+        </div>
       </aside>
 
       {/* Sign Out Confirmation Modal */}
