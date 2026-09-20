@@ -1,7 +1,10 @@
 // src/components/member/Sidebar.tsx
+// Member's own nav items wired into the shared shell in
+// components/ui/Sidebar.tsx (the same shell Admin uses) - only the data
+// differs, keeping the two surfaces' behavior identical by construction
+// instead of by hand-copied styling that can drift apart again.
 
-import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React from "react";
 import {
   LayoutDashboard,
   Bell,
@@ -9,265 +12,59 @@ import {
   Briefcase,
   MessageSquare,
   Calendar,
-  LogOut,
   BookOpen,
   ClipboardList,
-  ChevronsLeft,
-  ChevronsRight,
 } from "lucide-react";
-import { useAuth } from "../../hooks/useAuth";
+import SidebarShell, { type SidebarLinkItem } from "../ui/Sidebar";
 
-interface SidebarItem {
-  name: string;
-  icon: React.ReactNode;
-  link: string;
-  badge?: number;
-}
-
-const sidebarItems: SidebarItem[] = [
+const links: SidebarLinkItem[] = [
   {
-    name: "Dashboard",
-    icon: <LayoutDashboard size={20} />,
-    link: "/dashboard",
+    label: "Dashboard",
+    icon: <LayoutDashboard size={18} strokeWidth={2.5} />,
+    path: "/dashboard",
+    // "/dashboard" is itself a prefix of every other Member route below -
+    // without `end`, Dashboard would render "active" on all of them too.
+    end: true,
   },
   {
-    name: "Notifications",
-    icon: <Bell size={20} />,
-    link: "/notifications",
+    label: "Notifications",
+    icon: <Bell size={18} strokeWidth={2.5} />,
+    path: "/notifications",
     badge: 6,
   },
   {
-    name: "Resources",
-    icon: <FolderOpen size={20} />,
-    link: "/dashboard/resources",
+    label: "Resources",
+    icon: <FolderOpen size={18} strokeWidth={2.5} />,
+    path: "/dashboard/resources",
     badge: 5,
   },
   {
-    name: "Projects",
-    icon: <Briefcase size={20} />,
-    link: "/dashboard/projects",
+    label: "Projects",
+    icon: <Briefcase size={18} strokeWidth={2.5} />,
+    path: "/dashboard/projects",
     badge: 30,
   },
   {
-    name: "Messages",
-    icon: <MessageSquare size={20} />,
-    link: "/hub-channel",
+    label: "Messages",
+    icon: <MessageSquare size={18} strokeWidth={2.5} />,
+    path: "/hub-channel",
   },
   {
-    name: "Events",
-    icon: <Calendar size={20} />,
-    link: "/dashboard/events",
+    label: "Events",
+    icon: <Calendar size={18} strokeWidth={2.5} />,
+    path: "/dashboard/events",
     badge: 6,
   },
   {
-    name: "Blog",
-    icon: <BookOpen size={20} />,
-    link: "/blog",
+    label: "Blog",
+    icon: <BookOpen size={18} strokeWidth={2.5} />,
+    path: "/blog",
   },
   {
-    name: "My Tasks",
-    icon: <ClipboardList size={20} />,
-    link: "/dashboard/tasks",
+    label: "My Tasks",
+    icon: <ClipboardList size={18} strokeWidth={2.5} />,
+    path: "/dashboard/tasks",
   },
 ];
 
-export const Sidebar: React.FC = () => {
-  const { logout } = useAuth();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  // Was a bare w-64 ml-6 (280px) rendered inline unconditionally - on a
-  // 320-375px phone that alone left almost no room for the actual page
-  // content next to it in DashboardLayout's flex row (the admin sidebar
-  // already had this off-canvas treatment; this one never did). Closed
-  // by default so a phone doesn't load into the drawer covering the
-  // page - matches the admin sidebar's own default, fixed for the same
-  // reason there.
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const location = useLocation();
-
-  // Close the mobile drawer on navigation, same as the public Navbar -
-  // otherwise a tapped link left the new page rendered behind the still-
-  // open drawer and its backdrop, needing a second tap just to see it.
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [location.pathname]);
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setIsLoggingOut(false);
-      setShowLogoutConfirm(false);
-    }
-  };
-
-  return (
-    <>
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
-      <aside
-        // h-dvh, not h-screen: on mobile this is `fixed inset-y-0` with an
-        // explicit height, which wins over the inset-derived one - 100vh
-        // is measured against the largest possible viewport, so with the
-        // browser's address bar visible it runs past the actually-visible
-        // area and can put the logout button behind the browser chrome.
-        // 100dvh tracks the real visible viewport instead.
-        className={`fixed inset-y-0 left-0 z-30 w-64 lg:sticky lg:top-0 lg:left-auto lg:ml-6 lg:translate-x-0 rounded-none lg:rounded-xl bg-navy-800 h-dvh flex flex-col py-6 px-6 text-white shadow-lg transition-transform duration-300 ease-in-out ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Mobile-only toggle, positioned outside the sidebar's own right
-            edge (same trick as the admin sidebar's) so the transform that
-            slides this whole <aside> off-screen carries the button along
-            with it - it lands as a small tab right at the screen's left
-            edge when closed, instead of a separately `fixed` button that
-            would sit on top of Topbar's search bar. */}
-        <button
-          onClick={() => setIsMobileOpen((open) => !open)}
-          aria-label={isMobileOpen ? "Close menu" : "Open menu"}
-          className="lg:hidden absolute -right-11 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
-        >
-          {isMobileOpen ? (
-            <ChevronsLeft size={20} />
-          ) : (
-            <ChevronsRight size={20} />
-          )}
-        </button>
-
-        {/* Brand - sized (not truncated) to stay fully visible on one line
-            within the sidebar's own width, no horizontal scroll needed. */}
-        <div className="pb-4 flex-shrink-0">
-          <span className="block text-sm font-extrabold tracking-tight text-white whitespace-nowrap">
-            NPC INNOVATION HUB
-          </span>
-        </div>
-
-        {/* Scrolls internally so a tall menu never pushes Logout off-screen
-            or forces the whole sidebar (rather than the page) to scroll.
-            Used to open with a large avatar/name/role profile block here -
-            removed to match the Admin sidebar's own convention (profile
-            access lives in Topbar's profile dropdown, not duplicated here
-            too - see admin-components/Sidebar.tsx). It was also a literal
-            duplicate of dashboard/ProfileCard.tsx shown right below it on
-            the Dashboard page. */}
-        <div className="flex-1 min-h-0 overflow-y-auto pt-2">
-          {/* Menu label */}
-          <div className="mb-6 ml-2 text-sm text-navy-300 uppercase tracking-wide font-bold">
-            Menu
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex flex-col gap-2">
-            {sidebarItems.map((item) => (
-              <NavLink
-                to={item.link}
-                key={item.name}
-                end={item.link === "/dashboard"}
-                className={({ isActive }) =>
-                  `group flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 min-w-0 ${
-                    isActive
-                      ? "bg-navy-700 shadow-md border-l-4 border-white"
-                      : "text-navy-100 hover:bg-navy-700 hover:text-white"
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span
-                      className={`flex-shrink-0 rounded-lg p-2 relative transition-colors duration-200 ${
-                        isActive
-                          ? "bg-white text-navy-800"
-                          : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
-                      }`}
-                    >
-                      {item.icon}
-                      {item.badge !== undefined && (
-                        <span className="absolute -top-2 -right-2 text-xs bg-white text-navy-800 ring-2 ring-navy-800 rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                          {item.badge > 99 ? "99+" : item.badge}
-                        </span>
-                      )}
-                    </span>
-                    <span className="flex-1 min-w-0 truncate font-bold uppercase">
-                      {item.name}
-                    </span>
-                  </>
-                )}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-
-        {/* Logout Button - pinned below the scrollable region, always visible */}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          disabled={isLoggingOut}
-          className="flex-shrink-0 flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 border border-navy-600 hover:bg-white hover:border-white hover:shadow-md font-bold uppercase text-navy-100 hover:text-navy-800 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <LogOut size={20} />
-          <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
-        </button>
-      </aside>
-
-      {/* Sign Out Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-navy-900 bg-opacity-60">
-          <div className="bg-white rounded-xl shadow-xl border border-mist-300 max-w-md w-full mx-4 p-6">
-            <h2 className="text-2xl font-bold text-navy-800 mb-4">
-              Confirm Sign Out
-            </h2>
-            <p className="text-mist-600 mb-6">
-              Are you sure you want to sign out? You'll need to sign in again to
-              access your dashboard.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                disabled={isLoggingOut}
-                className="px-6 py-2 bg-mist-200 text-navy-800 border border-mist-300 rounded-lg hover:bg-mist-300 transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="px-6 py-2 bg-navy-800 text-white rounded-lg hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoggingOut ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Signing out...
-                  </span>
-                ) : (
-                  "Yes, Sign Out"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
+export const Sidebar: React.FC = () => <SidebarShell links={links} />;
