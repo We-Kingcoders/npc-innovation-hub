@@ -7,7 +7,6 @@
 import React from "react";
 import {
   LayoutDashboard,
-  Bell,
   FolderOpen,
   Briefcase,
   MessageSquare,
@@ -17,54 +16,53 @@ import {
 } from "lucide-react";
 import SidebarShell, { type SidebarLinkItem } from "../ui/Sidebar";
 
-const links: SidebarLinkItem[] = [
-  {
-    label: "Dashboard",
-    icon: <LayoutDashboard size={18} strokeWidth={2.5} />,
-    path: "/dashboard",
-    // "/dashboard" is itself a prefix of every other Member route below -
-    // without `end`, Dashboard would render "active" on all of them too.
-    end: true,
-  },
-  {
-    label: "Notifications",
-    icon: <Bell size={18} strokeWidth={2.5} />,
-    path: "/notifications",
-    badge: 6,
-  },
-  {
-    label: "Resources",
-    icon: <FolderOpen size={18} strokeWidth={2.5} />,
-    path: "/dashboard/resources",
-    badge: 5,
-  },
-  {
-    label: "Projects",
-    icon: <Briefcase size={18} strokeWidth={2.5} />,
-    path: "/dashboard/projects",
-    badge: 30,
-  },
-  {
-    label: "Messages",
-    icon: <MessageSquare size={18} strokeWidth={2.5} />,
-    path: "/hub-channel",
-  },
-  {
-    label: "Events",
-    icon: <Calendar size={18} strokeWidth={2.5} />,
-    path: "/dashboard/events",
-    badge: 6,
-  },
-  {
-    label: "Blog",
-    icon: <BookOpen size={18} strokeWidth={2.5} />,
-    path: "/blog",
-  },
-  {
-    label: "My Tasks",
-    icon: <ClipboardList size={18} strokeWidth={2.5} />,
-    path: "/dashboard/tasks",
-  },
-];
+export const Sidebar: React.FC = () => {
+  const links: SidebarLinkItem[] = [
+    {
+      label: "Dashboard",
+      icon: <LayoutDashboard size={18} strokeWidth={2.5} />,
+      path: "/dashboard",
+      // "/dashboard" is itself a prefix of every other Member route below -
+      // without `end`, Dashboard would render "active" on all of them too.
+      end: true,
+    },
+    // No "Notifications" nav item: it pointed at a "/notifications" route
+    // that was never registered anywhere in AllRoutes.tsx (a dead link),
+    // and the Topbar's NotificationBell already fully handles this - full
+    // list, mark-as-read, mark-all-read, delete, live badge count - the
+    // same way Admin's sidebar has no Notifications entry either and
+    // relies solely on its own Topbar bell.
+    {
+      label: "Resources",
+      icon: <FolderOpen size={18} strokeWidth={2.5} />,
+      path: "/dashboard/resources",
+    },
+    {
+      label: "Projects",
+      icon: <Briefcase size={18} strokeWidth={2.5} />,
+      path: "/dashboard/projects",
+    },
+    {
+      label: "Messages",
+      icon: <MessageSquare size={18} strokeWidth={2.5} />,
+      path: "/hub-channel",
+    },
+    {
+      label: "Events",
+      icon: <Calendar size={18} strokeWidth={2.5} />,
+      path: "/dashboard/events",
+    },
+    {
+      label: "Blog",
+      icon: <BookOpen size={18} strokeWidth={2.5} />,
+      path: "/blog",
+    },
+    {
+      label: "My Tasks",
+      icon: <ClipboardList size={18} strokeWidth={2.5} />,
+      path: "/dashboard/tasks",
+    },
+  ];
 
-export const Sidebar: React.FC = () => <SidebarShell links={links} />;
+  return <SidebarShell links={links} />;
+};

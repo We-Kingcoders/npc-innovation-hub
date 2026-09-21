@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Mail, User, Search } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserFullName } from "../../types/user.types";
+import { useConversations } from "../../hooks/useDirectMessages";
 import NotificationBell from "../notifications/NotificationBell";
 
 // sticky + a working profile dropdown, matching admin-components/Topbar.tsx's
@@ -12,8 +13,20 @@ import NotificationBell from "../notifications/NotificationBell";
 // this dropdown is the one place profile access lives.
 export const Topbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { conversations } = useConversations();
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Real unread-messages count (same live-polled/socket-pushed hook the
+  // Messages page itself uses) - the dashboard used to also carry a full
+  // MessagesPreview widget with its own "No conversations yet" empty
+  // state; Admin's dashboard has no messages widget at all, so that
+  // block was dropped and this badge is the lightweight replacement for
+  // it, matching NotificationBell's own badge treatment.
+  const unreadMessagesCount = conversations.reduce(
+    (sum, conversation) => sum + (conversation.unreadCount || 0),
+    0,
+  );
 
   const handleLogout = async () => {
     try {
@@ -53,11 +66,16 @@ export const Topbar: React.FC = () => {
         <Link
           to="/messages"
           title="Messages"
-          className="w-10 h-10 rounded-xl bg-white border border-mist-300 text-navy-700
+          className="relative w-10 h-10 rounded-xl bg-white border border-mist-300 text-navy-700
                      flex items-center justify-center shadow-sm transition-colors
                      hover:bg-navy-800 hover:border-navy-800 hover:text-white"
         >
           <Mail size={20} />
+          {unreadMessagesCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white">
+              {unreadMessagesCount > 99 ? "99+" : unreadMessagesCount}
+            </span>
+          )}
         </Link>
 
         {/* Profile */}
