@@ -565,6 +565,22 @@ const AllRoutes: React.FC = () => {
           }
         />
 
+        {/* Member's own Blog nav item used to point at the public "/blog"
+            route (Navbar + marketing site chrome) - clicking it from
+            inside the dashboard dropped the sidebar/Topbar entirely,
+            unlike Admin's own "Blog" nav item, which stays inside
+            AdminLayout. This keeps Member in the dashboard shell too. */}
+        <Route
+          path="/dashboard/blog"
+          element={
+            <ProtectedRoute requiredRole="Member">
+              <DashboardLayout>
+                <BlogDesign embedded />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* ── Member Tasks ── */}
         <Route
           path="/dashboard/tasks"
