@@ -55,7 +55,10 @@ export const Sidebar: React.FC = () => {
     {
       label: "Blog",
       icon: <BookOpen size={18} strokeWidth={2.5} />,
-      path: "/blog",
+      // /dashboard/blog, not the public /blog - that route renders the
+      // public Navbar and drops the dashboard shell entirely (Admin's own
+      // "Blog" nav item stays inside AdminLayout; this matches that).
+      path: "/dashboard/blog",
     },
     {
       label: "My Tasks",
