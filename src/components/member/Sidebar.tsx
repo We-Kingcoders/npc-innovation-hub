@@ -7,7 +7,6 @@
 import React from "react";
 import {
   LayoutDashboard,
-  Bell,
   FolderOpen,
   Briefcase,
   MessageSquare,
@@ -16,19 +15,8 @@ import {
   ClipboardList,
 } from "lucide-react";
 import SidebarShell, { type SidebarLinkItem } from "../ui/Sidebar";
-import { useNotifications } from "../../hooks/useNotifications";
 
 export const Sidebar: React.FC = () => {
-  // Real unread-notification count - the same live-polled/socket-pushed
-  // hook NotificationBell uses, not a hardcoded placeholder. Resources,
-  // Projects, and Events used to carry static badges (5/30/6) that never
-  // corresponded to any real count - matching Admin's own actual
-  // behavior instead: Admin's sidebar only badges the one thing it has a
-  // genuine live count for (pending hire inquiries) and leaves every
-  // other item unbadged rather than showing a total-count number that
-  // isn't a "pending/unread" signal at all.
-  const { unreadCount } = useNotifications();
-
   const links: SidebarLinkItem[] = [
     {
       label: "Dashboard",
@@ -38,12 +26,12 @@ export const Sidebar: React.FC = () => {
       // without `end`, Dashboard would render "active" on all of them too.
       end: true,
     },
-    {
-      label: "Notifications",
-      icon: <Bell size={18} strokeWidth={2.5} />,
-      path: "/notifications",
-      badge: unreadCount,
-    },
+    // No "Notifications" nav item: it pointed at a "/notifications" route
+    // that was never registered anywhere in AllRoutes.tsx (a dead link),
+    // and the Topbar's NotificationBell already fully handles this - full
+    // list, mark-as-read, mark-all-read, delete, live badge count - the
+    // same way Admin's sidebar has no Notifications entry either and
+    // relies solely on its own Topbar bell.
     {
       label: "Resources",
       icon: <FolderOpen size={18} strokeWidth={2.5} />,
