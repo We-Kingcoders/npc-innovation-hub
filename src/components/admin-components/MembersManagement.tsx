@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import type { User, UserRole } from "../../types/user.types";
 import {
@@ -32,7 +33,12 @@ const MembersManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Filter states
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  // Seeded from ?q= so the Topbar's search dropdown can link here with
+  // the query already applied instead of landing on an unfiltered list.
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") || "",
+  );
   const [roleFilter, setRoleFilter] = useState<UserRole | "all">("all");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "inactive"

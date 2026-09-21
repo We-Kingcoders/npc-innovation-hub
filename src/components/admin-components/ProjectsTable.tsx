@@ -4,6 +4,7 @@
  */
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { format } from "date-fns";
 import type { Project } from "../../types/project.types";
@@ -42,7 +43,12 @@ export default function ProjectsTable() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  // Seeded from ?q= so the Topbar's search dropdown can link here with
+  // the query already applied instead of landing on an unfiltered list.
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") || "",
+  );
 
   const menuRef = useRef<HTMLDivElement>(null);
 

@@ -38,6 +38,20 @@ export const getProject = async (id: string): Promise<ProjectResponse> => {
 };
 
 /**
+ * Search projects (was a defined-but-unused route constant - the Topbar
+ * search box needs it now). Same backend endpoint and "q" param as
+ * member/project.api.ts's searchProjects.
+ */
+export const searchProjects = async (
+  query: string,
+): Promise<ProjectsResponse> => {
+  const response = await apiClient.get(PROJECT_ROUTES.SEARCH_PROJECTS, {
+    params: { q: query },
+  });
+  return response.data as ProjectsResponse;
+};
+
+/**
  * Create new project
  */
 export const createProject = async (

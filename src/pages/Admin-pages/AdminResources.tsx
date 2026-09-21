@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AdminLayout from "../../components/admin-components/AdminLayout";
 import ResourceTable from "../../components/admin-components/ResourceTable";
 import ConfirmationModal from "../../components/admin-components/ConfirmationModal";
@@ -208,13 +208,15 @@ const ResourceDetailsModal = ({
 
 const FilterSection = ({
   onFilterChange,
+  initialSearch,
 }: {
   onFilterChange: (params: ResourceQueryParams) => void;
+  initialSearch?: string;
 }) => {
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
   const [difficulty, setDifficulty] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch || "");
 
   const handleApplyFilters = () => {
     const params: ResourceQueryParams = {};
@@ -316,6 +318,7 @@ const FilterSection = ({
 
 export default function AdminResources() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     resources,
     pagination,
@@ -332,7 +335,12 @@ export default function AdminResources() {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null,
   );
-  const [filterParams, setFilterParams] = useState<ResourceQueryParams>({});
+  // Seeded from ?q= so the Topbar's search dropdown can link here with
+  // the query already applied instead of landing on an unfiltered list.
+  const [filterParams, setFilterParams] = useState<ResourceQueryParams>(() => {
+    const q = searchParams.get("q");
+    return q ? { search: q } : {};
+  });
 
   // Fetch resources on mount and when filters/page changes
   useEffect(() => {
@@ -433,7 +441,10 @@ export default function AdminResources() {
       )}
 
       {/* Filters */}
-      <FilterSection onFilterChange={handleFilterChange} />
+      <FilterSection
+        onFilterChange={handleFilterChange}
+        initialSearch={filterParams.search}
+      />
 
       {/* Table */}
       <ResourceTable
