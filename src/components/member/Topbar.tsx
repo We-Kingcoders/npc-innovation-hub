@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Mail, User, Search } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, User } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserFullName } from "../../types/user.types";
 import { useConversations } from "../../hooks/useDirectMessages";
 import NotificationBell from "../notifications/NotificationBell";
+import TopbarSearch, { type SearchSection } from "../ui/TopbarSearch";
+import { searchResources } from "../../api/member/resource.api";
+import { searchProjects } from "../../api/member/project.api";
+import type {
+  Resource,
+  PaginatedResourcesResponse,
+} from "../../types/resource.types";
+import type { MemberProject } from "../../api/member/project.api";
+
+const RESULTS_CAP = 5;
 
 // sticky + a working profile dropdown, matching admin-components/Topbar.tsx's
 // pattern exactly (same shell language, see the Member/Admin UI-parity work) -
@@ -14,8 +24,12 @@ import NotificationBell from "../notifications/NotificationBell";
 export const Topbar: React.FC = () => {
   const { user, logout } = useAuth();
   const { conversations } = useConversations();
+  const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [resourceResults, setResourceResults] = useState<Resource[]>([]);
+  const [projectResults, setProjectResults] = useState<MemberProject[]>([]);
 
   // Real unread-messages count (same live-polled/socket-pushed hook the
   // Messages page itself uses) - the dashboard used to also carry a full
@@ -43,20 +57,88 @@ export const Topbar: React.FC = () => {
   const displayName = user ? getUserFullName(user) : "Member";
   const displayEmail = user?.email || "";
 
+  // Real search against the same backend endpoints the Resources and
+  // Projects pages already use - the search bar used to be entirely
+  // decorative (no value, no onChange, no handler at all).
+  const handleSearch = async (query: string) => {
+    if (!query) {
+      setResourceResults([]);
+      setProjectResults([]);
+      return;
+    }
+    setSearchLoading(true);
+    try {
+      const [resourcesResult, projectsResult] = await Promise.allSettled([
+        searchResources(query),
+        searchProjects(query),
+      ]);
+
+      setResourceResults(
+        resourcesResult.status === "fulfilled"
+          ? (
+              resourcesResult.value.data as PaginatedResourcesResponse
+            ).data.resources.slice(0, RESULTS_CAP)
+          : [],
+      );
+      setProjectResults(
+        projectsResult.status === "fulfilled"
+          ? projectsResult.value.data.projects.slice(0, RESULTS_CAP)
+          : [],
+      );
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const goToResources = (query: string) =>
+    navigate(`/dashboard/resources?q=${encodeURIComponent(query)}`);
+  const goToProjects = (query: string) =>
+    navigate(`/dashboard/projects?q=${encodeURIComponent(query)}`);
+
+  const sections: SearchSection[] = [
+    {
+      key: "resources",
+      label: "Resources",
+      items: resourceResults.map((r) => ({
+        id: r.id,
+        label: r.title,
+        sublabel: r.category,
+        onSelect: () => goToResources(r.title),
+      })),
+    },
+    {
+      key: "projects",
+      label: "Projects",
+      items: projectResults.map((p) => ({
+        id: p.id,
+        label: p.title,
+        sublabel: p.owner,
+        onSelect: () => goToProjects(p.title),
+      })),
+    },
+  ];
+
+  // Enter with no specific result picked - land wherever there's
+  // something to show, defaulting to Resources when both (or neither)
+  // have matches.
+  const handleSubmit = (query: string) => {
+    if (resourceResults.length === 0 && projectResults.length > 0) {
+      goToProjects(query);
+    } else {
+      goToResources(query);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-mist-300 shadow-sm flex items-center justify-between gap-4 py-6 px-4 sm:px-10">
-      {/* Search Bar - was a hardcoded w-[540px], which overflowed the
-          viewport on any screen narrower than ~540px plus the icons and
-          padding (every phone, and many tablets in portrait). Now grows up
-          to that same 540px on room enough, shrinks to fit otherwise. */}
       <div className="w-full min-w-0 max-w-[540px]">
-        <div className="bg-white border border-mist-300 rounded-xl shadow-sm flex items-center px-4 sm:px-6 py-3 focus-within:border-navy-500 transition-colors">
-          <Search className="text-mist-500 mr-3 flex-shrink-0" size={20} />
-          <input
-            className="w-full min-w-0 outline-none border-none bg-transparent text-sm text-navy-800 placeholder:text-mist-500"
-            placeholder="Search a resource or project"
-          />
-        </div>
+        <TopbarSearch
+          placeholder="Search a resource or project"
+          loading={searchLoading}
+          sections={sections}
+          onSearch={handleSearch}
+          onSubmit={handleSubmit}
+        />
       </div>
 
       {/* Icons Section */}

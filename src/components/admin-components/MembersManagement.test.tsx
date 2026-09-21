@@ -16,6 +16,7 @@ jest.mock("../../api/admin/alumni.api", () => ({
 
 import { render, screen, within, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import MembersManagement from "./MembersManagement";
 import { getAllUsers } from "../../api/admin/member.api";
 import { setMemberAlumniStatus } from "../../api/admin/alumni.api";
@@ -59,7 +60,11 @@ describe("MembersManagement alumni toggle", () => {
     mockedGetAllUsers.mockResolvedValue([memberUser]);
     mockedSetMemberAlumniStatus.mockResolvedValue(undefined);
 
-    render(<MembersManagement />);
+    render(
+      <MemoryRouter>
+        <MembersManagement />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => {
       expect(screen.getByRole("table")).toBeInTheDocument();
@@ -90,7 +95,11 @@ describe("MembersManagement alumni toggle", () => {
   test("Admin rows with no memberId have no alumni toggle to click", async () => {
     mockedGetAllUsers.mockResolvedValue([adminUser]);
 
-    render(<MembersManagement />);
+    render(
+      <MemoryRouter>
+        <MembersManagement />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => {
       expect(screen.getByRole("table")).toBeInTheDocument();

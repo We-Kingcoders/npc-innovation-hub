@@ -1,7 +1,7 @@
 // src/pages/resources-page/Resources.tsx
 
 import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTable from "../../components/resources/ResourceTable";
 import ResourceDetailsModal from "../../components/resources/ResourceDetailsModal";
 import ResourceFilters from "../../components/resources/ResourceFilters";
@@ -10,6 +10,7 @@ import type { Resource } from "../../types/resource.types";
 
 export const Resources: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const {
     resources,
@@ -35,6 +36,15 @@ export const Resources: React.FC = () => {
     fetchResources();
     fetchSavedResources();
   }, [fetchResources, fetchSavedResources]);
+
+  // Seed the search filter from ?q= - lets the Topbar's search dropdown
+  // link here with the query already applied instead of landing on an
+  // unfiltered list.
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) setFilters((prev) => ({ ...prev, search: q }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const savedResourceIds = useMemo(
     () => new Set(savedResources.map((r) => r.id)),

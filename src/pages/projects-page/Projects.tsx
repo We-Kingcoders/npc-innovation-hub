@@ -1,6 +1,6 @@
 // src/pages/projects-page/Projects.tsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Plus,
   Search,
@@ -25,6 +25,7 @@ export const Projects: React.FC = () => {
     searchProjects,
     refresh,
   } = useMemberProjects();
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +33,18 @@ export const Projects: React.FC = () => {
     setSearchQuery(val);
     searchProjects(val);
   };
+
+  // Seed the search box from ?q= - lets the Topbar's search dropdown link
+  // here with the query already applied instead of landing on an
+  // unfiltered list.
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) {
+      setSearchQuery(q);
+      searchProjects(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-full">

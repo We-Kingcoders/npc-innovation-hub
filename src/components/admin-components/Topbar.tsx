@@ -1,14 +1,33 @@
-import { Search, Sun, Moon, User, Settings } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Sun, Moon, User, Settings } from "lucide-react";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserFullName } from "../../types/user.types";
+import type { User as AppUser } from "../../types/user.types";
+import type { Resource } from "../../types/resource.types";
+import type { Project } from "../../types/project.types";
 import NotificationBell from "../notifications/NotificationBell";
+import TopbarSearch, { type SearchSection } from "../ui/TopbarSearch";
+import { getAllResources } from "../../api/admin/resource.api";
+import { searchProjects } from "../../api/admin/project.api";
+import { getAllUsers, searchUsers } from "../../api/admin/member.api";
+
+const RESULTS_CAP = 5;
 
 export default function Topbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [resourceResults, setResourceResults] = useState<Resource[]>([]);
+  const [projectResults, setProjectResults] = useState<Project[]>([]);
+  const [memberResults, setMemberResults] = useState<AppUser[]>([]);
+  // Fetched once, lazily, on the first search - member search has no
+  // dedicated backend search endpoint (only a client-side filter over
+  // the full list, same as MembersManagement.tsx already does), so this
+  // avoids refetching the whole user list on every keystroke.
+  const allUsersRef = useRef<AppUser[] | null>(null);
+  const navigate = useNavigate();
 
   // Get user data and logout function from AuthContext
   const { user, logout } = useAuth();
@@ -29,29 +48,121 @@ export default function Topbar() {
   const displayName = user ? getUserFullName(user) : "Admin User";
   const displayEmail = user?.email || "admin@example.com";
 
+  // Real search against the same domains AdminResources/ProjectsTable/
+  // MembersManagement already manage - the search bar used to be
+  // entirely decorative (no value, no onChange, no handler at all).
+  const handleSearch = async (query: string) => {
+    if (!query) {
+      setResourceResults([]);
+      setProjectResults([]);
+      setMemberResults([]);
+      return;
+    }
+    setSearchLoading(true);
+    try {
+      const usersPromise: Promise<AppUser[]> = allUsersRef.current
+        ? Promise.resolve(allUsersRef.current)
+        : getAllUsers().then((users) => {
+            allUsersRef.current = users;
+            return users;
+          });
+
+      const [resourcesResult, projectsResult, usersResult] =
+        await Promise.allSettled([
+          getAllResources({ search: query, limit: RESULTS_CAP }),
+          searchProjects(query),
+          usersPromise,
+        ]);
+
+      setResourceResults(
+        resourcesResult.status === "fulfilled"
+          ? resourcesResult.value.data.resources.slice(0, RESULTS_CAP)
+          : [],
+      );
+      setProjectResults(
+        projectsResult.status === "fulfilled"
+          ? projectsResult.value.data.projects.slice(0, RESULTS_CAP)
+          : [],
+      );
+      setMemberResults(
+        usersResult.status === "fulfilled"
+          ? searchUsers(usersResult.value, query).slice(0, RESULTS_CAP)
+          : [],
+      );
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const goToResources = (query: string) =>
+    navigate(`/resources?q=${encodeURIComponent(query)}`);
+  const goToProjects = (query: string) =>
+    navigate(`/Admin-projects?q=${encodeURIComponent(query)}`);
+  const goToMembers = (query: string) =>
+    navigate(`/Admin-members?q=${encodeURIComponent(query)}`);
+
+  const sections: SearchSection[] = [
+    {
+      key: "resources",
+      label: "Resources",
+      items: resourceResults.map((r) => ({
+        id: r.id,
+        label: r.title,
+        sublabel: r.category,
+        onSelect: () => goToResources(r.title),
+      })),
+    },
+    {
+      key: "projects",
+      label: "Projects",
+      items: projectResults.map((p) => ({
+        id: p.id,
+        label: p.title,
+        sublabel: p.owner,
+        onSelect: () => goToProjects(p.title),
+      })),
+    },
+    {
+      key: "members",
+      label: "Members",
+      items: memberResults.map((m) => ({
+        id: m.id,
+        label: getUserFullName(m),
+        sublabel: m.email,
+        onSelect: () => goToMembers(getUserFullName(m)),
+      })),
+    },
+  ];
+
+  // Enter with no specific result picked - land on whichever section
+  // actually has matches, defaulting to Resources when several (or none)
+  // do.
+  const handleSubmit = (query: string) => {
+    if (resourceResults.length === 0 && projectResults.length > 0) {
+      goToProjects(query);
+    } else if (
+      resourceResults.length === 0 &&
+      projectResults.length === 0 &&
+      memberResults.length > 0
+    ) {
+      goToMembers(query);
+    } else {
+      goToResources(query);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-mist-300 shadow-sm">
       <div className="flex items-center justify-between px-6 lg:px-8 py-4">
         {/* Search Bar */}
         <div className="flex-1 max-w-xl">
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-mist-500 group-focus-within:text-navy-600 transition-colors" />
-            </div>
-            <input
-              type="text"
-              className="
-                w-full pl-11 pr-4 py-3
-                bg-white
-                border border-mist-300 group-focus-within:border-navy-500
-                rounded-xl
-                text-sm text-navy-800 placeholder-mist-500
-                focus:outline-none focus:ring-2 focus:ring-navy-500/20
-                transition-all duration-200
-              "
-              placeholder="Search resources, projects, or members..."
-            />
-          </div>
+          <TopbarSearch
+            placeholder="Search resources, projects, or members..."
+            loading={searchLoading}
+            sections={sections}
+            onSearch={handleSearch}
+            onSubmit={handleSubmit}
+          />
         </div>
 
         {/* Action Buttons */}
