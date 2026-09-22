@@ -120,7 +120,28 @@ export const authService = {
       body: JSON.stringify(credentials),
     });
 
-    // Store authentication data
+    // Store authentication data.
+    //
+    // Known, deliberately accepted tradeoff (flagged by a full-platform
+    // security review, 2026-09): a JWT in localStorage is readable by
+    // any script that runs on this origin, so a successful XSS anywhere
+    // in the app could exfiltrate it - unlike an httpOnly cookie, which
+    // JS can never read. This review searched the whole frontend for an
+    // actual XSS sink and found none (dangerouslySetInnerHTML is used in
+    // exactly one place, BlogDetails.tsx, and only after the content is
+    // HTML-entity-escaped first). Moving off localStorage to close this
+    // theoretical gap means httpOnly cookies end-to-end: the backend
+    // issuing Set-Cookie instead of a JSON token field, protectRoute
+    // reading req.cookies instead of the Authorization header, CORS
+    // switching to explicit credentialed origins, adding CSRF protection
+    // (moot today - this app is 100% Bearer-token auth, confirmed no
+    // res.cookie/cookie-parser usage anywhere - but a cookie-based
+    // session brings CSRF back), and reworking the Socket.IO handshake,
+    // which currently authenticates via an explicit `auth: { token }`
+    // payload rather than a cookie. That's a cross-cutting migration
+    // across both repos, not a local fix - tracked as a real risk, not
+    // silently accepted by omission, but deliberately not undertaken
+    // as part of a token-by-token security pass.
     if (response.token) {
       localStorage.setItem("token", response.token);
       localStorage.setItem("email", credentials.email);
@@ -144,7 +165,8 @@ export const authService = {
       body: JSON.stringify(payload),
     });
 
-    // Store authentication data
+    // Store authentication data - see the same localStorage.setItem
+    // call in login() above for the accepted-risk rationale.
     if (response.token) {
       localStorage.setItem("token", response.token);
       if (response.data?.user?.email) {
@@ -176,7 +198,8 @@ export const authService = {
       },
     );
 
-    // Update token if provided
+    // Update token if provided - see the same localStorage.setItem call
+    // in login() above for the accepted-risk rationale.
     if (response.token) {
       localStorage.setItem("token", response.token);
     }
