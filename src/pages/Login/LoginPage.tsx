@@ -70,13 +70,6 @@ const LoginPage = () => {
           callback: async (response: CredentialResponse) => {
             const tokenId = response.credential;
 
-            // Debug: decode JWT payload
-            const parts = tokenId?.split(".");
-            if (parts?.length === 3) {
-              const decoded = JSON.parse(atob(parts[1]));
-              console.log("Decoded Google JWT payload:", decoded);
-            }
-
             try {
               const res = await fetch(
                 // Was hardcoded to the production onrender.com URL, which
