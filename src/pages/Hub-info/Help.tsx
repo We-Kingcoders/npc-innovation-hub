@@ -9,29 +9,53 @@
 // consistency between the two.
 import { useState, useEffect, useRef } from "react";
 import type { KeyboardEvent } from "react";
-import axios from "axios";
 import { Bot, User, Send, Loader2, MessageCircle, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { CHATBOT_API_URL as FASTAPI_URL } from "../../config/env";
+import {
+  sendAssistantMessage,
+  type AssistantChatTurn,
+} from "../../api/assistant.api";
 
 type Message = {
   id: number;
   text: string;
   sender: string;
   isError?: boolean;
-  intent?: string;
-  confidence?: number;
   language?: string;
 };
+
+// Shown in the empty state before the first message - a real question a
+// visitor can tap instead of typing, grounded in what the assistant can
+// actually answer (see the backend's knowledgeRetrieval.service.ts).
+const SUGGESTED_QUESTIONS = [
+  "What is NPC Innovation Hub?",
+  "What projects does NPC Innovation Hub work on?",
+  "What is NPC's mission and vision?",
+  "How can I contact NPC Innovation Hub?",
+];
+
+// Sent with every request so the assistant can follow a conversation -
+// the backend independently caps this again server-side regardless of
+// what's sent here (see AI_MAX_HISTORY_MESSAGES), so this is just keeping
+// the request itself reasonably sized, not the only limit in place.
+const MAX_LOCAL_HISTORY_TURNS = 8;
 
 const ChatDesign = () => {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [, setError] = useState<string | null>(null);
+  // The original text of the most recent failed send, so the Retry
+  // button can resend exactly that rather than whatever's currently
+  // typed in the input. Cleared on the next successful send.
+  const [lastFailedText, setLastFailedText] = useState<string | null>(null);
 
   // Auto-scroll to bottom of messages
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Assigned by the backend on the first successful reply, then reused
+  // for every later turn in this session - purely a log-correlation id
+  // server-side (see the plan's "no persisted conversation" decision),
+  // not something this page ever reads the contents of.
+  const conversationIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     // useEffect runs on mount too, and messages starts as [] - without
@@ -45,17 +69,30 @@ const ChatDesign = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (inputValue.trim() !== "") {
-      // Clear any previous errors
-      setError(null);
+  const sendMessage = async (textOverride?: string) => {
+    const text = (textOverride ?? inputValue).trim();
+    if (text !== "") {
+      setLastFailedText(null);
 
       // Add user message to chat
       const newUserMessage = {
         id: messages.length + 1,
-        text: inputValue,
+        text,
         sender: "user",
       };
+
+      // Capped local history sent alongside this turn, built BEFORE
+      // adding the new message (it represents everything prior to it).
+      // The backend independently re-validates and re-truncates this -
+      // see chatOrchestrator.service.ts - so this is just keeping the
+      // request itself reasonably sized, not a security boundary.
+      const history: AssistantChatTurn[] = messages
+        .filter((m) => !m.isError)
+        .slice(-MAX_LOCAL_HISTORY_TURNS)
+        .map((m) => ({
+          role: m.sender === "user" ? "user" : "assistant",
+          content: m.text,
+        }));
 
       setMessages((prev) => [...prev, newUserMessage]);
       setInputValue("");
@@ -64,49 +101,47 @@ const ChatDesign = () => {
       setIsLoading(true);
 
       try {
-        // Call FastAPI chatbot endpoint
-        const response = await axios.post(`${FASTAPI_URL}/predict`, {
-          message: inputValue,
-          context: [],
-          options: {},
+        const response = await sendAssistantMessage({
+          message: text,
+          conversationId: conversationIdRef.current,
+          history,
         });
 
-        // Define the expected response type
-        interface BotResponse {
-          text: string;
-          intent?: string;
-          confidence?: number;
-          detected_language?: string;
-        }
-        const data = response.data as BotResponse;
+        conversationIdRef.current = response.data.conversationId;
 
-        // Add bot response to chat
         const botMessage = {
           id: messages.length + 2,
-          text: data.text,
+          text: response.data.message,
           sender: "bot",
-          intent: data.intent,
-          confidence: data.confidence,
-          language: data.detected_language,
+          language:
+            response.data.language !== "auto"
+              ? response.data.language
+              : undefined,
         };
 
         setMessages((prev) => [...prev, botMessage]);
       } catch (err) {
-        console.error("Error calling chatbot API:", err);
+        console.error("Error calling NPC AI Assistant:", err);
 
-        // Handle errors - show error message in chat
-        const errorMessage =
+        // The backend already returns a specific, friendly message per
+        // failure category (provider unavailable, rate-limited, network,
+        // etc. - see assistant.controller.ts) - the shared apiClient's
+        // response interceptor unwraps it onto err.message, so this is
+        // real, distinct feedback rather than one hardcoded string for
+        // every possible failure.
+        const message =
+          (err as { message?: string })?.message ||
           "Sorry, I couldn't process your request. Please try again.";
 
         const errorBotMessage = {
           id: messages.length + 2,
-          text: errorMessage,
+          text: message,
           sender: "bot",
           isError: true,
         };
 
         setMessages((prev) => [...prev, errorBotMessage]);
-        setError("Failed to get response from chatbot");
+        setLastFailedText(text);
       } finally {
         setIsLoading(false);
       }
@@ -176,7 +211,11 @@ const ChatDesign = () => {
               below its content's natural height so the message list's own
               overflow-y-auto is what scrolls, not the card or the page. */}
           <div className="bg-white p-4 md:w-3/5 flex flex-col min-h-[420px] md:min-h-0">
-            <div className="w-full px-4 space-y-6 flex-1 min-h-0 overflow-y-auto">
+            <div
+              className="w-full px-4 space-y-6 flex-1 min-h-0 overflow-y-auto"
+              aria-live="polite"
+              aria-label="Conversation with the NPC Innovation Hub assistant"
+            >
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-3 py-16">
                   <Bot
@@ -184,6 +223,17 @@ const ChatDesign = () => {
                     aria-hidden="true"
                   />
                   <p>Send a message to start chatting!</p>
+                  <div className="flex flex-wrap justify-center gap-2 mt-2 max-w-sm">
+                    {SUGGESTED_QUESTIONS.map((question) => (
+                      <button
+                        key={question}
+                        onClick={() => void sendMessage(question)}
+                        className="text-xs md:text-sm bg-[#F3F9FB] border border-gray-200 text-[#002B56] rounded-full px-3 py-1.5 hover:bg-[#002B56] hover:text-white hover:border-[#002B56] transition-colors"
+                      >
+                        {question}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 messages.map((message) => (
@@ -219,6 +269,17 @@ const ChatDesign = () => {
                             Language detected: {message.language}
                           </div>
                         )}
+                        {message.isError &&
+                          lastFailedText &&
+                          !isLoading &&
+                          message.id === messages[messages.length - 1]?.id && (
+                            <button
+                              onClick={() => void sendMessage(lastFailedText)}
+                              className="text-xs font-semibold text-red-700 hover:underline mt-2"
+                            >
+                              Retry
+                            </button>
+                          )}
                       </div>
                     )}
                   </div>
@@ -254,6 +315,7 @@ const ChatDesign = () => {
             <div className="mt-4 px-4 flex items-center gap-2 flex-shrink-0">
               <input
                 type="text"
+                aria-label="Type your question for the NPC Innovation Hub assistant"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
