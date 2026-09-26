@@ -143,7 +143,7 @@ const AddProject: React.FC = () => {
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div className="reveal-on-hover absolute inset-0 bg-black/30 flex items-center justify-center">
                     <p className="text-white text-sm font-medium">
                       Change image
                     </p>
@@ -247,7 +247,7 @@ const AddProject: React.FC = () => {
           </div>
 
           {/* Submit */}
-          <div className="pt-2 flex items-center justify-end gap-3">
+          <div className="dialog-actions pt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
             <button
               type="button"
               onClick={() => navigate(-1)}

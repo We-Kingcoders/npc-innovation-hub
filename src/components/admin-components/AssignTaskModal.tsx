@@ -57,13 +57,13 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-md overflow-y-auto">
         {/* Header */}
         <div className="bg-navy-800 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-xl font-bold text-white">Reassign Task</h2>
@@ -134,7 +134,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="dialog-actions flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={onClose}

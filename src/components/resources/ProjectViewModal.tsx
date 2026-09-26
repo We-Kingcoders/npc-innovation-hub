@@ -21,9 +21,9 @@ const ProjectViewModal: React.FC<Props> = ({ project, onClose }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image banner */}
@@ -66,7 +66,7 @@ const ProjectViewModal: React.FC<Props> = ({ project, onClose }) => {
           </p>
 
           {/* Meta info */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 mb-6">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <User size={14} className="shrink-0" />
               <span>{project.owner || "Unknown Owner"}</span>

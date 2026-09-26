@@ -65,11 +65,11 @@ const ResourceDetailsModal: React.FC<ResourceDetailsModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image / Video */}
@@ -100,7 +100,7 @@ const ResourceDetailsModal: React.FC<ResourceDetailsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col gap-5">
+        <div className="p-5 sm:p-6 flex flex-col gap-5">
           {/* Title & badges */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-3">
@@ -134,7 +134,7 @@ const ResourceDetailsModal: React.FC<ResourceDetailsModalProps> = ({
           </p>
 
           {/* Meta info */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <User size={15} className="text-gray-400 shrink-0" />
               <span>{resource.author}</span>

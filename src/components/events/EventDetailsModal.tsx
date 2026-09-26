@@ -48,11 +48,11 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image */}
@@ -83,7 +83,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col gap-5">
+        <div className="p-5 sm:p-6 flex flex-col gap-5">
           <h2 className="text-2xl font-bold text-gray-900">{event.title}</h2>
 
           {/* Location */}

@@ -57,8 +57,8 @@ const RecentTasks: React.FC<RecentTasksProps> = ({ tasks, loading }) => {
   const displayed = tasks.slice(0, 5);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-mist-300 p-6">
-      <div className="flex items-center justify-between mb-5">
+    <div className="min-w-0 bg-white rounded-xl shadow-sm border border-mist-300 p-4 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 sm:mb-5">
         <h3 className="text-sm font-bold text-navy-800">Recent Tasks</h3>
         <button
           onClick={() => navigate("/dashboard/tasks")}

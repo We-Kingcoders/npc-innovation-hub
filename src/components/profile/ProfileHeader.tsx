@@ -27,25 +27,27 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   return (
     <div className="relative">
       {/* Gradient banner */}
-      <div className="h-44 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 rounded-t-2xl" />
+      <div className="h-32 sm:h-44 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 rounded-t-2xl" />
 
       {/* Avatar row */}
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-14 mb-4">
-          {/* Left: avatar + name */}
-          <div className="flex items-end gap-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-12 sm:-mt-14 mb-4">
+          {/* Left: avatar + name. Stacks on the narrowest screens,
+              where a 112px avatar beside a name leaves the name ~180px. */}
+          <div className="flex flex-col xs:flex-row xs:items-end gap-3 xs:gap-4 min-w-0">
             <div className="relative shrink-0">
               {member?.imageUrl ? (
                 <img
                   src={member.imageUrl}
                   alt={displayName}
-                  className="w-28 h-28 rounded-2xl object-cover border-4 border-white shadow-lg"
+                  loading="lazy"
+                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl object-cover border-4 border-white shadow-lg"
                 />
               ) : (
                 <div
-                  className="w-28 h-28 rounded-2xl bg-gradient-to-br from-blue-500
+                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-blue-500
                                 to-indigo-600 border-4 border-white shadow-lg
-                                flex items-center justify-center text-white text-3xl font-bold"
+                                flex items-center justify-center text-white text-2xl sm:text-3xl font-bold"
                 >
                   {initials}
                 </div>
@@ -75,7 +77,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
 
           {/* Right: completion + edit */}
-          <div className="flex items-center gap-3 mb-1">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1 flex-shrink-0">
             {/* Completion pill */}
             <div
               className="flex items-center gap-2 bg-white border border-gray-200

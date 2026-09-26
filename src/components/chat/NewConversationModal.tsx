@@ -167,7 +167,7 @@
 //         if (e.target === e.currentTarget) onClose();
 //       }}
 //     >
-//       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+//       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-3 sm:mx-4 max-h-[calc(100dvh-2rem)] flex flex-col overflow-hidden">
 //         {/* Header */}
 //         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
 //           <h3 className="text-base font-bold text-gray-800">New Message</h3>
@@ -198,7 +198,7 @@
 //         </div>
 
 //         {/* List */}
-//         <div className="overflow-y-auto max-h-80">
+//         <div className="flex-1 min-h-0 overflow-y-auto sm:max-h-80">
 //           {isLoading ? (
 //             <div className="flex items-center justify-center py-10">
 //               <Loader2 size={20} className="animate-spin text-gray-400" />
@@ -508,7 +508,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-3 sm:mx-4 max-h-[calc(100dvh-2rem)] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div>
@@ -546,7 +546,7 @@ const NewConversationModal: React.FC<NewConversationModalProps> = ({
         </div>
 
         {/* List */}
-        <div className="overflow-y-auto max-h-80">
+        <div className="flex-1 min-h-0 overflow-y-auto sm:max-h-80">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-10 gap-2">
               <Loader2 size={20} className="animate-spin text-gray-400" />

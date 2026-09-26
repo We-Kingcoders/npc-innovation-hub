@@ -89,12 +89,12 @@ const MyTasks: React.FC = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-5 w-fit">
+      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-5 max-w-full overflow-x-auto hide-scrollbar sm:w-fit">
         {TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold
+            className={`flex flex-shrink-0 whitespace-nowrap items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold
                         transition-all duration-200
                         ${
                           activeTab === tab.value

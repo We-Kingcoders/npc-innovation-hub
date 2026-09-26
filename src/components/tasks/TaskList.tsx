@@ -28,7 +28,7 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 min-w-0-all">
         {[1, 2, 3, 4, 5, 6].map((n) => (
           <TaskCardSkeleton key={n} />
         ))}
@@ -38,7 +38,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
 
   if (tasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400 gap-3">
+      <div className="flex flex-col items-center justify-center text-center px-4 py-12 sm:py-20 text-gray-400 gap-3">
         <ClipboardList size={44} className="opacity-30" />
         <p className="font-semibold text-gray-500 text-base">
           No tasks assigned yet
@@ -51,7 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 min-w-0-all">
       {tasks.map((task) => (
         <TaskCard key={task.id} task={task} />
       ))}

@@ -70,9 +70,9 @@ const SystemHealth: React.FC<SystemHealthProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 sm:mb-5">
         <div>
           <h3 className="font-semibold text-navy-800 text-sm">System Health</h3>
           <p className="text-xs text-mist-500 mt-0.5">

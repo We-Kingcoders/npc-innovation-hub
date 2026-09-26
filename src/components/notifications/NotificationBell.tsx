@@ -131,7 +131,7 @@ const NotificationBell: React.FC = () => {
                       {formatRelativeTime(n.createdAt)}
                     </p>
                   </button>
-                  <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="reveal-on-hover flex-shrink-0 flex flex-col gap-1">
                     {!n.isRead && (
                       <button
                         onClick={() => markAsRead(n.id)}

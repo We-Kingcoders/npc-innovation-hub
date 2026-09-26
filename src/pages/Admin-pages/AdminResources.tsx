@@ -33,7 +33,7 @@ const ResourceDetailsModal = ({
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-page-title font-bold text-gray-900 mb-2">
                 {resource.title}
               </h2>
               <p className="text-gray-600">{resource.description}</p>

@@ -167,7 +167,9 @@ export default function ProfileSettings() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
+          <h1 className="text-page-title font-bold text-gray-900">
+            Profile Settings
+          </h1>
           <p className="text-gray-600 mt-1">
             Manage your account information and security
           </p>
@@ -363,7 +365,7 @@ export default function ProfileSettings() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 pt-4 border-t border-gray-200">
+            <div className="dialog-actions flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={isSaving}

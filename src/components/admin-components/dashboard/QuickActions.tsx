@@ -185,9 +185,9 @@ const ACTIONS: QuickAction[] = [
 
 const QuickActions: React.FC = () => {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div>
           <h3 className="font-semibold text-navy-800 text-sm">Quick Actions</h3>
           <p className="text-xs text-mist-500 mt-0.5">Common admin tasks</p>
@@ -206,7 +206,7 @@ const QuickActions: React.FC = () => {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0-all">
         {ACTIONS.map((action) => (
           <a
             key={action.label}

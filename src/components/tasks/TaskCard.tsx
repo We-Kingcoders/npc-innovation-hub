@@ -41,7 +41,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </div>
       )}
 
-      <div className="p-5 flex flex-col gap-3 flex-1">
+      <div className="p-4 sm:p-5 flex flex-col gap-3 flex-1 min-w-0">
         {/* Badges row */}
         <div className="flex flex-wrap gap-2">
           <span

@@ -91,7 +91,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({
       </div>
 
       {/* Stat pills */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 min-w-0-all">
         {stats.map((s) => (
           <div
             key={s.label}

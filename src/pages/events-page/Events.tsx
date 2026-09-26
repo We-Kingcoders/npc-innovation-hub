@@ -97,7 +97,7 @@ export const Events: React.FC = () => {
 
           {/* Loading state */}
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 min-w-0-all">
               {[1, 2, 3].map((n) => (
                 <EventSkeleton key={n} />
               ))}
@@ -106,7 +106,7 @@ export const Events: React.FC = () => {
 
           {/* Empty state */}
           {!loading && !error && displayedEvents.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="flex flex-col items-center justify-center text-center px-4 py-12 sm:py-20 text-center">
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                 <svg
                   className="w-8 h-8 text-gray-400"
@@ -133,7 +133,7 @@ export const Events: React.FC = () => {
 
           {/* Events grid */}
           {!loading && displayedEvents.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 min-w-0-all">
               {displayedEvents.map((event) => (
                 <EventCard
                   key={event.id}

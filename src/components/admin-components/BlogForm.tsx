@@ -278,7 +278,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-4 pt-4 border-t">
+      <div className="dialog-actions flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4 pt-4 border-t">
         <button
           type="button"
           onClick={onCancel}

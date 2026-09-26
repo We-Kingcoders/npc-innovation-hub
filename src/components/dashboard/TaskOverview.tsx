@@ -90,7 +90,7 @@ const TaskOverview: React.FC<TaskOverviewProps> = ({ tasks }) => {
           </div>
 
           {/* Legend */}
-          <div className="grid grid-cols-2 gap-y-2">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-y-2 min-w-0-all">
             {segments.map((s) => (
               <div key={s.label} className="flex items-center gap-1.5">
                 <span

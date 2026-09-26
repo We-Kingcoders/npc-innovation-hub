@@ -28,7 +28,7 @@ export const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -36,7 +36,7 @@ export const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-4xl overflow-hidden">
         {/* Header with Image */}
         <div className="relative h-64 bg-navy-800 overflow-hidden">
           <img
@@ -69,9 +69,9 @@ export const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto max-h-[calc(90vh-256px)]">
+        <div className="flex-1 min-h-0 p-4 sm:p-8 overflow-y-auto">
           {/* Title */}
-          <h2 className="text-3xl font-bold text-navy-800 mb-4">
+          <h2 className="text-page-title font-bold text-navy-800 mb-4 break-words">
             {project.title}
           </h2>
 

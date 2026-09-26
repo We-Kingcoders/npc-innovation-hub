@@ -22,12 +22,12 @@ interface ProfileTabsProps {
 }
 
 const ProfileTabs: React.FC<ProfileTabsProps> = ({ active, onChange }) => (
-  <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit mb-7">
+  <div className="flex gap-1 bg-gray-100 p-1 rounded-xl max-w-full overflow-x-auto hide-scrollbar sm:w-fit mb-5 sm:mb-7">
     {TABS.map((tab) => (
       <button
         key={tab.value}
         onClick={() => onChange(tab.value)}
-        className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200
+        className={`flex-shrink-0 whitespace-nowrap px-4 sm:px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200
                     ${
                       active === tab.value
                         ? "bg-white text-indigo-700 shadow-sm"

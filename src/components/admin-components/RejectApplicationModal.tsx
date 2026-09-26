@@ -36,7 +36,7 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -44,7 +44,7 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div className="dialog-panel relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-2xl overflow-y-auto">
         {/* Header */}
         <div className="border-b border-mist-300 px-6 py-4 flex items-center justify-between">
           <div>
@@ -95,7 +95,7 @@ export const RejectApplicationModal: React.FC<RejectApplicationModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="dialog-actions flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}

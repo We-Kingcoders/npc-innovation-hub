@@ -6,7 +6,7 @@
 // badge counts, whatever business logic decides those are), and this
 // component owns all the shell mechanics: mobile off-canvas drawer,
 // desktop icon-only collapse, active-link styling, and sign-out.
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { ChevronsLeft, ChevronsRight, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
@@ -39,11 +39,37 @@ export default function Sidebar({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { logout } = useAuth();
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   // Close the mobile drawer on navigation - otherwise a tapped link left
   // the new page rendered behind the still-open drawer and its backdrop.
   useEffect(() => {
     setIsMobileOpen(false);
   }, [location.pathname]);
+
+  // While the drawer is open it owns the screen: Escape dismisses it
+  // (matching the dialog convention used everywhere else in the app),
+  // focus moves into it so keyboard and screen-reader users land in the
+  // panel they just summoned rather than staying behind it, and the body
+  // behind it stops scrolling under the user's finger on touch.
+  useEffect(() => {
+    if (!isMobileOpen) return;
+
+    closeButtonRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isMobileOpen]);
 
   const handleLogout = async () => {
     try {
@@ -73,15 +99,34 @@ export default function Sidebar({
         // tracks the real visible viewport instead. Flush against the
         // edge on desktop (no rounding, no left margin, shadow-2xl) -
         // this is Admin's actual container shape, not a floating card.
-        className={`fixed lg:sticky inset-y-0 lg:inset-y-auto lg:top-0 left-0 z-30 w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"} ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 bg-navy-800 h-dvh flex flex-col transition-transform lg:transition-all duration-300 ease-in-out shadow-2xl`}
+        id="app-nav-drawer"
+        aria-label="Main navigation"
+        // `invisible` alongside the off-screen transform, not the transform
+        // alone: a translated-but-visible drawer keeps all of its links in
+        // the tab order, so tabbing from the header walked through a
+        // fourteen-item menu nobody could see before reaching the page.
+        // Transitioning visibility with the transform keeps the slide-out
+        // animation (visibility holds `visible` until the transition ends).
+        // safe-pt/safe-pl clear the notch in landscape.
+        className={`fixed lg:sticky inset-y-0 lg:inset-y-auto lg:top-0 left-0 z-30 w-64 ${isDesktopCollapsed ? "lg:w-20" : "lg:w-64"} ${isMobileOpen ? "translate-x-0 visible" : "-translate-x-full invisible"} lg:visible lg:translate-x-0 bg-navy-800 h-dvh flex flex-col transition-[transform,visibility] lg:transition-all duration-300 ease-in-out shadow-2xl safe-pt safe-pl`}
       >
         {/* Mobile-only off-canvas toggle - stays outside the brand row
             since the whole sidebar translates off-screen on mobile; it
             needs to remain reachable independent of that. */}
         <button
+          ref={closeButtonRef}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          aria-label={isMobileOpen ? "Collapse sidebar" : "Expand sidebar"}
-          className="lg:hidden absolute -right-12 top-6 bg-navy-800 text-white p-2 rounded-r-lg shadow-lg"
+          aria-label={
+            isMobileOpen ? "Close navigation menu" : "Open navigation menu"
+          }
+          aria-expanded={isMobileOpen}
+          aria-controls="app-nav-drawer"
+          // The tab handle lives outside the panel's right edge, so it
+          // rides along with the transform and stays reachable whether the
+          // drawer is open or closed. `visible` overrides the `invisible`
+          // the closed panel carries, which would otherwise hide the only
+          // control that can reopen it.
+          className="lg:hidden visible absolute -right-12 top-6 bg-navy-800 text-white p-2.5 rounded-r-lg shadow-lg"
         >
           {isMobileOpen ? (
             <ChevronsLeft size={20} />
@@ -181,7 +226,7 @@ export default function Sidebar({
 
         {/* Sign Out - pinned below the scrollable region, always visible */}
         <div
-          className={`px-4 pb-4 mt-auto flex-shrink-0 ${isDesktopCollapsed ? "lg:px-3" : ""}`}
+          className={`px-4 pb-4 mt-auto flex-shrink-0 safe-pb ${isDesktopCollapsed ? "lg:px-3" : ""}`}
         >
           <button
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}

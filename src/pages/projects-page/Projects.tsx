@@ -118,14 +118,14 @@ export const Projects: React.FC = () => {
 
       {/* States */}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-24 text-gray-400">
+        <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-gray-400">
           <Loader2 size={32} className="animate-spin mb-3" />
           <p className="text-sm">Loading projects…</p>
         </div>
       )}
 
       {!loading && error && (
-        <div className="flex flex-col items-center justify-center py-24 text-red-400">
+        <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-red-400">
           <AlertCircle size={32} className="mb-3" />
           <p className="text-sm font-medium">{error}</p>
           <button
@@ -138,7 +138,7 @@ export const Projects: React.FC = () => {
       )}
 
       {!loading && !error && projects.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-24 text-gray-400">
+        <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-gray-400">
           <Layers size={40} className="mb-3 text-gray-300" />
           <p className="text-sm font-medium text-gray-500">No projects found</p>
           <p className="text-xs text-gray-400 mt-1">
