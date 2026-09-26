@@ -10,6 +10,12 @@ if (typeof global.TextDecoder === 'undefined') {
   global.TextDecoder = TextDecoder;
 }
 
+// jsdom doesn't implement scrollIntoView either - Help.tsx (NPC AI
+// Assistant chat) calls it to auto-scroll to the latest message.
+if (typeof window.HTMLElement !== 'undefined' && !window.HTMLElement.prototype.scrollIntoView) {
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
+}
+
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
