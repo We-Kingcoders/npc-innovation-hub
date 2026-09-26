@@ -25,13 +25,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
   const dateRange = formatEventDateRange(event.startTime, event.endTime);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-4xl overflow-hidden">
         {/* Event Image Header */}
         <div className="relative h-64 bg-navy-800 overflow-hidden">
           <img
@@ -77,8 +77,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto max-h-[calc(90vh-256px)]">
-          <h2 className="text-3xl font-bold text-navy-800 mb-3">
+        <div className="flex-1 min-h-0 p-4 sm:p-8 overflow-y-auto">
+          <h2 className="text-page-title font-bold text-navy-800 mb-3 break-words">
             {event.title}
           </h2>
 

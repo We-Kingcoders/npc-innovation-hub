@@ -468,7 +468,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
         {/* Bubble column */}
         <div
-          className={`flex flex-col max-w-[70%] ${isMe ? "items-end" : "items-start"}`}
+          className={`flex flex-col min-w-0 max-w-[85%] sm:max-w-[70%] ${isMe ? "items-end" : "items-start"}`}
         >
           {/* Sender name */}
           {isGroupStart && !isMe && (
@@ -502,7 +502,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
           {/* Edit mode */}
           {isEditing ? (
-            <div className="flex flex-col gap-2 w-full min-w-[220px]">
+            // min-w on a flex child forces its parent wider; lifted below
+            // sm so editing cannot widen the thread past a phone screen.
+            <div className="flex flex-col gap-2 w-full min-w-0 sm:min-w-[220px]">
               <input
                 autoFocus
                 value={editText}

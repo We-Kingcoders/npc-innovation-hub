@@ -165,7 +165,7 @@ export default function ApplicationDetail() {
               <div className="flex items-start justify-between flex-wrap gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-2xl font-bold">
+                    <h1 className="text-page-title font-bold break-words">
                       {application.fullName}
                     </h1>
                     <span
@@ -237,7 +237,7 @@ export default function ApplicationDetail() {
                 <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Applicant Information
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0-all">
                   <div>
                     <label className="text-sm font-medium text-mist-600">
                       Phone Number
@@ -332,7 +332,7 @@ export default function ApplicationDetail() {
                   <h2 className="text-lg font-semibold text-navy-800 mb-4">
                     Review
                   </h2>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0-all">
                     <div>
                       <label className="text-sm font-medium text-mist-600">
                         Reviewed By

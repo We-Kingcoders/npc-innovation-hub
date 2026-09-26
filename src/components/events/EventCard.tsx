@@ -30,7 +30,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
       onClick={() => onClick(event)}
       className="rounded-2xl bg-white shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
     >
-      <div className="relative w-full h-48 overflow-hidden">
+      <div className="relative w-full aspect-video overflow-hidden">
         <img
           src={event.imageUrl}
           alt={event.title}
@@ -38,7 +38,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
         />
       </div>
 
-      <div className="p-5 flex flex-col flex-1 gap-2">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 gap-2 min-w-0">
         <h3 className="font-bold text-base text-gray-900 line-clamp-2">
           {event.title}
         </h3>
@@ -65,7 +65,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
           <span className="line-clamp-1">{event.location}</span>
         </div>
 
-        <div className="flex gap-6 text-xs text-gray-500 mt-1">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500 mt-1">
           <div>
             <div className="font-semibold text-gray-700 mb-0.5">Start</div>
             <div>{formatDateTime(event.startTime)}</div>

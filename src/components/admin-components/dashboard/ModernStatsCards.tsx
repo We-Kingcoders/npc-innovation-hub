@@ -20,7 +20,7 @@ const ModernStatsCards: React.FC<ModernStatsCardsProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4 mb-6 min-w-0-all">
         {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
           <StatsCardSkeleton key={i} />
         ))}
@@ -37,7 +37,7 @@ const ModernStatsCards: React.FC<ModernStatsCardsProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
+    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4 mb-6 min-w-0-all">
       {metrics.map((metric, index) => (
         <StatsCard key={metric.label} metric={metric} index={index} />
       ))}

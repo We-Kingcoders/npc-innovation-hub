@@ -89,7 +89,7 @@
 //   return (
 //     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
 //       {/* Header */}
-//       <div className="flex items-center justify-between mb-4">
+//       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
 //         <div>
 //           <h3 className="font-semibold text-gray-900 text-sm">Task Overview</h3>
 //           <p className="text-xs text-gray-400 mt-0.5">
@@ -217,7 +217,7 @@ const CustomTooltip: React.FC<{
 };
 
 const SkeletonWidget: React.FC = () => (
-  <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm animate-pulse">
+  <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm animate-pulse">
     <div className="flex justify-between items-center mb-4">
       <div className="w-32 h-5 bg-mist-200 rounded" />
       <div className="w-20 h-5 bg-mist-200 rounded-full" />
@@ -242,7 +242,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
 
   if (!analytics) {
     return (
-      <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm flex items-center justify-center h-72">
+      <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm flex items-center justify-center h-72">
         <p className="text-mist-500 text-sm">No task data available</p>
       </div>
     );
@@ -264,9 +264,9 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
   const hasData = chartData.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div>
           <h3 className="font-semibold text-navy-800 text-sm">Task Overview</h3>
           <p className="text-xs text-mist-500 mt-0.5">

@@ -229,7 +229,7 @@
 
 //       {/* Empty State */}
 //       {!loading && filteredTasks.length === 0 && (
-//         <div className="bg-white rounded-2xl p-12 text-center">
+//         <div className="bg-white rounded-2xl px-4 py-10 sm:p-12 text-center">
 //           <svg
 //             className="mx-auto h-16 w-16 text-gray-400 mb-4"
 //             fill="none"
@@ -894,7 +894,7 @@ export default function TasksTable({
 
       {/* Empty State */}
       {!loading && filteredTasks.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 text-center">
+        <div className="bg-white rounded-2xl px-4 py-10 sm:p-12 text-center">
           <svg
             className="mx-auto h-16 w-16 text-mist-400 mb-4"
             fill="none"

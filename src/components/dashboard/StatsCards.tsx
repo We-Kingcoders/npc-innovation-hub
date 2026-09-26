@@ -66,7 +66,7 @@ const StatsCards: React.FC<StatsCardsProps> = ({ tasks }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-7 min-w-0-all">
       {metrics.map((metric, index) => (
         <StatsCard key={metric.label} metric={metric} index={index} />
       ))}

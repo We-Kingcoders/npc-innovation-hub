@@ -315,11 +315,13 @@ const MemberForm: React.FC = () => {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    // px-4 here sat inside DashboardLayout's own gutter, double-padding
+    // the form; the layout supplies the horizontal gutter already.
+    <div className="min-w-0">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-blue-950 px-8 py-6">
+          <div className="bg-blue-950 px-4 sm:px-8 py-5 sm:py-6">
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
               <User className="h-7 w-7" />
               {memberExists ? "Edit Your Profile" : "Complete Your Profile"}
@@ -331,7 +333,7 @@ const MemberForm: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-8 space-y-10">
+          <div className="p-4 sm:p-8 space-y-8 sm:space-y-10">
             {/* Global toast */}
             <Toast msg={error} type="error" />
             <Toast msg={success} type="success" />
@@ -387,7 +389,7 @@ const MemberForm: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0-all">
                 <Input
                   label="Display Name *"
                   placeholder="Entue MUGABO"
@@ -470,7 +472,7 @@ const MemberForm: React.FC = () => {
                 subtitle="Degree, institution and description"
                 color="text-purple-600"
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0-all">
                 <Input
                   label="Degree"
                   accent="purple"
@@ -547,7 +549,7 @@ const MemberForm: React.FC = () => {
                 subtitle="Social media and professional links"
                 color="text-green-600"
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0-all">
                 <Input
                   label="LinkedIn"
                   accent="green"
@@ -616,7 +618,7 @@ const MemberForm: React.FC = () => {
                 <h3 className="font-semibold text-gray-800 text-sm">
                   Add New Skill
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0-all">
                   <Input
                     label="Skill Category"
                     accent="orange"
@@ -721,7 +723,7 @@ const MemberForm: React.FC = () => {
 
               {/* Added skills */}
               {skills.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0-all">
                   {skills.map((skill, idx) => (
                     <div
                       key={idx}

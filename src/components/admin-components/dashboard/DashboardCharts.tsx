@@ -172,7 +172,7 @@
 //             </span>
 //           )}
 //         </div>
-//         <div className="h-48">
+//         <div className="h-44 sm:h-48">
 //           {loading ? (
 //             <ChartSkeleton />
 //           ) : (
@@ -229,7 +229,7 @@
 //             Last 6 months
 //           </span>
 //         </div>
-//         <div className="h-48">
+//         <div className="h-44 sm:h-48">
 //           {loading ? (
 //             <ChartSkeleton />
 //           ) : (
@@ -451,9 +451,9 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 min-w-0-all">
       {/* ── Project Activity Bar Chart ── */}
-      <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="font-semibold text-navy-800 text-sm">
@@ -470,7 +470,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
             </span>
           )}
         </div>
-        <div className="h-48">
+        <div className="h-44 sm:h-48">
           {loading ? (
             <ChartSkeleton />
           ) : (
@@ -513,7 +513,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
       </div>
 
       {/* ── Task Completion Trend Area Chart (real data) ── */}
-      <div className="bg-white rounded-2xl p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="font-semibold text-navy-800 text-sm">
@@ -544,7 +544,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
           </div>
         </div>
 
-        <div className="h-48">
+        <div className="h-44 sm:h-48">
           {loading ? (
             <ChartSkeleton />
           ) : !hasTrendData ? (

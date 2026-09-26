@@ -123,7 +123,9 @@ export const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
             <div className={`p-3 rounded-xl ${stat.color} shadow-lg`}>
               <div className="text-white">{stat.icon}</div>
             </div>
-            <span className={`text-3xl font-bold ${stat.textColor}`}>
+            <span
+              className={`text-2xl sm:text-3xl font-bold ${stat.textColor}`}
+            >
               {stat.value}
             </span>
           </div>

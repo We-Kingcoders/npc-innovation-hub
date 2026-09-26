@@ -197,13 +197,13 @@ export default function BlogTable({
     <div className="p-0">
       <div className="w-full">
         {/* Filters */}
-        <div className="mb-6 flex flex-wrap gap-4">
+        <div className="mb-6 flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
           <input
             type="text"
             placeholder="Search blogs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 min-w-[250px] px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+            className="flex-1 w-full min-w-0 sm:min-w-[250px] px-4 py-2 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
           />
           <select
             value={categoryFilter}
@@ -232,7 +232,7 @@ export default function BlogTable({
 
         {/* Table */}
         {filteredBlogs.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center">
+          <div className="bg-white rounded-2xl px-4 py-10 sm:p-12 text-center">
             <svg
               className="mx-auto h-12 w-12 text-mist-400 mb-4"
               fill="none"

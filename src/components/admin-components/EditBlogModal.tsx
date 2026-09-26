@@ -25,7 +25,7 @@ export const EditBlogModal: React.FC<EditBlogModalProps> = ({
   if (!isOpen || !blog) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -33,10 +33,12 @@ export const EditBlogModal: React.FC<EditBlogModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-4xl overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-mist-300 px-8 py-5 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-navy-800">Edit Blog</h2>
+        <div className="sticky top-0 bg-white border-b border-mist-300 px-4 sm:px-8 py-5 flex items-center justify-between z-10">
+          <h2 className="text-lg sm:text-2xl font-bold text-navy-800 min-w-0 break-words">
+            Edit Blog
+          </h2>
           <button
             onClick={onClose}
             className="text-mist-400 hover:text-mist-600 transition-colors"
@@ -59,7 +61,7 @@ export const EditBlogModal: React.FC<EditBlogModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="px-8 py-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+        <div className="flex-1 min-h-0 px-4 sm:px-8 py-5 sm:py-6 overflow-y-auto">
           <BlogForm
             initialData={blog}
             onSubmit={onSubmit}

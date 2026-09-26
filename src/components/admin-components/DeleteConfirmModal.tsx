@@ -29,7 +29,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -37,7 +37,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-md w-full p-6">
+      <div className="dialog-panel relative bg-white border border-mist-300 rounded-2xl shadow-2xl max-w-md p-5 sm:p-6 overflow-y-auto">
         {/* Icon */}
         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
           <svg

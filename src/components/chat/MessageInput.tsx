@@ -1759,7 +1759,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
               <button
                 type="button"
                 onClick={() => removeAttachment(i)}
-                className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                aria-label="Remove attachment"
+                className="reveal-on-hover absolute -top-1.5 -right-1.5 w-5 h-5 sm:w-4 sm:h-4 bg-red-500 text-white rounded-full flex items-center justify-center"
               >
                 <X size={10} />
               </button>
@@ -1775,9 +1776,12 @@ const MessageInput: React.FC<MessageInputProps> = ({
       )}
 
       {/* Input row */}
-      <div className="flex items-center gap-2 px-4 py-3">
-        {/* Avatar */}
-        <div className="flex-shrink-0">
+      {/* safe-pb clears the iOS home indicator / Android gesture bar when
+          the chat runs to the bottom of the screen. */}
+      <div className="flex items-center gap-2 px-2 sm:px-4 py-2.5 sm:py-3 safe-pb">
+        {/* Avatar - dropped below sm, where those 40px are better spent on
+            the field; the sender is never ambiguous in your own composer. */}
+        <div className="hidden sm:block flex-shrink-0">
           {currentUserImage ? (
             <img
               src={currentUserImage}

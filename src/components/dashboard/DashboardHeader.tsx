@@ -45,7 +45,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user }) => {
       <div>
         <div className="flex items-center gap-2 mb-1">
           {greeting.icon}
-          <h1 className="text-2xl font-bold text-navy-800">
+          <h1 className="text-page-title font-bold text-navy-800 min-w-0 break-words">
             {greeting.text}, {displayName}!
           </h1>
         </div>

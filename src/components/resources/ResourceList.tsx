@@ -65,7 +65,7 @@ const ResourceList: React.FC<Props> = ({ title, onSelect }) => {
       {title && <h3 className="text-xl font-bold text-center mb-6">{title}</h3>}
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0-all">
           {[0, 1].map((col) => (
             <ul key={col} className="space-y-3">
               {[1, 2, 3, 4].map((n) => (
@@ -86,7 +86,7 @@ const ResourceList: React.FC<Props> = ({ title, onSelect }) => {
           No resources available yet.
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0-all">
           {columns.map((col, idx) => (
             <ul key={idx} className="space-y-3">
               {col.map((res) => (

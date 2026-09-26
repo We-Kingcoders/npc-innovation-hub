@@ -58,7 +58,7 @@ const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
   return (
     <div className="mb-6 flex flex-col gap-4">
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 min-w-0-all">
         {stats.map((s) => (
           <div
             key={s.label}

@@ -97,7 +97,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
   }, [tasks, blogs, resources]);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-mist-300 p-6">
+    <div className="min-w-0 bg-white rounded-xl shadow-sm border border-mist-300 p-4 sm:p-6">
       <h3 className="text-sm font-bold text-navy-800 mb-5">Activity Feed</h3>
 
       {feed.length === 0 ? (

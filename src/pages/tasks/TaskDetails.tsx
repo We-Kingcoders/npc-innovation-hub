@@ -75,7 +75,7 @@ const TaskDetails: React.FC = () => {
   // ── Error / Not found ──
   if (error || !selectedTask) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-500 gap-4">
+      <div className="flex flex-col items-center justify-center text-center px-4 py-12 sm:py-20 text-gray-500 gap-4">
         <p className="text-lg font-semibold">{error || "Task not found."}</p>
         <button
           onClick={() => navigate("/dashboard/tasks")}

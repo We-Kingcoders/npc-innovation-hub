@@ -186,7 +186,7 @@ const MembersManagement: React.FC = () => {
     <div className="flex-1 px-8 py-6">
       {/* HEADER */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-navy-800 mb-2">
+        <h2 className="text-page-title font-bold text-navy-800 mb-2">
           Members Management
         </h2>
         <p className="text-mist-600">

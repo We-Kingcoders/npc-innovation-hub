@@ -45,18 +45,20 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-3xl overflow-hidden">
         {/* Header */}
-        <div className="bg-navy-800 px-8 py-6 text-white">
+        <div className="bg-navy-800 px-4 sm:px-8 py-6 text-white">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-3">{task.title}</h2>
+              <h2 className="text-page-title font-bold mb-3 break-words">
+                {task.title}
+              </h2>
               <div className="flex items-center gap-3">
                 <StatusBadge status={task.status} />
                 <PriorityBadge priority={task.priority} />
@@ -84,7 +86,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto max-h-[calc(90vh-200px)]">
+        <div className="flex-1 min-h-0 p-4 sm:p-8 overflow-y-auto">
           {/* Status Progress */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
@@ -123,7 +125,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
           </div>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
             {/* Creator */}
             <div>
               <h4 className="text-sm font-semibold text-mist-500 mb-2">
@@ -241,7 +243,7 @@ export const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         </div>
 
         {/* Actions Footer */}
-        <div className="border-t border-mist-200 px-8 py-4 bg-mist-100 flex justify-end gap-3">
+        <div className="dialog-actions flex-shrink-0 border-t border-mist-200 px-4 sm:px-8 py-4 bg-mist-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
           <button
             onClick={onReassign}
             className="px-4 py-2 text-navy-700 bg-navy-50 rounded-lg hover:bg-navy-100 transition-colors font-medium"

@@ -132,7 +132,7 @@ const ProjectsPage = () => {
 
           {/* Loading state */}
           {loading && (
-            <div className="flex flex-col items-center justify-center py-24 text-gray-400">
+            <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-gray-400">
               <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4" />
               <p className="text-sm">Loading projects…</p>
             </div>
@@ -140,7 +140,7 @@ const ProjectsPage = () => {
 
           {/* Error state */}
           {!loading && error && (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-center">
               <p className="text-red-500 font-medium mb-4">{error}</p>
               <button
                 onClick={loadProjects}
@@ -153,7 +153,7 @@ const ProjectsPage = () => {
 
           {/* Empty state */}
           {!loading && !error && allProjects.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="flex flex-col items-center justify-center text-center px-4 py-14 sm:py-24 text-center">
               <p className="text-gray-500 font-medium">
                 No projects to show yet.
               </p>

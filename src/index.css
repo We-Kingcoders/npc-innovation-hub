@@ -2,21 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* Custom styles */
 body {
   margin: 0;
   padding: 0;
   font-family:
-    'Inter',
+    "Inter",
     -apple-system,
     BlinkMacSystemFont,
-    'Segoe UI',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Apple Color Emoji',
-    'Noto Color Emoji',
-    'Roboto',
+    "Segoe UI",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Apple Color Emoji",
+    "Noto Color Emoji",
+    "Roboto",
     sans-serif;
 
   -webkit-font-smoothing: antialiased;
@@ -38,4 +37,172 @@ body {
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, modern Edge */
+}
+
+/* ============================================================
+   RESPONSIVE FOUNDATIONS
+   Behaviour that belongs to the whole app rather than any one
+   component, so it lives here instead of being repeated (and
+   forgotten) per page. Deliberately NOT `overflow-x: hidden` on
+   the page - that hides overflow bugs rather than fixing them;
+   these rules remove common *causes* of overflow instead.
+   ============================================================ */
+
+/* Long unbroken strings - email addresses, pasted URLs, project titles
+   with no spaces - are the most common reason a card or table cell pushes
+   the page wider than the viewport. Let them wrap. */
+body {
+  overflow-wrap: break-word;
+}
+
+/* Media never exceeds its container, and never distorts. */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+/* iOS Safari zooms the page in when a focused input's font-size is under
+   16px, and does not zoom back out on blur - so every tap into a filter or
+   search field on an iPhone left the layout scaled up and scrolling
+   sideways. Only the control's *rendered* size changes, and only on small
+   screens; desktop typography is untouched. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Honour a reduced-motion preference across every transition and animation
+   in the app - the sidebar slide, modal fades, spinners, the dashboard's
+   count-up numbers. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------
+   Safe-area insets - iPhone notch / home indicator, Android
+   gesture bar. Applied to the elements that actually sit against
+   a screen edge: full-height drawers and the chat composer.
+   ------------------------------------------------------------ */
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-pt {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-pl {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* ------------------------------------------------------------
+   Fluid page titles
+   clamp() scales continuously between phone and desktop instead
+   of jumping at a breakpoint, so intermediate widths (a 900px
+   half-tiled window, a tablet in portrait) look considered
+   rather than accidental. A fixed 24-30px page title wrapped to
+   three lines at 320px.
+   ------------------------------------------------------------ */
+.text-page-title {
+  font-size: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  line-height: 1.2;
+}
+
+/* ------------------------------------------------------------
+   Flex/grid overflow guards
+   A flex or grid child defaults to min-width:auto, so one wide
+   child (a chart, a table, a long word) can only grow the track,
+   never shrink it - which is how a narrowing window ends up
+   scrolling the page sideways. Applied at the call sites that
+   need it rather than globally, since min-width:auto is the
+   right default for plenty of other layouts.
+   ------------------------------------------------------------ */
+.min-w-0-all > * {
+  min-width: 0;
+}
+
+/* Recharts measures its parent, so the parent must be allowed to shrink
+   or the chart re-renders at the old width and overflows its card. */
+.chart-box {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------
+   Dialogs
+   ------------------------------------------------------------
+   Shared by every modal so they cannot drift apart again.
+
+   max-height is tied to the *visible* viewport: on a mobile
+   browser `vh` is measured against the largest possible viewport
+   (address bar hidden), so the previous `max-h-[90vh]` panels
+   were taller than the screen while the bar was showing, putting
+   their footer buttons below the fold with no way to scroll to
+   them. `dvh` tracks what is actually visible.
+
+   The column layout lets the body be the only scroller, so the
+   header and action row stay put while the content moves.
+   ------------------------------------------------------------ */
+.dialog-panel {
+  width: 100%;
+  max-height: calc(100dvh - 2rem);
+  display: flex;
+  flex-direction: column;
+}
+@supports not (height: 100dvh) {
+  .dialog-panel {
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+/* Dialog action rows stack on phones (the markup uses flex-col-reverse, so
+   the primary action ends up lowest - nearest the thumb). Their buttons
+   then take the full row, giving two equally large targets instead of two
+   small ones crowded against the right edge. Centralised here so each
+   dialog does not repeat the same utilities on every button. */
+@media (max-width: 639px) {
+  .dialog-actions > button,
+  .dialog-actions > a {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------
+   Touch targets
+   `opacity-0 group-hover:opacity-100` is invisible-and-unusable
+   on a touch device, which has no hover state at all - it hid
+   row actions, "remove attachment" and "change image" entirely
+   on phones. `.reveal-on-hover` shows the control by default and
+   only opts into the fade where a real pointer exists.
+   ------------------------------------------------------------ */
+.reveal-on-hover {
+  transition: opacity 0.2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .reveal-on-hover {
+    opacity: 0;
+  }
+  .group:hover .reveal-on-hover,
+  .reveal-on-hover:focus-within,
+  .reveal-on-hover:focus-visible {
+    opacity: 1;
+  }
 }

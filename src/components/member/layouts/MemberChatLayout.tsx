@@ -59,7 +59,7 @@ export const MemberChatLayout: React.FC<{ children: React.ReactNode }> = ({
           <Topbar />
           <main
             id="main-content"
-            className="flex-1 min-h-0 px-4 sm:px-10 py-6 flex flex-col overflow-hidden"
+            className="flex-1 min-h-0 px-2 sm:px-6 lg:px-10 py-3 sm:py-6 flex flex-col overflow-hidden"
           >
             {children}
           </main>

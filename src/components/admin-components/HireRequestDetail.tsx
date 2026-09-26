@@ -165,7 +165,7 @@ export default function HireRequestDetail() {
             <div className="bg-navy-800 px-8 py-6 text-white">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold mb-2">
+                  <h1 className="text-page-title font-bold mb-2 break-words">
                     {inquiry.company_name}
                   </h1>
                   <p className="text-navy-100">{inquiry.job_title}</p>
@@ -220,7 +220,7 @@ export default function HireRequestDetail() {
                 <h2 className="text-lg font-semibold text-navy-800 mb-4">
                   Contact Information
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0-all">
                   <div>
                     <label className="text-sm font-medium text-mist-600">
                       Full Name

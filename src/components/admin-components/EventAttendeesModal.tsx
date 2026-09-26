@@ -38,18 +38,20 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-3xl overflow-hidden">
         {/* Header */}
-        <div className="bg-navy-800 px-8 py-6 text-white">
+        <div className="bg-navy-800 px-4 sm:px-8 py-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-1">Event Attendees</h2>
+              <h2 className="text-page-title font-bold mb-1">
+                Event Attendees
+              </h2>
               <p className="text-navy-100">{eventTitle}</p>
             </div>
             <button
@@ -74,7 +76,7 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
         </div>
 
         {/* Filter */}
-        <div className="px-8 py-4 border-b border-mist-200">
+        <div className="px-4 sm:px-8 py-4 border-b border-mist-200">
           <select
             value={statusFilter}
             onChange={(e) =>
@@ -89,7 +91,7 @@ export const EventAttendeesModal: React.FC<EventAttendeesModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto max-h-[calc(90vh-200px)]">
+        <div className="flex-1 min-h-0 p-4 sm:p-8 overflow-y-auto">
           {loading && (
             <div className="text-center py-8">
               <div className="animate-spin h-8 w-8 border-4 border-navy-700 border-t-transparent rounded-full mx-auto"></div>

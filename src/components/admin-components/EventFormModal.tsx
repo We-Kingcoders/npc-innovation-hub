@@ -151,7 +151,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -159,10 +159,10 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+      <div className="dialog-panel relative bg-white rounded-2xl shadow-2xl max-w-3xl overflow-hidden">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-mist-300 px-8 py-5 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-navy-800">
+        <div className="sticky top-0 bg-white border-b border-mist-300 px-4 sm:px-8 py-5 flex items-center justify-between z-10">
+          <h2 className="text-lg sm:text-2xl font-bold text-navy-800 min-w-0 break-words">
             {initialData ? "Edit Event" : "Create New Event"}
           </h2>
           <button
@@ -189,7 +189,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
         {/* Content */}
         <form
           onSubmit={handleSubmit}
-          className="px-8 py-6 overflow-y-auto max-h-[calc(90vh-140px)]"
+          className="flex-1 min-h-0 px-4 sm:px-8 py-5 sm:py-6 overflow-y-auto"
         >
           <div className="space-y-5">
             {/* Title */}
@@ -334,7 +334,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-4 pt-6 mt-6 border-t">
+          <div className="dialog-actions flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4 pt-6 mt-6 border-t">
             <button
               type="button"
               onClick={onClose}

@@ -25,7 +25,7 @@ const DashboardSkeleton: React.FC = () => (
     </div>
 
     {/* Stats row */}
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-7">
       {[1, 2, 3, 4].map((n) => (
         <CardSkeleton key={n} />
       ))}

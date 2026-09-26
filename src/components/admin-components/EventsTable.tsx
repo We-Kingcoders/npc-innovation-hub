@@ -284,13 +284,13 @@ export default function EventsTable() {
     <div className="p-0">
       <div className="w-full">
         {/* Filters */}
-        <div className="mb-6 flex flex-wrap gap-4">
+        <div className="mb-6 flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
           <input
             type="text"
             placeholder="Search events by title, location, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 min-w-[250px] px-4 py-3 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+            className="flex-1 w-full min-w-0 sm:min-w-[250px] px-4 py-3 border border-mist-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
           />
           <select
             value={statusFilter}

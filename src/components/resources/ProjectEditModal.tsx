@@ -92,11 +92,11 @@ const ProjectEditModal: React.FC<Props> = ({ project, onClose, onSave }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -110,7 +110,7 @@ const ProjectEditModal: React.FC<Props> = ({ project, onClose, onSave }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
           {/* Error */}
           {error && (
             <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
@@ -134,7 +134,7 @@ const ProjectEditModal: React.FC<Props> = ({ project, onClose, onSave }) => {
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div className="reveal-on-hover absolute inset-0 bg-black/30 flex items-center justify-center">
                     <p className="text-white text-sm font-medium">
                       Change image
                     </p>
@@ -235,7 +235,7 @@ const ProjectEditModal: React.FC<Props> = ({ project, onClose, onSave }) => {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="dialog-actions flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
