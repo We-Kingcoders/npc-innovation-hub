@@ -7,29 +7,12 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import {
   getDashboardStats,
   getTaskAnalytics,
-  getTaskTrendData,
-  getEventInsights,
-  getProjectInsights,
-  getRecentActivity,
-  getSystemHealth,
 } from "../api/admin/dashboard.api";
 import type {
   DashboardStats,
   TaskAnalytics,
-  EventInsightsData,
-  ProjectInsightsData,
-  ActivityItem,
-  SystemHealthIndicator,
   GrowthMetric,
 } from "../types/dashboard.types";
-
-// ─── Task trend data shape ────────────────────────────────────────────────────
-export interface TaskTrendPoint {
-  name: string;
-  completed: number;
-  inProgress: number;
-  pending: number;
-}
 
 // ─── Simple in-memory cache ───────────────────────────────────────────────────
 const CACHE_TTL_MS = 60_000; // 1 minute
@@ -56,114 +39,49 @@ function setCached<T>(key: string, data: T): void {
 }
 
 // ─── Growth metric builder ────────────────────────────────────────────────────
+// Used to compare each count against a baseline snapshotted into
+// localStorage the first time the dashboard loaded in a given browser -
+// not a real time-windowed trend (it reset on a cleared cache or a
+// different device, and had no relationship to "vs last week/month").
+// StatsCard renders these KPI cards with showGrowth={false} now, so
+// previousValue/growthPercent/trend are static, honest placeholders
+// rather than a number implying a real trend nothing here actually
+// tracks.
 function buildGrowthMetrics(stats: DashboardStats): GrowthMetric[] {
-  const storedRaw = localStorage.getItem("dashboard_baseline");
-  let baseline: Partial<DashboardStats> = {};
-  try {
-    baseline = storedRaw
-      ? (JSON.parse(storedRaw) as Partial<DashboardStats>)
-      : {};
-  } catch {
-    baseline = {};
-  }
-  if (!storedRaw) {
-    localStorage.setItem("dashboard_baseline", JSON.stringify(stats));
-  }
-
-  function growth(current: number, previous: number): number {
-    if (previous === 0) return current > 0 ? 100 : 0;
-    return Math.round(((current - previous) / previous) * 100);
-  }
-
   const metrics: GrowthMetric[] = [
-    {
-      label: "Total Users",
-      value: stats.users,
-      previousValue: baseline.users ?? stats.users,
-      growthPercent: growth(stats.users, baseline.users ?? stats.users),
-      trend:
-        stats.users > (baseline.users ?? stats.users)
-          ? "up"
-          : stats.users < (baseline.users ?? stats.users)
-            ? "down"
-            : "neutral",
-      icon: "users",
-      color: "blue",
-    },
+    { label: "Total Users", value: stats.users, icon: "users", color: "blue" },
     {
       label: "Projects",
       value: stats.projects,
-      previousValue: baseline.projects ?? stats.projects,
-      growthPercent: growth(
-        stats.projects,
-        baseline.projects ?? stats.projects,
-      ),
-      trend:
-        stats.projects > (baseline.projects ?? stats.projects)
-          ? "up"
-          : "neutral",
       icon: "folder",
       color: "indigo",
     },
     {
       label: "Resources",
       value: stats.resources,
-      previousValue: baseline.resources ?? stats.resources,
-      growthPercent: growth(
-        stats.resources,
-        baseline.resources ?? stats.resources,
-      ),
-      trend:
-        stats.resources > (baseline.resources ?? stats.resources)
-          ? "up"
-          : "neutral",
       icon: "book",
       color: "purple",
     },
-    {
-      label: "Blog Posts",
-      value: stats.blogs,
-      previousValue: baseline.blogs ?? stats.blogs,
-      growthPercent: growth(stats.blogs, baseline.blogs ?? stats.blogs),
-      trend: stats.blogs > (baseline.blogs ?? stats.blogs) ? "up" : "neutral",
-      icon: "edit",
-      color: "teal",
-    },
+    { label: "Blog Posts", value: stats.blogs, icon: "edit", color: "teal" },
     {
       label: "Hire Inquiries",
       value: stats.inquiries,
-      previousValue: baseline.inquiries ?? stats.inquiries,
-      growthPercent: growth(
-        stats.inquiries,
-        baseline.inquiries ?? stats.inquiries,
-      ),
-      trend:
-        stats.inquiries > (baseline.inquiries ?? stats.inquiries)
-          ? "up"
-          : "neutral",
       icon: "briefcase",
       color: "orange",
     },
     {
       label: "Active Tasks",
       value: stats.tasks,
-      previousValue: baseline.tasks ?? stats.tasks,
-      growthPercent: growth(stats.tasks, baseline.tasks ?? stats.tasks),
-      trend: stats.tasks > (baseline.tasks ?? stats.tasks) ? "up" : "neutral",
       icon: "check-square",
       color: "green",
     },
-    {
-      label: "Events",
-      value: stats.events,
-      previousValue: baseline.events ?? stats.events,
-      growthPercent: growth(stats.events, baseline.events ?? stats.events),
-      trend:
-        stats.events > (baseline.events ?? stats.events) ? "up" : "neutral",
-      icon: "calendar",
-      color: "red",
-    },
-  ];
+    { label: "Events", value: stats.events, icon: "calendar", color: "red" },
+  ].map((m) => ({
+    ...m,
+    previousValue: m.value,
+    growthPercent: 0,
+    trend: "neutral" as const,
+  }));
 
   return metrics;
 }
@@ -174,11 +92,6 @@ interface DashboardHookState {
   stats: DashboardStats | null;
   growthMetrics: GrowthMetric[];
   taskAnalytics: TaskAnalytics | null;
-  taskTrend: TaskTrendPoint[];
-  eventInsights: EventInsightsData | null;
-  projectInsights: ProjectInsightsData | null;
-  recentActivity: ActivityItem[];
-  systemHealth: SystemHealthIndicator[];
   loading: boolean;
   refreshing: boolean;
   errors: Record<string, string>;
@@ -194,14 +107,6 @@ export function useAdminDashboard(): DashboardHookState {
   const [taskAnalytics, setTaskAnalytics] = useState<TaskAnalytics | null>(
     null,
   );
-  const [taskTrend, setTaskTrend] = useState<TaskTrendPoint[]>([]);
-  const [eventInsights, setEventInsights] = useState<EventInsightsData | null>(
-    null,
-  );
-  const [projectInsights, setProjectInsights] =
-    useState<ProjectInsightsData | null>(null);
-  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
-  const [systemHealth, setSystemHealth] = useState<SystemHealthIndicator[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -246,73 +151,6 @@ export function useAdminDashboard(): DashboardHookState {
     }
     if (isMounted.current && tasksData) setTaskAnalytics(tasksData);
 
-    // Task trend (real monthly data)
-    const cachedTrend = getCached<TaskTrendPoint[]>("taskTrend");
-    let trendData: TaskTrendPoint[] | null = cachedTrend;
-    if (!trendData) {
-      try {
-        trendData = await getTaskTrendData();
-        setCached("taskTrend", trendData);
-      } catch {
-        trendData = [];
-      }
-    }
-    if (isMounted.current) setTaskTrend(trendData ?? []);
-
-    // Events
-    const cachedEvents = getCached<EventInsightsData>("events");
-    let eventsData: EventInsightsData | null = cachedEvents;
-    if (!eventsData) {
-      try {
-        eventsData = await getEventInsights();
-        setCached("events", eventsData);
-      } catch (e) {
-        newErrors["events"] =
-          e instanceof Error ? e.message : "Failed to load events";
-      }
-    }
-    if (isMounted.current && eventsData) setEventInsights(eventsData);
-
-    // Projects
-    const cachedProjects = getCached<ProjectInsightsData>("projects");
-    let projectsData: ProjectInsightsData | null = cachedProjects;
-    if (!projectsData) {
-      try {
-        projectsData = await getProjectInsights();
-        setCached("projects", projectsData);
-      } catch (e) {
-        newErrors["projects"] =
-          e instanceof Error ? e.message : "Failed to load projects";
-      }
-    }
-    if (isMounted.current && projectsData) setProjectInsights(projectsData);
-
-    // Activity
-    const cachedActivity = getCached<ActivityItem[]>("activity");
-    let activityData: ActivityItem[] | null = cachedActivity;
-    if (!activityData) {
-      try {
-        activityData = await getRecentActivity();
-        setCached("activity", activityData);
-      } catch {
-        activityData = [];
-      }
-    }
-    if (isMounted.current) setRecentActivity(activityData ?? []);
-
-    // System health
-    const cachedHealth = getCached<SystemHealthIndicator[]>("health");
-    let healthData: SystemHealthIndicator[] | null = cachedHealth;
-    if (!healthData) {
-      try {
-        healthData = await getSystemHealth();
-        setCached("health", healthData);
-      } catch {
-        healthData = [];
-      }
-    }
-    if (isMounted.current) setSystemHealth(healthData ?? []);
-
     if (isMounted.current) {
       setErrors(newErrors);
       setLastUpdated(new Date());
@@ -338,11 +176,6 @@ export function useAdminDashboard(): DashboardHookState {
     stats,
     growthMetrics,
     taskAnalytics,
-    taskTrend,
-    eventInsights,
-    projectInsights,
-    recentActivity,
-    systemHealth,
     loading,
     refreshing,
     errors,
