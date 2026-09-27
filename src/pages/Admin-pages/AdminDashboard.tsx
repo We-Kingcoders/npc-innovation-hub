@@ -8,14 +8,10 @@ import Sidebar from "../../components/admin-components/Sidebar";
 import Topbar from "../../components/admin-components/Topbar";
 import SkipToContent from "../../components/SkipToContent";
 
-// New dashboard components
+// Dashboard components
 import ModernStatsCards from "../../components/admin-components/dashboard/ModernStatsCards";
-import DashboardCharts from "../../components/admin-components/dashboard/DashboardCharts";
 import TaskOverviewWidget from "../../components/admin-components/dashboard/TaskOverviewWidget";
-import EventInsightsWidget from "../../components/admin-components/dashboard/EventInsightsWidget";
-import ActivityFeed from "../../components/admin-components/dashboard/ActivityFeed";
 import QuickActions from "../../components/admin-components/dashboard/QuickActions";
-import SystemHealth from "../../components/admin-components/dashboard/SystemHealth";
 
 // Hook
 import { useAdminDashboard } from "../../hooks/useAdminDashboard";
@@ -98,16 +94,23 @@ const LastUpdatedBadge: React.FC<{
   </div>
 );
 
+// ─── Section Eyebrow ────────────────────────────────────────────────────────────
+// Small uppercase label above a section, matching the header's eyebrow
+// treatment — gives the (now shorter) page clear structure instead of two
+// widgets floating with no heading of their own.
+const SectionEyebrow: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
+  <p className="text-[11px] font-bold tracking-[0.14em] text-navy-500 uppercase mb-3">
+    {children}
+  </p>
+);
+
 // ─── Main Dashboard ────────────────────────────────────────────────────────────
 export default function AdminDashboard() {
   const {
     growthMetrics,
     taskAnalytics,
-    taskTrend,
-    eventInsights,
-    projectInsights,
-    recentActivity,
-    systemHealth,
     loading,
     refreshing,
     errors,
@@ -152,38 +155,18 @@ export default function AdminDashboard() {
           <ErrorBanner errors={errors} />
 
           {/* ── KPI Cards Row ── */}
+          <SectionEyebrow>At a glance</SectionEyebrow>
           <ModernStatsCards metrics={growthMetrics} loading={loading} />
 
-          {/* ── Charts Row ── */}
-          <DashboardCharts
-            taskTrend={taskTrend}
-            projectInsights={projectInsights}
-            loading={loading}
-          />
-
-          {/* ── Middle Section: 3-column grid ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-            {/* Task Overview (Donut) */}
-            <TaskOverviewWidget analytics={taskAnalytics} loading={loading} />
-
-            {/* Event Insights */}
-            <EventInsightsWidget insights={eventInsights} loading={loading} />
-
-            {/* Activity Feed */}
-            <ActivityFeed activities={recentActivity} loading={loading} />
-          </div>
-
-          {/* ── Bottom Section: 2-column grid ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Quick Actions */}
-            <QuickActions />
-
-            {/* System Health */}
-            <SystemHealth
-              health={systemHealth}
-              loading={loading}
-              onRefresh={handleRefresh}
-            />
+          {/* ── Task Overview + Quick Actions ── */}
+          <SectionEyebrow>Tasks &amp; Actions</SectionEyebrow>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+            <div className="lg:col-span-2">
+              <TaskOverviewWidget analytics={taskAnalytics} loading={loading} />
+            </div>
+            <div className="lg:col-span-3">
+              <QuickActions />
+            </div>
           </div>
         </div>
       </main>
