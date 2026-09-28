@@ -139,7 +139,7 @@ export default function Sidebar({
             lives in each surface's own Topbar profile dropdown, not
             duplicated here. */}
         <div
-          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-3 pb-2 justify-between px-6 ${
+          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-3.5 pb-2.5 justify-between px-6 ${
             isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""
           }`}
         >
@@ -166,13 +166,15 @@ export default function Sidebar({
         {/* Navigation - still scrolls internally as a safety net (so an
             even longer menu in the future never pushes Sign Out
             off-screen), but sized to comfortably fit every current nav
-            item on a real laptop viewport with no scrolling needed:
-            compact py-1.5 rows, a tighter icon badge, space-y-0.5 between
-            items, and text-xs labels instead of text-sm - the same
-            professional density this app's admin data tables already use
-            for dense lists, not an ad hoc shrink. */}
-        <nav className="flex-1 px-4 py-1.5 overflow-y-auto hide-scrollbar">
-          <ul className="space-y-0.5">
+            item on a real laptop viewport with no scrolling needed.
+            Label size (text-xs) and icon size (16) are the values that
+            actually made 14 items fit - kept as-is. This second pass adds
+            back some of the padding/spacing trimmed to get there (row
+            py-1 -> py-1.5, icon/label gap-2 -> gap-3, space-y-0.5 -> 1,
+            this wrapper's own py-1.5 -> py-2), using the slack that was
+            left over once everything fit rather than font size. */}
+        <nav className="flex-1 px-4 py-2 overflow-y-auto hide-scrollbar">
+          <ul className="space-y-1">
             {links.map((item) => (
               <li key={item.label}>
                 <NavLink
@@ -180,7 +182,7 @@ export default function Sidebar({
                   end={item.end}
                   title={isDesktopCollapsed ? item.label : undefined}
                   className={({ isActive }) =>
-                    `group flex items-center gap-2 px-2.5 py-1 rounded-lg transition-all duration-200 min-w-0 ${
+                    `group flex items-center gap-3 px-2.5 py-1.5 rounded-lg transition-all duration-200 min-w-0 ${
                       isDesktopCollapsed ? "lg:justify-center" : ""
                     } ${
                       isActive
@@ -233,10 +235,10 @@ export default function Sidebar({
             Padding/text trimmed to match the nav items' new density
             rather than standing out as the one oversized row left. */}
         <div
-          className={`px-4 pb-2.5 mt-auto flex-shrink-0 safe-pb ${isDesktopCollapsed ? "lg:px-3" : ""}`}
+          className={`px-4 pb-3 mt-auto flex-shrink-0 safe-pb ${isDesktopCollapsed ? "lg:px-3" : ""}`}
         >
           <button
-            className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-xs text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-xs text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => void handleLogout()}
             disabled={isLoggingOut}
           >
