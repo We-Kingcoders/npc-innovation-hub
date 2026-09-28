@@ -166,6 +166,9 @@ const ProfileSettings = lazy(
 
 // Admin Chat pages
 const AdminMessages = lazy(() => import("../pages/Admin-pages/AdminMessages"));
+const AdminContactMessages = lazy(
+  () => import("../pages/Admin-pages/AdminContactMessages"),
+);
 const AdminHubChannel = lazy(
   () => import("../pages/Admin-pages/AdminHubChannel"),
 );
@@ -831,6 +834,16 @@ const AllRoutes: React.FC = () => {
             <ProtectedRoute requiredRole="Admin">
               <AdminChatLayout>
                 <AdminHubChannel />
+              </AdminChatLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/contact-messages"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <AdminChatLayout>
+                <AdminContactMessages />
               </AdminChatLayout>
             </ProtectedRoute>
           }
