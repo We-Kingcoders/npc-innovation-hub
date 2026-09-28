@@ -304,6 +304,22 @@ export const HUB_VIDEO_ROUTES = {
   DELETE_HUB_VIDEO: `${API_BASE}/admin/hub-video`,
 } as const;
 
+// ==================== ADMIN HERO MEDIA ROUTES ====================
+
+export const HERO_MEDIA_ROUTES = {
+  GET_HERO_MEDIA: `${API_BASE}/admin/hero-media`,
+  UPLOAD_HERO_MEDIA: `${API_BASE}/admin/hero-media`,
+  UPDATE_HERO_MEDIA: (id: string) => `${API_BASE}/admin/hero-media/${id}`,
+  ACTIVATE_HERO_MEDIA: (id: string) =>
+    `${API_BASE}/admin/hero-media/${id}/activate`,
+  DEACTIVATE_HERO_MEDIA: (id: string) =>
+    `${API_BASE}/admin/hero-media/${id}/deactivate`,
+  SET_DEFAULT_HERO_MEDIA: (id: string) =>
+    `${API_BASE}/admin/hero-media/${id}/default`,
+  REORDER_HERO_MEDIA: `${API_BASE}/admin/hero-media/reorder`,
+  DELETE_HERO_MEDIA: (id: string) => `${API_BASE}/admin/hero-media/${id}`,
+} as const;
+
 // ==================== ADMIN ALUMNI ROUTES ====================
 
 export const ALUMNI_ROUTES = {

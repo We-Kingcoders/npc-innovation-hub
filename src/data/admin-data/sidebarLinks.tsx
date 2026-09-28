@@ -57,6 +57,12 @@ export const sidebarLinks = [
     notification: 0,
   },
   {
+    icon: "heroMedia",
+    label: "Hero Media",
+    path: "/Admin-hero-media",
+    notification: 0,
+  },
+  {
     icon: "alumni",
     label: "Alumni",
     path: "/Admin-alumni",

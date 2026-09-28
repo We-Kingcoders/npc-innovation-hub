@@ -3,6 +3,11 @@ jest.mock("../../hooks/useHeroMembers", () => ({
   useHeroMembers: jest.fn(),
 }));
 
+jest.mock("../../hooks/useHeroMedia", () => ({
+  __esModule: true,
+  useHeroMedia: jest.fn(),
+}));
+
 jest.mock("../../api/applicationService", () => ({
   __esModule: true,
   submitMembershipApplication: jest.fn(),
@@ -13,8 +18,10 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import HeroSection from "./HeroSection";
 import { useHeroMembers } from "../../hooks/useHeroMembers";
+import { useHeroMedia } from "../../hooks/useHeroMedia";
 
 const mockedUseHeroMembers = useHeroMembers as jest.Mock;
+const mockedUseHeroMedia = useHeroMedia as jest.Mock;
 
 function renderHero() {
   return render(
@@ -25,6 +32,18 @@ function renderHero() {
 }
 
 describe("<HeroSection />", () => {
+  // No active hero media configured - the background falls back to the
+  // static image, same as a real "nothing uploaded yet" homepage. The
+  // background media carousel itself has its own dedicated tests.
+  beforeEach(() => {
+    mockedUseHeroMedia.mockReturnValue({
+      media: [],
+      loading: false,
+      error: null,
+      fetchMedia: jest.fn(),
+    });
+  });
+
   afterEach(() => jest.clearAllMocks());
 
   test("renders real hero-member data in the carousel instead of hardcoded names", () => {
@@ -72,6 +91,12 @@ describe("<HeroSection /> rotating headline", () => {
       loading: false,
       error: null,
       fetchMembers: jest.fn(),
+    });
+    mockedUseHeroMedia.mockReturnValue({
+      media: [],
+      loading: false,
+      error: null,
+      fetchMedia: jest.fn(),
     });
   });
 

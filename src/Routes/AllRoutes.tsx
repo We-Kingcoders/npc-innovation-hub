@@ -136,6 +136,7 @@ const HeroMembersPage = lazy(
   () => import("../pages/Admin-pages/HeroMembersPage"),
 );
 const HubVideoPage = lazy(() => import("../pages/Admin-pages/HubVideoPage"));
+const HeroMediaPage = lazy(() => import("../pages/Admin-pages/HeroMediaPage"));
 const AlumniManagementPage = lazy(
   () => import("../pages/Admin-pages/AlumniManagementPage"),
 );
@@ -751,6 +752,14 @@ const AllRoutes: React.FC = () => {
           element={
             <ProtectedRoute requiredRole="Admin">
               <HubVideoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Admin-hero-media"
+          element={
+            <ProtectedRoute requiredRole="Admin">
+              <HeroMediaPage />
             </ProtectedRoute>
           }
         />
