@@ -4,14 +4,15 @@
 // Reuses the same NewConversationModal and conversation hooks,
 // but navigates to /admin/messages/:id and /admin/hub-channel.
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Hash, Search, Plus, MessageSquare } from "lucide-react";
+import { Hash, Search, Plus, MessageSquare, Mail } from "lucide-react";
 import { useConversations } from "../../hooks/useDirectMessages";
 import { useAuth } from "../../hooks/useAuth";
 import NewConversationModal from "./NewConversationModal";
 import type { MemberItem } from "./NewConversationModal";
 import { HeaderAvatar } from "./ChatShell";
+import { getPendingContactMessagesCount } from "../../api/admin/contact.api";
 
 interface AdminChatLeftPanelProps {
   selectedUserId?: string | null;
@@ -58,6 +59,32 @@ const AdminChatLeftPanel: React.FC<AdminChatLeftPanelProps> = ({
 
   const { conversations, isLoading } = useConversations();
   const isHub = location.pathname === `${basePath}/hub-channel`;
+  const isContactMessages =
+    location.pathname === `${basePath}/contact-messages`;
+
+  // Pending contact-message count for the shortcut's badge, same idea as
+  // the outer admin Sidebar's own "Hire Us Requests" badge - polled
+  // rather than pushed, matching this panel's own conversation list (no
+  // real-time infra for this one either).
+  const [pendingContactCount, setPendingContactCount] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    const fetchCount = () => {
+      getPendingContactMessagesCount()
+        .then((count) => {
+          if (!cancelled) setPendingContactCount(count);
+        })
+        .catch(() => {
+          /* badge just stays at its last known value on failure */
+        });
+    };
+    fetchCount();
+    const timer = setInterval(fetchCount, 45_000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, []);
 
   const filtered = conversations.filter((c) =>
     `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()),
@@ -123,8 +150,8 @@ const AdminChatLeftPanel: React.FC<AdminChatLeftPanelProps> = ({
           </div>
         </div>
 
-        {/* Hub Channel shortcut */}
-        <div className="px-3 py-2 border-b border-gray-100 flex-shrink-0">
+        {/* Hub Channel + Contact Messages shortcuts */}
+        <div className="px-3 py-2 border-b border-gray-100 flex-shrink-0 space-y-1">
           <button
             type="button"
             onClick={() => navigate(`${basePath}/hub-channel`)}
@@ -146,6 +173,40 @@ const AdminChatLeftPanel: React.FC<AdminChatLeftPanelProps> = ({
               </p>
             </div>
             <span className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0" />
+          </button>
+
+          {/* Contact Messages - public "Contact Us" form submissions,
+              reviewed here rather than folded into the live DM/hub-channel
+              chat threads above, since they aren't a back-and-forth chat -
+              they're one-shot form submissions an admin reviews and
+              optionally replies to by email. */}
+          <button
+            type="button"
+            onClick={() => navigate(`${basePath}/contact-messages`)}
+            className={`w-full flex items-center gap-3 py-2 px-2.5 rounded-xl text-left transition-all ${
+              isContactMessages
+                ? "bg-blue-50 border border-blue-200"
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="w-9 h-9 bg-[#002B56] rounded-xl flex items-center justify-center flex-shrink-0">
+              <Mail size={16} className="text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className={`font-semibold text-sm ${isContactMessages ? "text-blue-700" : "text-gray-800"}`}
+              >
+                Contact Messages
+              </p>
+              <p className="text-xs text-gray-400 truncate">
+                Submitted from the website
+              </p>
+            </div>
+            {pendingContactCount > 0 && (
+              <span className="flex-shrink-0 bg-red-500 text-white text-[10px] rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 font-semibold">
+                {pendingContactCount > 99 ? "99+" : pendingContactCount}
+              </span>
+            )}
           </button>
         </div>
 
