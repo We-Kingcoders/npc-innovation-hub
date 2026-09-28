@@ -18,6 +18,7 @@ import {
   UserCheck,
   Star,
   Video,
+  Images,
   GraduationCap,
 } from "lucide-react";
 import { sidebarLinks } from "../../data/admin-data/sidebarLinks";
@@ -41,6 +42,7 @@ const iconComponents = {
   applications: UserCheck,
   heroMembers: Star,
   hubVideo: Video,
+  heroMedia: Images,
   alumni: GraduationCap,
 };
 

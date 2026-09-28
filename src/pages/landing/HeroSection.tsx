@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import JoinUsModal from "../../components/JoinUsModal";
+import {
+  useHeroBackgroundCarousel,
+  HeroBackgroundMediaLayers,
+  HeroBackgroundDots,
+} from "./HeroBackgroundMedia";
 import { useHeroMembers } from "../../hooks/useHeroMembers";
 
 /**
@@ -93,6 +98,15 @@ const HeroSection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textSlide, textPaused]);
 
+  const {
+    activeMedia: heroBackgroundMedia,
+    currentIndex: heroBackgroundIndex,
+    setCurrentIndex: setHeroBackgroundIndex,
+    reducedMotion: heroBackgroundReducedMotion,
+    setHovered: setHeroBackgroundHovered,
+    handleMediaError: handleHeroBackgroundMediaError,
+  } = useHeroBackgroundCarousel();
+
   const { members: heroMembers } = useHeroMembers();
 
   const teamMembers = heroMembers.map((hm) => ({
@@ -173,14 +187,18 @@ const HeroSection = () => {
           Needs overflow-x-hidden, not overflow-hidden, on the section
           above - overflow-hidden would clip this negative offset before
           it ever reaches up past the section's own top. */}
-      <div
-        className="absolute inset-x-0 bottom-0 -top-[67px] lg:-top-[83px] z-0"
-        aria-hidden="true"
-      >
-        <img
-          src="/assets/images/hubimage.jpg"
-          alt=""
-          className="w-full h-full object-cover"
+      <div className="absolute inset-x-0 bottom-0 -top-[67px] lg:-top-[83px] z-0">
+        {/* Admin-controlled hero background (images and/or video) - see
+            HeroBackgroundMedia.tsx. Renders the same static
+            /assets/images/hubimage.jpg as before whenever no active media
+            is configured or the fetch fails, so this can never regress to
+            a blank hero. */}
+        <HeroBackgroundMediaLayers
+          activeMedia={heroBackgroundMedia}
+          currentIndex={heroBackgroundIndex}
+          reducedMotion={heroBackgroundReducedMotion}
+          setHovered={setHeroBackgroundHovered}
+          onError={handleHeroBackgroundMediaError}
         />
         {/* Below lg: a single strong navy tint across the whole image.
             Text wraps the full width here (no second column to give a
@@ -188,7 +206,7 @@ const HeroSection = () => {
             guarantee contrast regardless of where a line falls on the
             photo - close to solid navy rather than a subtle wash. */}
         <div
-          className="absolute inset-0 lg:hidden"
+          className="absolute inset-0 lg:hidden pointer-events-none"
           style={{
             background:
               "linear-gradient(180deg, rgba(0,43,86,0.82) 0%, rgba(0,31,63,0.9) 100%)",
@@ -198,13 +216,24 @@ const HeroSection = () => {
             navy at the carousel card - works here because the two-column
             split gives each end somewhere real to land. */}
         <div
-          className="hidden lg:block absolute inset-0"
+          className="hidden lg:block absolute inset-0 pointer-events-none"
           style={{
             background:
               "linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
           }}
         />
       </div>
+      {/* Background-carousel dot controls - deliberately a LATER sibling
+          of the whole background wrapper above (not nested inside it), so
+          plain DOM order paints them above both the media and the two
+          gradient overlays without needing to fight z-index across
+          separate stacking contexts. Renders nothing for the common
+          single-image case. */}
+      <HeroBackgroundDots
+        activeMedia={heroBackgroundMedia}
+        currentIndex={heroBackgroundIndex}
+        onSelect={setHeroBackgroundIndex}
+      />
 
       {/* =================================================================
           MAIN HERO CONTENT
