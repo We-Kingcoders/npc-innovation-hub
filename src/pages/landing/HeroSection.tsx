@@ -317,61 +317,60 @@ const HeroSection = () => {
             shown at every breakpoint so the sliding member carousel isn't
             a desktop-exclusive feature, and that duplicate tagline was
             removed in favor of this section's own (directly below the
-            card, same as desktop always had).
+            carousel, same as desktop always had).
             items-center below lg (was only relevant at lg as items-end):
-            centers the card in the single-column mobile/tablet layout;
+            centers the carousel in the single-column mobile/tablet layout;
             items-end still pins it to the right edge in the two-column
             desktop layout. Right padding trimmed to a sliver at lg+ (was
-            lg:pr-8 xl:pr-12): the card and slogan both cap out at
+            lg:pr-8 xl:pr-12): the carousel and slogan both cap out at
             max-w-[580px], so on any screen wider than that cap this
             column has real slack left over - with items-start that slack
-            rendered as a wide gap of unused navy between the card and the
-            right edge; the small remaining pr just keeps the slogan text
-            off the literal edge of the viewport. */}
+            rendered as a wide gap of unused space between the carousel and
+            the right edge; the small remaining pr just keeps the slogan
+            text off the literal edge of the viewport. */}
         <div className="flex flex-col items-center lg:items-end justify-center w-full px-6 sm:px-8 pb-10 lg:pb-0 lg:w-[60%] lg:px-0 lg:pl-12 xl:pl-20 lg:pr-4 xl:pr-6 lg:pt-20">
-          {/* Hero Image Carousel. bg-gradient fill is the permanent card
-              backdrop now - every member renders as a circular avatar
-              (see below), not a full-bleed photo, so this navy surface is
-              always visible around it rather than only showing through
-              letterboxed gaps. No prev/next arrows - dots are the only
-              manual control, same as the text carousel. Height scales up
-              through the smaller breakpoints too now that this renders on
-              phones, not just a flat lg+ h-[420px]. */}
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[580px] h-[300px] sm:h-[360px] lg:h-[420px] xl:h-[470px] bg-gradient-to-br from-[#002B56] to-[#003366]">
+          {/* Hero Image Carousel - no card/background of its own any more:
+              the avatar and name/role sit directly on the hero's own
+              backdrop (photo/video + overlay), the same surface the text
+              column's headline already sits on, instead of floating in a
+              separate navy rectangle. No prev/next arrows - dots are the
+              only manual control, same as the text carousel. Height still
+              fixed (nothing here is in normal flow - every slide is
+              absolutely positioned for the cross-fade) so the dots below
+              never jump as the active member's name/role changes length. */}
+          <div className="relative w-full max-w-[580px] h-[300px] sm:h-[360px] lg:h-[420px] xl:h-[470px]">
             {/* Slides */}
             <div className="relative w-full h-full">
               {teamMembers.map((member, index) => (
                 <div
                   key={index}
-                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                  className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ${
                     index === currentSlide ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  {/* One large circular avatar per member - object-cover
-                      cropped to a fixed circle so every photo reads the
-                      same way regardless of its own aspect ratio (a tall
-                      portrait and a small square headshot both used to
-                      render completely differently under object-contain).
-                      pb-16 nudges the circle up so it sits clear of the
-                      name/role overlay below it. */}
-                  <div className="w-full h-full flex items-center justify-center pb-16">
-                    <div className="w-40 h-40 sm:w-48 sm:h-48 xl:w-56 xl:h-56 rounded-full overflow-hidden ring-4 ring-white/30 shadow-xl bg-white/10">
-                      <img
-                        src={member.image}
-                        alt={`${member.name} - ${member.role}`}
-                        className="w-full h-full object-cover"
-                        loading={index === 0 ? "eager" : "lazy"}
-                      />
-                    </div>
+                  {/* Large circular avatar - object-cover cropped to a
+                      fixed circle so every photo reads the same way
+                      regardless of its own aspect ratio. A stronger ring/
+                      shadow than before: with no navy card behind it any
+                      more, the circle needs to hold its own definition
+                      directly against the photo/video backdrop. */}
+                  <div className="w-40 h-40 sm:w-48 sm:h-48 xl:w-56 xl:h-56 rounded-full overflow-hidden ring-4 ring-white/50 shadow-2xl bg-white/10 flex-shrink-0">
+                    <img
+                      src={member.image}
+                      alt={`${member.name} - ${member.role}`}
+                      className="w-full h-full object-cover"
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
                   </div>
-                  {/* Name/role, bottom-left - no gradient scrim needed
-                      behind it any more, the card's own navy background
-                      already gives white text plenty of contrast. */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 pb-20">
-                    <h3 className="text-white text-2xl font-bold mb-1 drop-shadow-lg">
+                  {/* Name/role, centered directly below the avatar (used
+                      to be an absolute bottom-left overlay on the navy
+                      card - now genuinely part of the same centered
+                      column as the image). */}
+                  <div className="mt-5 text-center px-4">
+                    <h3 className="text-white text-2xl font-bold drop-shadow-lg">
                       {member.name}
                     </h3>
-                    <p className="text-gray-200 text-lg drop-shadow-md">
+                    <p className="text-gray-200 text-lg drop-shadow-md mt-1">
                       {member.role}
                     </p>
                   </div>
@@ -380,7 +379,7 @@ const HeroSection = () => {
             </div>
 
             {/* Navigation dots */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+            <div className="absolute bottom-2 sm:bottom-3 left-0 right-0 flex justify-center gap-2 z-10">
               {teamMembers.map((_, index) => (
                 <button
                   key={index}
@@ -396,13 +395,14 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Slogan - positioned directly below image, always one line,
-              centered under it. White/90/80 since this always sits on the
-              photo/navy background now (the card's own navy fill at lg+,
-              the full-bleed overlay below it) - text size steps down at
-              the smallest breakpoint so "Innovate. Create. Lead." still
-              fits the phrase's own whitespace-nowrap on a narrow phone
-              without shrinking the container's max-w-[580px]. */}
+          {/* Slogan - positioned directly below the carousel, always one
+              line, centered under it. White/90/80 since this always sits
+              on the hero's own photo/video backdrop + overlay (the
+              carousel above it has no background fill of its own either,
+              now) - text size steps down at the smallest breakpoint so
+              "Innovate. Create. Lead." still fits the phrase's own
+              whitespace-nowrap on a narrow phone without shrinking the
+              container's max-w-[580px]. */}
           <div className="mt-4 lg:mt-2 xl:mt-10 w-full max-w-[580px] text-center">
             <p className="text-xl sm:text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
               <span className="text-white">Innovate.</span>{" "}
