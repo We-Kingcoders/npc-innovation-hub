@@ -139,7 +139,7 @@ export default function Sidebar({
             lives in each surface's own Topbar profile dropdown, not
             duplicated here. */}
         <div
-          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-5 pb-3 justify-between px-6 ${
+          className={`flex items-center flex-shrink-0 border-b border-navy-700 pt-3.5 pb-2.5 justify-between px-6 ${
             isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""
           }`}
         >
@@ -163,10 +163,17 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Navigation - scrolls internally so a tall menu never pushes
-            Sign Out off-screen or forces the whole sidebar (rather than
-            the page) to scroll. */}
-        <nav className="flex-1 px-4 py-3 overflow-y-auto hide-scrollbar">
+        {/* Navigation - still scrolls internally as a safety net (so an
+            even longer menu in the future never pushes Sign Out
+            off-screen), but sized to comfortably fit every current nav
+            item on a real laptop viewport with no scrolling needed.
+            Label size (text-xs) and icon size (16) are the values that
+            actually made 14 items fit - kept as-is. This second pass adds
+            back some of the padding/spacing trimmed to get there (row
+            py-1 -> py-1.5, icon/label gap-2 -> gap-3, space-y-0.5 -> 1,
+            this wrapper's own py-1.5 -> py-2), using the slack that was
+            left over once everything fit rather than font size. */}
+        <nav className="flex-1 px-4 py-2 overflow-y-auto hide-scrollbar">
           <ul className="space-y-1">
             {links.map((item) => (
               <li key={item.label}>
@@ -175,7 +182,7 @@ export default function Sidebar({
                   end={item.end}
                   title={isDesktopCollapsed ? item.label : undefined}
                   className={({ isActive }) =>
-                    `group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 ${
+                    `group flex items-center gap-3 px-2.5 py-1.5 rounded-lg transition-all duration-200 min-w-0 ${
                       isDesktopCollapsed ? "lg:justify-center" : ""
                     } ${
                       isActive
@@ -188,7 +195,7 @@ export default function Sidebar({
                     <>
                       <div className="relative flex-shrink-0">
                         <div
-                          className={`p-1.5 rounded-lg transition-colors duration-200 ${
+                          className={`p-0.5 rounded-lg transition-colors duration-200 ${
                             isActive
                               ? "bg-white text-navy-800"
                               : "bg-navy-700 text-navy-100 group-hover:bg-navy-600 group-hover:text-white"
@@ -198,20 +205,20 @@ export default function Sidebar({
                         </div>
                         {!!item.badge && item.badge > 0 && (
                           <span
-                            className={`absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-white text-navy-800 ring-2 ring-navy-800 text-[10px] font-bold rounded-full flex items-center justify-center ${isDesktopCollapsed ? "lg:scale-90" : ""}`}
+                            className={`absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] bg-white text-navy-800 ring-2 ring-navy-800 text-[9px] font-bold rounded-full flex items-center justify-center ${isDesktopCollapsed ? "lg:scale-90" : ""}`}
                           >
                             {item.badge > 99 ? "99+" : item.badge}
                           </span>
                         )}
                       </div>
                       <span
-                        className={`flex-1 min-w-0 truncate text-sm uppercase ${isActive ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200 ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+                        className={`flex-1 min-w-0 truncate text-xs uppercase tracking-wide ${isActive ? "text-white" : "text-navy-100"} group-hover:text-white transition-colors duration-200 ${isDesktopCollapsed ? "lg:hidden" : ""}`}
                       >
                         {item.label}
                       </span>
                       {!!item.badge && item.badge > 0 && (
                         <span
-                          className={`ml-auto flex-shrink-0 bg-white text-navy-800 text-xs font-bold px-2 py-0.5 rounded-full ${isDesktopCollapsed ? "lg:hidden" : ""}`}
+                          className={`ml-auto flex-shrink-0 bg-white text-navy-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isDesktopCollapsed ? "lg:hidden" : ""}`}
                         >
                           {item.badge > 99 ? "99+" : item.badge}
                         </span>
@@ -224,17 +231,19 @@ export default function Sidebar({
           </ul>
         </nav>
 
-        {/* Sign Out - pinned below the scrollable region, always visible */}
+        {/* Sign Out - pinned below the scrollable region, always visible.
+            Padding/text trimmed to match the nav items' new density
+            rather than standing out as the one oversized row left. */}
         <div
-          className={`px-4 pb-4 mt-auto flex-shrink-0 safe-pb ${isDesktopCollapsed ? "lg:px-3" : ""}`}
+          className={`px-4 pb-3 mt-auto flex-shrink-0 safe-pb ${isDesktopCollapsed ? "lg:px-3" : ""}`}
         >
           <button
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-sm text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg border border-navy-600 hover:bg-white hover:border-white hover:font-bold uppercase text-xs text-navy-100 hover:text-navy-800 transition-all duration-200 group ${isDesktopCollapsed ? "lg:justify-center lg:px-3" : ""} ${isLoggingOut ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => void handleLogout()}
             disabled={isLoggingOut}
           >
             <LogOut
-              size={20}
+              size={16}
               className={`group-hover:scale-110 transition-transform ${isLoggingOut ? "animate-spin" : ""}`}
             />
             <span className={isDesktopCollapsed ? "lg:hidden" : ""}>

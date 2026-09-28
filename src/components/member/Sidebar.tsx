@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
   const links: SidebarLinkItem[] = [
     {
       label: "Dashboard",
-      icon: <LayoutDashboard size={18} strokeWidth={2.5} />,
+      icon: <LayoutDashboard size={16} strokeWidth={2.5} />,
       path: "/dashboard",
       // "/dashboard" is itself a prefix of every other Member route below -
       // without `end`, Dashboard would render "active" on all of them too.
@@ -34,27 +34,27 @@ export const Sidebar: React.FC = () => {
     // relies solely on its own Topbar bell.
     {
       label: "Resources",
-      icon: <FolderOpen size={18} strokeWidth={2.5} />,
+      icon: <FolderOpen size={16} strokeWidth={2.5} />,
       path: "/dashboard/resources",
     },
     {
       label: "Projects",
-      icon: <Briefcase size={18} strokeWidth={2.5} />,
+      icon: <Briefcase size={16} strokeWidth={2.5} />,
       path: "/dashboard/projects",
     },
     {
       label: "Messages",
-      icon: <MessageSquare size={18} strokeWidth={2.5} />,
+      icon: <MessageSquare size={16} strokeWidth={2.5} />,
       path: "/hub-channel",
     },
     {
       label: "Events",
-      icon: <Calendar size={18} strokeWidth={2.5} />,
+      icon: <Calendar size={16} strokeWidth={2.5} />,
       path: "/dashboard/events",
     },
     {
       label: "Blog",
-      icon: <BookOpen size={18} strokeWidth={2.5} />,
+      icon: <BookOpen size={16} strokeWidth={2.5} />,
       // /dashboard/blog, not the public /blog - that route renders the
       // public Navbar and drops the dashboard shell entirely (Admin's own
       // "Blog" nav item stays inside AdminLayout; this matches that).
@@ -62,7 +62,7 @@ export const Sidebar: React.FC = () => {
     },
     {
       label: "My Tasks",
-      icon: <ClipboardList size={18} strokeWidth={2.5} />,
+      icon: <ClipboardList size={16} strokeWidth={2.5} />,
       path: "/dashboard/tasks",
     },
   ];

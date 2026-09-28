@@ -87,7 +87,7 @@ export default function Sidebar() {
         path,
         badge,
         icon: IconComponent ? (
-          <IconComponent size={18} strokeWidth={2.5} />
+          <IconComponent size={16} strokeWidth={2.5} />
         ) : null,
       };
     },
