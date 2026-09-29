@@ -1,8 +1,3 @@
-jest.mock("../../hooks/useHeroMembers", () => ({
-  __esModule: true,
-  useHeroMembers: jest.fn(),
-}));
-
 jest.mock("../../hooks/useHeroMedia", () => ({
   __esModule: true,
   useHeroMedia: jest.fn(),
@@ -17,10 +12,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import HeroSection from "./HeroSection";
-import { useHeroMembers } from "../../hooks/useHeroMembers";
 import { useHeroMedia } from "../../hooks/useHeroMedia";
 
-const mockedUseHeroMembers = useHeroMembers as jest.Mock;
 const mockedUseHeroMedia = useHeroMedia as jest.Mock;
 
 function renderHero() {
@@ -46,52 +39,18 @@ describe("<HeroSection />", () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test("renders real hero-member data in the carousel instead of hardcoded names", () => {
-    mockedUseHeroMembers.mockReturnValue({
-      members: [
-        {
-          id: "hm-1",
-          memberId: "member-1",
-          name: "Jane Doe",
-          role: "Full Stack Developer",
-          imageUrl: "https://example.com/jane.jpg",
-          order: 0,
-        },
-      ],
-      loading: false,
-      error: null,
-      fetchMembers: jest.fn(),
-    });
-
+  test("shows the tagline and no member roster - members live on their own homepage section/page, not in the hero", () => {
     renderHero();
 
-    expect(screen.getByText("Jane Doe")).toBeInTheDocument();
-    expect(screen.getByText("Full Stack Developer")).toBeInTheDocument();
-    expect(screen.queryByText("Sarah Chen")).not.toBeInTheDocument();
-  });
-
-  test("does not crash when there are no hero members yet", () => {
-    mockedUseHeroMembers.mockReturnValue({
-      members: [],
-      loading: false,
-      error: null,
-      fetchMembers: jest.fn(),
-    });
-
-    renderHero();
-
-    expect(screen.queryByText("Sarah Chen")).not.toBeInTheDocument();
+    expect(screen.getByText("Innovate.")).toBeInTheDocument();
+    expect(screen.getByText("Create.")).toBeInTheDocument();
+    expect(screen.getByText("Lead.")).toBeInTheDocument();
+    expect(screen.queryByText("Full Stack Developer")).not.toBeInTheDocument();
   });
 });
 
 describe("<HeroSection /> rotating headline", () => {
   beforeEach(() => {
-    mockedUseHeroMembers.mockReturnValue({
-      members: [],
-      loading: false,
-      error: null,
-      fetchMembers: jest.fn(),
-    });
     mockedUseHeroMedia.mockReturnValue({
       media: [],
       loading: false,

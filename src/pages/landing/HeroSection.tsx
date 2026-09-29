@@ -5,7 +5,6 @@ import {
   HeroBackgroundMediaLayers,
   HeroBackgroundDots,
 } from "./HeroBackgroundMedia";
-import { useHeroMembers } from "../../hooks/useHeroMembers";
 
 /**
  * HeroSection Component
@@ -14,27 +13,35 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
  * Matches reference design with pixel-perfect accuracy
  *
  * Features:
- * - Background photo (Hub students at work) at every breakpoint, under a
- *   navy overlay: a light wash the full width of the text column that
- *   transitions to solid navy at the carousel card on lg+ (two columns
- *   give each end somewhere real to land), and a single strong navy tint
- *   across the whole image below lg (single-column text wraps the full
- *   width, so there's no safe lighter patch to land a wash on).
+ * - Background photo (Hub students at work) at every breakpoint, under one
+ *   uniform navy scrim (not a per-column split) so headline, paragraph
+ *   and tagline all read the same regardless of what part of the photo
+ *   sits behind them - klab.rw's own hero uses the same one-overlay-for-
+ *   the-whole-image approach.
  *   Headline/paragraph/button/dots/tagline are white throughout, with a
  *   drop-shadow as insurance against the photo's own brightness.
  * - Responsive navigation with hamburger menu
- * - Two-column layout with hero text and image
- * - "Innovate. Create. Lead." tagline positioned below hero image
+ * - Single full-width text column over the photo (klab.rw-style, not a
+ *   40/60 two-column split) - headline and paragraph wrap naturally into
+ *   as many lines as their own length needs, rather than being squeezed
+ *   into an artificially narrow side column. No member photos/roster
+ *   here (that lives in its own homepage section further down, and its
+ *   own full /members page).
  * - Fully accessible and mobile-responsive
- * - Automatic sliding carousel of 12 team members
- * - Left column also rotates through 4 headline/subtext messages,
- *   independently of the member photo carousel on the right
+ * - Rotates through 4 headline/subtext messages
+ * - CTA row (Join Us + slide dots + the "Innovate. Create. Lead."
+ *   tagline) sits together on one line near the bottom of the hero
  *
  * Updates:
- * - Slogan repositioned directly under hero image
- * - Added team member carousel with auto-loop
- * - Member photos now render as uniform large circular avatars
- * - Card is right-aligned flush against the viewport's right edge
+ * - Removed the team-member photo carousel that used to occupy a
+ *   separate right column (name/role cards) - the Hub's members are
+ *   presented in their own dedicated homepage section and /members page
+ *   instead, not repeated inside the hero.
+ * - Collapsed the two-column layout into one full-width column: the
+ *   40%-wide text column was forcing every headline onto 3-4 cramped
+ *   one-word lines regardless of how short the slide actually was. The
+ *   tagline that used to live alone in the freed-up right column now
+ *   sits in the CTA row instead, alongside Join Us and the slide dots.
  * - Extended the desktop-only photo/navy-overlay background and white
  *   text/button/dots/tagline treatment to every breakpoint, replacing the
  *   flat white + navy text mobile/tablet previously had, so the hero
@@ -43,10 +50,7 @@ import { useHeroMembers } from "../../hooks/useHeroMembers";
 
 // Four angles on what the Hub actually offers - mentorship, real shipped
 // projects, and the Hire Us/alumni career pipeline - rather than one
-// static line repeating the same pitch forever. Deliberately kept
-// independent from the member photo carousel on the right: that list is
-// admin-managed (via Hero Members) and can be any length including
-// zero, so coupling the two 1:1 would break the moment it changes.
+// static line repeating the same pitch forever.
 const HERO_SLIDES = [
   {
     headline: "Empowering Developers, Driving Innovation.",
@@ -70,7 +74,6 @@ const TEXT_SLIDE_INTERVAL_MS = 3000;
 const FADE_DURATION_MS = 300;
 
 const HeroSection = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   const [textSlide, setTextSlide] = useState(0);
@@ -107,41 +110,6 @@ const HeroSection = () => {
     handleMediaError: handleHeroBackgroundMediaError,
   } = useHeroBackgroundCarousel();
 
-  const { members: heroMembers } = useHeroMembers();
-
-  const teamMembers = heroMembers.map((hm) => ({
-    name: hm.name,
-    role: hm.role,
-    image: hm.imageUrl ?? "/assets/images/hero.png",
-  }));
-
-  // The hero member list now refreshes in the background (see
-  // useHeroMembers) so an admin's changes show up without a page
-  // reload - which means it can shrink while a visitor is mid-carousel.
-  // Without this, an in-range currentSlide could point past the end of
-  // a newly-shorter list and every slide would render opacity-0 until
-  // the interval below happened to wrap back into range.
-  useEffect(() => {
-    if (teamMembers.length > 0 && currentSlide >= teamMembers.length) {
-      setCurrentSlide(0);
-    }
-  }, [teamMembers.length, currentSlide]);
-
-  // Automatic looping
-  useEffect(() => {
-    if (teamMembers.length === 0) return undefined;
-
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % teamMembers.length);
-    }, 3500); // Change slide every 3.5 seconds
-
-    return () => clearInterval(timer);
-  }, [teamMembers.length]);
-
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
   return (
     <div
       id="home"
@@ -152,9 +120,8 @@ const HeroSection = () => {
       // too, cutting off the background layer's -top-[83px] extension
       // below before it can reach up behind Navbar.tsx's transparent
       // header. Nothing else in this section actually overflows its box
-      // (the background layer is inset-x-0-bounded horizontally, and the
-      // carousel card clips its own corners via its own overflow-hidden),
-      // so dropping this was the only way to let that one element bleed
+      // (the background layer is inset-x-0-bounded horizontally), so
+      // dropping this was the only way to let that one element bleed
       // upward without paying for it everywhere else.
       className="w-full min-h-screen bg-white relative flex flex-col scroll-mt-16 lg:scroll-mt-20"
     >
@@ -200,26 +167,21 @@ const HeroSection = () => {
           setHovered={setHeroBackgroundHovered}
           onError={handleHeroBackgroundMediaError}
         />
-        {/* Below lg: a single strong navy tint across the whole image.
-            Text wraps the full width here (no second column to give a
-            lighter wash somewhere safe to land), so this needs to
-            guarantee contrast regardless of where a line falls on the
-            photo - close to solid navy rather than a subtle wash. */}
+        {/* One uniform navy scrim over the whole photo, every breakpoint -
+            not a left-light/right-dark split. A gradient that goes light
+            wherever text happens to land leaves that text's contrast at
+            the mercy of whatever's directly behind it in the photo (a
+            bright laptop screen, a pale shirt); a single consistent tint
+            guarantees every line - headline, paragraph, tagline - reads
+            the same regardless of position, the same way klab.rw's own
+            hero holds one dark overlay across its full image rather than
+            varying it by column. Still translucent, not a solid fill -
+            the photo stays visible underneath, just consistently dimmed. */}
         <div
-          className="absolute inset-0 lg:hidden pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(180deg, rgba(0,43,86,0.82) 0%, rgba(0,31,63,0.9) 100%)",
-          }}
-        />
-        {/* lg+: light wash under the text column, transitioning to solid
-            navy at the carousel card - works here because the two-column
-            split gives each end somewhere real to land. */}
-        <div
-          className="hidden lg:block absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.4) 46%, #002B56 58%)",
+              "linear-gradient(180deg, rgba(0,31,63,0.62) 0%, rgba(0,20,40,0.75) 100%)",
           }}
         />
       </div>
@@ -243,46 +205,59 @@ const HeroSection = () => {
           the page's content (About, Members, Projects, ...), which all
           render as later siblings in AllRoutes.tsx's "/" route. The single
           <main id="main-content"> that covers all of it lives there instead
-          - see that file's comment for why. */}
-      <div className="flex-1 flex flex-col lg:flex-row relative z-10 items-center lg:items-start">
-        {/* Left Section - Hero Text Content. pt-10 is now just breathing
-            room under the fixed navbar (which reserves its own space via
-            its spacer div) - it no longer has a decorative gradient band
-            to clear now that the hero background is flat white. */}
-        <section
-          className="flex flex-col justify-center w-full px-6 sm:px-8 pt-10 sm:pt-12 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20"
-          onMouseEnter={() => setTextPaused(true)}
-          onMouseLeave={() => setTextPaused(false)}
+          - see that file's comment for why.
+          One full-width column, not a 40/60 split - klab.rw's own hero
+          lets its headline use the whole viewport's width and just wraps
+          onto however many lines its own length needs; a narrow side
+          column was forcing every slide here onto 3-4 one-word lines
+          regardless of how short the sentence actually was. pt-10 is just
+          breathing room under the fixed navbar (which reserves its own
+          space via its spacer div). */}
+      <section
+        className="flex-1 flex flex-col justify-center relative z-10 px-6 sm:px-8 lg:px-16 xl:px-24 pt-10 sm:pt-12 pb-10 lg:pb-14 lg:pt-20"
+        onMouseEnter={() => setTextPaused(true)}
+        onMouseLeave={() => setTextPaused(false)}
+      >
+        {/* Rotating headline/subtext - fades out, swaps, fades back in.
+            max-w caps line length for readability without artificially
+            narrowing the column itself, so a short slide (e.g. "Where
+            Students Become Builders.") sits on one line while a longer
+            one (e.g. "From First Line of Code to Finished Project.")
+            wraps to two - each at whatever length it actually needs,
+            not a fixed one-word-per-line squeeze. min-h reserves the
+            tallest of the 4 slides' actual rendered height at each
+            breakpoint (measured directly, not guessed - headline
+            line-count doesn't track paragraph line-count, so the
+            "obviously longest" slide isn't the tallest one at every
+            width) so the CTA row below never jumps up and down as the
+            active slide changes. aria-live="polite" announces the
+            change to screen readers without interrupting them
+            mid-sentence, and pausing on hover/focus (see this section's
+            own handlers and the buttons' onFocus below) keeps this from
+            being content that auto-updates with no way to stop it. */}
+        <div
+          aria-live="polite"
+          className={`max-w-3xl min-h-[9rem] sm:min-h-[8rem] md:min-h-[9rem] lg:min-h-[11rem] xl:min-h-[10rem] transition-opacity duration-300 ${
+            textVisible ? "opacity-100" : "opacity-0"
+          }`}
         >
-          {/* Rotating headline/subtext - fades out, swaps, fades back in.
-              min-h reserves the tallest of the 4 slides' actual rendered
-              height at each breakpoint (measured directly, not guessed -
-              headline line-count doesn't track paragraph line-count, so
-              the "obviously longest" slide isn't the tallest one at every
-              width) so the CTA button below never jumps up and down as
-              the active slide changes. aria-live="polite" announces the
-              change to screen readers without interrupting them
-              mid-sentence, and pausing on hover/focus (see the section's
-              own handlers and the buttons' onFocus below) keeps this from
-              being content that auto-updates with no way to stop it. */}
-          <div
-            aria-live="polite"
-            className={`min-h-[14rem] sm:min-h-[12rem] md:min-h-[13rem] lg:min-h-[20rem] xl:min-h-[18.5rem] transition-opacity duration-300 ${
-              textVisible ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <h1 className="text-white drop-shadow-lg font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] leading-tight mb-6 tracking-tight">
-              {HERO_SLIDES[textSlide].headline}
-            </h1>
-            <p className="text-white/90 drop-shadow-md text-lg sm:text-xl lg:text-[1.25rem] font-normal leading-relaxed max-w-md">
-              {HERO_SLIDES[textSlide].text}
-            </p>
-          </div>
+          <h1 className="text-white drop-shadow-lg font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 tracking-tight">
+            {HERO_SLIDES[textSlide].headline}
+          </h1>
+          <p className="text-white/90 drop-shadow-md text-lg sm:text-xl lg:text-2xl font-normal leading-relaxed max-w-2xl">
+            {HERO_SLIDES[textSlide].text}
+          </p>
+        </div>
 
-          {/* Call-to-Action + slide dots. No prev/next arrows - dots are
-              the only manual control, direct-jump is enough for 4 slides
-              this short-lived (3s each). */}
-          <div className="mt-8 flex flex-wrap items-center gap-6">
+        {/* CTA row - Join Us, slide dots, and the tagline together on one
+            line near the bottom of the hero (was its own centered block
+            in a separate right column; moved here now that column's
+            gone). justify-between spreads the two groups apart on wide
+            screens; flex-wrap lets the tagline drop to its own line
+            below them on narrow ones rather than clipping or forcing a
+            tiny font. */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-10 gap-y-6">
+          <div className="flex flex-wrap items-center gap-6">
             <button
               className="rounded-full border-2 border-white text-white hover:bg-white hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
               aria-label="Join NpcInnovationHub"
@@ -291,6 +266,9 @@ const HeroSection = () => {
               Join Us
             </button>
 
+            {/* No prev/next arrows - dots are the only manual control,
+                direct-jump is enough for 4 slides this short-lived (3s
+                each). */}
             <div className="flex items-center gap-1.5">
               {HERO_SLIDES.map((slide, index) => (
                 <button
@@ -309,109 +287,14 @@ const HeroSection = () => {
               ))}
             </div>
           </div>
-        </section>
 
-        {/* Right Section - Hero Image Carousel + Slogan Container. Used to
-            be lg:only (hidden below it), with the text section above
-            carrying its own separate mobile-only tagline instead - now
-            shown at every breakpoint so the sliding member carousel isn't
-            a desktop-exclusive feature, and that duplicate tagline was
-            removed in favor of this section's own (directly below the
-            carousel, same as desktop always had).
-            items-center below lg (was only relevant at lg as items-end):
-            centers the carousel in the single-column mobile/tablet layout;
-            items-end still pins it to the right edge in the two-column
-            desktop layout. Right padding trimmed to a sliver at lg+ (was
-            lg:pr-8 xl:pr-12): the carousel and slogan both cap out at
-            max-w-[580px], so on any screen wider than that cap this
-            column has real slack left over - with items-start that slack
-            rendered as a wide gap of unused space between the carousel and
-            the right edge; the small remaining pr just keeps the slogan
-            text off the literal edge of the viewport. */}
-        <div className="flex flex-col items-center lg:items-end justify-center w-full px-6 sm:px-8 pb-10 lg:pb-0 lg:w-[60%] lg:px-0 lg:pl-12 xl:pl-20 lg:pr-4 xl:pr-6 lg:pt-20">
-          {/* Hero Image Carousel - no card/background of its own any more:
-              the avatar and name/role sit directly on the hero's own
-              backdrop (photo/video + overlay), the same surface the text
-              column's headline already sits on, instead of floating in a
-              separate navy rectangle. No prev/next arrows - dots are the
-              only manual control, same as the text carousel. Height still
-              fixed (nothing here is in normal flow - every slide is
-              absolutely positioned for the cross-fade) so the dots below
-              never jump as the active member's name/role changes length. */}
-          <div className="relative w-full max-w-[580px] h-[300px] sm:h-[360px] lg:h-[420px] xl:h-[470px]">
-            {/* Slides */}
-            <div className="relative w-full h-full">
-              {teamMembers.map((member, index) => (
-                <div
-                  key={index}
-                  className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ${
-                    index === currentSlide ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  {/* Large circular avatar - object-cover cropped to a
-                      fixed circle so every photo reads the same way
-                      regardless of its own aspect ratio. A stronger ring/
-                      shadow than before: with no navy card behind it any
-                      more, the circle needs to hold its own definition
-                      directly against the photo/video backdrop. */}
-                  <div className="w-40 h-40 sm:w-48 sm:h-48 xl:w-56 xl:h-56 rounded-full overflow-hidden ring-4 ring-white/50 shadow-2xl bg-white/10 flex-shrink-0">
-                    <img
-                      src={member.image}
-                      alt={`${member.name} - ${member.role}`}
-                      className="w-full h-full object-cover"
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                  </div>
-                  {/* Name/role, centered directly below the avatar (used
-                      to be an absolute bottom-left overlay on the navy
-                      card - now genuinely part of the same centered
-                      column as the image). */}
-                  <div className="mt-5 text-center px-4">
-                    <h3 className="text-white text-2xl font-bold drop-shadow-lg">
-                      {member.name}
-                    </h3>
-                    <p className="text-gray-200 text-lg drop-shadow-md mt-1">
-                      {member.role}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Navigation dots */}
-            <div className="absolute bottom-2 sm:bottom-3 left-0 right-0 flex justify-center gap-2 z-10">
-              {teamMembers.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`transition-all duration-300 ${
-                    index === currentSlide
-                      ? "bg-white w-8 h-2.5"
-                      : "bg-white/50 hover:bg-white/75 w-2.5 h-2.5"
-                  } rounded-full`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Slogan - positioned directly below the carousel, always one
-              line, centered under it. White/90/80 since this always sits
-              on the hero's own photo/video backdrop + overlay (the
-              carousel above it has no background fill of its own either,
-              now) - text size steps down at the smallest breakpoint so
-              "Innovate. Create. Lead." still fits the phrase's own
-              whitespace-nowrap on a narrow phone without shrinking the
-              container's max-w-[580px]. */}
-          <div className="mt-4 lg:mt-2 xl:mt-10 w-full max-w-[580px] text-center">
-            <p className="text-xl sm:text-[1.5rem] xl:text-[2rem] font-bold select-none leading-tight whitespace-nowrap">
-              <span className="text-white">Innovate.</span>{" "}
-              <span className="text-white/90">Create.</span>{" "}
-              <span className="text-white/80">Lead.</span>
-            </p>
-          </div>
+          <p className="text-xl sm:text-2xl font-bold select-none leading-tight tracking-tight drop-shadow-lg whitespace-nowrap">
+            <span className="text-white">Innovate.</span>{" "}
+            <span className="text-white/90">Create.</span>{" "}
+            <span className="text-white/80">Lead.</span>
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
