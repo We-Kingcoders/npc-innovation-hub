@@ -140,9 +140,11 @@ export default function Navbar() {
       return undefined;
     }
 
-    // Header height differs below/at lg (67px vs 83px - must match the
-    // spacer's h-[67px] lg:h-[83px] below and HeroSection.tsx's matching
-    // -top-[67px] lg:-top-[83px] background offset). Re-read on every
+    // Header height differs below/at lg (63px vs 71px - measured, not
+    // guessed, since it's now intrinsic to the logo's own size rather
+    // than a fixed h-16/h-20 - must match the spacer's h-[63px]
+    // lg:h-[71px] below and HeroSection.tsx's matching -top-[63px]
+    // lg:-top-[71px] background offset). Re-read on every
     // (re)attach, and torn down/recreated below on a live breakpoint
     // crossing, rather than captured once - a resize that crosses lg
     // would otherwise leave the observer's rootMargin measuring against
@@ -155,7 +157,7 @@ export default function Navbar() {
     const deadline = Date.now() + 3000;
 
     const setup = (hero: HTMLElement) => {
-      const headerHeight = isLg() ? 83 : 67;
+      const headerHeight = isLg() ? 71 : 63;
       // The observer is only a "something crossed the threshold, go
       // recheck" signal here - its own isIntersecting/rootBounds aren't
       // trusted directly. Right after a client-side route transition
@@ -260,10 +262,18 @@ export default function Navbar() {
   const dashboardPath =
     user?.role === UserRole.ADMIN ? "/Admindashboard" : "/dashboard";
 
+  // "Home" never gets the active-highlight border on the nav link itself
+  // - that treatment now belongs to the logo (see isHomeActive below),
+  // since the logo already links to "/" and highlighting both at once
+  // would just be saying the same thing twice.
   const isActive = (link: (typeof NAV_LINKS)[number]) =>
-    onHome
-      ? activeSectionId === link.sectionId
-      : location.pathname === link.deepPath;
+    link.sectionId === "home"
+      ? false
+      : onHome
+        ? activeSectionId === link.sectionId
+        : location.pathname === link.deepPath;
+
+  const isHomeActive = onHome && activeSectionId === "home";
 
   const handleLogout = async () => {
     setShowUserMenu(false);
@@ -294,59 +304,112 @@ export default function Navbar() {
           }`}
         />
 
-        <div className="max-w-7xl mx-auto h-16 lg:h-20 flex items-center justify-between px-6 lg:px-12">
-          {/* Logo */}
+        {/* No fixed h-16/h-20 any more - row height is intrinsic to its
+            tallest child (the logo block) plus this small py-2, so
+            there's no leftover space beyond a bit of real breathing
+            room - without any py at all the logo's own active-page
+            border sat flush against the header's top/bottom edges with
+            nothing around it, which read as cramped rather than
+            compact. items-center still centers the shorter items (nav
+            links, Sign In) against it. */}
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 py-2">
+          {/* Brand mark - the National Police College emblem plus a
+              two-line NPC Innovation Hub / Innovate · Create · Build
+              lockup, replacing the old text-only "NPC INNOVATION HUB"
+              wordmark. One Link (not two) so the whole mark is a single
+              tab stop to Home, matching how a logo normally behaves.
+              Carries the active-page border that "Home" used to show on
+              itself (see isHomeActive/isActive above) - the logo already
+              links to "/", so highlighting both it and a separate Home
+              link at once would just say the same thing twice. Always
+              border-2 (transparent when not active), same as every other
+              nav link, so this never changes size between the two states. */}
           <Link
             to="/"
-            className={`font-bold tracking-tight text-lg lg:text-xl whitespace-nowrap transition-colors duration-200 ${
+            className={`flex items-center gap-2.5 sm:gap-3 group border-2 px-3 py-1.5 -mx-3 -my-1.5 transition-all duration-200 ${
               transparentAtTop
-                ? "text-white hover:text-white/80 drop-shadow-md"
-                : "text-[#002B56] hover:text-[#003366]"
+                ? isHomeActive
+                  ? "border-white"
+                  : "border-transparent"
+                : isHomeActive
+                  ? "border-[#002B56]"
+                  : "border-transparent"
             }`}
           >
-            NPC INNOVATION HUB
-          </Link>
-
-          {/* Desktop nav links. gap tightened (was gap-8 xl:gap-10) - the
-              links were reading as too spread out from each other,
-              especially on wider screens. */}
-          <nav
-            className="hidden lg:flex items-center gap-4 xl:gap-6"
-            aria-label="Main navigation"
-          >
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                aria-current={isActive(link) ? "page" : undefined}
-                // An outlined pill for the active page - same border-2 +
-                // rounded-full box on every link (only the border color
-                // differs, transparent vs navy) so every item keeps
-                // identical size/alignment whether or not it's active.
-                className={`font-bold uppercase text-[1.05rem] px-4 py-1.5 rounded-full border-2 transition-all duration-200 ${
+            <img
+              src="/assets/images/npc-emblem.png"
+              alt="National Police College"
+              className="w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0 transition-transform duration-200 group-hover:scale-105"
+            />
+            <span className="leading-tight">
+              <span
+                className={`block font-bold tracking-tight text-sm lg:text-lg whitespace-nowrap transition-colors duration-200 ${
                   transparentAtTop
-                    ? isActive(link)
-                      ? "border-white text-white hover:bg-white hover:text-[#002B56] drop-shadow-sm"
-                      : "border-transparent text-white/90 hover:text-white drop-shadow-sm"
-                    : isActive(link)
-                      ? "border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white"
-                      : "border-transparent text-[#002B56] hover:text-[#003366]"
+                    ? "text-white drop-shadow-md group-hover:text-white/80"
+                    : "text-[#002B56] group-hover:text-[#003366]"
                 }`}
               >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+                NPC INNOVATION HUB
+              </span>
+              <span
+                className={`block font-medium tracking-wide uppercase text-[10px] lg:text-xs whitespace-nowrap transition-colors duration-200 ${
+                  transparentAtTop ? "text-white/70" : "text-[#002B56]/60"
+                }`}
+              >
+                Innovate &middot; Create &middot; Build
+              </span>
+            </span>
+          </Link>
 
-          {/* Desktop right side: Sign In, or an account menu once logged in */}
-          <div className="hidden lg:block">
+          {/* Desktop nav links + Sign In, grouped as one right-aligned
+              unit (was 3 separate flex children spread across the row
+              via justify-between, which floated the links in the
+              middle with a large gap after the logo) - now the outer
+              row has exactly 2 visible children at lg+ (logo, this
+              group), so justify-between pins the logo flush left and
+              the whole group flush right, with the links sitting close
+              to Sign In instead of floating in open space. */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+            <nav
+              className="flex items-center gap-4 xl:gap-6"
+              aria-label="Main navigation"
+            >
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  aria-current={isActive(link) ? "page" : undefined}
+                  // An outlined rectangle for the active page - same
+                  // border-2 box on every link (only the border color
+                  // differs, transparent vs navy) so every item keeps
+                  // identical size/alignment whether or not it's active.
+                  className={`font-bold uppercase text-[1.05rem] px-4 py-1.5 border-2 transition-all duration-200 ${
+                    transparentAtTop
+                      ? isActive(link)
+                        ? "border-white text-white hover:bg-white hover:text-[#002B56] drop-shadow-sm"
+                        : "border-transparent text-white/90 hover:text-white drop-shadow-sm"
+                      : isActive(link)
+                        ? "border-[#002B56] text-[#002B56] hover:bg-[#002B56] hover:text-white"
+                        : "border-transparent text-[#002B56] hover:text-[#003366]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Sign In, or an account menu once logged in. Sign In is
+                plain text now (no border box) - same hover-only
+                treatment as an inactive nav link, matching the "no
+                outer rectangle" look now used everywhere except the
+                nav links' own active-page indicator. */}
             {isAuthenticated && user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu((s) => !s)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="true"
-                  className={`flex items-center gap-2 font-bold text-white px-5 py-2.5 rounded-full shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                  className={`flex items-center gap-2 font-bold text-white px-5 py-2.5 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     transparentAtTop
                       ? "bg-white/10 backdrop-blur-sm border-2 border-white hover:bg-white hover:text-[#002B56] focus:ring-white"
                       : "bg-[#002B56] hover:bg-[#003366] hover:shadow-md focus:ring-[#002B56]"
@@ -389,10 +452,10 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className={`text-white font-bold uppercase px-6 py-2.5 rounded-full shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                className={`font-bold uppercase text-[1.05rem] px-4 py-1.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                   transparentAtTop
-                    ? "bg-white/10 backdrop-blur-sm border-2 border-white hover:bg-white hover:text-[#002B56] focus:ring-white"
-                    : "bg-[#002B56] hover:bg-[#003366] hover:shadow-md focus:ring-[#002B56]"
+                    ? "text-white/90 hover:text-white drop-shadow-sm focus:ring-white"
+                    : "text-[#002B56] hover:text-[#003366] focus:ring-[#002B56]"
                 }`}
               >
                 Sign In
@@ -476,7 +539,7 @@ export default function Navbar() {
                   </Link>
                   <button
                     onClick={() => void handleLogout()}
-                    className="w-full text-left mt-2 px-4 py-3 font-bold text-center bg-white text-red-600 rounded-full shadow-sm border border-gray-200 hover:bg-red-50 transition-colors duration-200"
+                    className="w-full text-left mt-2 px-4 py-3 font-bold text-center bg-white text-red-600 shadow-sm border border-gray-200 hover:bg-red-50 transition-colors duration-200"
                   >
                     Sign Out
                   </button>
@@ -484,7 +547,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   to="/login"
-                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
+                  className="block mt-2 text-center bg-[#002B56] text-white font-bold uppercase px-6 py-3 shadow-sm hover:bg-[#003366] hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#002B56] focus:ring-offset-2"
                 >
                   Sign In
                 </Link>
@@ -495,9 +558,12 @@ export default function Navbar() {
       </header>
 
       {/* Reserves the space the fixed header occupies so page content isn't
-          hidden underneath it. Height must match the header's own h-16/h-20
-          content row plus the 3px gradient accent bar above it, exactly. */}
-      <div aria-hidden="true" className="h-[67px] lg:h-[83px]" />
+          hidden underneath it. Height must match the header's own real
+          rendered height exactly - the content row has no fixed h-16/h-20
+          any more (intrinsic to the logo's size instead), so this is a
+          measured value (63px below lg, 71px at lg - see the
+          headerHeight comment above), not a guess. */}
+      <div aria-hidden="true" className="h-[63px] lg:h-[71px]" />
     </>
   );
 }

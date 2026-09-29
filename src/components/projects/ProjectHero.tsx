@@ -26,7 +26,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
             <p className="text-2xl sm:text-3xl font-bold select-none text-center">
               <span className="text-white block">Innovate.</span>
               <span className="text-white/90 block">Create.</span>
-              <span className="text-white/80 block">Lead.</span>
+              <span className="text-white/80 block">Build.</span>
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
             the mobile-only decorative gradient band above (h-48 = 192px,
             absolutely positioned behind this), so this heading rendered
             starting inside that band - overlapping its own "Innovate.
-            Create. Lead." tagline, with #29476E text at very low contrast
+            Create. Build." tagline, with #29476E text at very low contrast
             against the navy gradient showing through behind it. */}
         <section className="flex flex-col justify-center w-full px-6 sm:px-8 pt-52 pb-8 lg:w-[40%] lg:pl-16 xl:pl-24 lg:pr-8 lg:pt-20">
           {/* Main Headline */}
@@ -104,7 +104,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
               navy diagonal (same as HeroSection.tsx's identical tagline),
               so it's white/90/80 here too now - "Innovate." in plain
               black had barely any contrast against navy to begin with,
-              and light-blue "Create."/"Lead." only worked here because it
+              and light-blue "Create."/"Build." only worked here because it
               was functioning as a de-facto contrast color, not a real
               accent choice. */}
           <div className="mt-2 xl:mt-10 w-full max-w-[580px] text-right">
@@ -112,7 +112,7 @@ const ProjectHero = ({ onViewProjectsClick }: ProjectHeroProps) => {
               <span className="text-white">Innovate.</span>{" "}
               <span className="text-white/90">Create.</span>
               <br />
-              <span className="text-white/80">Lead.</span>
+              <span className="text-white/80">Build.</span>
             </p>
           </div>{" "}
         </div>

@@ -29,7 +29,7 @@ import {
  *   own full /members page).
  * - Fully accessible and mobile-responsive
  * - Rotates through 4 headline/subtext messages
- * - CTA row (Join Us + slide dots + the "Innovate. Create. Lead."
+ * - CTA row (Join Us + slide dots + the "Innovate. Create. Build."
  *   tagline) sits together on one line near the bottom of the hero
  *
  * Updates:
@@ -117,7 +117,7 @@ const HeroSection = () => {
       // overflow-x and overflow-y aren't both `visible`, the browser
       // forces BOTH to `auto` - so overflow-x-hidden alone (or paired
       // with an explicit overflow-y-visible) ends up clipping vertically
-      // too, cutting off the background layer's -top-[83px] extension
+      // too, cutting off the background layer's -top-[71px] extension
       // below before it can reach up behind Navbar.tsx's transparent
       // header. Nothing else in this section actually overflows its box
       // (the background layer is inset-x-0-bounded horizontally), so
@@ -141,9 +141,11 @@ const HeroSection = () => {
           breakpoint to match the desktop identity, with the overlay
           below doing more work at the breakpoints that need it to keep
           that promise.
-          -top-[83px]/-top-[67px]: the fixed Navbar reserves its own
+          -top-[71px]/-top-[63px]: the fixed Navbar reserves its own
           height via a spacer div rendered ABOVE this section in the page
-          (67px below lg, 83px at lg - see Navbar.tsx), so this section's
+          (63px below lg, 71px at lg - measured, since the header's
+          content row is intrinsic to the logo's size rather than a
+          fixed h-16/h-20 - see Navbar.tsx), so this section's
           own top edge already starts below it - inset-0/top-0 would leave
           that reserved strip showing the plain white page background
           instead of this photo. Extending the top edge up by the navbar's
@@ -154,7 +156,7 @@ const HeroSection = () => {
           Needs overflow-x-hidden, not overflow-hidden, on the section
           above - overflow-hidden would clip this negative offset before
           it ever reaches up past the section's own top. */}
-      <div className="absolute inset-x-0 bottom-0 -top-[67px] lg:-top-[83px] z-0">
+      <div className="absolute inset-x-0 bottom-0 -top-[63px] lg:-top-[71px] z-0">
         {/* Admin-controlled hero background (images and/or video) - see
             HeroBackgroundMedia.tsx. Renders the same static
             /assets/images/hubimage.jpg as before whenever no active media
@@ -250,48 +252,50 @@ const HeroSection = () => {
         </div>
 
         {/* CTA row - Join Us, slide dots, and the tagline together on one
-            line near the bottom of the hero (was its own centered block
-            in a separate right column; moved here now that column's
-            gone). justify-between spreads the two groups apart on wide
-            screens; flex-wrap lets the tagline drop to its own line
-            below them on narrow ones rather than clipping or forcing a
-            tiny font. */}
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-10 gap-y-6">
-          <div className="flex flex-wrap items-center gap-6">
-            <button
-              className="rounded-full border-2 border-white text-white hover:bg-white hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
-              aria-label="Join NpcInnovationHub"
-              onClick={() => setIsJoinModalOpen(true)}
-            >
-              Join Us
-            </button>
+            line (was its own centered block in a separate right column;
+            moved here now that column's gone). flex-wrap lets the
+            tagline drop to its own line below the rest on narrow
+            viewports rather than clipping or forcing a tiny font. */}
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-6">
+          {/* No border box at rest - plain text - but the original
+              outlined-box hover (border appears, fills white, text
+              flips navy) comes back on hover. border-2 border-transparent
+              at rest (not just no border at all) so the box's size is
+              already reserved and hovering doesn't shift surrounding
+              layout when the border becomes visible. */}
+          <button
+            className="text-white border-2 border-transparent hover:border-white hover:bg-white hover:text-[#002B56] px-10 py-3 font-semibold text-lg lg:text-[1.2rem] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+            aria-label="Join NpcInnovationHub"
+            onClick={() => setIsJoinModalOpen(true)}
+          >
+            Join Us
+          </button>
 
-            {/* No prev/next arrows - dots are the only manual control,
-                direct-jump is enough for 4 slides this short-lived (3s
-                each). */}
-            <div className="flex items-center gap-1.5">
-              {HERO_SLIDES.map((slide, index) => (
-                <button
-                  key={slide.headline}
-                  onClick={() => changeTextSlide(index)}
-                  onFocus={() => setTextPaused(true)}
-                  onBlur={() => setTextPaused(false)}
-                  aria-label={`Show message ${index + 1} of ${HERO_SLIDES.length}`}
-                  aria-current={index === textSlide}
-                  className={`rounded-full transition-all duration-300 ${
-                    index === textSlide
-                      ? "bg-white w-6 h-2"
-                      : "bg-white/40 hover:bg-white/60 w-2 h-2"
-                  }`}
-                />
-              ))}
-            </div>
+          {/* No prev/next arrows - dots are the only manual control,
+              direct-jump is enough for 4 slides this short-lived (3s
+              each). */}
+          <div className="flex items-center gap-1.5">
+            {HERO_SLIDES.map((slide, index) => (
+              <button
+                key={slide.headline}
+                onClick={() => changeTextSlide(index)}
+                onFocus={() => setTextPaused(true)}
+                onBlur={() => setTextPaused(false)}
+                aria-label={`Show message ${index + 1} of ${HERO_SLIDES.length}`}
+                aria-current={index === textSlide}
+                className={`rounded-full transition-all duration-300 ${
+                  index === textSlide
+                    ? "bg-white w-6 h-2"
+                    : "bg-white/40 hover:bg-white/60 w-2 h-2"
+                }`}
+              />
+            ))}
           </div>
 
           <p className="text-xl sm:text-2xl font-bold select-none leading-tight tracking-tight drop-shadow-lg whitespace-nowrap">
             <span className="text-white">Innovate.</span>{" "}
             <span className="text-white/90">Create.</span>{" "}
-            <span className="text-white/80">Lead.</span>
+            <span className="text-white/80">Build.</span>
           </p>
         </div>
       </section>
