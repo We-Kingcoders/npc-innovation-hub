@@ -16,11 +16,11 @@ const extractErrorMessage = (error: unknown): string => {
 
 // A visitor can already be on the homepage when an admin adds or
 // reorders a hero member elsewhere - without this, they'd only ever see
-// that change by refreshing the page themselves. Neither consumer of
-// this hook (HeroSection's carousel, HubMembersSection's grid) reads
-// `loading` from here, so re-fetching in the background never causes a
-// visible skeleton/flicker - it just quietly swaps `members` in once new
-// data arrives.
+// that change by refreshing the page themselves. HubMembersSection's
+// grid (this hook's one remaining consumer) doesn't read `loading` from
+// here, so re-fetching in the background never causes a visible
+// skeleton/flicker - it just quietly swaps `members` in once new data
+// arrives.
 const POLL_INTERVAL_MS = 15_000;
 
 interface UseHeroMembersReturn {
