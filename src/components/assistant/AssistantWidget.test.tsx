@@ -4,30 +4,77 @@ jest.mock("../../api/assistant.api", () => ({
 }));
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import ChatDesign from "./Help";
+import AssistantWidget, { OPEN_ASSISTANT_CHAT_EVENT } from "./AssistantWidget";
 import { sendAssistantMessage } from "../../api/assistant.api";
 
 const mockedSend = sendAssistantMessage as jest.Mock;
 
-function renderChat() {
-  return render(
-    <MemoryRouter>
-      <ChatDesign />
-    </MemoryRouter>,
-  );
+function renderWidget() {
+  return render(<AssistantWidget />);
 }
 
-describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
+function openPanel() {
+  fireEvent.click(screen.getByLabelText("Chat with NPC Innovation Hub"));
+}
+
+describe("<AssistantWidget /> (floating NPC AI Assistant)", () => {
   afterEach(() => jest.clearAllMocks());
 
-  it("shows suggested questions in the empty state before any message is sent", () => {
-    renderChat();
+  it("starts closed - the panel isn't in the document until the launcher is clicked", () => {
+    renderWidget();
 
-    expect(screen.getByText("What is NPC Innovation Hub?")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Send a message to start chatting!"),
+    ).not.toBeInTheDocument();
+
+    openPanel();
+
     expect(
       screen.getByText("Send a message to start chatting!"),
     ).toBeInTheDocument();
+    expect(screen.getByText("What is NPC Innovation Hub?")).toBeInTheDocument();
+  });
+
+  it("opens when another component dispatches the shared open event", () => {
+    renderWidget();
+
+    expect(
+      screen.queryByText("Send a message to start chatting!"),
+    ).not.toBeInTheDocument();
+
+    fireEvent(window, new Event(OPEN_ASSISTANT_CHAT_EVENT));
+
+    expect(
+      screen.getByText("Send a message to start chatting!"),
+    ).toBeInTheDocument();
+  });
+
+  it("closes on clicking the launcher again", () => {
+    renderWidget();
+    openPanel();
+    expect(
+      screen.getByText("Send a message to start chatting!"),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText("Close chat"));
+
+    expect(
+      screen.queryByText("Send a message to start chatting!"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("closes on Escape", () => {
+    renderWidget();
+    openPanel();
+    expect(
+      screen.getByText("Send a message to start chatting!"),
+    ).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(
+      screen.queryByText("Send a message to start chatting!"),
+    ).not.toBeInTheDocument();
   });
 
   it("sends a suggested question on click and renders the assistant's reply", async () => {
@@ -40,10 +87,10 @@ describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
       },
     });
 
-    renderChat();
+    renderWidget();
+    openPanel();
     fireEvent.click(screen.getByText("What is NPC Innovation Hub?"));
 
-    expect(screen.getByText("What is NPC Innovation Hub?")).toBeInTheDocument();
     await waitFor(() =>
       expect(
         screen.getByText("NPC Innovation Hub is a tech innovation platform."),
@@ -73,7 +120,8 @@ describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
         },
       });
 
-    renderChat();
+    renderWidget();
+    openPanel();
     const input = screen.getByLabelText(
       "Type your question for the NPC Innovation Hub assistant",
     );
@@ -112,7 +160,8 @@ describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
         },
       });
 
-    renderChat();
+    renderWidget();
+    openPanel();
     const input = screen.getByLabelText(
       "Type your question for the NPC Innovation Hub assistant",
     );
@@ -129,8 +178,7 @@ describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
       ).toBeInTheDocument(),
     );
 
-    const retryButton = screen.getByText("Retry");
-    fireEvent.click(retryButton);
+    fireEvent.click(screen.getByText("Retry"));
 
     await waitFor(() =>
       expect(screen.getByText("Recovered reply.")).toBeInTheDocument(),
@@ -142,7 +190,8 @@ describe("ChatDesign (Chat with Us / NPC AI Assistant)", () => {
   });
 
   it("does not send an empty or whitespace-only message", () => {
-    renderChat();
+    renderWidget();
+    openPanel();
     const input = screen.getByLabelText(
       "Type your question for the NPC Innovation Hub assistant",
     );
