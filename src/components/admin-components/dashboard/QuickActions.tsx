@@ -185,9 +185,9 @@ const ACTIONS: QuickAction[] = [
 
 const QuickActions: React.FC = () => {
   return (
-    <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="chart-box bg-white rounded-2xl p-4 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div>
           <h3 className="font-semibold text-navy-800 text-sm">Quick Actions</h3>
           <p className="text-xs text-mist-500 mt-0.5">Common admin tasks</p>
@@ -205,33 +205,33 @@ const QuickActions: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* Grid - tiles a bit tighter (p-2.5 not p-3.5, smaller icon box,
+          no description line under the label) than before, part of
+          fitting this whole row in view without scrolling. The
+          description text was mostly restating what the icon+label
+          already said (e.g. "Create Project" / "Add a new project"). */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0-all">
         {ACTIONS.map((action) => (
           <a
             key={action.label}
             href={action.href}
+            title={action.description}
             className={`
-              group flex flex-col items-center gap-2 p-3.5 rounded-xl border border-transparent
+              group flex flex-col items-center gap-1.5 p-2.5 rounded-xl border border-transparent
               hover:border-mist-300 ${action.hoverColor}
               transition-all duration-200 hover:shadow-sm cursor-pointer
               text-center
             `}
           >
             <div
-              className={`w-10 h-10 rounded-xl ${action.iconBg} ${action.color} flex items-center justify-center
+              className={`w-9 h-9 rounded-xl ${action.iconBg} ${action.color} flex items-center justify-center
                 group-hover:scale-110 transition-transform duration-200`}
             >
               {action.icon}
             </div>
-            <div>
-              <p className={`text-xs font-semibold ${action.color}`}>
-                {action.label}
-              </p>
-              <p className="text-xs text-mist-500 leading-tight mt-0.5">
-                {action.description}
-              </p>
-            </div>
+            <p className={`text-xs font-semibold ${action.color}`}>
+              {action.label}
+            </p>
           </a>
         ))}
       </div>

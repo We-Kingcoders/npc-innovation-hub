@@ -25,12 +25,17 @@ interface AdminLayoutProps {
   // subtitle prop.
   title?: ReactNode;
   actions?: ReactNode;
+  // Off by default - see Topbar's own showSearch comment. Only the pages
+  // where a cross-domain (Resources/Projects/Members) search actually
+  // makes sense pass this.
+  showSearch?: boolean;
 }
 
 export default function AdminLayout({
   children,
   title,
   actions,
+  showSearch,
 }: AdminLayoutProps) {
   return (
     <div className="flex min-h-screen bg-mist-100">
@@ -38,12 +43,12 @@ export default function AdminLayout({
       <Sidebar />
 
       <main id="main-content" className="flex-1 min-w-0 px-4 sm:px-10 py-8">
-        <Topbar />
+        <Topbar showSearch={showSearch} />
 
         {title && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
             {typeof title === "string" ? (
-              <h1 className="font-bold text-2xl">{title}</h1>
+              <h1 className="font-bold text-2xl uppercase">{title}</h1>
             ) : (
               title
             )}

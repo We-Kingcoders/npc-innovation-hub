@@ -41,7 +41,7 @@ const HeroMediaPage: React.FC = () => {
       <AdminLayout
         title={
           <div>
-            <h1 className="font-bold text-2xl mb-2 text-navy-800">
+            <h1 className="font-bold text-2xl mb-2 text-navy-800 uppercase">
               Homepage Hero Media
             </h1>
             <p className="text-sm text-mist-600">
