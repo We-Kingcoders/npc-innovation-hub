@@ -44,7 +44,7 @@ describe("<HeroSection />", () => {
 
     expect(screen.getByText("Innovate.")).toBeInTheDocument();
     expect(screen.getByText("Create.")).toBeInTheDocument();
-    expect(screen.getByText("Lead.")).toBeInTheDocument();
+    expect(screen.getByText("Build.")).toBeInTheDocument();
     expect(screen.queryByText("Full Stack Developer")).not.toBeInTheDocument();
   });
 });

@@ -61,7 +61,7 @@ export default function AuthPageMain({ children }: { children: ReactNode }) {
               whitespace-nowrap - this needs the column's full padded width
               to stay on one line at this size instead of wrapping. */}
           <h2 className="text-3xl lg:text-4xl font-bold leading-tight whitespace-nowrap text-white drop-shadow-lg mb-10">
-            Innovate. Create. Lead.
+            Innovate. Create. Build.
           </h2>
 
           <div className="max-w-md space-y-6">
