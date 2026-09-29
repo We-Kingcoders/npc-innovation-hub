@@ -48,8 +48,6 @@ const NAVY_CARD = {
   border: "border-mist-300",
   glow: "hover:shadow-mist-200",
   icon: "bg-navy-50 text-navy-700",
-  numBg: "bg-navy-800",
-  numText: "text-white",
   cornerAccent: "bg-navy-50",
 };
 
@@ -85,14 +83,12 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 export const StatsCardSkeleton: React.FC = () => (
-  <div className="bg-white rounded-2xl p-5 border border-mist-300 shadow-sm animate-pulse">
-    <div className="flex items-start justify-between mb-4">
-      <div className="w-8 h-8 bg-mist-200 rounded-lg" />
-      <div className="w-12 h-5 bg-mist-200 rounded-full" />
+  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-mist-300 shadow-sm animate-pulse flex flex-col gap-6">
+    <div className="flex items-center gap-2">
+      <div className="w-7 h-7 bg-mist-200 rounded-lg flex-shrink-0" />
+      <div className="w-16 h-3 bg-mist-200 rounded" />
     </div>
-    {/* Circular number skeleton */}
-    <div className="w-16 h-16 bg-mist-200 rounded-full mx-auto mb-3" />
-    <div className="w-20 h-3 bg-mist-200 rounded mx-auto" />
+    <div className="w-14 h-8 bg-mist-200 rounded" />
   </div>
 );
 
@@ -122,10 +118,11 @@ const StatsCard: React.FC<StatsCardProps> = ({
       }}
       className={`
         group relative isolate bg-gradient-to-b ${c.cardBg}
-        rounded-2xl p-5 border ${c.border}
+        rounded-2xl p-4 sm:p-5 border ${c.border}
         shadow-sm hover:shadow-lg ${c.glow}
         transition-all duration-300 hover:-translate-y-0.5
         overflow-hidden cursor-default animate-slide-up
+        flex flex-col gap-6
       `}
     >
       {/* Decorative corner circle */}
@@ -134,63 +131,49 @@ const StatsCard: React.FC<StatsCardProps> = ({
           opacity-40 group-hover:opacity-70 transition-opacity duration-300`}
       />
 
-      <div className="relative flex flex-col items-center text-center gap-3">
-        {/* Top row: icon (left) + growth badge (right, when shown) */}
-        <div
-          className={`w-full flex items-center ${showGrowth ? "justify-between" : "justify-center"}`}
-        >
-          <div className={`p-2 rounded-lg ${c.icon}`}>
-            {ICON_PATHS[metric.icon ?? "folder"]}
-          </div>
-
-          {showGrowth && (
-            <span
-              className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
-                text-[10px] font-bold ring-1 bg-navy-50 text-navy-700 ring-navy-200"
-            >
-              {isPositive ? (
-                <svg
-                  className="w-2 h-2"
-                  fill="currentColor"
-                  viewBox="0 0 10 10"
-                >
-                  <path d="M5 2l4 6H1z" />
-                </svg>
-              ) : isNegative ? (
-                <svg
-                  className="w-2 h-2"
-                  fill="currentColor"
-                  viewBox="0 0 10 10"
-                >
-                  <path d="M5 8L1 2h8z" />
-                </svg>
-              ) : (
-                <span className="w-2 h-0.5 bg-current rounded" />
-              )}
-              {metric.growthPercent > 0 ? "+" : ""}
-              {metric.growthPercent}%
-            </span>
-          )}
+      {/* Header row: icon immediately followed by the card's own name,
+          not a separate icon-alone corner with the label stranded below
+          the number - the icon exists to label the card, so it reads
+          better right next to what it's labeling. */}
+      <div className="relative flex items-center gap-2 min-w-0">
+        <div className={`p-1.5 rounded-lg flex-shrink-0 ${c.icon}`}>
+          {ICON_PATHS[metric.icon ?? "folder"]}
         </div>
-
-        {/* Colored circle with animated count-up number */}
-        <div
-          className={`
-            w-16 h-16 rounded-full ${c.numBg} ${c.numText}
-            flex items-center justify-center
-            shadow-md
-            transition-transform duration-200 group-hover:scale-105
-          `}
-        >
-          <span className="text-xl font-bold tabular-nums leading-none">
-            {displayValue.toLocaleString()}
-          </span>
-        </div>
-
-        {/* Label */}
-        <p className="text-xs font-semibold text-navy-700 leading-tight">
+        <p className="text-xs font-semibold text-navy-700 leading-tight truncate">
           {metric.label}
         </p>
+      </div>
+
+      {/* The count itself, directly on the card - no circular chip
+          behind it. A plain large number reads as more professional
+          data-density here than a decorative badge shape competing with
+          the icon+label above for the same "this is the important part"
+          attention. */}
+      <div className="relative flex items-end justify-between gap-2">
+        <span className="text-3xl sm:text-4xl font-bold tabular-nums leading-none text-navy-900">
+          {displayValue.toLocaleString()}
+        </span>
+
+        {showGrowth && (
+          <span
+            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full
+              text-[10px] font-bold ring-1 bg-navy-50 text-navy-700 ring-navy-200 flex-shrink-0 mb-1"
+          >
+            {isPositive ? (
+              <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 10 10">
+                <path d="M5 2l4 6H1z" />
+              </svg>
+            ) : isNegative ? (
+              <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 10 10">
+                <path d="M5 8L1 2h8z" />
+              </svg>
+            ) : (
+              <span className="w-2 h-0.5 bg-current rounded" />
+            )}
+            {metric.growthPercent > 0 ? "+" : ""}
+            {metric.growthPercent}%
+          </span>
+        )}
       </div>
     </div>
   );

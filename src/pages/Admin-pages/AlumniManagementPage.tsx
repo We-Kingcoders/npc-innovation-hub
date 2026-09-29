@@ -42,7 +42,9 @@ const AlumniManagementPage: React.FC = () => {
       <AdminLayout
         title={
           <div>
-            <h1 className="font-bold text-2xl mb-2 text-navy-800">Alumni</h1>
+            <h1 className="font-bold text-2xl mb-2 text-navy-800 uppercase">
+              Alumni
+            </h1>
             <p className="text-sm text-mist-600">
               Manage the alumni directory shown on the public site. To promote
               or demote an existing member, use the Members page.

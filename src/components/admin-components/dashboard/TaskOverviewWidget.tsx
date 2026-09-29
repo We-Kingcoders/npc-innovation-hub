@@ -217,7 +217,7 @@ const CustomTooltip: React.FC<{
 };
 
 const SkeletonWidget: React.FC = () => (
-  <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm animate-pulse">
+  <div className="chart-box bg-white rounded-2xl p-4 border border-mist-300 shadow-sm animate-pulse">
     <div className="flex justify-between items-center mb-4">
       <div className="w-32 h-5 bg-mist-200 rounded" />
       <div className="w-20 h-5 bg-mist-200 rounded-full" />
@@ -242,7 +242,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
 
   if (!analytics) {
     return (
-      <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm flex items-center justify-center h-72">
+      <div className="chart-box bg-white rounded-2xl p-4 border border-mist-300 shadow-sm flex items-center justify-center h-72">
         <p className="text-mist-500 text-sm">No task data available</p>
       </div>
     );
@@ -264,9 +264,9 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
   const hasData = chartData.length > 0;
 
   return (
-    <div className="chart-box bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="chart-box bg-white rounded-2xl p-4 border border-mist-300 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div>
           <h3 className="font-semibold text-navy-800 text-sm">Task Overview</h3>
           <p className="text-xs text-mist-500 mt-0.5">
@@ -282,7 +282,7 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
       </div>
 
       {/* Completion Rate bar */}
-      <div className="mb-4">
+      <div className="mb-3">
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-xs text-mist-600">Completion Rate</span>
           <span className="text-xs font-bold text-emerald-600">
@@ -297,16 +297,17 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
         </div>
       </div>
 
-      {/* Donut Chart */}
+      {/* Donut Chart - 140px, not the original 180px, part of fitting
+          this whole row in view without scrolling. */}
       {hasData ? (
-        <ResponsiveContainer width="100%" height={180}>
+        <ResponsiveContainer width="100%" height={140}>
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
-              innerRadius={48}
-              outerRadius={75}
+              innerRadius={38}
+              outerRadius={60}
               paddingAngle={3}
               dataKey="value"
             >
@@ -318,13 +319,13 @@ const TaskOverviewWidget: React.FC<TaskOverviewWidgetProps> = ({
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <div className="h-[180px] flex items-center justify-center">
+        <div className="h-[140px] flex items-center justify-center">
           <p className="text-mist-500 text-xs">No task data to display</p>
         </div>
       )}
 
       {/* Legend — only shows statuses with count > 0 */}
-      <div className="mt-3 space-y-2">
+      <div className="mt-2 space-y-1.5">
         {(
           Object.entries(STATUS_CONFIG) as Array<
             [keyof typeof STATUS_CONFIG, { label: string; color: string }]

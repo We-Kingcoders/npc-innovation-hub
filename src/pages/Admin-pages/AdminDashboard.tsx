@@ -52,71 +52,45 @@ const ErrorBanner: React.FC<{ errors: Record<string, string> }> = ({
   );
 };
 
-// ─── Last Updated Badge ────────────────────────────────────────────────────────
-const LastUpdatedBadge: React.FC<{
-  lastUpdated: Date | null;
+// ─── Refresh Button ─────────────────────────────────────────────────────────────
+// Icon-only now - no "Updated HH:MM" timestamp text and no "Refresh"
+// label next to it, both dropped as unnecessary description clutter on
+// an already-dense command-center page. The refresh action itself is
+// still real (aria-label carries it for screen readers, title gives
+// sighted users the same on hover).
+const RefreshButton: React.FC<{
   refreshing: boolean;
   onRefresh: () => void;
-}> = ({ lastUpdated, refreshing, onRefresh }) => (
-  <div className="flex items-center gap-3">
-    {lastUpdated && (
-      <span className="text-xs text-mist-500">
-        Updated{" "}
-        {lastUpdated.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </span>
-    )}
-    <button
-      onClick={onRefresh}
-      disabled={refreshing}
-      className={`
-        inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg
-        border border-mist-300 text-navy-700 hover:bg-mist-100
-        transition-all duration-200
-        ${refreshing ? "opacity-50 cursor-not-allowed" : "hover:border-mist-400"}
-      `}
+}> = ({ refreshing, onRefresh }) => (
+  <button
+    onClick={onRefresh}
+    disabled={refreshing}
+    aria-label={refreshing ? "Refreshing" : "Refresh dashboard data"}
+    title={refreshing ? "Refreshing…" : "Refresh"}
+    className={`
+      p-2 rounded-lg border border-mist-300 text-navy-700 hover:bg-mist-100
+      transition-all duration-200
+      ${refreshing ? "opacity-50 cursor-not-allowed" : "hover:border-mist-400"}
+    `}
+  >
+    <svg
+      className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
     >
-      <svg
-        className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        viewBox="0 0 24 24"
-      >
-        <polyline points="23 4 23 10 17 10" />
-        <polyline points="1 20 1 14 7 14" />
-        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
-      </svg>
-      {refreshing ? "Refreshing…" : "Refresh"}
-    </button>
-  </div>
-);
-
-// ─── Section Eyebrow ────────────────────────────────────────────────────────────
-// Small uppercase label above a section, matching the header's eyebrow
-// treatment — gives the (now shorter) page clear structure instead of two
-// widgets floating with no heading of their own.
-const SectionEyebrow: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => (
-  <p className="text-[11px] font-bold tracking-[0.14em] text-navy-500 uppercase mb-3">
-    {children}
-  </p>
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+    </svg>
+  </button>
 );
 
 // ─── Main Dashboard ────────────────────────────────────────────────────────────
 export default function AdminDashboard() {
-  const {
-    growthMetrics,
-    taskAnalytics,
-    loading,
-    refreshing,
-    errors,
-    lastUpdated,
-    refresh,
-  } = useAdminDashboard();
+  const { growthMetrics, taskAnalytics, loading, refreshing, errors, refresh } =
+    useAdminDashboard();
 
   const handleRefresh = useCallback(() => {
     refresh();
@@ -130,36 +104,29 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <main id="main-content" className="flex-1 min-w-0 flex flex-col">
-        <Topbar />
+        <Topbar showSearch />
 
-        {/* Page Content */}
-        <div className="flex-1 px-6 xl:px-8 py-6 overflow-auto">
+        {/* Page Content - no subtitle/eyebrow labels/timestamp text
+            (dropped as unnecessary description clutter on an already
+            dense page), and tighter padding/gaps throughout so the KPI
+            row plus Task Overview/Quick Actions actually fit in view on
+            a real laptop screen without needing to scroll to see them. */}
+        <div className="flex-1 px-6 xl:px-8 py-4 overflow-auto">
           {/* Page Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <div>
-              <h1 className="text-page-title font-bold text-navy-800 tracking-tight">
-                Dashboard
-              </h1>
-              <p className="text-sm text-mist-600 mt-0.5">
-                Innovation Hub — Analytics Command Center
-              </p>
-            </div>
-            <LastUpdatedBadge
-              lastUpdated={lastUpdated}
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-            />
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <h1 className="text-page-title font-bold text-navy-800 tracking-tight uppercase">
+              Dashboard
+            </h1>
+            <RefreshButton refreshing={refreshing} onRefresh={handleRefresh} />
           </div>
 
           {/* Error Banner */}
           <ErrorBanner errors={errors} />
 
           {/* ── KPI Cards Row ── */}
-          <SectionEyebrow>At a glance</SectionEyebrow>
           <ModernStatsCards metrics={growthMetrics} loading={loading} />
 
           {/* ── Task Overview + Quick Actions ── */}
-          <SectionEyebrow>Tasks &amp; Actions</SectionEyebrow>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
             <div className="lg:col-span-2">
               <TaskOverviewWidget analytics={taskAnalytics} loading={loading} />

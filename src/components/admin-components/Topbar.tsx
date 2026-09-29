@@ -14,7 +14,15 @@ import { getAllUsers, searchUsers } from "../../api/admin/member.api";
 
 const RESULTS_CAP = 5;
 
-export default function Topbar() {
+interface TopbarProps {
+  // Off by default - the search bar (Resources/Projects/Members) used to
+  // render unconditionally on every admin page via AdminLayout, including
+  // ones it has nothing to do with. Callers opt in on the pages where a
+  // cross-domain search actually makes sense.
+  showSearch?: boolean;
+}
+
+export default function Topbar({ showSearch = false }: TopbarProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -152,21 +160,32 @@ export default function Topbar() {
   };
 
   return (
-    <header className="sticky top-0 z-10 bg-white border-b border-mist-300 shadow-sm">
-      <div className="flex items-center justify-between px-6 lg:px-8 py-4">
-        {/* Search Bar */}
-        <div className="flex-1 max-w-xl">
-          <TopbarSearch
-            placeholder="Search resources, projects, or members..."
-            loading={searchLoading}
-            sections={sections}
-            onSearch={handleSearch}
-            onSubmit={handleSubmit}
-          />
-        </div>
+    <header
+      // No white bar/border/shadow when there's no search bar to
+      // contain - that was rendering as an empty full-width white
+      // strip with the icons stranded on the right. Without it, the
+      // icons just float at the top of the page's own background,
+      // right-aligned, with no separate bar behind them.
+      className={`sticky top-0 z-10 ${showSearch ? "bg-white border-b border-mist-300 shadow-sm" : ""}`}
+    >
+      <div
+        className={`flex items-center px-6 lg:px-8 ${showSearch ? "justify-between py-4" : "justify-end py-3"}`}
+      >
+        {/* Search Bar - only on pages that opt in (see showSearch above) */}
+        {showSearch && (
+          <div className="flex-1 max-w-xl">
+            <TopbarSearch
+              placeholder="Search resources, projects, or members..."
+              loading={searchLoading}
+              sections={sections}
+              onSearch={handleSearch}
+              onSubmit={handleSubmit}
+            />
+          </div>
+        )}
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 ml-6">
+        <div className={`flex items-center gap-2 ${showSearch ? "ml-6" : ""}`}>
           {/* Theme Toggle */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}

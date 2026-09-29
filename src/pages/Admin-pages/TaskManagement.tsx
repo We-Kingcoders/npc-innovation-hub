@@ -86,7 +86,7 @@ export default function TaskManagement() {
     <AdminLayout
       title={
         <div>
-          <h1 className="font-bold text-3xl text-gray-900 mb-2">
+          <h1 className="font-bold text-3xl text-gray-900 mb-2 uppercase">
             Task Management
           </h1>
           <p className="text-gray-600">Manage and track internal tasks</p>

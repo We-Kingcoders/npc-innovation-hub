@@ -202,7 +202,7 @@ export default function AddResource() {
       <AdminLayout
         title={
           <div>
-            <h1 className="font-bold text-2xl">
+            <h1 className="font-bold text-2xl uppercase">
               {isEditMode ? "Edit Resource" : "Add New Resource"}
             </h1>
             <p className="text-gray-600 mt-1">
