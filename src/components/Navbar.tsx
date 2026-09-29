@@ -16,6 +16,7 @@ import { useAuth } from "../hooks/useAuth";
 import { UserRole } from "../types/user.types";
 import { useActiveSection } from "../hooks/useActiveSection";
 import SkipToContent from "./SkipToContent";
+import AssistantWidget from "./assistant/AssistantWidget";
 
 // Primary nav points at the single-page Home story's sections, not straight
 // at the deep pages - deepPath is still real and still reachable (each
@@ -564,6 +565,11 @@ export default function Navbar() {
           measured value (63px below lg, 71px at lg - see the
           headerHeight comment above), not a guess. */}
       <div aria-hidden="true" className="h-[63px] lg:h-[71px]" />
+
+      {/* Floating AI assistant - mounted once here (Navbar is on every
+          public page) rather than duplicated per-route, so it's a
+          single instance regardless of which page is active. */}
+      <AssistantWidget />
     </>
   );
 }

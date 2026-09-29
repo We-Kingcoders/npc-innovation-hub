@@ -19,8 +19,8 @@
 // still a legitimate fallback for anyone who'd rather email directly.
 import { useState, type FormEvent } from "react";
 import { MapPin, Phone, Mail, MessageCircle, Send } from "lucide-react";
-import { Link } from "react-router-dom";
 import { submitContactMessage } from "../../api/contactService";
+import { OPEN_ASSISTANT_CHAT_EVENT } from "../../components/assistant/AssistantWidget";
 
 const HUB_LOCATION = "Musanze, North, Rwanda";
 const HUB_PHONE = "+250 783 330 443";
@@ -307,12 +307,18 @@ const ContactSection = () => {
               <p className="text-gray-600 text-sm mb-1">
                 Get an instant answer from our assistant.
               </p>
-              <Link
-                to="/chat-with-us"
+              {/* The assistant is a floating widget now (see
+                  Navbar.tsx -> AssistantWidget), not its own page - this
+                  opens it right here instead of navigating away. */}
+              <button
+                type="button"
+                onClick={() =>
+                  window.dispatchEvent(new Event(OPEN_ASSISTANT_CHAT_EVENT))
+                }
                 className="text-[#002B56] font-semibold text-sm hover:underline"
               >
                 Start a chat →
-              </Link>
+              </button>
             </div>
           </div>
         </div>

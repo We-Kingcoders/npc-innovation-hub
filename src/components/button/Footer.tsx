@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import HireUsModal from "../HireUsModal";
 import JoinUsModal from "../JoinUsModal";
+import { OPEN_ASSISTANT_CHAT_EVENT } from "../assistant/AssistantWidget";
 
 const Footer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,8 +147,15 @@ const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/chat-with-us"
+                  {/* The assistant is a floating widget now (see
+                      Navbar.tsx -> AssistantWidget), not its own page -
+                      this opens it from wherever the visitor already is
+                      instead of navigating them away. */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.dispatchEvent(new Event(OPEN_ASSISTANT_CHAT_EVENT))
+                    }
                     className="flex items-center gap-2 py-1.5 hover:text-gray-300 transition-colors"
                   >
                     <MessageCircle
@@ -155,7 +163,7 @@ const Footer: React.FC = () => {
                       aria-hidden="true"
                     />
                     Chat with Us
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <button

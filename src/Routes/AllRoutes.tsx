@@ -59,7 +59,6 @@ const StrategicObjectives = lazy(
 const CoreValues = lazy(() => import("../pages/Hub-info/CoreValues"));
 const WhyHub = lazy(() => import("../pages/Hub-info/WhyHub"));
 const FAQs = lazy(() => import("../pages/Hub-info/FAQs"));
-const ChatCard = lazy(() => import("../pages/Hub-info/Help"));
 
 // Resources Room
 const Home = lazy(() => import("../pages/resources-room/Home"));
@@ -455,18 +454,11 @@ const AllRoutes: React.FC = () => {
             </>
           }
         />
-        <Route
-          path="/chat-with-us"
-          element={
-            <>
-              <Navbar />
-              <main id="main-content">
-                <ChatCard />
-              </main>
-              <Footer />
-            </>
-          }
-        />
+        {/* The AI assistant is now a floating widget on every page (see
+            Navbar.tsx -> AssistantWidget), not its own page - redirect
+            any old bookmark/link to this URL home instead of a 404,
+            same precedent as the /signup -> /login redirect above. */}
+        <Route path="/chat-with-us" element={<Navigate to="/" replace />} />
         <Route
           path="/resources-room"
           element={
