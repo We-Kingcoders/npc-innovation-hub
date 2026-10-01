@@ -13,7 +13,7 @@
 // presentation is new.
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { Bot, BotMessageSquare, Loader2, Send, User, X } from "lucide-react";
+import { Bot, Loader2, Send, User, X } from "lucide-react";
 import {
   sendAssistantMessage,
   type AssistantChatTurn,
@@ -213,16 +213,19 @@ export default function AssistantWidget() {
         {isOpen ? (
           <X className="w-6 h-6" aria-hidden="true" />
         ) : (
-          // animate-bounce (Tailwind's built-in, already used elsewhere
-          // in this file for the loading dots) - only while closed, so
-          // it draws the eye to a launcher that's easy to miss fixed in
-          // a corner, and stops the moment there's an actual panel to
-          // look at instead. prefers-reduced-motion already flattens
-          // this globally (see index.css), so no separate check here.
-          <BotMessageSquare
-            className="w-6 h-6 animate-bounce"
+          <svg
+            className="w-7 h-7 animate-bounce"
+            viewBox="0 0 32 32"
             aria-hidden="true"
-          />
+          >
+            <path
+              d="M8 24.5V27l3.5-2.5H22a6 6 0 0 0 6-6v-6a6 6 0 0 0-6-6H10a6 6 0 0 0-6 6v6a6 6 0 0 0 4 5.65Z"
+              fill="white"
+            />
+            <circle cx="11" cy="15.5" r="1.5" fill="#002B56" />
+            <circle cx="16" cy="15.5" r="1.5" fill="#002B56" />
+            <circle cx="21" cy="15.5" r="1.5" fill="#002B56" />
+          </svg>
         )}
       </button>
 
